@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>diff Algorithm Tip | 로코의 개발 블로그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="diffing 구현React에서는 화면에서 바뀐 부분만 부분적으로 렌더링 해주기 위해 diffing 알고리즘을 구현하였다. virtualDOM과 realDOM을 비교해주기 위해 리액트 홈페이지에서 설명한 방법으로 vanilla JS로 diffing 알고리즘을 구현해보자. 0. 두 요소의 길이부터 비교한다.우리가 작업하고 있는 요소를 $old, 새롭게 생성된">
+<meta property="og:type" content="article">
+<meta property="og:title" content="diff Algorithm Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/index.html">
+<meta property="og:site_name" content="로코의 개발 블로그">
+<meta property="og:description" content="diffing 구현React에서는 화면에서 바뀐 부분만 부분적으로 렌더링 해주기 위해 diffing 알고리즘을 구현하였다. virtualDOM과 realDOM을 비교해주기 위해 리액트 홈페이지에서 설명한 방법으로 vanilla JS로 diffing 알고리즘을 구현해보자. 0. 두 요소의 길이부터 비교한다.우리가 작업하고 있는 요소를 $old, 새롭게 생성된">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-30T09:21:26.000Z">
+<meta property="article:modified_time" content="2022-10-29T10:20:41.177Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="diff">
+<meta property="article:tag" content="virtualDOM">
+<meta property="article:tag" content="realDOM">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="로코의 개발 블로그" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">로코의 개발 블로그</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="검색"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="검색"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://loco9939.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-PairProgramming/level 2/diff Algorithm Tip" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/" class="article-date">
+  <time class="dt-published" datetime="2022-09-30T09:21:26.000Z" itemprop="datePublished">2022-09-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Pair-Programming/">Pair Programming</a>►<a class="article-category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      diff Algorithm Tip
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="diffing-구현"><a href="#diffing-구현" class="headerlink" title="diffing 구현"></a>diffing 구현</h1><p>React에서는 화면에서 바뀐 부분만 부분적으로 렌더링 해주기 위해 diffing 알고리즘을 구현하였다.</p>
+<p>virtualDOM과 realDOM을 비교해주기 위해 리액트 홈페이지에서 설명한 방법으로 vanilla JS로 diffing 알고리즘을 구현해보자.</p>
+<h1 id="0-두-요소의-길이부터-비교한다"><a href="#0-두-요소의-길이부터-비교한다" class="headerlink" title="0. 두 요소의 길이부터 비교한다."></a>0. 두 요소의 길이부터 비교한다.</h1><p>우리가 작업하고 있는 요소를 $old, 새롭게 생성된 요소를 $new 요소라고 하자. 우리는 $new를 기준으로 $old의 요소들을 일치 시켜주는 행위를 하면 된다.</p>
+<p>$new의 노드길이가 $old의 노드 길이보다 길다면, $old에서 추가해주면 되지만, $new가 $old보다 길이가 짧다면, $old의 나머지 부분을 제거해줘야한다.</p>
+<h2 id="0-1-길이가-짧은-경우"><a href="#0-1-길이가-짧은-경우" class="headerlink" title="0.1. 길이가 짧은 경우"></a>0.1. 길이가 짧은 경우</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">diff</span> = (<span class="params">$new, $old</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newNodes = [...$new.<span class="property">childNodes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldNodes = [...$old.<span class="property">childNodes</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (oldNodes.<span class="property">length</span> &gt; newNodes.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; oldNodes.<span class="property">length</span> - newNodes.<span class="property">length</span>; i++)</span><br><span class="line">      $old.<span class="title function_">removeChild</span>($old.<span class="property">lastChild</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0-2-길이가-긴-경우"><a href="#0-2-길이가-긴-경우" class="headerlink" title="0.2. 길이가 긴 경우"></a>0.2. 길이가 긴 경우</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ($o === <span class="literal">undefined</span>) &#123;</span><br><span class="line">    $old.<span class="title function_">appendChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>));</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이전 요소에 새로운 요소가 가진 자식 노드가 없다면 이전 요소에 추가해준다.</li>
+</ul>
+<blockquote>
+<p>cloneNode(true)는 해당 요소의 자식노드들 까지 모두 복제해주기 위한 옵션이다.</p>
+</blockquote>
+<h1 id="1-두-요소의-루트-노드부터-비교한다"><a href="#1-두-요소의-루트-노드부터-비교한다" class="headerlink" title="1. 두 요소의 루트 노드부터 비교한다."></a>1. 두 요소의 루트 노드부터 비교한다.</h1><p>먼저 두 루트 요소의 타입이 다르면 $old 요소에서 제거하고 새로운 트리를 구축한다.</p>
+<p>ex) <a>에서 <div>로, <Article>에서 <Comment>로 바뀌는 경우</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ($o.<span class="property">tagName</span> !== $n.<span class="property">tagName</span>) &#123;</span><br><span class="line">    $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이전 요소의 자식노드과 새로운 요소의 자식노드를 1:1로 tagName을 비교하여 서로 다르면 교체를 해주었다.</li>
+</ul>
+<h1 id="2-textNode-commentNode-들은-textContent를-비교한-뒤-교체해준다"><a href="#2-textNode-commentNode-들은-textContent를-비교한-뒤-교체해준다" class="headerlink" title="2. textNode, commentNode 들은 textContent를 비교한 뒤 교체해준다."></a>2. textNode, commentNode 들은 textContent를 비교한 뒤 교체해준다.</h1><p>앞서 tagName으로 비교하여 같지 않을 때, 자식노드까지 비교해주었는데, textNode와 commentNode는 서로 tagName이 같으므로 이들의 textContent로 비교해주어야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line">  <span class="comment">// textNode:3, commentNode:8</span></span><br><span class="line">  <span class="keyword">if</span> ($n.<span class="property">nodeType</span> === <span class="number">3</span> || $n.<span class="property">nodeType</span> === <span class="number">8</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">textContent</span> !== $o.<span class="property">textContent</span>)</span><br><span class="line">      $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-이제-각-노드의-attribute-노드를-비교한다"><a href="#3-이제-각-노드의-attribute-노드를-비교한다" class="headerlink" title="3. 이제 각 노드의 attribute 노드를 비교한다."></a>3. 이제 각 노드의 attribute 노드를 비교한다.</h1><p>2번까지의 과정으로 $old 요소의 자식노드와 $new 요소의 자식노드들의 비교가 끝났고 일치까지 시켜줬다. 그러므로 이제는 자식 노드가 가지고 있는 attribute(class, inline-style, checked, disabled…)를 비교해줘야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newAttrs = [...$n.<span class="property">attributes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldAttrs = [...$o.<span class="property">attributes</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> $nAttr <span class="keyword">of</span> newAttrs) &#123;</span><br><span class="line">    <span class="keyword">const</span> $sameAttr = oldAttrs.<span class="title function_">find</span>(<span class="function">(<span class="params">$oAttr</span>) =&gt;</span> $oAttr.<span class="property">name</span> === $nAttr.<span class="property">name</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($sameAttr === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($sameAttr.<span class="property">value</span> !== $nAttr.<span class="property">value</span>) $sameAttr.<span class="property">value</span> = $nAttr.<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  oldAttrs.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$oAttr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!newAttrs.<span class="title function_">find</span>(<span class="function">(<span class="params">$nAttr</span>) =&gt;</span> $nAttr.<span class="property">name</span> === $oAttr.<span class="property">name</span>))</span><br><span class="line">      $o.<span class="title function_">removeAttribute</span>($oAttr.<span class="property">name</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">diff</span>($n, $o);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>새로운 노드의 attritube 중 이전 노드의 attribute와 같은 attribute가 없다면, 이전 요소 노드의 attribute를 새로운 노드의 attribute로 추가해준다.</p>
+</li>
+<li><p>이전 노드의 attribute 값과 새로운 노드의 attribute 값이 다르면 이전 노드 attribute에 값을 할당해준다.</p>
+</li>
+<li><p>만약 이전 노드의 attribute 중 새로운 노드의 attribute가 없다면 이전 노드의 해당 attribute를 제거해준다.</p>
+</li>
+</ul>
+<p>그리고 마지막으로 자식 노드들을 재귀적으로 diff 함수를 호출해주면 자식 노드까지 바뀐 부분만 확인해줄 수 있다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li><p>diff 알고리즘을 경현님과 같이 이야기 하면서 작성하다보니 완성할 수 있어서 기뻤다.</p>
+</li>
+<li><p>이전 노드의 attribute와 새로운 노드의 attribute가 다를 때, attribute를 추가해주기 위해 setAttribute()를 사용하였는데, attribute는 HTML 구조의 초기값을 설정해주는 것이므로, 사용자의 화면에 변화되는 것이 반영되지 않고 todo를 삭제할 때, 삭제한 다음 요소에 삭제 요소의 attribute가 남아있는 것처럼 보이는 문제가 발생하여 attribute를 추가하는 경우에는 replaceChild() 메서드를 사용하여 해당 요소의 노드를 바꿔주는 방식을 사용하였다.</p>
+</li>
+</ul>
+<p>때문에 attribute를 추가하는 경우에는 li 요소가 전부 렌더링 되는 모습을 보이고 attribute를 제거할 때는 input에 있는 checked attribute만 제거되므로 li 요소가 아닌 li 자식 요소의 input과 input의 다음 형제 요소들만 렌더링 되는 모습을 볼 수 있었다.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://loco9939.github.io/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/" data-id="cl9tu25450046o10f9xglh43x" data-title="diff Algorithm Tip" class="article-share-link">공유</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/diff/" rel="tag">diff</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/realDOM/" rel="tag">realDOM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/virtualDOM/" rel="tag">virtualDOM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">최신</strong>
+      <div class="article-nav-title">
+        
+          tictactoe, drag 이벤트 Tip
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">이전</strong>
+      <div class="article-nav-title">CBD Library Tip</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">카테고리</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/boj/">boj</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/woowa/">woowa</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Diary/">Diary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javascript/">Javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/">Pair Programming</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-1/">level 1</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-2/">level 2</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/holymoly/">holymoly</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Settings/">Settings</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBD/" rel="tag">CBD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CORS/" rel="tag">CORS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DFS/" rel="tag">DFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/" rel="tag">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JWT/" rel="tag">JWT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Promise/" rel="tag">Promise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDLC/" rel="tag">SDLC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/accordion/" rel="tag">accordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/acordion/" rel="tag">acordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/analog-clock/" rel="tag">analog clock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/async/" rel="tag">async</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/autocomplete/" rel="tag">autocomplete</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/await/" rel="tag">await</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/branch/" rel="tag">branch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/calendar/" rel="tag">calendar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/call/" rel="tag">call</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/callback/" rel="tag">callback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel/" rel="tag">carousel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel-Tip/" rel="tag">carousel Tip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/const/" rel="tag">const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/counter/" rel="tag">counter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/customEvent/" rel="tag">customEvent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/darkmode/" rel="tag">darkmode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/diff/" rel="tag">diff</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag-drop/" rel="tag">drag&amp;drop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drag이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drop이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/env/" rel="tag">env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/formValidation/" rel="tag">formValidation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frontend/" rel="tag">frontend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitflow/" rel="tag">gitflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/historyAPI/" rel="tag">historyAPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isPalindrome/" rel="tag">isPalindrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterable/" rel="tag">iterable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterator/" rel="tag">iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/let/" rel="tag">let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/method/" rel="tag">method</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/modal/" rel="tag">modal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc/" rel="tag">mvc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/newsviewr/" rel="tag">newsviewr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nth-child/" rel="tag">nth-child</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/observer/" rel="tag">observer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/" rel="tag">proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pushState/" rel="tag">pushState</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/realDOM/" rel="tag">realDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/router/" rel="tag">router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">scroll 이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/setTimeout/" rel="tag">setTimeout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sidebar/" rel="tag">sidebar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/star-rating/" rel="tag">star rating</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stopwatch/" rel="tag">stopwatch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tab/" rel="tag">tab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tagged-templates/" rel="tag">tagged templates</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this/" rel="tag">this</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tictactoe/" rel="tag">tictactoe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toString/" rel="tag">toString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toaster/" rel="tag">toaster</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/todolist/" rel="tag">todolist</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/transition/" rel="tag">transition</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/trelloclone/" rel="tag">trelloclone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/var/" rel="tag">var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualDOM/" rel="tag">virtualDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4/" rel="tag">객체</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">객체지향프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" rel="tag">기술면접</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">깊은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" rel="tag">데이터타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" rel="tag">백트래킹</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" rel="tag">브라우저렌더링</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" rel="tag">비동기</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%88%9C%EC%97%B4/" rel="tag">순열</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" rel="tag">스코프</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" rel="tag">스코프체인</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" rel="tag">실행컨텍스트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">얕은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" rel="tag">원시값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" rel="tag">정적메소드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" rel="tag">직접상속</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" rel="tag">참조값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" rel="tag">클래스</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" rel="tag">클로저</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" rel="tag">클론코딩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">페어프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" rel="tag">프로토타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" rel="tag">프로퍼티</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">프로퍼티 어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" rel="tag">프론트엔드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%95%A8%EC%88%98/" rel="tag">함수</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%9A%8C%EA%B3%A0/" rel="tag">회고</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그 클라우드</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CBD/" style="font-size: 13.33px;">CBD</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CORS/" style="font-size: 10px;">CORS</a> <a href="/tags/DFS/" style="font-size: 10px;">DFS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/JWT/" style="font-size: 10px;">JWT</a> <a href="/tags/Promise/" style="font-size: 10px;">Promise</a> <a href="/tags/SDLC/" style="font-size: 10px;">SDLC</a> <a href="/tags/accordion/" style="font-size: 10px;">accordion</a> <a href="/tags/acordion/" style="font-size: 10px;">acordion</a> <a href="/tags/analog-clock/" style="font-size: 10px;">analog clock</a> <a href="/tags/async/" style="font-size: 10px;">async</a> <a href="/tags/autocomplete/" style="font-size: 13.33px;">autocomplete</a> <a href="/tags/await/" style="font-size: 10px;">await</a> <a href="/tags/branch/" style="font-size: 10px;">branch</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/call/" style="font-size: 10px;">call</a> <a href="/tags/callback/" style="font-size: 10px;">callback</a> <a href="/tags/carousel/" style="font-size: 10px;">carousel</a> <a href="/tags/carousel-Tip/" style="font-size: 10px;">carousel Tip</a> <a href="/tags/const/" style="font-size: 10px;">const</a> <a href="/tags/counter/" style="font-size: 13.33px;">counter</a> <a href="/tags/customEvent/" style="font-size: 10px;">customEvent</a> <a href="/tags/darkmode/" style="font-size: 13.33px;">darkmode</a> <a href="/tags/diff/" style="font-size: 10px;">diff</a> <a href="/tags/drag-drop/" style="font-size: 10px;">drag&drop</a> <a href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 16.67px;">drag이벤트</a> <a href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">drop이벤트</a> <a href="/tags/env/" style="font-size: 10px;">env</a> <a href="/tags/formValidation/" style="font-size: 10px;">formValidation</a> <a href="/tags/frontend/" style="font-size: 10px;">frontend</a> <a href="/tags/gitflow/" style="font-size: 10px;">gitflow</a> <a href="/tags/historyAPI/" style="font-size: 10px;">historyAPI</a> <a href="/tags/isPalindrome/" style="font-size: 13.33px;">isPalindrome</a> <a href="/tags/iterable/" style="font-size: 10px;">iterable</a> <a href="/tags/iterator/" style="font-size: 10px;">iterator</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/let/" style="font-size: 10px;">let</a> <a href="/tags/method/" style="font-size: 10px;">method</a> <a href="/tags/modal/" style="font-size: 16.67px;">modal</a> <a href="/tags/mvc/" style="font-size: 16.67px;">mvc</a> <a href="/tags/newsviewr/" style="font-size: 10px;">newsviewr</a> <a href="/tags/nth-child/" style="font-size: 10px;">nth-child</a> <a href="/tags/observer/" style="font-size: 10px;">observer</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pushState/" style="font-size: 10px;">pushState</a> <a href="/tags/realDOM/" style="font-size: 10px;">realDOM</a> <a href="/tags/router/" style="font-size: 20px;">router</a> <a href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">scroll 이벤트</a> <a href="/tags/setTimeout/" style="font-size: 10px;">setTimeout</a> <a href="/tags/sidebar/" style="font-size: 13.33px;">sidebar</a> <a href="/tags/star-rating/" style="font-size: 10px;">star rating</a> <a href="/tags/stopwatch/" style="font-size: 16.67px;">stopwatch</a> <a href="/tags/tab/" style="font-size: 10px;">tab</a> <a href="/tags/tagged-templates/" style="font-size: 10px;">tagged templates</a> <a href="/tags/this/" style="font-size: 10px;">this</a> <a href="/tags/tictactoe/" style="font-size: 13.33px;">tictactoe</a> <a href="/tags/toString/" style="font-size: 10px;">toString</a> <a href="/tags/toaster/" style="font-size: 13.33px;">toaster</a> <a href="/tags/todolist/" style="font-size: 16.67px;">todolist</a> <a href="/tags/transition/" style="font-size: 10px;">transition</a> <a href="/tags/trelloclone/" style="font-size: 10px;">trelloclone</a> <a href="/tags/var/" style="font-size: 10px;">var</a> <a href="/tags/virtualDOM/" style="font-size: 10px;">virtualDOM</a> <a href="/tags/%EA%B0%9D%EC%B2%B4/" style="font-size: 10px;">객체</a> <a href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">객체지향프로그래밍</a> <a href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" style="font-size: 10px;">기술면접</a> <a href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">깊은복사</a> <a href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" style="font-size: 10px;">데이터타입</a> <a href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" style="font-size: 10px;">백트래킹</a> <a href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" style="font-size: 10px;">브라우저렌더링</a> <a href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" style="font-size: 10px;">비동기</a> <a href="/tags/%EC%88%9C%EC%97%B4/" style="font-size: 10px;">순열</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" style="font-size: 10px;">스코프</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" style="font-size: 10px;">스코프체인</a> <a href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" style="font-size: 10px;">실행컨텍스트</a> <a href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">얕은복사</a> <a href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">어트리뷰트</a> <a href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" style="font-size: 10px;">원시값</a> <a href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">이벤트</a> <a href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" style="font-size: 10px;">정적메소드</a> <a href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" style="font-size: 10px;">직접상속</a> <a href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" style="font-size: 10px;">참조값</a> <a href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" style="font-size: 10px;">클래스</a> <a href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" style="font-size: 10px;">클로저</a> <a href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" style="font-size: 10px;">클론코딩</a> <a href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">페어프로그래밍</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" style="font-size: 13.33px;">프로토타입</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" style="font-size: 13.33px;">프로퍼티</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">프로퍼티 어트리뷰트</a> <a href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" style="font-size: 10px;">프론트엔드</a> <a href="/tags/%ED%95%A8%EC%88%98/" style="font-size: 10px;">함수</a> <a href="/tags/%ED%9A%8C%EA%B3%A0/" style="font-size: 13.33px;">회고</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">아카이브</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">10월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">9월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">8월 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">최근 포스트</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/">22년 10월 29일 하루일기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/">리액트 공식문서 읽어보기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/">git fork 제대로 파헤치기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/babel/">babel</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/homebrew/">homebrew</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 loco9939<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

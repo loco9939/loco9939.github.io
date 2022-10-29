@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>CBD Library Tip | 로코의 개발 블로그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="9. CBD로직 처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.  12345678910111213window.addEventListener(&quot;DOMContentLoaded&quot;, () &#x3D;&gt; &amp;#123;  createState(&amp;#123;    todos: [">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CBD Library Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/index.html">
+<meta property="og:site_name" content="로코의 개발 블로그">
+<meta property="og:description" content="9. CBD로직 처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.  12345678910111213window.addEventListener(&quot;DOMContentLoaded&quot;, () &#x3D;&gt; &amp;#123;  createState(&amp;#123;    todos: [">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-29T14:09:53.000Z">
+<meta property="article:modified_time" content="2022-10-29T10:17:02.352Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="CBD">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="로코의 개발 블로그" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">로코의 개발 블로그</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="검색"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="검색"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://loco9939.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-PairProgramming/level 2/CBD Library Tip" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/" class="article-date">
+  <time class="dt-published" datetime="2022-09-29T14:09:53.000Z" itemprop="datePublished">2022-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Pair-Programming/">Pair Programming</a>►<a class="article-category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      CBD Library Tip
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="9-CBD"><a href="#9-CBD" class="headerlink" title="9. CBD"></a>9. CBD</h1><h2 id="로직"><a href="#로직" class="headerlink" title="로직"></a>로직</h2><ol>
+<li>처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">createState</span>(&#123;</span><br><span class="line">    <span class="attr">todos</span>: [</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">content</span>: <span class="string">&quot;Javascript&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">content</span>: <span class="string">&quot;CSS&quot;</span>, <span class="attr">completed</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">content</span>: <span class="string">&quot;HTML&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">todoFilter</span>: [<span class="string">&quot;All&quot;</span>, <span class="string">&quot;Completed&quot;</span>, <span class="string">&quot;Active&quot;</span>],</span><br><span class="line">    <span class="attr">currentTodoFilterId</span>: <span class="number">0</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>render가 실행되면 App 클래스의 인스턴스를 생성하고 생성된 인스턴스를 domStr 프로토타입 메서드를 사용하여 문자열로 반환하고 이 문자열을 <strong>node(virtual DOM)로 반환</strong>해주었다. 생성된 Virtual DOM과 기존 index.html에 있는 root가 생성한 Real DOM을 비교하는 diff 함수를 실행한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">App</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(app);</span><br><span class="line">  <span class="title function_">diff</span>(app.<span class="title function_">newDOM</span>(), $root);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>App 클래스에서는 todoInput, todoList, todoFilter 라는 인스턴스 프로퍼티에 각각 클래스형 컴포넌트의 인스턴스를 할당해주었다. 이 프로퍼티(컴포넌트)를 components 배열에서 관리를 해준다. 또한, 각 컴포넌트에서 데이터가 변경되어 재렌더링이 발생하면 2번 과정이 발생한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> components = []; <span class="comment">// App 인스턴스 여러개 만들면 구분해주기 위해 전역에서 선언</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">App</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    components.<span class="title function_">forEach</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="title function_">unmount</span>());</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoInput</span> = <span class="keyword">new</span> <span class="title class_">TodoInput</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoList</span> = <span class="keyword">new</span> <span class="title class_">TodoList</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoFilter</span> = <span class="keyword">new</span> <span class="title class_">TodoFilter</span>();</span><br><span class="line"></span><br><span class="line">    components = [<span class="variable language_">this</span>.<span class="property">todoInput</span>, <span class="variable language_">this</span>.<span class="property">todoList</span>, <span class="variable language_">this</span>.<span class="property">todoFilter</span>];</span><br><span class="line"></span><br><span class="line">    components.<span class="title function_">forEach</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="title function_">mount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoInput.domStr()&#125;</span></span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoList.domStr()&#125;</span></span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoFilter.domStr()&#125;</span></span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">newDOM</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">domStrToNode</span>(<span class="variable language_">this</span>.<span class="title function_">domStr</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이렇게 생성된 컴포넌트에 이벤트 핸들러를 등록시켜주기 위해서는 App 클래스의 인스턴스가 생성될 때, 즉 데이터가 변경되어 렌더링이 될 때 마다 기존 컴포넌트 목록들에게 unmount(이벤트 제거)를 실행하고 다시 컴포넌트를 등록하고 mount(이벤트 등록)을 실행한다.</li>
+<li>이벤트를 등록하고 제거해주어 <strong>컴포넌트의 생명주기를 관리</strong>해주는 이유는 이벤트 위임으로 window에게 이벤트를 등록만 하고 제거해주지 않는다면 <strong>재렌더링 발생하여 컴포넌트가 새로 생성되면 그 때 다시 또 이벤트를 등록해주므로 불필요한 이벤트 등록과 성능상 문제가 발생</strong>할 수 있기 때문에 재렌더링이 발생할 때 꼭 이전 컴포넌트의 이벤트를 제거해줘야한다.</li>
+</ul>
+<ol>
+<li>각 컴포넌트에서는 이벤트 핸들러를 작성해주고 mount 함수 안에 이벤트 리스너를 등록하고 unmount 함수안에 이벤트를 제거해준다. domStr 함수는 해당 컴포넌트를 HTML 구조를 문자열로 반환해준다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TodoList</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> todos = [...state.<span class="property">todos</span>];</span><br><span class="line">    <span class="keyword">if</span> (state.<span class="property">currentTodoFilterId</span> === <span class="number">1</span>)</span><br><span class="line">      todos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span>);</span><br><span class="line">    <span class="keyword">if</span> (state.<span class="property">currentTodoFilterId</span> === <span class="number">2</span>)</span><br><span class="line">      todos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> !todo.<span class="property">completed</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span> = todos.<span class="title function_">map</span>(<span class="function">(<span class="params">&#123; id &#125;</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">TodoItem</span>(id));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="title function_">mount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="title function_">unmount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">      &lt;ul class=&quot;todo-list&quot;&gt;</span></span><br><span class="line"><span class="string">        <span class="subst">$&#123;<span class="variable language_">this</span>.items.map((item) =&gt; item.domStr()).join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">      &lt;/ul&gt;</span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>todoList 경우는 App 에서 todoList, todoInput, todoFilter 컴포넌트를 관리해주는 것처럼 todoItem 컴포넌트를 관리해준다. App 에서 mount 함수를 실행하여 각 컴포넌트의 mount, unmount를 통해 생명주기를 관리해준 것 처럼 todoList의 mount 에서는 todoItem 컴포넌트의 mount, unmount를 관리해준다.</li>
+<li>this.items 에는 각 id에 해당하는 TodoItem의 컴포넌트들로 구성된 배열이 할당된다. 그리고 domStr 함수에서 TodoItem 컴포넌트들을 map 고차함수로 돌면서 각 컴포넌트들의 domStr 함수로 호출하여 문자열로 반환한다.</li>
+<li>TodoFilter에서 domStr 부분에서 id가 꼭 필요한가?<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;ul class=&#x27;todo-filter&#x27;&gt;</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;state.todoFilter</span></span></span><br><span class="line"><span class="subst"><span class="string">        .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">          (filter, i) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">            <span class="string">`&lt;li class=&quot; filter <span class="subst">$&#123;i === state.currentTodoFilterId ? <span class="string">&#x27;active&#x27;</span> : <span class="string">&#x27;&#x27;</span>&#125;</span>&quot; id=&quot;<span class="subst">$&#123;i&#125;</span>&quot;&gt;<span class="subst">$&#123;filter&#125;</span>&lt;/li&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">        )</span></span></span><br><span class="line"><span class="subst"><span class="string">        .join(<span class="string">&#x27;&#x27;</span>)&#125;</span></span></span><br><span class="line"><span class="string">    &lt;/ul&gt;</span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>all, completed, active 에 id가 굳이 필요한가??</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>각 컴포넌트에서 state로 관리하는 부분이 변경될 때, 상태가 바뀌는 부분만 재렌더링이 일어나도록 구현하였으므로 todoInput에서는 재렌더링이 일어날 부분이 없으므로 autofocus 기능이 사라지지 않는다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TodoInput</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">addTodo</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Enter&quot;</span> || e.<span class="property">target</span>.<span class="property">value</span>.<span class="title function_">trim</span>() === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">      state.<span class="property">todos</span> = [</span><br><span class="line">        ...state.<span class="property">todos</span>,</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="title function_">getNextId</span>(), <span class="attr">content</span>: e.<span class="property">target</span>.<span class="property">value</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      ];</span><br><span class="line">      e.<span class="property">target</span>.<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="variable language_">this</span>.<span class="property">addTodo</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="variable language_">this</span>.<span class="property">addTodo</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`&lt;input class=&#x27;todo-input&#x27; autofocus/&gt;`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><ul>
+<li>checkbox 클릭하면 checked가 생성되고 사라지는 렌더링은 잘 되지만, 화면에서는 바뀌지 않는 문제가 발생하였다.<ul>
+<li>attribute와 property의 차이때문에 발생하는 문제점이라고 생각되었다.</li>
+<li>setAttribute대신에 요소를 replaceChild()로 자식노드를 교체해주었다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>혼자서 공식문서들여다 보는 것 보다 확실히 옆에서 같이 이야기 하고 생각을 공유하면서 코드를 작성해나가다 보니 diff 알고리즘도 완성할 수 있어서 기뻤다.</li>
+<li>node.children 은 텍스트 노드를 제외한 자식 노드들을 반환</li>
+<li>node.childNodes는 모든 자식 노드를 반환한다.</li>
+<li>attribute와 property의 차이점에 대해 한번 더 생각해볼 수 있는 시간이 있어서 좋았다. attribute는 HTML에 있는 속성으로 rendering이 되면 attribute는 DOM property로 변환된다. 하지만 1:1 매칭이 되지는 않는다는 점을 주의하자.<ul>
+<li>attribute : 변하지 않는 초기 default 값 전달</li>
+<li>property : 사용자의 행동으로 변할 수 있다.</li>
+<li>diff 구현할 때, removeAttribute는 제대로 동작했는데, setAttribute할 때는 checkbox값이 삭제했을 때, 다음 todo에 이전되는 문제가 발생하였는데 이는 따로 정리해둬야겠다.</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/" data-id="cl9tu25440043o10f0dot9amp" data-title="CBD Library Tip" class="article-share-link">공유</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CBD/" rel="tag">CBD</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">최신</strong>
+      <div class="article-nav-title">
+        
+          diff Algorithm Tip
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">이전</strong>
+      <div class="article-nav-title">newsViewer, CBD Library Tip</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">카테고리</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/boj/">boj</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/woowa/">woowa</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Diary/">Diary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javascript/">Javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/">Pair Programming</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-1/">level 1</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-2/">level 2</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/holymoly/">holymoly</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Settings/">Settings</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBD/" rel="tag">CBD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CORS/" rel="tag">CORS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DFS/" rel="tag">DFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/" rel="tag">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JWT/" rel="tag">JWT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Promise/" rel="tag">Promise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDLC/" rel="tag">SDLC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/accordion/" rel="tag">accordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/acordion/" rel="tag">acordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/analog-clock/" rel="tag">analog clock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/async/" rel="tag">async</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/autocomplete/" rel="tag">autocomplete</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/await/" rel="tag">await</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/branch/" rel="tag">branch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/calendar/" rel="tag">calendar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/call/" rel="tag">call</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/callback/" rel="tag">callback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel/" rel="tag">carousel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel-Tip/" rel="tag">carousel Tip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/const/" rel="tag">const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/counter/" rel="tag">counter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/customEvent/" rel="tag">customEvent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/darkmode/" rel="tag">darkmode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/diff/" rel="tag">diff</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag-drop/" rel="tag">drag&amp;drop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drag이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drop이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/env/" rel="tag">env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/formValidation/" rel="tag">formValidation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frontend/" rel="tag">frontend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitflow/" rel="tag">gitflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/historyAPI/" rel="tag">historyAPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isPalindrome/" rel="tag">isPalindrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterable/" rel="tag">iterable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterator/" rel="tag">iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/let/" rel="tag">let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/method/" rel="tag">method</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/modal/" rel="tag">modal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc/" rel="tag">mvc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/newsviewr/" rel="tag">newsviewr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nth-child/" rel="tag">nth-child</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/observer/" rel="tag">observer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/" rel="tag">proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pushState/" rel="tag">pushState</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/realDOM/" rel="tag">realDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/router/" rel="tag">router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">scroll 이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/setTimeout/" rel="tag">setTimeout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sidebar/" rel="tag">sidebar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/star-rating/" rel="tag">star rating</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stopwatch/" rel="tag">stopwatch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tab/" rel="tag">tab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tagged-templates/" rel="tag">tagged templates</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this/" rel="tag">this</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tictactoe/" rel="tag">tictactoe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toString/" rel="tag">toString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toaster/" rel="tag">toaster</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/todolist/" rel="tag">todolist</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/transition/" rel="tag">transition</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/trelloclone/" rel="tag">trelloclone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/var/" rel="tag">var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualDOM/" rel="tag">virtualDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4/" rel="tag">객체</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">객체지향프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" rel="tag">기술면접</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">깊은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" rel="tag">데이터타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" rel="tag">백트래킹</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" rel="tag">브라우저렌더링</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" rel="tag">비동기</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%88%9C%EC%97%B4/" rel="tag">순열</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" rel="tag">스코프</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" rel="tag">스코프체인</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" rel="tag">실행컨텍스트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">얕은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" rel="tag">원시값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" rel="tag">정적메소드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" rel="tag">직접상속</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" rel="tag">참조값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" rel="tag">클래스</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" rel="tag">클로저</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" rel="tag">클론코딩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">페어프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" rel="tag">프로토타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" rel="tag">프로퍼티</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">프로퍼티 어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" rel="tag">프론트엔드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%95%A8%EC%88%98/" rel="tag">함수</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%9A%8C%EA%B3%A0/" rel="tag">회고</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그 클라우드</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CBD/" style="font-size: 13.33px;">CBD</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CORS/" style="font-size: 10px;">CORS</a> <a href="/tags/DFS/" style="font-size: 10px;">DFS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/JWT/" style="font-size: 10px;">JWT</a> <a href="/tags/Promise/" style="font-size: 10px;">Promise</a> <a href="/tags/SDLC/" style="font-size: 10px;">SDLC</a> <a href="/tags/accordion/" style="font-size: 10px;">accordion</a> <a href="/tags/acordion/" style="font-size: 10px;">acordion</a> <a href="/tags/analog-clock/" style="font-size: 10px;">analog clock</a> <a href="/tags/async/" style="font-size: 10px;">async</a> <a href="/tags/autocomplete/" style="font-size: 13.33px;">autocomplete</a> <a href="/tags/await/" style="font-size: 10px;">await</a> <a href="/tags/branch/" style="font-size: 10px;">branch</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/call/" style="font-size: 10px;">call</a> <a href="/tags/callback/" style="font-size: 10px;">callback</a> <a href="/tags/carousel/" style="font-size: 10px;">carousel</a> <a href="/tags/carousel-Tip/" style="font-size: 10px;">carousel Tip</a> <a href="/tags/const/" style="font-size: 10px;">const</a> <a href="/tags/counter/" style="font-size: 13.33px;">counter</a> <a href="/tags/customEvent/" style="font-size: 10px;">customEvent</a> <a href="/tags/darkmode/" style="font-size: 13.33px;">darkmode</a> <a href="/tags/diff/" style="font-size: 10px;">diff</a> <a href="/tags/drag-drop/" style="font-size: 10px;">drag&drop</a> <a href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 16.67px;">drag이벤트</a> <a href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">drop이벤트</a> <a href="/tags/env/" style="font-size: 10px;">env</a> <a href="/tags/formValidation/" style="font-size: 10px;">formValidation</a> <a href="/tags/frontend/" style="font-size: 10px;">frontend</a> <a href="/tags/gitflow/" style="font-size: 10px;">gitflow</a> <a href="/tags/historyAPI/" style="font-size: 10px;">historyAPI</a> <a href="/tags/isPalindrome/" style="font-size: 13.33px;">isPalindrome</a> <a href="/tags/iterable/" style="font-size: 10px;">iterable</a> <a href="/tags/iterator/" style="font-size: 10px;">iterator</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/let/" style="font-size: 10px;">let</a> <a href="/tags/method/" style="font-size: 10px;">method</a> <a href="/tags/modal/" style="font-size: 16.67px;">modal</a> <a href="/tags/mvc/" style="font-size: 16.67px;">mvc</a> <a href="/tags/newsviewr/" style="font-size: 10px;">newsviewr</a> <a href="/tags/nth-child/" style="font-size: 10px;">nth-child</a> <a href="/tags/observer/" style="font-size: 10px;">observer</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pushState/" style="font-size: 10px;">pushState</a> <a href="/tags/realDOM/" style="font-size: 10px;">realDOM</a> <a href="/tags/router/" style="font-size: 20px;">router</a> <a href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">scroll 이벤트</a> <a href="/tags/setTimeout/" style="font-size: 10px;">setTimeout</a> <a href="/tags/sidebar/" style="font-size: 13.33px;">sidebar</a> <a href="/tags/star-rating/" style="font-size: 10px;">star rating</a> <a href="/tags/stopwatch/" style="font-size: 16.67px;">stopwatch</a> <a href="/tags/tab/" style="font-size: 10px;">tab</a> <a href="/tags/tagged-templates/" style="font-size: 10px;">tagged templates</a> <a href="/tags/this/" style="font-size: 10px;">this</a> <a href="/tags/tictactoe/" style="font-size: 13.33px;">tictactoe</a> <a href="/tags/toString/" style="font-size: 10px;">toString</a> <a href="/tags/toaster/" style="font-size: 13.33px;">toaster</a> <a href="/tags/todolist/" style="font-size: 16.67px;">todolist</a> <a href="/tags/transition/" style="font-size: 10px;">transition</a> <a href="/tags/trelloclone/" style="font-size: 10px;">trelloclone</a> <a href="/tags/var/" style="font-size: 10px;">var</a> <a href="/tags/virtualDOM/" style="font-size: 10px;">virtualDOM</a> <a href="/tags/%EA%B0%9D%EC%B2%B4/" style="font-size: 10px;">객체</a> <a href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">객체지향프로그래밍</a> <a href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" style="font-size: 10px;">기술면접</a> <a href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">깊은복사</a> <a href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" style="font-size: 10px;">데이터타입</a> <a href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" style="font-size: 10px;">백트래킹</a> <a href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" style="font-size: 10px;">브라우저렌더링</a> <a href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" style="font-size: 10px;">비동기</a> <a href="/tags/%EC%88%9C%EC%97%B4/" style="font-size: 10px;">순열</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" style="font-size: 10px;">스코프</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" style="font-size: 10px;">스코프체인</a> <a href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" style="font-size: 10px;">실행컨텍스트</a> <a href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">얕은복사</a> <a href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">어트리뷰트</a> <a href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" style="font-size: 10px;">원시값</a> <a href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">이벤트</a> <a href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" style="font-size: 10px;">정적메소드</a> <a href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" style="font-size: 10px;">직접상속</a> <a href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" style="font-size: 10px;">참조값</a> <a href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" style="font-size: 10px;">클래스</a> <a href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" style="font-size: 10px;">클로저</a> <a href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" style="font-size: 10px;">클론코딩</a> <a href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">페어프로그래밍</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" style="font-size: 13.33px;">프로토타입</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" style="font-size: 13.33px;">프로퍼티</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">프로퍼티 어트리뷰트</a> <a href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" style="font-size: 10px;">프론트엔드</a> <a href="/tags/%ED%95%A8%EC%88%98/" style="font-size: 10px;">함수</a> <a href="/tags/%ED%9A%8C%EA%B3%A0/" style="font-size: 13.33px;">회고</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">아카이브</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">10월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">9월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">8월 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">최근 포스트</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/">22년 10월 29일 하루일기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/">리액트 공식문서 읽어보기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/">git fork 제대로 파헤치기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/babel/">babel</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/homebrew/">homebrew</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 loco9939<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>클래스 | 로코의 개발 블로그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="클래스와 생성자 함수   구분 클래스 생성자함수    new 연산자 무조건 쓴다. 안쓰면 에러 쓰면 생성자 함수, 안쓰면 일반함수   extends &amp; super O X   호이스팅 let,const 처럼 변수 호이스팅 선언문 → 함수 호출 &#x2F; 표현식 → 변수 호이스팅   strict mode O X   내부 메서드들의[[Enumerable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="클래스">
+<meta property="og:url" content="https://loco9939.github.io/2022/08/24/Javascript/%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A2%E1%84%89%E1%85%B3/index.html">
+<meta property="og:site_name" content="로코의 개발 블로그">
+<meta property="og:description" content="클래스와 생성자 함수   구분 클래스 생성자함수    new 연산자 무조건 쓴다. 안쓰면 에러 쓰면 생성자 함수, 안쓰면 일반함수   extends &amp; super O X   호이스팅 let,const 처럼 변수 호이스팅 선언문 → 함수 호출 &#x2F; 표현식 → 변수 호이스팅   strict mode O X   내부 메서드들의[[Enumerable">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-08-24T09:50:32.000Z">
+<meta property="article:modified_time" content="2022-10-29T10:28:55.547Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="클래스">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="로코의 개발 블로그" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">로코의 개발 블로그</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="검색"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="검색"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://loco9939.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Javascript/클래스" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/24/Javascript/%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A2%E1%84%89%E1%85%B3/" class="article-date">
+  <time class="dt-published" datetime="2022-08-24T09:50:32.000Z" itemprop="datePublished">2022-08-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Javascript/">Javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      클래스
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="클래스와-생성자-함수"><a href="#클래스와-생성자-함수" class="headerlink" title="클래스와 생성자 함수"></a>클래스와 생성자 함수</h1><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>클래스</th>
+<th>생성자함수</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>new 연산자</td>
+<td>무조건 쓴다. 안쓰면 에러</td>
+<td>쓰면 생성자 함수, 안쓰면 일반함수</td>
+</tr>
+<tr>
+<td>extends &amp; super</td>
+<td>O</td>
+<td>X</td>
+</tr>
+<tr>
+<td>호이스팅</td>
+<td>let,const 처럼 변수 호이스팅</td>
+<td>선언문 → 함수 호출 &#x2F; 표현식 → 변수 호이스팅</td>
+</tr>
+<tr>
+<td>strict mode</td>
+<td>O</td>
+<td>X</td>
+</tr>
+<tr>
+<td>내부 메서드들의[[Enumerable]]</td>
+<td>false</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<p>내가 객체를 만드는 방법이 5가지나 아는데 어떠한 근거로 이 방법으로 객체를 만들것인지 생각하여 선택해야한다.</p>
+<p><strong>⇒ 다양한 문법 상황에서 현재 상황에 맞는 것을 끄집어 내는 것이 중요하다.</strong></p>
+<p>만약 인스턴스 여러개 만들 상황이라면 우리는 생성자 함수를 쓸것이냐? 클래스를 쓸 것이냐 ? 선택해야한다.</p>
+<p>그렇다면 생성자 함수랑 클래스가 동일한 동작을 하는 문법적 설탕일까?</p>
+<p>즉, 이말은 두개가 동일한 동작을 하니 둘중 아무거나 써도될까?</p>
+<p>⇒ <strong>아니다… 왜? 위와 같은 이유때문에!</strong></p>
+<aside>
+💡 엄격한 조건을 갖는 클래스를 사용하는 것이 더 적절하다.
+
+<p><strong>에러를 빨리 내는 것이 유리하지 런타임에 에러나는 것은 별로다.</strong></p>
+</aside>
+
+<p><strong>항상 왜 A 방법 대신 B 방법을 쓰는것인지 이유를 알아내야한다.</strong></p>
+<p>이벤트핸들러 내부의 this는 이벤트 핸들러를 바인딩한 내부를 가리킨다.</p>
+<p>애플리케이션의 그릇으로 class를 사용하는 것은 부적절하다. ⇒ this가 꼬여서</p>
+<p>클래스를 문법적 설탕이라고 보기보다는 새로운 객체 생성 메커니즘으로 보는 것이 합당하다.</p>
+<aside>
+💡 문법적 설탕이란? 똑같이 동작하는데 서로 다른 것을 문법적 설탕이라고 한다. 문법적인 편의성을 주는 것이다.
+
+</aside>
+
+<hr>
+<h1 id="클래스-호이스팅"><a href="#클래스-호이스팅" class="headerlink" title="클래스 호이스팅"></a>클래스 호이스팅</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 클래스 선언문</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>클래스도 함수이다. 클래스 선언문으로 정의한 클래스는 함수 선언문과 같이 런타임 이전에 먼저 평가되어 함수 객체를 생성한다. <strong>함수 호이스팅이 발생</strong>한다.</p>
+<p>이 때 클래스가 평가되어 생성된 함수 객체는 constructor다. constructor는 생성자 함수로서 호출될 수 있으므로 <strong>함수 정의가 평가될 때 더불어 프로토타입도 생성된다.</strong></p>
+<aside>
+💡 프로토타입과 생성자함수는 언제나 쌍으로 존재한다.
+
+</aside>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 클래스 선언문</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Person</span>); <span class="comment">// function</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클래스는 let,const 키워드로 선언한 변수처럼 호이스팅 현상이 발생한다.(TDZ) 그러므로 클래스 정의 이전에 참조할 수 없다.</li>
+</ul>
+<hr>
+<h1 id="클래스-메서드"><a href="#클래스-메서드" class="headerlink" title="클래스 메서드"></a>클래스 메서드</h1><h2 id="1-counstructor-생성자-메서드"><a href="#1-counstructor-생성자-메서드" class="headerlink" title="1. counstructor(생성자) 메서드"></a>1. counstructor(생성자) 메서드</h2><p>constructor는 인스턴스를 생성하고 초기화하기 위한 특수한 메서드다.</p>
+<ul>
+<li>constructor는 <span style="color:red">이름을 변경할 수 없다.</span></li>
+<li>유일하게 하나만 존재할 수 있다.</li>
+<li>생략할 수 있다. 생략시 빈 constructor에 의해 빈 객체를 생성한다.</li>
+<li>constructor는 <span style="color:red"><strong>return문 반드시 생략한다.</strong></span> 생성자 함수와 동일하게 암묵적으로 this를 반환하기 때문에 다른 객체를 return 할 시 인스턴스가 반환되지 못할 수 있다.</li>
+<li>프로퍼티 추가하여 초기화한 인스턴스 생성하려면 constructor 내부에서 this에 인스턴스 프로퍼티를 추가한다. <strong>(이 경우 constructor 생략 불가)</strong></li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 클래스</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 생성자</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// 인스턴스 생성 및 초기화</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="comment">// 인스턴스 생성 및 초기화</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>생성자 함수와 마찬가지로 constructor 내부에서 this에 추가한 프로퍼티는 인스턴스 프로퍼티가 된다.</p>
+<ul>
+<li>constructor 내부의 this는 클래스가 미래에 생성할 인스턴스를 가리킨다.</li>
+</ul>
+<p>constructor는 메서드로 해석되는 것이 아니라 클래스가 평가되어 생성한 함수 객체 코드의 일부가 된다.</p>
+<p>⇒ constructor가 평가되면 constructor의 기술된 동작을 하는 함수 객체가 생성된다.</p>
+<aside>
+💡 클래스의 constructor ≠ 프토로타입의 constructor 프로퍼티
+
+</aside>
+
+<h2 id="2-프로토타입-메서드"><a href="#2-프로토타입-메서드" class="headerlink" title="2. 프로토타입 메서드"></a>2. 프로토타입 메서드</h2><p>생성자 함수와 달리 Person.prototype.sayHi 이런식으로 추가하지 않아도 기본적으로 프로토타입 메서드가 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 생성자</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// 인스턴스 생성 및 초기화</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 프로토타입 메서드</span></span><br><span class="line">  <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! My name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line">me.<span class="title function_">sayHi</span>(); <span class="comment">// Hi! My name is Lee</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// me 객체의 프로토타입은 Person.prototype이다.</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(me) === <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>; <span class="comment">// -&gt; true</span></span><br><span class="line">me <span class="keyword">instanceof</span> <span class="title class_">Person</span>; <span class="comment">// -&gt; true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Person.prototype의 프로토타입은 Object.prototype이다.</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>) === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>; <span class="comment">// -&gt; true</span></span><br><span class="line">me <span class="keyword">instanceof</span> <span class="title class_">Object</span>; <span class="comment">// -&gt; true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// me 객체의 constructor는 Person 클래스다.</span></span><br><span class="line">me.<span class="property">constructor</span> === <span class="title class_">Person</span>; <span class="comment">// -&gt; true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>생성자 함수와 마찬가지로 인스턴스는 프로토타입 체인의 일원이된다.</li>
+</ul>
+<h2 id="3-정적-메서드"><a href="#3-정적-메서드" class="headerlink" title="3. 정적 메서드"></a>3. 정적 메서드</h2><p>정적 메서드는 인스턴스를 생성하지 않고 호출할 수 있는 메서드이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 메서드</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property">sayHi</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hi!&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 메서드 호출</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="title function_">sayHi</span>(); <span class="comment">// Hi!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 클래스</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 생성자</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// 인스턴스 생성 및 초기화</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 정적 메서드</span></span><br><span class="line">  <span class="keyword">static</span> <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hi!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 인스턴스 생성없이 호출 가능</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="title function_">sayHi</span>(); <span class="comment">// Hi!</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클래스에서는 static 키워드만 붙이면 정적 메서드(클래스 메서드)가 된다.</li>
+</ul>
+<h2 id="정적-메서드와-프로토타입-메서드-차이"><a href="#정적-메서드와-프로토타입-메서드-차이" class="headerlink" title="정적 메서드와 프로토타입 메서드 차이"></a>정적 메서드와 프로토타입 메서드 차이</h2><ol>
+<li>이 둘은 각자 속해있는 프로토타입 체인이 다르다</li>
+<li>정적 메서드는 클래스로 호출하고 프로토타입 메서드는 인스턴스로 호출한다.</li>
+<li>정적 메서드는 인스턴스 프로퍼티 참조 불가하지만 프로토타입 메서드는 인스턴스 프로퍼티를 참조할 수 있다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 생성자</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// 인스턴스 생성 및 초기화</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 프로토타입 메서드</span></span><br><span class="line">  <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! My name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 정적 메서드</span></span><br><span class="line">  <span class="keyword">static</span> <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hi!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;kim&quot;</span>);</span><br><span class="line"></span><br><span class="line">me.<span class="title function_">sayHi</span>(); <span class="comment">// Hi! My name is kim</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 프로토타입 메서드는 인스턴스 프로퍼티인 name을 참조할 수 있다.</span></span><br></pre></td></tr></table></figure>
+
+<p>또한 프로토타입 메서드 내부의 this는 메서드를 호출한 인스턴스에 바인딩 되지만, 정적 메서드는 클래스로 호출해야하므로 <strong>정적 메서드 내부의 this는 인스턴스가 아닌 클래스에 바인딩</strong>된다.</p>
+<ul>
+<li>인스턴스 프로퍼티 참조해야한다 → <strong>프로토타입 메서드</strong></li>
+<li>인스턴스 프로퍼티 참조 불필요 → <strong>정적 메서드</strong></li>
+</ul>
+<h2 id="클래스에서-정의한-메서드-특징"><a href="#클래스에서-정의한-메서드-특징" class="headerlink" title="클래스에서 정의한 메서드 특징"></a>클래스에서 정의한 메서드 특징</h2><ol>
+<li>메서드 축약표현 사용</li>
+<li>클래스에 메서드 정의시 콤마 필요없다</li>
+<li>암묵적 strict mode</li>
+<li>프로퍼티 어트리뷰트 [[Enumerable]] 값이 false로 열거 불가능</li>
+<li>메서드 축약 표현 사용했으므로 non-constructor이다. new 연산자와 호출 불가</li>
+</ol>
+<hr>
+<h1 id="프로퍼티"><a href="#프로퍼티" class="headerlink" title="프로퍼티"></a>프로퍼티</h1><h2 id="인스턴스-프로퍼티"><a href="#인스턴스-프로퍼티" class="headerlink" title="인스턴스 프로퍼티"></a>인스턴스 프로퍼티</h2><p>인스턴스 프로퍼티는 constructor 내부에서 정의해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// 인스턴스 프로퍼티 =&gt; public 하다.</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me); <span class="comment">// Person &#123;name: &quot;Lee&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>constructor 내부의 코드가 실행되기 이전에 빈 객체가 생성되고 this가 바인딩되어 있다.</p>
+<ul>
+<li>자바스크립트 클래스는 접근 제한자를 제공하지 않아 <strong>인스턴스 프로퍼티는 언제나 public하다.</strong></li>
+</ul>
+<h2 id="접근자-프로퍼티"><a href="#접근자-프로퍼티" class="headerlink" title="접근자 프로퍼티"></a>접근자 프로퍼티</h2><p>자체적으로 값을 갖지 않고 다른 데이터 프로퍼티의 값을 읽거나 저장할 때 사용하는 접근자 함수들로 구성된 프로퍼티이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">firstName, lastName</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">firstName</span> = firstName;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">lastName</span> = lastName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// fullName은 접근자 함수로 구성된 접근자 프로퍼티다.</span></span><br><span class="line">  <span class="comment">// getter 함수</span></span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">fullName</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.firstName&#125;</span> <span class="subst">$&#123;<span class="variable language_">this</span>.lastName&#125;</span>`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// setter 함수</span></span><br><span class="line">  <span class="keyword">set</span> <span class="title function_">fullName</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    [<span class="variable language_">this</span>.<span class="property">firstName</span>, <span class="variable language_">this</span>.<span class="property">lastName</span>] = name.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Ungmo&quot;</span>, <span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 프로퍼티를 통한 프로퍼티 값의 참조.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;me.firstName&#125;</span> <span class="subst">$&#123;me.lastName&#125;</span>`</span>); <span class="comment">// Ungmo Lee</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 접근자 프로퍼티를 통한 프로퍼티 값의 저장</span></span><br><span class="line"><span class="comment">// 접근자 프로퍼티 fullName에 값을 저장하면 setter 함수가 호출된다.</span></span><br><span class="line">me.<span class="property">fullName</span> = <span class="string">&quot;Heegun Lee&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me); <span class="comment">// &#123;firstName: &quot;Heegun&quot;, lastName: &quot;Lee&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 접근자 프로퍼티를 통한 프로퍼티 값의 참조</span></span><br><span class="line"><span class="comment">// 접근자 프로퍼티 fullName에 접근하면 getter 함수가 호출된다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me.<span class="property">fullName</span>); <span class="comment">// Heegun Lee</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fullName은 접근자 프로퍼티다.</span></span><br><span class="line"><span class="comment">// 접근자 프로퍼티는 get, set, enumerable, configurable 프로퍼티 어트리뷰트를 갖는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>, <span class="string">&quot;fullName&quot;</span>));</span><br><span class="line"><span class="comment">// &#123;get: ƒ, set: ƒ, enumerable: false, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클래스 메서드는 기본적으로 프로토타입 메서드가 되므로 접근자 프로퍼티도 인스턴스 프로퍼티가 아닌 <strong>프로토타입 프로퍼티</strong>가 된다.</li>
+</ul>
+<h1 id="클래스-필드-정의"><a href="#클래스-필드-정의" class="headerlink" title="클래스 필드 정의"></a>클래스 필드 정의</h1><p>클래스 필드란, 클래스 기반 객체지향 언어에서 클래스가 생성할 인스턴스의 프로퍼티를 가리키는 용어이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 클래스 필드 정의</span></span><br><span class="line">  name = <span class="string">&quot;Lee&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<aside>
+💡 클래스 몸체에서 클래스 필드 정의시 this에 클래스 필드를 바인딩해서는 안된다. this는 constructor와 메서드 내부에서만 유효하다.
+
+</aside>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// 클래스 필드에 문자열을 할당</span></span><br><span class="line">  name = <span class="string">&quot;Lee&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클래스 필드에 함수를 할당</span></span><br><span class="line">  getName = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="comment">// 화살표 함수로 정의할 수도 있다.</span></span><br><span class="line">  <span class="comment">// getName = () =&gt; this.name;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me); <span class="comment">// Person &#123;name: &quot;Lee&quot;, getName: ƒ&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me.<span class="title function_">getName</span>()); <span class="comment">// Lee</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>함수는 일급 객체이므로 함수를 클래스 필드에 할당할 수 있다.</li>
+</ul>
+<p>단, 이 경우 프로토타입 메서드가 아닌 인스턴스 메서드가 된다.</p>
+<h3 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h3><ul>
+<li>인스턴스 생성시 클래스 필드 this 초기화 필요하다면 constructor에서 인스턴스 프로퍼티 정의</li>
+<li>클래스 필드 this 초기화 필요 없다면 기존 방식과 클래스 필드 정의 방식 모두 사용 가능</li>
+</ul>
+<p>추가로 클래스 필드에 정의하여 고정 초기값을 주고 constructor에 정의하여 this 바인딩 해주는 것들 구분하면 좋다.</p>
+<h2 id="private-필드-정의-제안"><a href="#private-필드-정의-제안" class="headerlink" title="private 필드 정의 제안"></a>private 필드 정의 제안</h2><p>자바스크립트는 캡슐화를 안전하게 지원하지 않는다. 인스턴스 여러개 생성시 프로퍼티 상태를 유지하지 못하는 문제점 등이 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// private 필드 정의</span></span><br><span class="line">  #name = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="comment">// private 필드 참조</span></span><br><span class="line">    <span class="variable language_">this</span>.#name = name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// private 필드 #name은 클래스 외부에서 참조할 수 없다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me.#name);</span><br><span class="line"><span class="comment">// SyntaxError: Private field &#x27;#name&#x27; must be declared in an enclosing class</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>private 필드 정의는 식별자 앞에 #을 붙혀 정의한다.</li>
+<li>private 필드는 클래스 내부에서만 참조할 수 있다.</li>
+<li>private 필드는 constructor 내부가 아닌 반드시 클래스 몸체에 정의해야한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="comment">// private 필드 정의</span></span><br><span class="line">  #name = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#name = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// name은 접근자 프로퍼티다.</span></span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">name</span>() &#123;</span><br><span class="line">    <span class="comment">// private 필드를 참조하여 trim한 다음 반환한다.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.#name.<span class="title function_">trim</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot; Lee &quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(me.<span class="property">name</span>); <span class="comment">// Lee</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>접근자 프로퍼티를 통해 간접적으로 접근하는 방법은 유효하다.</li>
+</ul>
+<h2 id="static-필드-정의-제안"><a href="#static-필드-정의-제안" class="headerlink" title="static 필드 정의 제안"></a>static 필드 정의 제안</h2><p>static private 필드 , static public 필드, static private 메서드를 정의할 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyMath</span> &#123;</span><br><span class="line">  <span class="comment">// static public 필드 정의</span></span><br><span class="line">  <span class="keyword">static</span> <span class="variable constant_">PI</span> = <span class="number">22</span> / <span class="number">7</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// static private 필드 정의</span></span><br><span class="line">  <span class="keyword">static</span> #num = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// static 메서드</span></span><br><span class="line">  <span class="keyword">static</span> <span class="title function_">increment</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> ++<span class="title class_">MyMath</span>.#num;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">MyMath</span>.<span class="property">PI</span>); <span class="comment">// 3.142857142857143</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">MyMath</span>.<span class="title function_">increment</span>()); <span class="comment">// 11</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://loco9939.github.io/2022/08/24/Javascript/%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A2%E1%84%89%E1%85%B3/" data-id="cl9tu253b001uo10faenk20xr" data-title="클래스" class="article-share-link">공유</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" rel="tag">클래스</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/25/Javascript/%E1%84%86%E1%85%A6%E1%84%89%E1%85%A5%E1%84%83%E1%85%B3%E1%84%8B%E1%85%AA%20%E1%84%92%E1%85%AA%E1%84%89%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD%20%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">최신</strong>
+      <div class="article-nav-title">
+        
+          메서드와 화살표 함수
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/23/Javascript/%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%84%8C%E1%85%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">이전</strong>
+      <div class="article-nav-title">클로저</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">카테고리</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/boj/">boj</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/woowa/">woowa</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Diary/">Diary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javascript/">Javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/">Pair Programming</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-1/">level 1</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-2/">level 2</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/holymoly/">holymoly</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Settings/">Settings</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBD/" rel="tag">CBD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CORS/" rel="tag">CORS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DFS/" rel="tag">DFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/" rel="tag">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JWT/" rel="tag">JWT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Promise/" rel="tag">Promise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDLC/" rel="tag">SDLC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/accordion/" rel="tag">accordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/acordion/" rel="tag">acordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/analog-clock/" rel="tag">analog clock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/async/" rel="tag">async</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/autocomplete/" rel="tag">autocomplete</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/await/" rel="tag">await</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/branch/" rel="tag">branch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/calendar/" rel="tag">calendar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/call/" rel="tag">call</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/callback/" rel="tag">callback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel/" rel="tag">carousel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel-Tip/" rel="tag">carousel Tip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/const/" rel="tag">const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/counter/" rel="tag">counter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/customEvent/" rel="tag">customEvent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/darkmode/" rel="tag">darkmode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/diff/" rel="tag">diff</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag-drop/" rel="tag">drag&amp;drop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drag이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drop이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/env/" rel="tag">env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/formValidation/" rel="tag">formValidation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frontend/" rel="tag">frontend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitflow/" rel="tag">gitflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/historyAPI/" rel="tag">historyAPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isPalindrome/" rel="tag">isPalindrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterable/" rel="tag">iterable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterator/" rel="tag">iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/let/" rel="tag">let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/method/" rel="tag">method</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/modal/" rel="tag">modal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc/" rel="tag">mvc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/newsviewr/" rel="tag">newsviewr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nth-child/" rel="tag">nth-child</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/observer/" rel="tag">observer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/" rel="tag">proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pushState/" rel="tag">pushState</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/realDOM/" rel="tag">realDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/router/" rel="tag">router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">scroll 이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/setTimeout/" rel="tag">setTimeout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sidebar/" rel="tag">sidebar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/star-rating/" rel="tag">star rating</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stopwatch/" rel="tag">stopwatch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tab/" rel="tag">tab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tagged-templates/" rel="tag">tagged templates</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this/" rel="tag">this</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tictactoe/" rel="tag">tictactoe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toString/" rel="tag">toString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toaster/" rel="tag">toaster</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/todolist/" rel="tag">todolist</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/transition/" rel="tag">transition</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/trelloclone/" rel="tag">trelloclone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/var/" rel="tag">var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualDOM/" rel="tag">virtualDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4/" rel="tag">객체</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">객체지향프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" rel="tag">기술면접</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">깊은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" rel="tag">데이터타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" rel="tag">백트래킹</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" rel="tag">브라우저렌더링</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" rel="tag">비동기</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%88%9C%EC%97%B4/" rel="tag">순열</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" rel="tag">스코프</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" rel="tag">스코프체인</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" rel="tag">실행컨텍스트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">얕은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" rel="tag">원시값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" rel="tag">정적메소드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" rel="tag">직접상속</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" rel="tag">참조값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" rel="tag">클래스</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" rel="tag">클로저</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" rel="tag">클론코딩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">페어프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" rel="tag">프로토타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" rel="tag">프로퍼티</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">프로퍼티 어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" rel="tag">프론트엔드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%95%A8%EC%88%98/" rel="tag">함수</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%9A%8C%EA%B3%A0/" rel="tag">회고</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그 클라우드</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CBD/" style="font-size: 13.33px;">CBD</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CORS/" style="font-size: 10px;">CORS</a> <a href="/tags/DFS/" style="font-size: 10px;">DFS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/JWT/" style="font-size: 10px;">JWT</a> <a href="/tags/Promise/" style="font-size: 10px;">Promise</a> <a href="/tags/SDLC/" style="font-size: 10px;">SDLC</a> <a href="/tags/accordion/" style="font-size: 10px;">accordion</a> <a href="/tags/acordion/" style="font-size: 10px;">acordion</a> <a href="/tags/analog-clock/" style="font-size: 10px;">analog clock</a> <a href="/tags/async/" style="font-size: 10px;">async</a> <a href="/tags/autocomplete/" style="font-size: 13.33px;">autocomplete</a> <a href="/tags/await/" style="font-size: 10px;">await</a> <a href="/tags/branch/" style="font-size: 10px;">branch</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/call/" style="font-size: 10px;">call</a> <a href="/tags/callback/" style="font-size: 10px;">callback</a> <a href="/tags/carousel/" style="font-size: 10px;">carousel</a> <a href="/tags/carousel-Tip/" style="font-size: 10px;">carousel Tip</a> <a href="/tags/const/" style="font-size: 10px;">const</a> <a href="/tags/counter/" style="font-size: 13.33px;">counter</a> <a href="/tags/customEvent/" style="font-size: 10px;">customEvent</a> <a href="/tags/darkmode/" style="font-size: 13.33px;">darkmode</a> <a href="/tags/diff/" style="font-size: 10px;">diff</a> <a href="/tags/drag-drop/" style="font-size: 10px;">drag&drop</a> <a href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 16.67px;">drag이벤트</a> <a href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">drop이벤트</a> <a href="/tags/env/" style="font-size: 10px;">env</a> <a href="/tags/formValidation/" style="font-size: 10px;">formValidation</a> <a href="/tags/frontend/" style="font-size: 10px;">frontend</a> <a href="/tags/gitflow/" style="font-size: 10px;">gitflow</a> <a href="/tags/historyAPI/" style="font-size: 10px;">historyAPI</a> <a href="/tags/isPalindrome/" style="font-size: 13.33px;">isPalindrome</a> <a href="/tags/iterable/" style="font-size: 10px;">iterable</a> <a href="/tags/iterator/" style="font-size: 10px;">iterator</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/let/" style="font-size: 10px;">let</a> <a href="/tags/method/" style="font-size: 10px;">method</a> <a href="/tags/modal/" style="font-size: 16.67px;">modal</a> <a href="/tags/mvc/" style="font-size: 16.67px;">mvc</a> <a href="/tags/newsviewr/" style="font-size: 10px;">newsviewr</a> <a href="/tags/nth-child/" style="font-size: 10px;">nth-child</a> <a href="/tags/observer/" style="font-size: 10px;">observer</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pushState/" style="font-size: 10px;">pushState</a> <a href="/tags/realDOM/" style="font-size: 10px;">realDOM</a> <a href="/tags/router/" style="font-size: 20px;">router</a> <a href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">scroll 이벤트</a> <a href="/tags/setTimeout/" style="font-size: 10px;">setTimeout</a> <a href="/tags/sidebar/" style="font-size: 13.33px;">sidebar</a> <a href="/tags/star-rating/" style="font-size: 10px;">star rating</a> <a href="/tags/stopwatch/" style="font-size: 16.67px;">stopwatch</a> <a href="/tags/tab/" style="font-size: 10px;">tab</a> <a href="/tags/tagged-templates/" style="font-size: 10px;">tagged templates</a> <a href="/tags/this/" style="font-size: 10px;">this</a> <a href="/tags/tictactoe/" style="font-size: 13.33px;">tictactoe</a> <a href="/tags/toString/" style="font-size: 10px;">toString</a> <a href="/tags/toaster/" style="font-size: 13.33px;">toaster</a> <a href="/tags/todolist/" style="font-size: 16.67px;">todolist</a> <a href="/tags/transition/" style="font-size: 10px;">transition</a> <a href="/tags/trelloclone/" style="font-size: 10px;">trelloclone</a> <a href="/tags/var/" style="font-size: 10px;">var</a> <a href="/tags/virtualDOM/" style="font-size: 10px;">virtualDOM</a> <a href="/tags/%EA%B0%9D%EC%B2%B4/" style="font-size: 10px;">객체</a> <a href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">객체지향프로그래밍</a> <a href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" style="font-size: 10px;">기술면접</a> <a href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">깊은복사</a> <a href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" style="font-size: 10px;">데이터타입</a> <a href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" style="font-size: 10px;">백트래킹</a> <a href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" style="font-size: 10px;">브라우저렌더링</a> <a href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" style="font-size: 10px;">비동기</a> <a href="/tags/%EC%88%9C%EC%97%B4/" style="font-size: 10px;">순열</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" style="font-size: 10px;">스코프</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" style="font-size: 10px;">스코프체인</a> <a href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" style="font-size: 10px;">실행컨텍스트</a> <a href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">얕은복사</a> <a href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">어트리뷰트</a> <a href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" style="font-size: 10px;">원시값</a> <a href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">이벤트</a> <a href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" style="font-size: 10px;">정적메소드</a> <a href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" style="font-size: 10px;">직접상속</a> <a href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" style="font-size: 10px;">참조값</a> <a href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" style="font-size: 10px;">클래스</a> <a href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" style="font-size: 10px;">클로저</a> <a href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" style="font-size: 10px;">클론코딩</a> <a href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">페어프로그래밍</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" style="font-size: 13.33px;">프로토타입</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" style="font-size: 13.33px;">프로퍼티</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">프로퍼티 어트리뷰트</a> <a href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" style="font-size: 10px;">프론트엔드</a> <a href="/tags/%ED%95%A8%EC%88%98/" style="font-size: 10px;">함수</a> <a href="/tags/%ED%9A%8C%EA%B3%A0/" style="font-size: 13.33px;">회고</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">아카이브</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">10월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">9월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">8월 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">최근 포스트</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/">22년 10월 29일 하루일기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/">리액트 공식문서 읽어보기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/">git fork 제대로 파헤치기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/babel/">babel</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/homebrew/">homebrew</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 loco9939<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

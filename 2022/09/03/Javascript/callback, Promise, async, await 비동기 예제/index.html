@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>callback, Promise, async/await 비동기 예제 | 로코의 개발 블로그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="비동기 이해하기 (연습)이번시간에는 비동기 처리 결과를 이용하는 예제를 따라쳐보면서 익숙해지도록 해보자. 목적API를 활용하여 서버에서 데이터를 가져와 화면에 렌더링하기 코드 구현12345678910111213141516171819202122232425262728293031323334&lt;!DOCTYPE html&gt;&lt;html lang&#x3D;&quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="callback, Promise, async&#x2F;await 비동기 예제">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/index.html">
+<meta property="og:site_name" content="로코의 개발 블로그">
+<meta property="og:description" content="비동기 이해하기 (연습)이번시간에는 비동기 처리 결과를 이용하는 예제를 따라쳐보면서 익숙해지도록 해보자. 목적API를 활용하여 서버에서 데이터를 가져와 화면에 렌더링하기 코드 구현12345678910111213141516171819202122232425262728293031323334&lt;!DOCTYPE html&gt;&lt;html lang&#x3D;&quot;">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-03T10:51:04.000Z">
+<meta property="article:modified_time" content="2022-10-29T10:27:22.531Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="callback">
+<meta property="article:tag" content="Promise">
+<meta property="article:tag" content="async">
+<meta property="article:tag" content="await">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="로코의 개발 블로그" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">로코의 개발 블로그</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="검색"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="검색"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://loco9939.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Javascript/callback, Promise, async, await 비동기 예제" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/" class="article-date">
+  <time class="dt-published" datetime="2022-09-03T10:51:04.000Z" itemprop="datePublished">2022-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Javascript/">Javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      callback, Promise, async/await 비동기 예제
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="비동기-이해하기-연습"><a href="#비동기-이해하기-연습" class="headerlink" title="비동기 이해하기 (연습)"></a>비동기 이해하기 (연습)</h1><p>이번시간에는 비동기 처리 결과를 이용하는 예제를 따라쳐보면서 익숙해지도록 해보자.</p>
+<h1 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h1><p>API를 활용하여 서버에서 데이터를 가져와 화면에 렌더링하기</p>
+<h2 id="코드-구현"><a href="#코드-구현" class="headerlink" title="코드 구현"></a>코드 구현</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> url = <span class="string">&quot;https://api.artic.edu/api/v1/artworks&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">items</span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;ul&quot;</span>).<span class="property">innerHTML</span> = items</span></span><br><span class="line"><span class="language-javascript">          .<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> <span class="string">`&lt;li&gt;<span class="subst">$&#123;item.title&#125;</span>&lt;/li&gt;`</span>)</span></span><br><span class="line"><span class="language-javascript">          .<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">      &#125;;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> <span class="title function_">get</span> = (<span class="params"></span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span></span><br><span class="line"><span class="language-javascript">        xhr.<span class="title function_">open</span>(<span class="string">&quot;GET&quot;</span>, url);</span></span><br><span class="line"><span class="language-javascript">        xhr.<span class="title function_">send</span>();</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        xhr.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="title function_">render</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">response</span>).<span class="property">data</span>);</span></span><br><span class="line"><span class="language-javascript">          &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;Status Error occured&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">          &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">      &#125;;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>서버에 XMLHttpRequest 요청을 보내 데이터 응답을 받았다.</p>
+<p>이 과정을 다시 살펴보면 비동기 코드의 처리 결과를 render() 함수의 인수로 전달해주면서 비동기 처리 결과를 다루는 모습을 볼 수 있다.</p>
+<p>만약에 비동기 처리 결과를 단순히 렌더해주는 것만이 아니라, 데이터의 조작이나 어떤 로직으로 처리가 많아지면 그 때마다 함수의 인수로 전달해줘야 하기 때문에 콜백 헬 현상이 발생하여 가독성과 복잡성이 떨어지게된다.</p>
+<h2 id="콜백함수를-이용한-비동기-처리-결과-다루기"><a href="#콜백함수를-이용한-비동기-처리-결과-다루기" class="headerlink" title="콜백함수를 이용한 비동기 처리 결과 다루기"></a>콜백함수를 이용한 비동기 처리 결과 다루기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> url = <span class="string">&quot;https://api.artic.edu/api/v1/artworks&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">items</span>) =&gt;</span><br><span class="line">  items.<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> <span class="string">`&lt;li&gt;<span class="subst">$&#123;item.title&#125;</span>&lt;/li&gt;`</span>).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">get</span> = (<span class="params">url, callback</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  xhr.<span class="title function_">open</span>(<span class="string">&quot;GET&quot;</span>, url);</span><br><span class="line">  xhr.<span class="title function_">send</span>();</span><br><span class="line"></span><br><span class="line">  xhr.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">      <span class="title function_">callback</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">response</span>).<span class="property">data</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`<span class="subst">$&#123;xhr.status&#125;</span> <span class="subst">$&#123;xhr.statusText&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">get</span>(url, <span class="function">(<span class="params">param</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;ul&quot;</span>).<span class="property">innerHTML</span> = <span class="title function_">render</span>(param);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 비동기 처리 결과를 렌더해주는 로직 하나만 해주고 있어서 콜백 헬이 발생하지 않는다.</p>
+<p>만약 데이터를 받아와서 수정을 거치고 삭제도 하고 여러가지 로직을 다루게 되면 그 때마다 함수의 인수로 전달해줘야 하기 때문에 코드가 가로로 길어지게 된다.</p>
+<p>또한, 콜백함수들에서 에러가 발생했을 경우 에러처리가 까다로워진다.</p>
+<blockquote>
+<p>에러는 caller 즉, 함수 호출자(콜 스택하위)방향으로 전파가 된다. 비동기 함수는 호출자가 브라우저이므로 브라우저가 콜백함수를 호출할 때에는 이벤트 루프가 콜 스택에 비었을 때, 태스크 큐에서 콜 스택으로 콜백함수를 이동시켜(호출)주기 때문에 콜 스택 하위로 에러 전파가 발생하지 않아서 에러가 발생한 위치에서만 에러를 캐치해야한다는 단점이 있다.</p>
+</blockquote>
+<h2 id="프로미스로-비동기-처리-결과-다루기"><a href="#프로미스로-비동기-처리-결과-다루기" class="headerlink" title="프로미스로 비동기 처리 결과 다루기"></a>프로미스로 비동기 처리 결과 다루기</h2><p>프로미스는 객체의 완료 상태와 값을 저장한 객체이다. 이 때, 값에는 비동기 처리 성공시 resolve 함수의 인수로 전달되 값이 저장되고 실패이 reject 함수의 인수로 전달된 에러가 저장된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> url = <span class="string">&quot;https://api.artic.edu/api/v1/artworks&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">items</span>) =&gt;</span><br><span class="line">  items.<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> <span class="string">`&lt;li&gt;<span class="subst">$&#123;item.title&#125;</span>&lt;/li&gt;`</span>).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">get</span> = (<span class="params">url</span>) =&gt;</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;GET&quot;</span>, url);</span><br><span class="line">    xhr.<span class="title function_">send</span>();</span><br><span class="line"></span><br><span class="line">    xhr.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="title function_">render</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">response</span>).<span class="property">data</span>));</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_">reject</span>(xhr.<span class="property">status</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"><span class="keyword">const</span> promise = <span class="title function_">get</span>(url);</span><br><span class="line">promise</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;ul&quot;</span>).<span class="property">innerHTML</span> = result;</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>get 함수가 프로미스 객체를 반환하고 있다. 반환한 프로미스는 콜백함수를 인수로 받는데 그 콜백함수 안에서 로직을 구현하고 콜백함수의 인수로 2개의 함수를 전달한다. 성공했을 경우 호출함 함수 resolve 함수와 실패했을 때 호출할 함수 reject 함수를 구현한다.</p>
+<p>get 함수를 호출하여 반환된 프로미스 객체를 후속 처리 메서드 then, catch가 이어서 받아서 처리를 해준다.</p>
+<ul>
+<li><p>then 메서드 : 프로미스 객체의 상태가 pending 상태에서 fulfilled로 변경되면 resolve 함수의 인수를 인수로 전달 받아 콜백함수를 호출한다.</p>
+</li>
+<li><p>catch 메서드 : 프로미스 객체의 상태가 pending 상태에서 rejected로 변경되면 reject 함수의 인수를 인수로 전달받아 콜백함수를 호출한다.</p>
+</li>
+</ul>
+<blockquote>
+<p>catch 메서드를 사용하면 catch 이전의 구간에서 발생한 에러를 캐치할 수 있다.</p>
+</blockquote>
+<h2 id="async-await로-비동기-처리-결과-다루기"><a href="#async-await로-비동기-처리-결과-다루기" class="headerlink" title="async, await로 비동기 처리 결과 다루기"></a>async, await로 비동기 처리 결과 다루기</h2><p>ES6에서 새로 생겨난 async, await를 사용하면 마치 동기 처리 방식처럼 비동기 처리결과를 다룰 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> url = <span class="string">&quot;https://api.artic.edu/api/v1/artworks&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">items</span>) =&gt;</span><br><span class="line">  items.<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> <span class="string">`&lt;li&gt;<span class="subst">$&#123;item.title&#125;</span>&lt;/li&gt;`</span>).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">get</span> = (<span class="params">url</span>) =&gt;</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;GET&quot;</span>, url);</span><br><span class="line">    xhr.<span class="title function_">send</span>();</span><br><span class="line"></span><br><span class="line">    xhr.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="title function_">render</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">response</span>).<span class="property">data</span>));</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="title function_">reject</span>(xhr.<span class="property">status</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> titleData = <span class="keyword">await</span> <span class="title function_">get</span>(url);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;ul&quot;</span>).<span class="property">innerHTML</span> = titleData;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>await는 반드시 async 키워드로 선언된 함수 안에서 사용해야한다.</p>
+<p>단, Node.js 애플리케이션 환경에서 함수 레벨이 아닌 최상위 레벨에서도 await를 사용할 수 있다.</p>
+</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>package.json 파일의 type을 module로 바꿔주면 독자적인 스코프인 모듈 스코프를 갖게되어 최상위 레벨에서도 await를 사용할 수 있다.</p>
+<ul>
+<li>async를 사용하면 에러전파가 되어 에러처리가 용이하다.</li>
+</ul>
+<p>제너레이터 함수와 연관지어 생각해보면 await 키워드를 만나면 일시 정지하고 제어권을 함수 외부로 이동시켜 동기 처리르 하다가 전역 코드가 다 실행되고 다시 일시 정지 했던 await 부분으로 돌아와서 프로미스 객체의 완료 상태가 settled로 바뀌면 코드를 실행하고 다음 코드 라인으로 넘어간다.</p>
+<blockquote>
+<p>즉, 프로미스 객체의 완료 상태가 pending이면 다음 코드를 실행하지 않고 계속 대기한다.</p>
+</blockquote>
+<h1 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h1><p>비동기를 동기처럼 다룰 수 있는 async,await를 사용하자.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://loco9939.github.io/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/" data-id="cl9tu252p000eo10f0ouge5jb" data-title="callback, Promise, async/await 비동기 예제" class="article-share-link">공유</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Promise/" rel="tag">Promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/async/" rel="tag">async</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/await/" rel="tag">await</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/callback/" rel="tag">callback</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">최신</strong>
+      <div class="article-nav-title">
+        
+          vanillaJS로 구현한 todoList(MVC패턴) 1탄
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/02/Javascript/CORS/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">이전</strong>
+      <div class="article-nav-title">CORS</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">카테고리</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/boj/">boj</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/woowa/">woowa</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Diary/">Diary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javascript/">Javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/">Pair Programming</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-1/">level 1</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Pair-Programming/level-2/">level 2</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/holymoly/">holymoly</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Settings/">Settings</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBD/" rel="tag">CBD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CORS/" rel="tag">CORS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DFS/" rel="tag">DFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DOM/" rel="tag">DOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JWT/" rel="tag">JWT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Promise/" rel="tag">Promise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDLC/" rel="tag">SDLC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/accordion/" rel="tag">accordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/acordion/" rel="tag">acordion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/analog-clock/" rel="tag">analog clock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/async/" rel="tag">async</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/autocomplete/" rel="tag">autocomplete</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/await/" rel="tag">await</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/branch/" rel="tag">branch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/calendar/" rel="tag">calendar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/call/" rel="tag">call</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/callback/" rel="tag">callback</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel/" rel="tag">carousel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/carousel-Tip/" rel="tag">carousel Tip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/const/" rel="tag">const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/counter/" rel="tag">counter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/customEvent/" rel="tag">customEvent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/darkmode/" rel="tag">darkmode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/diff/" rel="tag">diff</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag-drop/" rel="tag">drag&amp;drop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drag이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">drop이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/env/" rel="tag">env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/formValidation/" rel="tag">formValidation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frontend/" rel="tag">frontend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitflow/" rel="tag">gitflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/historyAPI/" rel="tag">historyAPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isPalindrome/" rel="tag">isPalindrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterable/" rel="tag">iterable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iterator/" rel="tag">iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/let/" rel="tag">let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/method/" rel="tag">method</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/modal/" rel="tag">modal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc/" rel="tag">mvc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/newsviewr/" rel="tag">newsviewr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nth-child/" rel="tag">nth-child</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/observer/" rel="tag">observer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/" rel="tag">proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pushState/" rel="tag">pushState</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/realDOM/" rel="tag">realDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/router/" rel="tag">router</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">scroll 이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/setTimeout/" rel="tag">setTimeout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sidebar/" rel="tag">sidebar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/star-rating/" rel="tag">star rating</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stopwatch/" rel="tag">stopwatch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tab/" rel="tag">tab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tagged-templates/" rel="tag">tagged templates</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this/" rel="tag">this</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tictactoe/" rel="tag">tictactoe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toString/" rel="tag">toString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toaster/" rel="tag">toaster</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/todolist/" rel="tag">todolist</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/transition/" rel="tag">transition</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/trelloclone/" rel="tag">trelloclone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/var/" rel="tag">var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualDOM/" rel="tag">virtualDOM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4/" rel="tag">객체</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">객체지향프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" rel="tag">기술면접</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">깊은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" rel="tag">데이터타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" rel="tag">백트래킹</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" rel="tag">브라우저렌더링</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" rel="tag">비동기</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%88%9C%EC%97%B4/" rel="tag">순열</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" rel="tag">스코프</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" rel="tag">스코프체인</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" rel="tag">실행컨텍스트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" rel="tag">얕은복사</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" rel="tag">원시값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" rel="tag">이벤트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" rel="tag">정적메소드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" rel="tag">직접상속</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" rel="tag">참조값</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" rel="tag">클래스</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" rel="tag">클로저</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" rel="tag">클론코딩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" rel="tag">페어프로그래밍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" rel="tag">프로토타입</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" rel="tag">프로퍼티</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" rel="tag">프로퍼티 어트리뷰트</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" rel="tag">프론트엔드</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%95%A8%EC%88%98/" rel="tag">함수</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%ED%9A%8C%EA%B3%A0/" rel="tag">회고</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">태그 클라우드</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CBD/" style="font-size: 13.33px;">CBD</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CORS/" style="font-size: 10px;">CORS</a> <a href="/tags/DFS/" style="font-size: 10px;">DFS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/JWT/" style="font-size: 10px;">JWT</a> <a href="/tags/Promise/" style="font-size: 10px;">Promise</a> <a href="/tags/SDLC/" style="font-size: 10px;">SDLC</a> <a href="/tags/accordion/" style="font-size: 10px;">accordion</a> <a href="/tags/acordion/" style="font-size: 10px;">acordion</a> <a href="/tags/analog-clock/" style="font-size: 10px;">analog clock</a> <a href="/tags/async/" style="font-size: 10px;">async</a> <a href="/tags/autocomplete/" style="font-size: 13.33px;">autocomplete</a> <a href="/tags/await/" style="font-size: 10px;">await</a> <a href="/tags/branch/" style="font-size: 10px;">branch</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/call/" style="font-size: 10px;">call</a> <a href="/tags/callback/" style="font-size: 10px;">callback</a> <a href="/tags/carousel/" style="font-size: 10px;">carousel</a> <a href="/tags/carousel-Tip/" style="font-size: 10px;">carousel Tip</a> <a href="/tags/const/" style="font-size: 10px;">const</a> <a href="/tags/counter/" style="font-size: 13.33px;">counter</a> <a href="/tags/customEvent/" style="font-size: 10px;">customEvent</a> <a href="/tags/darkmode/" style="font-size: 13.33px;">darkmode</a> <a href="/tags/diff/" style="font-size: 10px;">diff</a> <a href="/tags/drag-drop/" style="font-size: 10px;">drag&drop</a> <a href="/tags/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 16.67px;">drag이벤트</a> <a href="/tags/drop%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">drop이벤트</a> <a href="/tags/env/" style="font-size: 10px;">env</a> <a href="/tags/formValidation/" style="font-size: 10px;">formValidation</a> <a href="/tags/frontend/" style="font-size: 10px;">frontend</a> <a href="/tags/gitflow/" style="font-size: 10px;">gitflow</a> <a href="/tags/historyAPI/" style="font-size: 10px;">historyAPI</a> <a href="/tags/isPalindrome/" style="font-size: 13.33px;">isPalindrome</a> <a href="/tags/iterable/" style="font-size: 10px;">iterable</a> <a href="/tags/iterator/" style="font-size: 10px;">iterator</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/let/" style="font-size: 10px;">let</a> <a href="/tags/method/" style="font-size: 10px;">method</a> <a href="/tags/modal/" style="font-size: 16.67px;">modal</a> <a href="/tags/mvc/" style="font-size: 16.67px;">mvc</a> <a href="/tags/newsviewr/" style="font-size: 10px;">newsviewr</a> <a href="/tags/nth-child/" style="font-size: 10px;">nth-child</a> <a href="/tags/observer/" style="font-size: 10px;">observer</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pushState/" style="font-size: 10px;">pushState</a> <a href="/tags/realDOM/" style="font-size: 10px;">realDOM</a> <a href="/tags/router/" style="font-size: 20px;">router</a> <a href="/tags/scroll-%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">scroll 이벤트</a> <a href="/tags/setTimeout/" style="font-size: 10px;">setTimeout</a> <a href="/tags/sidebar/" style="font-size: 13.33px;">sidebar</a> <a href="/tags/star-rating/" style="font-size: 10px;">star rating</a> <a href="/tags/stopwatch/" style="font-size: 16.67px;">stopwatch</a> <a href="/tags/tab/" style="font-size: 10px;">tab</a> <a href="/tags/tagged-templates/" style="font-size: 10px;">tagged templates</a> <a href="/tags/this/" style="font-size: 10px;">this</a> <a href="/tags/tictactoe/" style="font-size: 13.33px;">tictactoe</a> <a href="/tags/toString/" style="font-size: 10px;">toString</a> <a href="/tags/toaster/" style="font-size: 13.33px;">toaster</a> <a href="/tags/todolist/" style="font-size: 16.67px;">todolist</a> <a href="/tags/transition/" style="font-size: 10px;">transition</a> <a href="/tags/trelloclone/" style="font-size: 10px;">trelloclone</a> <a href="/tags/var/" style="font-size: 10px;">var</a> <a href="/tags/virtualDOM/" style="font-size: 10px;">virtualDOM</a> <a href="/tags/%EA%B0%9D%EC%B2%B4/" style="font-size: 10px;">객체</a> <a href="/tags/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">객체지향프로그래밍</a> <a href="/tags/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91/" style="font-size: 10px;">기술면접</a> <a href="/tags/%EA%B9%8A%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">깊은복사</a> <a href="/tags/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%83%80%EC%9E%85/" style="font-size: 10px;">데이터타입</a> <a href="/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/" style="font-size: 10px;">백트래킹</a> <a href="/tags/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EB%A0%8C%EB%8D%94%EB%A7%81/" style="font-size: 10px;">브라우저렌더링</a> <a href="/tags/%EB%B9%84%EB%8F%99%EA%B8%B0/" style="font-size: 10px;">비동기</a> <a href="/tags/%EC%88%9C%EC%97%B4/" style="font-size: 10px;">순열</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84/" style="font-size: 10px;">스코프</a> <a href="/tags/%EC%8A%A4%EC%BD%94%ED%94%84%EC%B2%B4%EC%9D%B8/" style="font-size: 10px;">스코프체인</a> <a href="/tags/%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8/" style="font-size: 10px;">실행컨텍스트</a> <a href="/tags/%EC%96%95%EC%9D%80%EB%B3%B5%EC%82%AC/" style="font-size: 10px;">얕은복사</a> <a href="/tags/%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">어트리뷰트</a> <a href="/tags/%EC%9B%90%EC%8B%9C%EA%B0%92/" style="font-size: 10px;">원시값</a> <a href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8/" style="font-size: 10px;">이벤트</a> <a href="/tags/%EC%A0%95%EC%A0%81%EB%A9%94%EC%86%8C%EB%93%9C/" style="font-size: 10px;">정적메소드</a> <a href="/tags/%EC%A7%81%EC%A0%91%EC%83%81%EC%86%8D/" style="font-size: 10px;">직접상속</a> <a href="/tags/%EC%B0%B8%EC%A1%B0%EA%B0%92/" style="font-size: 10px;">참조값</a> <a href="/tags/%ED%81%B4%EB%9E%98%EC%8A%A4/" style="font-size: 10px;">클래스</a> <a href="/tags/%ED%81%B4%EB%A1%9C%EC%A0%80/" style="font-size: 10px;">클로저</a> <a href="/tags/%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/" style="font-size: 10px;">클론코딩</a> <a href="/tags/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/" style="font-size: 10px;">페어프로그래밍</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85/" style="font-size: 13.33px;">프로토타입</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0/" style="font-size: 13.33px;">프로퍼티</a> <a href="/tags/%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0-%EC%96%B4%ED%8A%B8%EB%A6%AC%EB%B7%B0%ED%8A%B8/" style="font-size: 10px;">프로퍼티 어트리뷰트</a> <a href="/tags/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C/" style="font-size: 10px;">프론트엔드</a> <a href="/tags/%ED%95%A8%EC%88%98/" style="font-size: 10px;">함수</a> <a href="/tags/%ED%9A%8C%EA%B3%A0/" style="font-size: 13.33px;">회고</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">아카이브</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">10월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">9월 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">8월 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">최근 포스트</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/">22년 10월 29일 하루일기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/">리액트 공식문서 읽어보기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/">git fork 제대로 파헤치기</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/babel/">babel</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/29/Settings/homebrew/">homebrew</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 loco9939<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
