@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>window.open()와 target, rel 속성 - Loco&#39;s Dev Blog</title>
+    <title>모의 면접 회고 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -17,22 +17,20 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 window.open()1window.open(&quot;https://www.w3schools.com&quot;);\n\n새 브라우저 탭에서 해당 URL을 연다.\n\n기본값이 target=&quot;_blank&quot; 이다.\n\n❗️ 하이퍼 링크를 신뢰할 수 없다면…target=&quot;\\_blank&quot; 속성이 적용되어 있다면 성능과 보안 면에서 취약점이 발생한다.\n새롭게 열린 페이지가 원본 페이지와 동일한 프로세스에서 실행될 수 있다.\n새로 열린 페이지는 보조 브라우징 컨텍스트이다. 새로 열린 페이지는 자기 자신을 생성한 원본 브라우징 컨텍스트를 오프너 브라우징 컨텍스트라는 이름으로 참조하고 있다.\n\n만약 보조 브라우징 컨텍스트가 많은 JavaScript를 실행하는 경우 원본 페이지의 성능이 저하될 수 있다.\n\n\n단, 위와 같은 문제는 최신 브라우저에서 발생하지 않도록 처리가 되어있다.\n\n👿 Tab nabbing(탭 내빙) - 피싱 공격가장 큰 문제는 새롭게 열린 페이지에서 JavaScript를 통해 원본 페이지에 직접 접근이 가능해지는 문제이다.\nwindow.opener를 이용해 원본 페이지에 접근 가능한데 이를 **탭 내빙(Tab nabbing)**이라고 부른다.\n\n\n사용자가 새탭을 열었다.\n해커가 새 탭에 window.opener.location을 사용하여 원본 사이트와 교묘하게 다른 링크로 바꾼다.\n사용자는 본래 탭으로 돌아오니 로그인일 풀렸다고 생각하여 정보를 입력한다.\n피싱 사이트가 사용자의 로그인 정보를 탈취한 후 다시 원래 링크로 되돌려 놓는다.\n\n이러한 탭 내빙 문제는 target=&quot;_blank&quot; 속성이 적용되어 있을 때만 발생한다.window.open() 메서드는 기본속성이다.그러므로 이러한 피싱 공격을 막기 위해 rel=&#39;noopener&#39; 속성을 설정해줘야한다.\nnoreferernoreferer는 noopener와 동일한 기능을 하지만 추가로 브라우저가 해당 페이지를 불러오면서 HTTP 요청을 보낼 때 referer Header를 생략하는 기능이 있다.\n즉, noreferer 속성이 있으면 링크 클릭 시 해당 유입이 어디에서 발생하였는지에 대한 정보가 새 페이지에 제공되지 않는다.\n\n일반적으로는 noopener noreferer 두 속성을 같이 적어준다.\n\nnofollownofollow 속성은 검색 엔진에게 링크된 웹 사이트를 보증하거나 신뢰할 수 없으니 현재 웹 사이트와 연결하지 않기를 바라는 경우에 사용한다.\n\n스팸 댓글이 등장하여 나오게 되었다.\n\n스팸 댓글이 달린 게시물은 사이트 소유와 상관없이 평판이 내려가게 되어서 구글이 이에 대한 해결책으로 nofollow 를 제시하였다.\nnofollow 속성이 설정된 링크는 크롤링하지 않고 검색 엔진에도 영향을 미치지 않는다.\n그러므로 댓글이나 포럼과 같이 사용자가 참여 콘텐츠의 링크에 적합하다.\n🏓 소감allWAIs 링크 컴포넌트를 만들다가 window.location.href 속성을 사용하다가 새창을 열어주는 메서드인 window.open() 속성을 알게되었다.\n그러다가 예전에 HTML 수업 때 배운 noopener, noreferer 속성이 잘 기억이 나지 않아 정리하기 위해 공부하였다.\n이번 기회에 제대로 정리할 수 있어서 오래 기억에 남을 것 같다.\n참고요즘 IT - “하이퍼링크를 신뢰할 수 없다면?”\n","dateCreated":"2022-11-17T19:46:43+09:00","dateModified":"2022-11-17T20:31:07+09:00","datePublished":"2022-11-17T19:46:43+09:00","description":"","headline":"window.open()와 target, rel 속성","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"}</script>
-    <meta name="description" content="📌 window.open()1window.open(&quot;https:&#x2F;&#x2F;www.w3schools.com&quot;);  새 브라우저 탭에서 해당 URL을 연다.  기본값이 target&#x3D;&quot;_blank&quot; 이다.  ❗️ 하이퍼 링크를 신뢰할 수 없다면…target&#x3D;&quot;\_blank&quot; 속성이 적용되어 있다면 성능과 보안 면에">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 모의 면접 회고HTML 수업 때 데레사 강사님께 기술면접을 1:1로 본 이후로 오래간만에 모의 면접을 보게되었다.\n박신영 강사님께서 인성면접을, 다른 수강생은 기술면접을 면접관 입장이 되어 나에게 질문해주었다.\n1. 😃 인성 면접어떤 개발자가 되길 원하는가?, 프로젝트 및 협업 과정에서 어떤 갈등을 겪었고 어떻게 해결하였는지 등 개발자로서 어떤 마인드를 가지고 있고 어떤 사람인지 판단할 수 있을 만한 질문들이었다.\n모든 질문에 어떻게 답변했는지는 기억나지 않지만 피드백을 받은 것을 이야기해보자면,\n👍 좋았던 점\n시작할 때 웃는 모습이 좋은 사람이라는 인상을 주고 마음을 편안하게 해주어 좋았다.\n커뮤니케이션과 협업을 일관되게 강조하고 중요시하고 있다는 점이 좋았다.\n말의 끝맺음을 제대로 하여 듣는 사람 입장에서 좋았다.\n추가로 대화에서, 개발에서 정리를 잘하는 사람인데 이 부분으로 어필할 수 있으면 더욱 좋을듯!\n\n\nWhy? 에 대해 생각하는 사람으로 느껴져서 좋았다.\n약점에 대해서 스스로 대안이 있어서 인상적이었다.\n\n💦 아쉬운 점\n의견, 주장이 강해보여 의견 충돌 시 강한 타입처럼 느껴질 수 있을 것 같아보인다.\n어떤 개발자가 되고 싶냐는 질문에 좀 더 직무, 역량 관점에서 답변할 수 있으면 좋을 것 같다.\n\n2. 🛠 기술 면접기술면접은 프로젝트 경험에 대해 질문해주셨고 기술적으로 깊은 고민을 해본 적이 있는지, 면접자가 기술에 사용 이유와 원리를 알고 사용하는 것인지 확인하는 질문들이었다.\n👍 좋았던 점\n페어프로그래밍을 통해 기술적인 단계를 깊이있게 공부하고 블로그에 정리해두었다는 점이 인상깊었다.\n기술 블로그에 대해 피드백을 받고 개선한다는 부분을 차별점으로 어필하는 모습 좋았다.\n\n💦 아쉬운 점\n전반적으로 기술적인 답변이 제대로 나오지 않아 아쉬웠다.\nCBD 라이브러리를 만들었다고 할 때 정확히 어떤 부분까지 만들어보았는지 자세한 설명이 부족했다.\n회피와 타협이라는 부정적인 단어 사용이 잦아서 아쉬웠다.\n부정적인 단어 대신 “라이브러리를 고치는 것은 비용이 많이 드는 작업이어서 프로젝트 기간에는 해당 부분을 이런 식으로 구현하여 해결하였다”로 사용해보자.\n\n\n트러블 슈팅 질문에 대한 답변이 기술적인 이슈 해결이 아닌 다른 답변이 나와서 아쉬웠다.\n트러블 슈팅 질문에 대한 소스들을 미리 준비해두면 도움이 될 것 같다.\n\n\n\n","dateCreated":"2023-01-02T21:32:10+09:00","dateModified":"2023-01-02T23:25:41+09:00","datePublished":"2023-01-02T21:32:10+09:00","description":"","headline":"모의 면접 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"}</script>
+    <meta name="description" content="📌 모의 면접 회고HTML 수업 때 데레사 강사님께 기술면접을 1:1로 본 이후로 오래간만에 모의 면접을 보게되었다. 박신영 강사님께서 인성면접을, 다른 수강생은 기술면접을 면접관 입장이 되어 나에게 질문해주었다. 1. 😃 인성 면접어떤 개발자가 되길 원하는가?, 프로젝트 및 협업 과정에서 어떤 갈등을 겪었고 어떻게 해결하였는지 등 개발자로서 어떤 마인">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="window.open()와 target, rel 속성">
-<meta property="og:url" content="https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/index.html">
+<meta property="og:title" content="모의 면접 회고">
+<meta property="og:url" content="https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="📌 window.open()1window.open(&quot;https:&#x2F;&#x2F;www.w3schools.com&quot;);  새 브라우저 탭에서 해당 URL을 연다.  기본값이 target&#x3D;&quot;_blank&quot; 이다.  ❗️ 하이퍼 링크를 신뢰할 수 없다면…target&#x3D;&quot;\_blank&quot; 속성이 적용되어 있다면 성능과 보안 면에">
+<meta property="og:description" content="📌 모의 면접 회고HTML 수업 때 데레사 강사님께 기술면접을 1:1로 본 이후로 오래간만에 모의 면접을 보게되었다. 박신영 강사님께서 인성면접을, 다른 수강생은 기술면접을 면접관 입장이 되어 나에게 질문해주었다. 1. 😃 인성 면접어떤 개발자가 되길 원하는가?, 프로젝트 및 협업 과정에서 어떤 갈등을 겪었고 어떻게 해결하였는지 등 개발자로서 어떤 마인">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://loco9939.github.io/images/noopener/tab-nabbing.svg">
-<meta property="article:published_time" content="2022-11-17T10:46:43.000Z">
-<meta property="article:modified_time" content="2022-11-17T11:31:07.116Z">
+<meta property="article:published_time" content="2023-01-02T12:32:10.000Z">
+<meta property="article:modified_time" content="2023-01-02T14:25:41.073Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://loco9939.github.io/images/noopener/tab-nabbing.svg">
     
     
         
@@ -328,22 +326,16 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            window.open()와 target, rel 속성
+            모의 면접 회고
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2022-11-17T19:46:43+09:00">
+    <time datetime="2023-01-02T21:32:10+09:00">
 	
-		    2022/11/17
+		    2023/01/02
     	
     </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
     
 </div>
 
@@ -353,47 +345,41 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="📌-window-open"><a href="#📌-window-open" class="headerlink" title="📌 window.open()"></a>📌 window.open()</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">open</span>(<span class="string">&quot;https://www.w3schools.com&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>새 브라우저 탭에서 해당 URL을 연다.</p>
-<ul>
-<li>기본값이 <code>target=&quot;_blank&quot;</code> 이다.</li>
+            <h1 id="📌-모의-면접-회고"><a href="#📌-모의-면접-회고" class="headerlink" title="📌 모의 면접 회고"></a>📌 모의 면접 회고</h1><p>HTML 수업 때 데레사 강사님께 기술면접을 1:1로 본 이후로 오래간만에 모의 면접을 보게되었다.</p>
+<p>박신영 강사님께서 인성면접을, 다른 수강생은 기술면접을 면접관 입장이 되어 나에게 질문해주었다.</p>
+<h2 id="1-😃-인성-면접"><a href="#1-😃-인성-면접" class="headerlink" title="1. 😃 인성 면접"></a>1. 😃 인성 면접</h2><p>어떤 개발자가 되길 원하는가?, 프로젝트 및 협업 과정에서 어떤 갈등을 겪었고 어떻게 해결하였는지 등 개발자로서 어떤 마인드를 가지고 있고 어떤 사람인지 판단할 수 있을 만한 질문들이었다.</p>
+<p>모든 질문에 어떻게 답변했는지는 기억나지 않지만 피드백을 받은 것을 이야기해보자면,</p>
+<h3 id="👍-좋았던-점"><a href="#👍-좋았던-점" class="headerlink" title="👍 좋았던 점"></a>👍 좋았던 점</h3><ol>
+<li>시작할 때 웃는 모습이 좋은 사람이라는 인상을 주고 마음을 편안하게 해주어 좋았다.</li>
+<li>커뮤니케이션과 협업을 일관되게 강조하고 중요시하고 있다는 점이 좋았다.</li>
+<li>말의 끝맺음을 제대로 하여 듣는 사람 입장에서 좋았다.<ul>
+<li><strong>추가로 대화에서, 개발에서 정리를 잘하는 사람인데 이 부분으로 어필할 수 있으면 더욱 좋을듯!</strong></li>
 </ul>
-<h2 id="❗️-하이퍼-링크를-신뢰할-수-없다면…"><a href="#❗️-하이퍼-링크를-신뢰할-수-없다면…" class="headerlink" title="❗️ 하이퍼 링크를 신뢰할 수 없다면…"></a>❗️ 하이퍼 링크를 신뢰할 수 없다면…</h2><p><code>target=&quot;\_blank&quot;</code> 속성이 적용되어 있다면 <red>성능과 보안 면에서 취약점이 발생한다.</red></p>
-<p>새롭게 열린 페이지가 원본 페이지와 동일한 프로세스에서 실행될 수 있다.</p>
-<p>새로 열린 페이지는 <strong>보조 브라우징 컨텍스트</strong>이다. 새로 열린 페이지는 자기 자신을 생성한 원본 브라우징 컨텍스트를 <strong>오프너 브라우징 컨텍스트</strong>라는 이름으로 참조하고 있다.</p>
-<blockquote>
-<p>만약 보조 브라우징 컨텍스트가 많은 JavaScript를 실행하는 경우 원본 페이지의 성능이 저하될 수 있다.</p>
-</blockquote>
-<ul>
-<li>단, 위와 같은 문제는 최신 브라우저에서 발생하지 않도록 처리가 되어있다.</li>
-</ul>
-<h3 id="👿-Tab-nabbing-탭-내빙-피싱-공격"><a href="#👿-Tab-nabbing-탭-내빙-피싱-공격" class="headerlink" title="👿 Tab nabbing(탭 내빙) - 피싱 공격"></a>👿 Tab nabbing(탭 내빙) - 피싱 공격</h3><p>가장 큰 문제는 새롭게 열린 페이지에서 JavaScript를 통해 원본 페이지에 직접 접근이 가능해지는 문제이다.</p>
-<p><code>window.opener</code>를 이용해 원본 페이지에 접근 가능한데 이를 **탭 내빙(Tab nabbing)**이라고 부른다.</p>
-<p><img src="/../../images/noopener/tab-nabbing.svg" alt="tab-nabbing"></p>
-<ol>
-<li>사용자가 새탭을 열었다.</li>
-<li>해커가 새 탭에 window.opener.location을 사용하여 원본 사이트와 교묘하게 다른 링크로 바꾼다.</li>
-<li>사용자는 본래 탭으로 돌아오니 로그인일 풀렸다고 생각하여 정보를 입력한다.</li>
-<li>피싱 사이트가 사용자의 로그인 정보를 탈취한 후 다시 원래 링크로 되돌려 놓는다.</li>
+</li>
+<li>Why? 에 대해 생각하는 사람으로 느껴져서 좋았다.</li>
+<li>약점에 대해서 스스로 대안이 있어서 인상적이었다.</li>
 </ol>
-<p>이러한 탭 내빙 문제는 <code>target=&quot;_blank&quot;</code> 속성이 적용되어 있을 때만 발생한다.<br><code>window.open()</code> 메서드는 기본속성이다.<br>그러므로 이러한 피싱 공격을 막기 위해 <code>rel=&#39;noopener&#39;</code> 속성을 설정해줘야한다.</p>
-<h3 id="noreferer"><a href="#noreferer" class="headerlink" title="noreferer"></a>noreferer</h3><p>noreferer는 noopener와 동일한 기능을 하지만 추가로 브라우저가 해당 페이지를 불러오면서 <strong>HTTP 요청을 보낼 때 referer Header를 생략하는 기능</strong>이 있다.</p>
-<p>즉, noreferer 속성이 있으면 링크 클릭 시 해당 유입이 어디에서 발생하였는지에 대한 정보가 새 페이지에 제공되지 않는다.</p>
-<ul>
-<li>일반적으로는 noopener noreferer 두 속성을 같이 적어준다.</li>
+<h3 id="💦-아쉬운-점"><a href="#💦-아쉬운-점" class="headerlink" title="💦 아쉬운 점"></a>💦 아쉬운 점</h3><ol>
+<li>의견, 주장이 강해보여 의견 충돌 시 강한 타입처럼 느껴질 수 있을 것 같아보인다.</li>
+<li>어떤 개발자가 되고 싶냐는 질문에 좀 더 직무, 역량 관점에서 답변할 수 있으면 좋을 것 같다.</li>
+</ol>
+<h2 id="2-🛠-기술-면접"><a href="#2-🛠-기술-면접" class="headerlink" title="2. 🛠 기술 면접"></a>2. 🛠 기술 면접</h2><p>기술면접은 프로젝트 경험에 대해 질문해주셨고 기술적으로 깊은 고민을 해본 적이 있는지, 면접자가 기술에 사용 이유와 원리를 알고 사용하는 것인지 확인하는 질문들이었다.</p>
+<h3 id="👍-좋았던-점-1"><a href="#👍-좋았던-점-1" class="headerlink" title="👍 좋았던 점"></a>👍 좋았던 점</h3><ol>
+<li>페어프로그래밍을 통해 기술적인 단계를 깊이있게 공부하고 블로그에 정리해두었다는 점이 인상깊었다.</li>
+<li><strong>기술 블로그에 대해 피드백을 받고 개선한다는 부분을 차별점으로 어필하는 모습 좋았다.</strong></li>
+</ol>
+<h3 id="💦-아쉬운-점-1"><a href="#💦-아쉬운-점-1" class="headerlink" title="💦 아쉬운 점"></a>💦 아쉬운 점</h3><ol>
+<li>전반적으로 기술적인 답변이 제대로 나오지 않아 아쉬웠다.</li>
+<li>CBD 라이브러리를 만들었다고 할 때 정확히 어떤 부분까지 만들어보았는지 자세한 설명이 부족했다.</li>
+<li>회피와 타협이라는 부정적인 단어 사용이 잦아서 아쉬웠다.<ul>
+<li><strong>부정적인 단어 대신 “라이브러리를 고치는 것은 비용이 많이 드는 작업이어서 프로젝트 기간에는 해당 부분을 이런 식으로 구현하여 해결하였다”로 사용해보자.</strong></li>
 </ul>
-<h3 id="nofollow"><a href="#nofollow" class="headerlink" title="nofollow"></a>nofollow</h3><p><code>nofollow</code> 속성은 검색 엔진에게 링크된 웹 사이트를 보증하거나 신뢰할 수 없으니 현재 웹 사이트와 연결하지 않기를 바라는 경우에 사용한다.</p>
-<ul>
-<li>스팸 댓글이 등장하여 나오게 되었다.</li>
+</li>
+<li>트러블 슈팅 질문에 대한 답변이 기술적인 이슈 해결이 아닌 다른 답변이 나와서 아쉬웠다.<ul>
+<li><strong>트러블 슈팅 질문에 대한 소스들을 미리 준비해두면 도움이 될 것 같다.</strong></li>
 </ul>
-<p>스팸 댓글이 달린 게시물은 사이트 소유와 상관없이 평판이 내려가게 되어서 구글이 이에 대한 해결책으로 <code>nofollow</code> 를 제시하였다.</p>
-<p><code>nofollow</code> 속성이 설정된 링크는 크롤링하지 않고 검색 엔진에도 영향을 미치지 않는다.</p>
-<p>그러므로 댓글이나 포럼과 같이 <strong>사용자가 참여 콘텐츠의 링크에 적합하다.</strong></p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>allWAIs 링크 컴포넌트를 만들다가 window.location.href 속성을 사용하다가 새창을 열어주는 메서드인 window.open() 속성을 알게되었다.</p>
-<p>그러다가 예전에 HTML 수업 때 배운 noopener, noreferer 속성이 잘 기억이 나지 않아 정리하기 위해 공부하였다.</p>
-<p>이번 기회에 제대로 정리할 수 있어서 오래 기억에 남을 것 같다.</p>
-<h3 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h3><p><a target="_blank" rel="noopener" href="https://yozm.wishket.com/magazine/detail/1586/">요즘 IT - “하이퍼링크를 신뢰할 수 없다면?”</a></p>
+</li>
+</ol>
 
             
 
@@ -411,9 +397,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
-                    data-tooltip="타입스크립트 들어가기 전..."
-                    aria-label="이전: 타입스크립트 들어가기 전..."
+                    href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/"
+                    data-tooltip="이벤트 위임이란 무엇이고 왜 사용하는가?"
+                    aria-label="이전: 이벤트 위임이란 무엇이고 왜 사용하는가?"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -425,9 +411,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"
-                    data-tooltip="allWAIs-Link 회고(22.11.16)"
-                    aria-label="다음: allWAIs-Link 회고(22.11.16)"
+                    href="/2022/12/29/Algorithm/merge%20sort/"
+                    data-tooltip="merge sort"
+                    aria-label="다음: merge sort"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -452,7 +438,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -465,7 +451,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -478,7 +464,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -526,9 +512,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
-                    data-tooltip="타입스크립트 들어가기 전..."
-                    aria-label="이전: 타입스크립트 들어가기 전..."
+                    href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/"
+                    data-tooltip="이벤트 위임이란 무엇이고 왜 사용하는가?"
+                    aria-label="이전: 이벤트 위임이란 무엇이고 왜 사용하는가?"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -540,9 +526,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"
-                    data-tooltip="allWAIs-Link 회고(22.11.16)"
-                    aria-label="다음: allWAIs-Link 회고(22.11.16)"
+                    href="/2022/12/29/Algorithm/merge%20sort/"
+                    data-tooltip="merge sort"
+                    aria-label="다음: merge sort"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -567,7 +553,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -580,7 +566,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -593,7 +579,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -627,7 +613,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -640,7 +626,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -653,7 +639,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/17/Javascript/window-open-%EC%99%80-target-rel-%EC%86%8D%EC%84%B1/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

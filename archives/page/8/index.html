@@ -325,6 +325,279 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                            aria-label=": drag이벤트 상태관리"
+                        >
+                            drag이벤트 상태관리
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-05T22:10:02+09:00">
+	
+		    2022/10/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="1-drag-상태-관리"><a href="#1-drag-상태-관리" class="headerlink" title="1. drag 상태 관리"></a>1. drag 상태 관리</h1><p>dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">List</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">id</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">id</span> = id;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$origin</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$target</span> = <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">addEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;dragstart&quot;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&quot;.list-container&quot;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">$origin</span> = e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>);</span><br><span class="line">          e.<span class="property">dataTransfer</span>.<span class="property">effectAllowed</span> = <span class="string">&quot;move&quot;</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;dragenter&quot;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&quot;.list-container&quot;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">$origin</span> !== e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>)) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">$target</span> = e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">swap</span>(<span class="variable language_">this</span>.<span class="property">$origin</span>, <span class="variable language_">this</span>.<span class="property">$target</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">    ];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>drag &amp; drop이 발생하는 컴포넌트에서 지역 변수로서 관리해주면 된다.</li>
+</ul>
+<h1 id="2-이벤트-등록-조건-수정"><a href="#2-이벤트-등록-조건-수정" class="headerlink" title="2. 이벤트 등록 조건 수정"></a>2. 이벤트 등록 조건 수정</h1><p>각자의 컴포넌트들을 window에 등록해줄 때, 이벤트 위임이므로 걸러주기 위해 matches를 사용하였는데, 이 경우 이벤트가 발생한 요소만 해당되고 이벤트 발생한 부모 요소를 찾을 수 없어 list 요소에 drag 이벤트가 발생하지 않는 문제가 발생하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Component</span></span><br><span class="line"><span class="title function_">checkEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">addEvent</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">addEvent</span>().<span class="title function_">forEach</span>(<span class="function">(<span class="params">&#123; type, selector, handler &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (events.<span class="title function_">find</span>(<span class="function"><span class="params">event</span> =&gt;</span> event.<span class="property">type</span> === type &amp;&amp; event.<span class="property">selector</span> === selector)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (selector === <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(type, <span class="function"><span class="params">e</span> =&gt;</span> <span class="title function_">handler</span>(e));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(type, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(selector) &amp;&amp; !e.<span class="property">target</span>.<span class="title function_">closest</span>(selector)) <span class="keyword">return</span>;</span><br><span class="line">            <span class="title function_">handler</span>(e);</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        events = [...events, &#123; type, selector, handler &#125;];</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>자신을 포함한 부모쪽에서 selector를 찾을 수 있기 때문에 closest도 추가해준다.</li>
+</ul>
+<h1 id="3-DOM만-변경하고-상태는-변경시키지-않는-경우"><a href="#3-DOM만-변경하고-상태는-변경시키지-않는-경우" class="headerlink" title="3. DOM만 변경하고 상태는 변경시키지 않는 경우"></a>3. DOM만 변경하고 상태는 변경시키지 않는 경우</h1><p>list 드래그 시 dragenter가 발생할 때, DOM을 직접 변경하여 화면에 list가 서로 바뀐 것처럼 보이도록 구현하였다. 하지만, drop을 발생시켰을 때, 1번 list에서 2번 리스트로 dragenter 되었다가 다시 1번 list로 드래그 한체로 돌아와서 drop을 하면 DOM 상에서 바뀌지 않았는데, 상태가 바뀐 것으로 감지하여 상태 lists의 순서를 변경하는 문제가 발생하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// state</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrangeList</span> = (<span class="params">idOrder</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(state);</span><br><span class="line">  <span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">lists</span>: state.<span class="property">lists</span>.<span class="title function_">sort</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> aOrder = idOrder.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">id</span>) =&gt;</span> id === a.<span class="property">id</span>);</span><br><span class="line">      <span class="keyword">const</span> bOrder = idOrder.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">id</span>) =&gt;</span> id === b.<span class="property">id</span>);</span><br><span class="line">      <span class="keyword">return</span> aOrder &lt; bOrder ? -<span class="number">1</span> : aOrder &gt; bOrder ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    &#125;),</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(state);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// List Component</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">List</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">addEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;drop&#x27;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&#x27;.list-container&#x27;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">          e.<span class="title function_">stopPropagation</span>();</span><br><span class="line">          <span class="title function_">arrangeList</span>([...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.list-container&#x27;</span>)].<span class="title function_">map</span>($c =&gt; +$c.<span class="property">id</span>));</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>dragenter 이벤트 핸들러에서 DOM을 직접 변경해주었기 때문에, DOM이 변경되었는지 확인하기 위해서는 DOM API를 사용할 수 밖에 없었다.</p>
+</li>
+<li><p>DOM에 직접 접근하여 drop 이벤트가 발생하였을 때, DOM의 list-container 요소들을 가져와서 id로 배열을 반환하여 인수로 전달해주었다. 이 때 전달한 인수는 화면에 나타난 list의 순서를 의미한다.</p>
+</li>
+</ul>
+<h1 id="페어프로그래밍2의-목적"><a href="#페어프로그래밍2의-목적" class="headerlink" title="페어프로그래밍2의 목적"></a>페어프로그래밍2의 목적</h1><p>이번 페어프로그래밍2의 목적은 리액트 프레임워크를 배우기 전에 컴포넌트가 무엇인지 제대로 알고 가기 위함이였다.</p>
+<h2 id="컴포넌트란"><a href="#컴포넌트란" class="headerlink" title="컴포넌트란?"></a>컴포넌트란?</h2><p><strong>모든 컴포넌트는 자신이 어디에 그려질지 알면 안된다.</strong></p>
+<p>→ <strong>render가 알아야 한다.</strong></p>
+<ul>
+<li>컴포넌트는 어떤 모습으로 그려질 것인가에 대한 정보를 가지고 있다.</li>
+<li>render가 그 정보들을 가지고 그려주는 역할을 한다.</li>
+<li>App 컴포넌트가 자식 컴포넌트까지도 알아야 그려줄 수 있다.</li>
+<li>부모 컴포넌트가 자식컴포넌트를 알고 있으면 새롭게 그려질 정보와 이전의 그려진 정보를 비교하여 효율적인 렌더링이 가능하다.</li>
+</ul>
+<blockquote>
+<p>컴포넌트가 부모요소의 컨테이너를 받아서 그곳에 innerHTML로 그리면 이는 부모가 그린 HTML에 종속되는 것이므로 컴포넌트를 독립적으로 사용할 수 없게되므로 컴포넌트 개념을 벗어난다.</p>
+</blockquote>
+<h2 id="효율적인-렌더링을-위해서…"><a href="#효율적인-렌더링을-위해서…" class="headerlink" title="효율적인 렌더링을 위해서…"></a>효율적인 렌더링을 위해서…</h2><p>효율적인 렌더링을 위해서는 diff 알고리즘을 구현하였었다. 만약 App 컴포넌트가 일부분을 그리고 나머지 부분을 다른 컴포넌트가 받아서 그리는 하향식 구조로 설계를 하게된다면 diff 알고리즘이 하향식으로 비교해나가는데 이는 어디가 최하단인지 판별해주기가 까다로워진다.</p>
+<p>그러므로 재조정은 App 컴포넌트가 해야한다. App 컴포넌트는 다른 컴포넌트에게 그들을 그리기 위한 정보를 전달받아 이것들을 모아서 render 함수로 보내서 화면에 렌더링을 시켜준다. render 함수는 그려주는 역할을 하고 App 컴포넌트는 그려지기위한 정보를 모두 가지고 있어야한다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>코드 작성에 대해 어떤 생각을 가지고 구현했는지 명확하게 얘기할 수 있으면 Ok<ul>
+<li>되는대로 짜는 것이 아니라 명확한 이유가 가지고 짜면 위의 문제가 해결</li>
+</ul>
+</li>
+<li>내가 작성한 코드는 나만 잘 알고 있다. 상대방에게 설명할 때, 상대방이 어느정도 알고 있을 것이라는 생각은 접어두자.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                            aria-label=": trello Tip"
+                        >
+                            trello Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-04T21:23:45+09:00">
+	
+		    2022/10/04
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="1-trello-상태관리"><a href="#1-trello-상태관리" class="headerlink" title="1. trello 상태관리"></a>1. trello 상태관리</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">lists</span>: [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&quot;Frameworks&quot;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&quot;OS&quot;</span> &#125;,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">cards</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;React&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;Vue&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;Windows&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">2</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;MacOS&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">2</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>처음에는 위와 같은 방식으로 상태를 관리해주려 하였다.trello cards를 드래그하여 다른 list로 옮겼을 경우도 있기 때문에, trello list에 cards가 종속되어 있지 않다고 생각했기 때문이다.</p>
+</li>
+<li><p>하지만 리스트 내의 cards가 순서대로 등록되기 때문에 list 별로 cards를 배열로 관리하는 것이 좋다고 판단하여 다음과 같이 상태를 변경해주었다.</p>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">listOriginId</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">isListMakerOpen</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">lists</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&quot;Frameworks&quot;</span>,</span><br><span class="line">      <span class="attr">isOpen</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">cards</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;React&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;Vue&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&quot;OS&quot;</span>,</span><br><span class="line">      <span class="attr">isOpen</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">cards</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;Windows&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">4</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;MacOS&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>추가로 렌더링에 영향을 끼치는 데이터는 모두 상태로 관리해주는 것이 DOM API를 적게 사용하고 동적 HTML에 선언적으로 style을 주거나 데이터를 바인딩해줄 수 있어 훨씬 가독성이 높아진다.</li>
+</ul>
+<p>때문에, <strong>DOM API 사용을 자제하고 만약 DOM API를 사용해야 하는 경우라면 꼭 한번 고민해보고 사용</strong>하도록 하자.</p>
+<h1 id="2-diff-알고리즘은-프로퍼티까지-비교해줘야한다"><a href="#2-diff-알고리즘은-프로퍼티까지-비교해줘야한다" class="headerlink" title="2. diff 알고리즘은 프로퍼티까지 비교해줘야한다."></a>2. diff 알고리즘은 프로퍼티까지 비교해줘야한다.</h1><p>이전에 diff 알고리즘을 구현하였을 때, attribute 값만 서로 비교해주고 property 값은 비교해주지 않았다. textarea의 value 값을 빈값으로 바꿔주고 싶어서 이를 상태로 관리해야하나? 생각이 들어 상태로 관리해보려했다.</p>
+<p>하지만, textarea의 attribute인 value는 처음부터 빈값이였고 input 이벤트가 발생하고 이 때의 value값(property 값)을 상태에 등록해주더라도 diff 알고리즘이 attribute만 비교해주기 때문에 처음과 input이벤트 발생한 후의 textarea는 변한게 없는 것으로 간주하였다.</p>
+<p>그러므로 diff 알고리즘에서 property까지 비교하여 바뀐 부분이 렌더링 되도록 알고리즘을 개선해주었다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// property 비교 추가</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">diff</span> = (<span class="params">$new, $old</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newNodes = [...$new.<span class="property">childNodes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldNodes = [...$old.<span class="property">childNodes</span>];</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"><span class="comment">// 원래는 프로퍼티를 전부 비교해줘야하지만, 사정상 value, checked만 확인해주겠다.</span></span><br><span class="line">    <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">value</span> !== $o.<span class="property">value</span>) &#123;</span><br><span class="line">      $o.<span class="property">value</span> = $n.<span class="property">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">checked</span> !== $o.<span class="property">checked</span>) &#123;</span><br><span class="line">      $o.<span class="property">checked</span> = $n.<span class="property">checked</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>그 결과 textarea가 변경될 때마다 textarea의 value property가 변경되므로 재렌더링이 발생하므로 요구사항에 맞게 구현할 수 있다.</li>
+</ul>
+<h1 id="3-drag-amp-drop-기능-완벽하게-이해하기"><a href="#3-drag-amp-drop-기능-완벽하게-이해하기" class="headerlink" title="3. drag &amp; drop 기능 완벽하게 이해하기"></a>3. drag &amp; drop 기능 완벽하게 이해하기</h1><p>요구사항에서 drag한 list를 드래그 한체로 다른 list 위로 올렸을 때, 상태가 변경되지 않고 DOM을 직접 변경하여 list가 서로 swap 되도록 하고 drop한 이후에 state를 변경하라고 적혀있다.</p>
+<p>각자의 이벤트 핸들러는 서로의 event target을 알 수 없으므로 상태로 관리해줘야만 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">listOriginId</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">targetId</span>:<span class="literal">null</span>,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragstart&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">listOriginId</span> = <span class="string">&quot;drag 시작한 list의 id&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragenter&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">targetId</span> = <span class="string">&quot;dragenter 발생한 list의 id&quot;</span></span><br><span class="line">  <span class="title function_">swapList</span>(e.<span class="property">target</span>.<span class="property">id</span>) <span class="comment">// DOM 직접 변경하여 dragstart 이벤트 발생한 노드와 dragenter 이벤트 발생한 노드를 변경</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragend&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123;...&#125;) <span class="comment">// listOriginId, targetId를 가지고 lists의 배열 요소 위치를 서로 바꿔준다.</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// drop 이벤트 발생시키기 위해서 dragover 이벤트 핸들러에 e.preventDefault()</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragover&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  e.<span class="title function_">preventDefault</span>();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>사실 drop 이벤트를 발생시키기 위해서 dragover 이벤트에서 e.preventDefault()를 호출하였는데, drop 이벤트를 사용하지 않아도 구현이 가능하여서 제거해도 될까 했지만, 제거하게 되면 dragend가 발생했을 때, dragstart한 요소가 제자리로 돌아오는 트랜지션(?)이 제거되지 않으므로 남겨두었다.</p>
+</li>
+<li><p>drop 이벤트를 사용하지 않은 이유는 drop 이벤트는 draggable인 요소에서만 drop 이벤트가 발생한다. 즉, dragenter로 새로운 list랑 이전 list의 DOM을 변경해주었는데, drop을 list 요소 바깥에서 발생시키면 drop 이벤트가 발생하지 않는 문제점이 있어서 drop 이벤트 대신에 dragend 이벤트를 사용하였다.</p>
+</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li><p>if문은 어렵다. input 값이 빈칸일 때, a조건 또는 b조건 만족해야지 실행하는 예제를 한줄로 줄여보려 했지만 복잡해서 일단 따로 사용했다.</p>
+</li>
+<li><p>state는 객체이고 그 안에 여러 상태 데이터를 관리하는데, lists를 배열로 관리해주고 있고, lists 배열의 요소를 list라고 한다면 list는 객체로 관리되고 list 안에 또 cards라는 배열이 있고 cards 배열의 요소는 card라는 객체이다. 이런 복잡한 구조의 state를 가지고 고차함수를 사용하는데 어려움이 있었다.</p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/04/PairProgramming/level%202/trello%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/"
+                            aria-label=": tictactoe, drag 이벤트 Tip"
+                        >
+                            tictactoe, drag 이벤트 Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-02T21:38:49+09:00">
+	
+		    2022/10/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="2-tictactoe"><a href="#2-tictactoe" class="headerlink" title="2. tictactoe"></a>2. tictactoe</h1><ol>
+<li>재렌더링 일어나는 부부은 game-status, game-grid-items 이 부분만 인데, innerHTML로 game 안을 전부 변경하려고 하니 재렌더링 필요 없는 부분인 game-reset 까지 재렌더링 해줘야하는 문제가 생겼다.<ol>
+<li>일단은 재렌더링 일어나도록 구현하였다.</li>
+</ol>
+</li>
+<li>isOver라는 상태를 두는 것이 맞는지? 이벤트 핸들러 안에서 isOver 값을 가지고 얼리리턴으로 더이상 게임을 못하게 막는것이 맞는지…<ol>
+<li>일단 위와같이 하였다.</li>
+</ol>
+</li>
+</ol>
+<h1 id="4-drag"><a href="#4-drag" class="headerlink" title="4. drag"></a>4. drag</h1><ol>
+<li>swapLang 할 때, 왜 새로운 변수에다가 langs 값을 복사해서 다루는 것인가?<ol>
+<li>lang을 변경할 수 있는 역할을 하는 함수가 setLang 함수이기 때문에 lang 데이터 변경은 반드시 setLang 함수로만 해야하기 때문이다.</li>
+</ol>
+</li>
+<li>render에서 lang 변수를 받는 이유는 ??<ol>
+<li>함수를 순수함수로 만들어주기 위함이다. 매개변수로 받은 인자를 가지고만 코드를 실행하도록 짜서 순수함수가 되도록 한다.</li>
+</ol>
+</li>
+<li>dragenter 이벤트로 드롭할 요소로 드래그 했을 때, p태그, i태그 등 div안의 다른 요소에 드래그한 체로 이동하면 dragleave이벤트랑 겹침 현상이 발생하여 이를 해결하기 위해서는 얼리 리턴으로 조건을 달아줘야하는데, 복잡한 구조로 되어있는 경우 매우 어려워진다. 그러므로 dragover를 사용하여 이벤트가 많이 발생하는 것은 디바운스로 해결해주자.</li>
+</ol>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>혼자서 짜보려고 하니 같이 짜는 것보다 스스로 생각해보고 문제를 해결해나가는 능력이 길러진 것 같다. 같이 짜면 상대방에게 의존할 수 있는 경우가 있는데 혼자서는 그런 것 없이 혼자 다 이겨내야하므로 어렵지만 더 기억에 오래 남을 것 같다. 앞으로도 내가 직접 해본것이 아니라면 반드시 내 손으로 다시 직접 해보면서 해결방안을 직접 터득하면서 나아가야겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/"
                             aria-label=": diff Algorithm Tip"
                         >
@@ -1069,351 +1342,6 @@
                         <p>
                             <a
                                 href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
-                            aria-label=": form validation Tip"
-                        >
-                            form validation Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-21T19:11:05+09:00">
-	
-		    2022/09/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Form-Validation-구현-중-느낀점"><a href="#Form-Validation-구현-중-느낀점" class="headerlink" title="Form Validation 구현 중 느낀점"></a>Form Validation 구현 중 느낀점</h1><h2 id="1-모든-코드를-setState로-틀을-고정하여-생각하지-말자"><a href="#1-모든-코드를-setState로-틀을-고정하여-생각하지-말자" class="headerlink" title="1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자."></a>1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">  <span class="attr">pw</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [$idSuccessIcon, $pwSuccessIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-success&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorIcon, $pwErrorIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorMessage, $pwErrorMessage] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> $signinButton = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.button&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  $idSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $idErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $pwSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $pwErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $idErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">id</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line">  $pwErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">pw</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">id</span> === <span class="string">&quot;success&quot;</span> &amp;&amp; state.<span class="property">pw</span> === <span class="string">&quot;success&quot;</span>)</span><br><span class="line">    $signinButton.<span class="title function_">removeAttribute</span>(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span> $signinButton.<span class="title function_">setAttribute</span>(<span class="string">&quot;disabled&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkIdValidation</span> = (<span class="params">input</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (input === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span> &#125;);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> regExp =</span><br><span class="line">    <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: regExp.<span class="title function_">test</span>(input) ? <span class="string">&quot;success&quot;</span> : <span class="string">&quot;error&quot;</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> $signIdInput = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#signin-userid&quot;</span>);</span><br><span class="line"></span><br><span class="line">$signIdInput.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;keyup&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkIdValidation</span>($signIdInput.<span class="property">value</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.</p>
-</li>
-<li><p>위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.</p>
-</li>
-</ul>
-<p>하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 <span style='color:red'>별로 좋지 않는 습관이다.</span></p>
-<p>왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.</p>
-<p>그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.</p>
-<p>위 코드를 리팩터링한 결과는 다음과 같다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> signinSchema = &#123;</span><br><span class="line">  <span class="attr">userid</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>.<span class="title function_">test</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">value</span></span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">password</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/\w&#123;6,12&#125;$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">userid</span>.<span class="property">valid</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">password</span>.<span class="property">valid</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.</li>
-</ul>
-<blockquote>
-<p>마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.</p>
-</blockquote>
-<ul>
-<li><p>email과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.</p>
-</li>
-<li><p>input에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.</p>
-</li>
-<li><p>접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.</p>
-</li>
-</ul>
-<blockquote>
-<p>각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.</p>
-</blockquote>
-<h2 id="2-DOM-API-사용을-줄이자"><a href="#2-DOM-API-사용을-줄이자" class="headerlink" title="2. DOM API 사용을 줄이자."></a>2. DOM API 사용을 줄이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.</p>
-</li>
-<li><p><code>document.querySelector(`#$&#123;target.id&#125; ~ .icon-success`)</code> 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.</p>
-</li>
-</ul>
-<blockquote>
-<p>DOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.</p>
-</blockquote>
-<h2 id="3-input-이벤트-타입"><a href="#3-input-이벤트-타입" class="headerlink" title="3. input 이벤트 타입"></a>3. input 이벤트 타입</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.</p>
-</li>
-<li><p>리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.</p>
-</li>
-<li><p>또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.</p>
-</li>
-<li><p>e.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
-                            aria-label=": toaster, autocomplete, carousel Tip"
-                        >
-                            toaster, autocomplete, carousel Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-20T18:45:54+09:00">
-	
-		    2022/09/20
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Toaster-리팩터링-중-느낀점"><a href="#Toaster-리팩터링-중-느낀점" class="headerlink" title="Toaster 리팩터링 중 느낀점"></a>Toaster 리팩터링 중 느낀점</h1><h2 id="1-함수의-인수는-3개를-넘지-말자"><a href="#1-함수의-인수는-3개를-넘지-말자" class="headerlink" title="1. 함수의 인수는 3개를 넘지 말자."></a>1. 함수의 인수는 3개를 넘지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">generateToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [type, title, message] = messageType;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">  $newToast.<span class="property">style</span>.<span class="property">bottom</span> = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">  $newToast.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;toast&quot;</span>, type);</span><br><span class="line"></span><br><span class="line">  $newToast.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;h4 class=&quot;toast-title&quot;&gt;<span class="subst">$&#123;title&#125;</span> <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    [...<span class="variable language_">document</span>.querySelectorAll(<span class="string">&quot;body .toast&quot;</span>)].length</span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>&lt;/h4&gt;</span></span><br><span class="line"><span class="string">    &lt;div class=&quot;toast-message&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;use xlink:href=&quot;#<span class="subst">$&#123;type&#125;</span>&quot; /&gt;</span></span><br><span class="line"><span class="string">      &lt;/svg&gt;</span></span><br><span class="line"><span class="string">      &lt;p&gt;<span class="subst">$&#123;message&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $newToast;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.</li>
-</ul>
-<h2 id="2-함수를-사용하는-이유를-고민하자"><a href="#2-함수를-사용하는-이유를-고민하자" class="headerlink" title="2. 함수를 사용하는 이유를 고민하자."></a>2. 함수를 사용하는 이유를 고민하자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">addToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="title function_">generateToast</span>(messageType);</span><br><span class="line"></span><br><span class="line">  $body.<span class="title function_">appendChild</span>($newToast);</span><br><span class="line">  <span class="title function_">lineUpToast</span>();</span><br><span class="line"></span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $newToast.<span class="title function_">remove</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">lineUpToast</span>();</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>setTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.</li>
-</ul>
-<h1 id="Autocomplete-리팩터링-중-느낀점"><a href="#Autocomplete-리팩터링-중-느낀점" class="headerlink" title="Autocomplete 리팩터링 중 느낀점"></a>Autocomplete 리팩터링 중 느낀점</h1><h2 id="1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수"><a href="#1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수" class="headerlink" title="1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수"></a>1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">countryCode</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">init</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; countryCode &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.autocomplete-toggle-button&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $suggester.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">    $searchInput.<span class="title function_">focus</span>();</span><br><span class="line"></span><br><span class="line">    autocomplete.<span class="title function_">init</span>();</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.</p>
-</li>
-<li><p>또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.</p>
-</li>
-</ul>
-<h2 id="2-함수-역할의-분리"><a href="#2-함수-역할의-분리" class="headerlink" title="2. 함수 역할의 분리"></a>2. 함수 역할의 분리</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">findCountry</span> = (<span class="params">inputValue</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(inputValue, <span class="string">&quot;i&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newCountryCode = countryCode</span><br><span class="line">    .<span class="title function_">filter</span>(<span class="function">(<span class="params">[, country]</span>) =&gt;</span> country.<span class="title function_">match</span>(regExp))</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function">(<span class="params">[code, country]</span>) =&gt;</span> [</span><br><span class="line">      code,</span><br><span class="line">      country.<span class="title function_">replace</span>(regExp, <span class="string">`&lt;strong&gt;<span class="subst">$&#123;country.match(regExp)&#125;</span>&lt;/strong&gt;`</span>),</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">countryCode</span>: newCountryCode &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.</p>
-</li>
-<li><p>또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.</p>
-</li>
-</ul>
-<blockquote>
-<p>([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.</p>
-</blockquote>
-<h2 id="3-함수의-가독성을-높이자"><a href="#3-함수의-가독성을-높이자" class="headerlink" title="3. 함수의 가독성을 높이자."></a>3. 함수의 가독성을 높이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">selectCountry</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  $toggleButtonSpan.<span class="property">innerHTML</span> = target.<span class="property">firstElementChild</span>.<span class="property">innerHTML</span>;</span><br><span class="line">  $toggleButtonSpan.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;country&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>selectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.</li>
-</ul>
-<h1 id="Carousel-리팩터링-중-느낀점"><a href="#Carousel-리팩터링-중-느낀점" class="headerlink" title="Carousel 리팩터링 중 느낀점"></a>Carousel 리팩터링 중 느낀점</h1><h2 id="1-state로-관리해야하는-데이터와-그렇지-않은-데이터"><a href="#1-state로-관리해야하는-데이터와-그렇지-않은-데이터" class="headerlink" title="1. state로 관리해야하는 데이터와 그렇지 않은 데이터"></a>1. state로 관리해야하는 데이터와 그렇지 않은 데이터</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">currentSlide</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> isTransitioned = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DURATION</span> = <span class="number">500</span>;</span><br><span class="line"><span class="keyword">const</span> newImages = [images[images.<span class="property">length</span> - <span class="number">1</span>], ...images, images[<span class="number">0</span>]];</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.</li>
-</ul>
-<h3 id="state로-관리해야하는-데이터"><a href="#state로-관리해야하는-데이터" class="headerlink" title="state로 관리해야하는 데이터"></a>state로 관리해야하는 데이터</h3><ol>
-<li><p>사용자의 액션에 의해서 변경되는 데이터</p>
-</li>
-<li><p>실제 화면의 렌더링에 영향을 끼치는 데이터</p>
-</li>
-<li><p>서버에 저장해야할 필요가 있는 데이터</p>
-</li>
-</ol>
-<p>위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.</p>
-<p>그에 대한 근거는 다음 예시를 통해 알아보자.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">isTransitioned</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  isTransitioned = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.</li>
-</ul>
-<p>즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.</p>
-<h2 id="2-Model과-Controller-패턴의-사용"><a href="#2-Model과-Controller-패턴의-사용" class="headerlink" title="2. Model과 Controller 패턴의 사용"></a>2. Model과 Controller 패턴의 사용</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">carousel</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> carouselSlider = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      init,</span><br><span class="line">      setStyle,</span><br><span class="line">      prev,</span><br><span class="line">      next,</span><br><span class="line">      completeTransition,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)();</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">carousel</span>(<span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.carousel&#x27;</span>), [images...])</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>addEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.</li>
-</ul>
-<h2 id="3-DOMContentLoaded와-load-이벤트-핸들러"><a href="#3-DOMContentLoaded와-load-이벤트-핸들러" class="headerlink" title="3. DOMContentLoaded와 load 이벤트 핸들러"></a>3. DOMContentLoaded와 load 이벤트 핸들러</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, carouselSlider.<span class="property">setStyle</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.</p>
-</li>
-<li><p>또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"
-                            aria-label=": darkmode, modal, stopwatch Tip"
-                        >
-                            darkmode, modal, stopwatch Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-19T19:07:25+09:00">
-	
-		    2022/09/19
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="darkMode-리팩터링-중-느낀점"><a href="#darkMode-리팩터링-중-느낀점" class="headerlink" title="darkMode 리팩터링 중 느낀점"></a>darkMode 리팩터링 중 느낀점</h1><h2 id="1-setDarkMode-함수의-응집도를-높이고-관심사를-구분하자"><a href="#1-setDarkMode-함수의-응집도를-높이고-관심사를-구분하자" class="headerlink" title="1. setDarkMode 함수의 응집도를 높이고 관심사를 구분하자."></a>1. setDarkMode 함수의 응집도를 높이고 관심사를 구분하자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> setDarkMode = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $body = <span class="variable language_">document</span>.<span class="property">body</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> userTheme = <span class="variable language_">window</span>.<span class="title function_">matchMedia</span>(<span class="string">&quot;(prefers-color-scheme: dark)&quot;</span>).<span class="property">matches</span>;</span><br><span class="line">  <span class="keyword">const</span> transitionDuration =</span><br><span class="line">    +<span class="title function_">getComputedStyle</span>(<span class="variable language_">document</span>.<span class="property">documentElement</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">      <span class="string">&quot;--transition-duration&quot;</span></span><br><span class="line">    ) * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getCurrentMode</span> = (<span class="params"></span>) =&gt; <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;isDark&quot;</span>));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">toggleMode</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    $body.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;dark&quot;</span>, <span class="title function_">getCurrentMode</span>());</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">setCurrentMode</span> = (<span class="params">selectedMode</span>) =&gt; &#123;</span><br><span class="line">    <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&quot;isDark&quot;</span>, selectedMode);</span><br><span class="line">    <span class="title function_">toggleMode</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">setCurrentMode</span>(!<span class="title function_">getCurrentMode</span>());</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">init</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;isDark&quot;</span>) === <span class="literal">null</span></span><br><span class="line">        ? <span class="title function_">setCurrentMode</span>(userTheme)</span><br><span class="line">        : <span class="title function_">toggleMode</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">preventBlink</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        $body.<span class="property">classList</span>.<span class="title function_">remove</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">      &#125;, transitionDuration);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.toggle-button&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, setDarkMode.<span class="property">toggle</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, setDarkMode.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, setDarkMode.<span class="property">preventBlink</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>setDarkMode 함수와 관련된 변수와 함수를 한곳에 모아 응집도를 높이고 즉시실행함수로 감싸고 클로저를 구현하였다.</p>
-</li>
-<li><p>즉시실행함수의 반환값인 toggle, init, preventBlink 함수는 자유변수를 참조하고 외부함수보다 생명주기가 긴 클로저이다.</p>
-</li>
-<li><p>preventBlink 함수와 init 함수는 결국 렌더링과 관련된 함수여서 하나로 합칠까 생각했지만, 그 경우, 이미지 파일이 많은 프로그램인 경우 이미지가 로드되기 전에 darkMode를 동작이 제대로 되지 않을 수 있다고 판단하여 다른 함수로 구분하였다.</p>
-</li>
-<li><p>addEventListener는 가능한 한줄로 쓰자는 팀원과의 컨벤션을 지키기 위해 위와같이 작성하였고 이벤트 핸들러가 많아지게 되면서 복잡해지더라도 한줄로 있으면 가독성을 높일 수 있을 것이라 생각했다.</p>
-</li>
-</ul>
-<h1 id="popupModal-리팩터링-중-느낀점"><a href="#popupModal-리팩터링-중-느낀점" class="headerlink" title="popupModal 리팩터링 중 느낀점"></a>popupModal 리팩터링 중 느낀점</h1><h2 id="1-변수를-사용한-이유"><a href="#1-변수를-사용한-이유" class="headerlink" title="1. 변수를 사용한 이유"></a>1. 변수를 사용한 이유</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $modalContainer = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> $modal = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> $popupMessage = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-message&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위의 document.querySelector() DOM API는 처음에 한번만 요소를 가져와 변수에 할당해주면 된다. 굳이 이벤트 핸들러 함수 내부에 적어서 함수가 호출될 때마다 DOM API까지 같이 호출될 필요가 없으므로 변수에 값을 저장해서 사용하였다.</li>
-</ul>
-<h2 id="2-누군가가-코드를-읽을-때-한번-더-생각하게-하지-않도록-작성하자"><a href="#2-누군가가-코드를-읽을-때-한번-더-생각하게-하지-않도록-작성하자" class="headerlink" title="2. 누군가가 코드를 읽을 때, 한번 더 생각하게 하지 않도록 작성하자."></a>2. 누군가가 코드를 읽을 때, 한번 더 생각하게 하지 않도록 작성하자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1번</span></span><br><span class="line">    <span class="title function_">toggle</span>(<span class="params">method</span>) &#123;</span><br><span class="line">      $modal.<span class="property">classList</span>[method](<span class="string">&#x27;is-open&#x27;</span>);</span><br><span class="line">      $modalContainer.<span class="property">classList</span>[method](<span class="string">&#x27;background-gray&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2번</span></span><br><span class="line">    <span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">      $modal.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&#x27;is-open&#x27;</span>);</span><br><span class="line">      $modalContainer.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&#x27;background-gray&#x27;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">remove</span>(<span class="params"></span>) &#123;</span><br><span class="line">      $modal.<span class="property">classList</span>.<span class="title function_">remove</span>(<span class="string">&#x27;is-open&#x27;</span>);</span><br><span class="line">      $modalContainer.<span class="property">classList</span>.<span class="title function_">remove</span>(<span class="string">&#x27;background-gray&#x27;</span>);</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>처음에 중복을 줄이기 위해 1번으로 구현했었는데, 오히려 직접 사용해보니 2번의 경우가 가독성이 더 낫다고 판단했다. 그 이유는 이벤트 핸들러에서 toggle(‘remove’) 이런식으로 사용하는 것보다 toggle, remove를 사용하는 것이 더 깔끔하기 때문이다.</li>
-</ul>
-<h2 id="3-이벤트-핸들러-축약표현-알아두기"><a href="#3-이벤트-핸들러-축약표현-알아두기" class="headerlink" title="3. 이벤트 핸들러 축약표현 알아두기"></a>3. 이벤트 핸들러 축약표현 알아두기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  e.<span class="title function_">preventDefault</span>();</span><br><span class="line">  $popupMessage.<span class="property">textContent</span> = <span class="string">`from popup : <span class="subst">$&#123;e.target.firstElementChild.value&#125;</span>`</span>;</span><br><span class="line">  popupModal.<span class="title function_">toggle</span>(<span class="string">&#x27;remove&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.popup-form&#x27;</span>).<span class="title function_">addEventListener</span>(<span class="string">&#x27;submit&#x27;</span>, render);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>render 함수를 이벤트 핸들러로 등록할 때, event 객체를 받아서 e.preventDefault() 메서드를 실행하는데, 이벤트 핸들러에서는 인수를 전달해주지 않아도 축약표현으로 인식하여 event 객체를 해당 위치에 전달해준다.</li>
-</ul>
-<h1 id="stopWatch-리팩터링-중-느낀점"><a href="#stopWatch-리팩터링-중-느낀점" class="headerlink" title="stopWatch 리팩터링 중 느낀점"></a>stopWatch 리팩터링 중 느낀점</h1><h2 id="1-배열-디스트럭처링-사용"><a href="#1-배열-디스트럭처링-사용" class="headerlink" title="1. 배열 디스트럭처링 사용"></a>1. 배열 디스트럭처링 사용</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [$leftButton, $rightButton] = [...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.control&quot;</span>)];</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>leftButton, rightButton &#x2F; laps, title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.</li>
-</ul>
-<h2 id="2-버튼-요소의-textContent-값으로-조건문을-구분하는-것은-좋지-않다"><a href="#2-버튼-요소의-textContent-값으로-조건문을-구분하는-것은-좋지-않다" class="headerlink" title="2. 버튼 요소의 textContent 값으로 조건문을 구분하는 것은 좋지 않다."></a>2. 버튼 요소의 textContent 값으로 조건문을 구분하는 것은 좋지 않다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1번</span></span><br><span class="line"><span class="keyword">if</span> ($leftButton.<span class="property">textContent</span> === <span class="string">&quot;Stop&quot;</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2번</span></span><br><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">isStarted</span>:<span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (state.<span class="property">isStarted</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>1번 처럼 textContent로 조건문을 사용하게되면 나중에 textContent를 수정하게되면 유지보수가 어려워지므로 상태로서 관리하는 것을 추천한다.</li>
-</ul>
-<h2 id="3-함수는-각자의-역할에-맞는-코드를-포함하도록-작성해야한다"><a href="#3-함수는-각자의-역할에-맞는-코드를-포함하도록-작성해야한다" class="headerlink" title="3. 함수는 각자의 역할에 맞는 코드를 포함하도록 작성해야한다."></a>3. 함수는 각자의 역할에 맞는 코드를 포함하도록 작성해야한다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">isStarted</span>) &#123;</span><br><span class="line">    $leftButton.<span class="property">textContent</span> = <span class="string">&quot;Stop&quot;</span>;</span><br><span class="line">    $rightButton.<span class="property">textContent</span> = <span class="string">&quot;Lap&quot;</span>;</span><br><span class="line">    $rightButton.<span class="title function_">removeAttribute</span>(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line"></span><br><span class="line">    $laps.<span class="property">innerHTML</span> = <span class="string">`Laps</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;state.laps.map((_, index) =&gt; <span class="string">`&lt;div&gt;<span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&lt;/div&gt;`</span>).join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">      `</span>;</span><br><span class="line">    $time.<span class="property">innerHTML</span> = <span class="string">`Time</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;state.laps.map((lap) =&gt; <span class="string">`&lt;div&gt;<span class="subst">$&#123;lap&#125;</span>&lt;/div&gt;`</span>).join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">      `</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $leftButton.<span class="property">textContent</span> = <span class="string">&quot;Start&quot;</span>;</span><br><span class="line">    $rightButton.<span class="property">textContent</span> = <span class="string">&quot;Reset&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleStarted</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">isStarted</span>: !state.<span class="property">isStarted</span> &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">updateTime</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addLap</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newLap = $display.<span class="property">textContent</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">laps</span>: [...state.<span class="property">laps</span>, newLap] &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>render 함수는 leftButton, rightButton을 클릭했을 때, 화면에 글자가 바꾸는 일을 해준다.</p>
-</li>
-<li><p>setState 함수는 데이터를 변경하고 그 데이터를 가지고 화면에 render 하는 함수를 호출하는 역할을 한다.</p>
-</li>
-<li><p>toggleStarted 함수는 isStarted 데이터를 변경시키고 시간을 갱신하는 역할을 한다.</p>
-</li>
-<li><p>addLap 함수는 $display의 textContent값으로 laps 데이터를 변경시키는 역할을 한다.</p>
-</li>
-</ul>
-<blockquote>
-<p>스톱워치에 아직 리팩터링 중인데, 버튼은 2개인데 가정해야할 상황이 4가지여서 어떻게 짜면 좋을지 고민중이다…</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
