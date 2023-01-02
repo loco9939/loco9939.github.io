@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>type alias(타입별칭)와 타입 합치기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;\n\n\n\n\n위와 같이 함수 타입도 type alias를 저장하여 사용할 수 있다.\n함수타입을 사용하려면 함수를 표현식으로 정의해줘야한다.\n\ncallback 함수 type 지정하기1234567891011121314type CutType = (x: string) =&gt; string;let cutZero: CutType = function (x) &#123;  let result = x.replace(/^0+/, &quot;&quot;);  return result;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;const newFunc = (str: string, funA: CutType, funB: (x: string) =&gt; number) =&gt; &#123;  return removeDash(cutZero(str));&#125;;\n\n\n만약 콜백 함수의 타입을 지정해주고 싶다면 위와 같이 지정해줄 수 있다.\n\n✏️ readonly로 객체 잠그기12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;;\n\n\n위와 같이 자바스크립트에서 const 키워드로 재할당을 막아도 객체 내부까지는 막을 수 없다. 이럴 때 readonly 타입을 지정해주면 막을 수 있다.\n\n12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;; // Error\n\n\n컴파일 시 에러가 발생한다.(변환된 js 파일은 바뀌어 있다.)\n\nreadonly number[ ]는 배열 요소를 읽을 수만 있다.\n\n배열을 변경하는 pop 메서드를 비롯한 다른 메서드를 호출할 수 없다.\n\n\n❗️ readonly 주의사항123const a: number[] = [1, 2, 3];const b: readonly number[] = a;const c: number[] = b; // Error: &#x27;readonly number[]는 변경가능한 number[] 타입에 할당할 수 없다.\n\n\nnumber[ ]는 readonly number[ ]보다 기능이 많기 때문에 readonly number[ ]의 서브타입이다.\nnumber[ ]는 readonly number[ ]에 할당 가능하다.\n\n1234567function arraySum(arr: readonly number[]) &#123;  let sum = 0;  for (const num of arr) &#123;    sum += num;  &#125;  return sum;&#125;\n\n\n함수가 매개변수를 변경하지 않는다면 readonly로 선언해야한다.\n\n⛳️ type 키워드 여러개 합치기123type Name = string;type Age = number;type person = Name | Age;\n\n\nOR 연산자를 사용하여 유니온 타입으로 만들 수 있다.\n\n12345678type PositionX = &#123; x: number &#125;;type PositionY = &#123; y: number &#125;;type XandY = PositionX &amp; PositionY;type XandZ = PositionX &amp; &#123; z: number &#125;;let pos: XandY = &#123; x: 1, y: 2 &#125;;let pos: XandZ = &#123; x: 10, z: 3 &#125;;\n\n\n객체 타입은 &amp; 연산자를 사용하여 **합치기(extends)**가 가능하다.\nXandY type is &#123; x: number, y: number &#125;\nType alias &amp; Type alias 뿐만 아니라 Type alias &amp; { key: type }도 가능하다.\n\n\ntype 키워드는 재정의가 불가능하다.\n\n❗️ &amp; 연산자 주의사항12345type Combined = &#123; a: number &#125; &amp; &#123; b: string &#125;;type Conflicting = &#123; a: number &#125; &amp; &#123; a: string &#125;;const ta: Combined = &#123; a: 1, b: &quot;st&quot; &#125;; // 정상const tt: Conflicting = &#123; a: 1 &#125;; // Error\n\n\nCombined 타입은 { a: number, b: string }\nConflicting 타입은 { a: number와 string의 교집합 === never }\n\n","dateCreated":"2022-11-22T09:06:56+09:00","dateModified":"2022-11-23T20:15:42+09:00","datePublished":"2022-11-22T09:06:56+09:00","description":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;","headline":"type alias(타입별칭)와 타입 합치기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"}</script>
+    <meta name="description" content="📌 type alias(타입별칭)1type Animal &#x3D; string | number;   type 타입변수명 &#x3D; 타입종류 이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다. 관습적으로 대문자 사용  🏓 function type 지정하기123456789type NumOut &#x3D; (x: number, y: number) &#x3D;&gt; nu">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="type alias(타입별칭)와 타입 합치기">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 type alias(타입별칭)1type Animal &#x3D; string | number;   type 타입변수명 &#x3D; 타입종류 이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다. 관습적으로 대문자 사용  🏓 function type 지정하기123456789type NumOut &#x3D; (x: number, y: number) &#x3D;&gt; nu">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-22T00:06:56.000Z">
+<meta property="article:modified_time" content="2022-11-23T11:15:42.295Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            type alias(타입별칭)와 타입 합치기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-22T09:06:56+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-type-alias-타입별칭"><a href="#📌-type-alias-타입별칭" class="headerlink" title="📌 type alias(타입별칭)"></a>📌 type alias(타입별칭)</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Animal</span> = <span class="built_in">string</span> | <span class="built_in">number</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type 타입변수명 &#x3D; 타입종류</li>
+<li>이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.</li>
+<li>관습적으로 대문자 사용</li>
+</ul>
+<h2 id="🏓-function-type-지정하기"><a href="#🏓-function-type-지정하기" class="headerlink" title="🏓 function type 지정하기"></a>🏓 function type 지정하기</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">NumOut</span> = <span class="function">(<span class="params">x: <span class="built_in">number</span>, y: <span class="built_in">number</span></span>) =&gt;</span> <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">ABC</span>: <span class="title class_">NumOut</span> = <span class="keyword">function</span> (<span class="params">x, y</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">removeDash</span>(<span class="params">x: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> result = x.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">parseFloat</span>(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<ul>
+<li>위와 같이 함수 타입도 type alias를 저장하여 사용할 수 있다.</li>
+<li>함수타입을 사용하려면 함수를 <red>표현식으로 정의</red>해줘야한다.</li>
+</ul>
+<h3 id="callback-함수-type-지정하기"><a href="#callback-함수-type-지정하기" class="headerlink" title="callback 함수 type 지정하기"></a>callback 함수 type 지정하기</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type <span class="title class_">CutType</span> = <span class="function">(<span class="params">x: string</span>) =&gt;</span> string;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">cutZero</span>: <span class="title class_">CutType</span> = <span class="keyword">function</span> (<span class="params">x</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> result = x.<span class="title function_">replace</span>(<span class="regexp">/^0+/</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">removeDash</span>(<span class="params">x: string</span>): number &#123;</span><br><span class="line">  <span class="keyword">let</span> result = x.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">parseFloat</span>(result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">newFunc</span> = (<span class="params">str: string, funA: CutType, funB: (x: string) =&gt; number</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">removeDash</span>(<span class="title function_">cutZero</span>(str));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>만약 콜백 함수의 타입을 지정해주고 싶다면 위와 같이 지정해줄 수 있다.</li>
+</ul>
+<h2 id="✏️-readonly로-객체-잠그기"><a href="#✏️-readonly로-객체-잠그기" class="headerlink" title="✏️ readonly로 객체 잠그기"></a>✏️ readonly로 객체 잠그기</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="property">name</span> = <span class="string">&quot;loco&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위와 같이 자바스크립트에서 const 키워드로 재할당을 막아도 객체 내부까지는 막을 수 없다. 이럴 때 <strong>readonly 타입을 지정해주면 막을 수 있다.</strong></li>
+</ul>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="property">name</span> = <span class="string">&quot;loco&quot;</span>; <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>컴파일 시 에러가 발생한다.(변환된 js 파일은 바뀌어 있다.)</p>
+</li>
+<li><p>readonly number[ ]는 배열 요소를 읽을 수만 있다.</p>
+</li>
+<li><p>배열을 변경하는 pop 메서드를 비롯한 다른 메서드를 호출할 수 없다.</p>
+</li>
+</ul>
+<h3 id="❗️-readonly-주의사항"><a href="#❗️-readonly-주의사항" class="headerlink" title="❗️ readonly 주의사항"></a>❗️ readonly 주의사항</h3><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">a</span>: <span class="built_in">number</span>[] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">const</span> <span class="attr">b</span>: <span class="keyword">readonly</span> <span class="built_in">number</span>[] = a;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">c</span>: <span class="built_in">number</span>[] = b; <span class="comment">// Error: &#x27;readonly number[]는 변경가능한 number[] 타입에 할당할 수 없다.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>number[ ]는 readonly number[ ]보다 기능이 많기 때문에 <strong>readonly number[ ]의 서브타입</strong>이다.</li>
+<li>number[ ]는 readonly number[ ]에 <strong>할당 가능하다</strong>.</li>
+</ul>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">arraySum</span>(<span class="params">arr: <span class="keyword">readonly</span> <span class="built_in">number</span>[]</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> arr) &#123;</span><br><span class="line">    sum += num;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>함수가 매개변수를 변경하지 않는다면 readonly로 선언해야한다.</li>
+</ul>
+<h2 id="⛳️-type-키워드-여러개-합치기"><a href="#⛳️-type-키워드-여러개-합치기" class="headerlink" title="⛳️ type 키워드 여러개 합치기"></a>⛳️ type 키워드 여러개 합치기</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Name</span> = <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Age</span> = <span class="built_in">number</span>;</span><br><span class="line"><span class="keyword">type</span> person = <span class="title class_">Name</span> | <span class="title class_">Age</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>OR 연산자를 사용하여 유니온 타입으로 만들 수 있다.</li>
+</ul>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">PositionX</span> = &#123; <span class="attr">x</span>: <span class="built_in">number</span> &#125;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">PositionY</span> = &#123; <span class="attr">y</span>: <span class="built_in">number</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">XandY</span> = <span class="title class_">PositionX</span> &amp; <span class="title class_">PositionY</span>;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">XandZ</span> = <span class="title class_">PositionX</span> &amp; &#123; <span class="attr">z</span>: <span class="built_in">number</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">pos</span>: <span class="title class_">XandY</span> = &#123; <span class="attr">x</span>: <span class="number">1</span>, <span class="attr">y</span>: <span class="number">2</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">pos</span>: <span class="title class_">XandZ</span> = &#123; <span class="attr">x</span>: <span class="number">10</span>, <span class="attr">z</span>: <span class="number">3</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>객체 타입은 &amp; 연산자를 사용하여 **합치기(extends)**가 가능하다.</li>
+<li>XandY type is <code>&#123; x: number, y: number &#125;</code></li>
+<li>Type alias &amp; Type alias 뿐만 아니라 Type alias &amp; { key: type }도 가능하다.</li>
+</ul>
+<blockquote>
+<p>type 키워드는 <red>재정의가 불가능하다.</red></p>
+</blockquote>
+<h3 id="❗️-amp-연산자-주의사항"><a href="#❗️-amp-연산자-주의사항" class="headerlink" title="❗️ &amp; 연산자 주의사항"></a>❗️ &amp; 연산자 주의사항</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Combined</span> = &#123; <span class="attr">a</span>: <span class="built_in">number</span> &#125; &amp; &#123; <span class="attr">b</span>: <span class="built_in">string</span> &#125;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Conflicting</span> = &#123; <span class="attr">a</span>: <span class="built_in">number</span> &#125; &amp; &#123; <span class="attr">a</span>: <span class="built_in">string</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">ta</span>: <span class="title class_">Combined</span> = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="string">&quot;st&quot;</span> &#125;; <span class="comment">// 정상</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">tt</span>: <span class="title class_">Conflicting</span> = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;; <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Combined 타입은 { a: number, b: string }</li>
+<li>Conflicting 타입은 { a: <code>number와 string의 교집합 === never</code> }</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"
+                    data-tooltip="🚧 Literal type과 as const"
+                    aria-label="이전: 🚧 Literal type과 as const"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
+                    data-tooltip="🐒 useEffect"
+                    aria-label="다음: 🐒 useEffect"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"
+                    data-tooltip="🚧 Literal type과 as const"
+                    aria-label="이전: 🚧 Literal type과 as const"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
+                    data-tooltip="🐒 useEffect"
+                    aria-label="다음: 🐒 useEffect"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

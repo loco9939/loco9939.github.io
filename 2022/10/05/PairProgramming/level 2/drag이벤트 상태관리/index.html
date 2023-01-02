@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>drag이벤트 상태관리 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다.\n12345678910111213141516171819202122232425262728293031class List extends Component &#123;  constructor(id) &#123;    super();    this.id = id;    this.$origin = null;    this.$target = null;  &#125;  addEvent() &#123;    return [      this.createEvent(&#123;        type: &quot;dragstart&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          this.$origin = e.target.closest(&quot;.list-container&quot;);          e.dataTransfer.effectAllowed = &quot;move&quot;;        &#125;,      &#125;),      this.createEvent(&#123;        type: &quot;dragenter&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          if (this.$origin !== e.target.closest(&quot;.list-container&quot;)) &#123;            this.$target = e.target.closest(&quot;.list-container&quot;);            this.swap(this.$origin, this.$target);          &#125;        &#125;,      &#125;),    ];  &#125;&#125;\n\n\ndrag &amp; drop이 발생하는 컴포넌트에서 지역 변수로서 관리해주면 된다.\n\n2. 이벤트 등록 조건 수정각자의 컴포넌트들을 window에 등록해줄 때, 이벤트 위임이므로 걸러주기 위해 matches를 사용하였는데, 이 경우 이벤트가 발생한 요소만 해당되고 이벤트 발생한 부모 요소를 찾을 수 없어 list 요소에 drag 이벤트가 발생하지 않는 문제가 발생하였다.\n12345678910111213141516171819// ComponentcheckEvent() &#123;    if (this.addEvent) &#123;      this.addEvent().forEach((&#123; type, selector, handler &#125;) =&gt; &#123;        if (events.find(event =&gt; event.type === type &amp;&amp; event.selector === selector)) return;        if (selector === &#x27;&#x27;) &#123;          window.addEventListener(type, e =&gt; handler(e));        &#125; else &#123;          window.addEventListener(type, e =&gt; &#123;            if (!e.target.matches(selector) &amp;&amp; !e.target.closest(selector)) return;            handler(e);          &#125;);        &#125;        events = [...events, &#123; type, selector, handler &#125;];      &#125;);    &#125;  &#125;\n\n\n자신을 포함한 부모쪽에서 selector를 찾을 수 있기 때문에 closest도 추가해준다.\n\n3. DOM만 변경하고 상태는 변경시키지 않는 경우list 드래그 시 dragenter가 발생할 때, DOM을 직접 변경하여 화면에 list가 서로 바뀐 것처럼 보이도록 구현하였다. 하지만, drop을 발생시켰을 때, 1번 list에서 2번 리스트로 dragenter 되었다가 다시 1번 list로 드래그 한체로 돌아와서 drop을 하면 DOM 상에서 바뀌지 않았는데, 상태가 바뀐 것으로 감지하여 상태 lists의 순서를 변경하는 문제가 발생하였다.\n12345678910111213141516171819202122232425262728// stateconst arrangeList = (idOrder) =&gt; &#123;  console.log(state);  setState(&#123;    lists: state.lists.sort((a, b) =&gt; &#123;      const aOrder = idOrder.findIndex((id) =&gt; id === a.id);      const bOrder = idOrder.findIndex((id) =&gt; id === b.id);      return aOrder &lt; bOrder ? -1 : aOrder &gt; bOrder ? 1 : 0;    &#125;),  &#125;);  console.log(state);&#125;;// List Componentclass List extends Component &#123;  addEvent() &#123;    ...    this.createEvent(&#123;        type: &#x27;drop&#x27;,        selector: &#x27;.list-container&#x27;,        handler: e =&gt; &#123;          e.stopPropagation();          arrangeList([...document.querySelectorAll(&#x27;.list-container&#x27;)].map($c =&gt; +$c.id));          return false;        &#125;,      &#125;),  &#125;&#125;\n\n\ndragenter 이벤트 핸들러에서 DOM을 직접 변경해주었기 때문에, DOM이 변경되었는지 확인하기 위해서는 DOM API를 사용할 수 밖에 없었다.\n\nDOM에 직접 접근하여 drop 이벤트가 발생하였을 때, DOM의 list-container 요소들을 가져와서 id로 배열을 반환하여 인수로 전달해주었다. 이 때 전달한 인수는 화면에 나타난 list의 순서를 의미한다.\n\n\n페어프로그래밍2의 목적이번 페어프로그래밍2의 목적은 리액트 프레임워크를 배우기 전에 컴포넌트가 무엇인지 제대로 알고 가기 위함이였다.\n컴포넌트란?모든 컴포넌트는 자신이 어디에 그려질지 알면 안된다.\n→ render가 알아야 한다.\n\n컴포넌트는 어떤 모습으로 그려질 것인가에 대한 정보를 가지고 있다.\nrender가 그 정보들을 가지고 그려주는 역할을 한다.\nApp 컴포넌트가 자식 컴포넌트까지도 알아야 그려줄 수 있다.\n부모 컴포넌트가 자식컴포넌트를 알고 있으면 새롭게 그려질 정보와 이전의 그려진 정보를 비교하여 효율적인 렌더링이 가능하다.\n\n\n컴포넌트가 부모요소의 컨테이너를 받아서 그곳에 innerHTML로 그리면 이는 부모가 그린 HTML에 종속되는 것이므로 컴포넌트를 독립적으로 사용할 수 없게되므로 컴포넌트 개념을 벗어난다.\n\n효율적인 렌더링을 위해서…효율적인 렌더링을 위해서는 diff 알고리즘을 구현하였었다. 만약 App 컴포넌트가 일부분을 그리고 나머지 부분을 다른 컴포넌트가 받아서 그리는 하향식 구조로 설계를 하게된다면 diff 알고리즘이 하향식으로 비교해나가는데 이는 어디가 최하단인지 판별해주기가 까다로워진다.\n그러므로 재조정은 App 컴포넌트가 해야한다. App 컴포넌트는 다른 컴포넌트에게 그들을 그리기 위한 정보를 전달받아 이것들을 모아서 render 함수로 보내서 화면에 렌더링을 시켜준다. render 함수는 그려주는 역할을 하고 App 컴포넌트는 그려지기위한 정보를 모두 가지고 있어야한다.\n소감\n코드 작성에 대해 어떤 생각을 가지고 구현했는지 명확하게 얘기할 수 있으면 Ok\n되는대로 짜는 것이 아니라 명확한 이유가 가지고 짜면 위의 문제가 해결\n\n\n내가 작성한 코드는 나만 잘 알고 있다. 상대방에게 설명할 때, 상대방이 어느정도 알고 있을 것이라는 생각은 접어두자.\n\n","dateCreated":"2022-10-05T22:10:02+09:00","dateModified":"2022-11-18T17:19:50+09:00","datePublished":"2022-10-05T22:10:02+09:00","description":"","headline":"drag이벤트 상태관리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"}</script>
+    <meta name="description" content="1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다. 12345678910111213141516171819202122232425262728">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="drag이벤트 상태관리">
+<meta property="og:url" content="https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다. 12345678910111213141516171819202122232425262728">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-10-05T13:10:02.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:19:50.777Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            drag이벤트 상태관리
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-10-05T22:10:02+09:00">
+	
+		    2022/10/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="1-drag-상태-관리"><a href="#1-drag-상태-관리" class="headerlink" title="1. drag 상태 관리"></a>1. drag 상태 관리</h1><p>dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">List</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">id</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">id</span> = id;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$origin</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$target</span> = <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">addEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;dragstart&quot;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&quot;.list-container&quot;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">$origin</span> = e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>);</span><br><span class="line">          e.<span class="property">dataTransfer</span>.<span class="property">effectAllowed</span> = <span class="string">&quot;move&quot;</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;dragenter&quot;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&quot;.list-container&quot;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">$origin</span> !== e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>)) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">$target</span> = e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.list-container&quot;</span>);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">swap</span>(<span class="variable language_">this</span>.<span class="property">$origin</span>, <span class="variable language_">this</span>.<span class="property">$target</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">    ];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>drag &amp; drop이 발생하는 컴포넌트에서 지역 변수로서 관리해주면 된다.</li>
+</ul>
+<h1 id="2-이벤트-등록-조건-수정"><a href="#2-이벤트-등록-조건-수정" class="headerlink" title="2. 이벤트 등록 조건 수정"></a>2. 이벤트 등록 조건 수정</h1><p>각자의 컴포넌트들을 window에 등록해줄 때, 이벤트 위임이므로 걸러주기 위해 matches를 사용하였는데, 이 경우 이벤트가 발생한 요소만 해당되고 이벤트 발생한 부모 요소를 찾을 수 없어 list 요소에 drag 이벤트가 발생하지 않는 문제가 발생하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Component</span></span><br><span class="line"><span class="title function_">checkEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">addEvent</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">addEvent</span>().<span class="title function_">forEach</span>(<span class="function">(<span class="params">&#123; type, selector, handler &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (events.<span class="title function_">find</span>(<span class="function"><span class="params">event</span> =&gt;</span> event.<span class="property">type</span> === type &amp;&amp; event.<span class="property">selector</span> === selector)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (selector === <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(type, <span class="function"><span class="params">e</span> =&gt;</span> <span class="title function_">handler</span>(e));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(type, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(selector) &amp;&amp; !e.<span class="property">target</span>.<span class="title function_">closest</span>(selector)) <span class="keyword">return</span>;</span><br><span class="line">            <span class="title function_">handler</span>(e);</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        events = [...events, &#123; type, selector, handler &#125;];</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>자신을 포함한 부모쪽에서 selector를 찾을 수 있기 때문에 closest도 추가해준다.</li>
+</ul>
+<h1 id="3-DOM만-변경하고-상태는-변경시키지-않는-경우"><a href="#3-DOM만-변경하고-상태는-변경시키지-않는-경우" class="headerlink" title="3. DOM만 변경하고 상태는 변경시키지 않는 경우"></a>3. DOM만 변경하고 상태는 변경시키지 않는 경우</h1><p>list 드래그 시 dragenter가 발생할 때, DOM을 직접 변경하여 화면에 list가 서로 바뀐 것처럼 보이도록 구현하였다. 하지만, drop을 발생시켰을 때, 1번 list에서 2번 리스트로 dragenter 되었다가 다시 1번 list로 드래그 한체로 돌아와서 drop을 하면 DOM 상에서 바뀌지 않았는데, 상태가 바뀐 것으로 감지하여 상태 lists의 순서를 변경하는 문제가 발생하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// state</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrangeList</span> = (<span class="params">idOrder</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(state);</span><br><span class="line">  <span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">lists</span>: state.<span class="property">lists</span>.<span class="title function_">sort</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> aOrder = idOrder.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">id</span>) =&gt;</span> id === a.<span class="property">id</span>);</span><br><span class="line">      <span class="keyword">const</span> bOrder = idOrder.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">id</span>) =&gt;</span> id === b.<span class="property">id</span>);</span><br><span class="line">      <span class="keyword">return</span> aOrder &lt; bOrder ? -<span class="number">1</span> : aOrder &gt; bOrder ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    &#125;),</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(state);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// List Component</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">List</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">addEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">createEvent</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;drop&#x27;</span>,</span><br><span class="line">        <span class="attr">selector</span>: <span class="string">&#x27;.list-container&#x27;</span>,</span><br><span class="line">        <span class="attr">handler</span>: <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">          e.<span class="title function_">stopPropagation</span>();</span><br><span class="line">          <span class="title function_">arrangeList</span>([...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.list-container&#x27;</span>)].<span class="title function_">map</span>($c =&gt; +$c.<span class="property">id</span>));</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>dragenter 이벤트 핸들러에서 DOM을 직접 변경해주었기 때문에, DOM이 변경되었는지 확인하기 위해서는 DOM API를 사용할 수 밖에 없었다.</p>
+</li>
+<li><p>DOM에 직접 접근하여 drop 이벤트가 발생하였을 때, DOM의 list-container 요소들을 가져와서 id로 배열을 반환하여 인수로 전달해주었다. 이 때 전달한 인수는 화면에 나타난 list의 순서를 의미한다.</p>
+</li>
+</ul>
+<h1 id="페어프로그래밍2의-목적"><a href="#페어프로그래밍2의-목적" class="headerlink" title="페어프로그래밍2의 목적"></a>페어프로그래밍2의 목적</h1><p>이번 페어프로그래밍2의 목적은 리액트 프레임워크를 배우기 전에 컴포넌트가 무엇인지 제대로 알고 가기 위함이였다.</p>
+<h2 id="컴포넌트란"><a href="#컴포넌트란" class="headerlink" title="컴포넌트란?"></a>컴포넌트란?</h2><p><strong>모든 컴포넌트는 자신이 어디에 그려질지 알면 안된다.</strong></p>
+<p>→ <strong>render가 알아야 한다.</strong></p>
+<ul>
+<li>컴포넌트는 어떤 모습으로 그려질 것인가에 대한 정보를 가지고 있다.</li>
+<li>render가 그 정보들을 가지고 그려주는 역할을 한다.</li>
+<li>App 컴포넌트가 자식 컴포넌트까지도 알아야 그려줄 수 있다.</li>
+<li>부모 컴포넌트가 자식컴포넌트를 알고 있으면 새롭게 그려질 정보와 이전의 그려진 정보를 비교하여 효율적인 렌더링이 가능하다.</li>
+</ul>
+<blockquote>
+<p>컴포넌트가 부모요소의 컨테이너를 받아서 그곳에 innerHTML로 그리면 이는 부모가 그린 HTML에 종속되는 것이므로 컴포넌트를 독립적으로 사용할 수 없게되므로 컴포넌트 개념을 벗어난다.</p>
+</blockquote>
+<h2 id="효율적인-렌더링을-위해서…"><a href="#효율적인-렌더링을-위해서…" class="headerlink" title="효율적인 렌더링을 위해서…"></a>효율적인 렌더링을 위해서…</h2><p>효율적인 렌더링을 위해서는 diff 알고리즘을 구현하였었다. 만약 App 컴포넌트가 일부분을 그리고 나머지 부분을 다른 컴포넌트가 받아서 그리는 하향식 구조로 설계를 하게된다면 diff 알고리즘이 하향식으로 비교해나가는데 이는 어디가 최하단인지 판별해주기가 까다로워진다.</p>
+<p>그러므로 재조정은 App 컴포넌트가 해야한다. App 컴포넌트는 다른 컴포넌트에게 그들을 그리기 위한 정보를 전달받아 이것들을 모아서 render 함수로 보내서 화면에 렌더링을 시켜준다. render 함수는 그려주는 역할을 하고 App 컴포넌트는 그려지기위한 정보를 모두 가지고 있어야한다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>코드 작성에 대해 어떤 생각을 가지고 구현했는지 명확하게 얘기할 수 있으면 Ok<ul>
+<li>되는대로 짜는 것이 아니라 명확한 이유가 가지고 짜면 위의 문제가 해결</li>
+</ul>
+</li>
+<li>내가 작성한 코드는 나만 잘 알고 있다. 상대방에게 설명할 때, 상대방이 어느정도 알고 있을 것이라는 생각은 접어두자.</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="페어프로그래밍 level 2 기술적 회고"
+                    aria-label="이전: 페어프로그래밍 level 2 기술적 회고"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    data-tooltip="trello Tip"
+                    aria-label="다음: trello Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="페어프로그래밍 level 2 기술적 회고"
+                    aria-label="이전: 페어프로그래밍 level 2 기술적 회고"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    data-tooltip="trello Tip"
+                    aria-label="다음: trello Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

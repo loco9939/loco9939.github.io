@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>vanillaJS로 구현한 todoList (MVC패턴) 2탄 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다.\n1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다.\n이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여쭤보니 다음과 같은 이점때문에 setState 함수를 만들어 사용하는 것이 좋다는 결론이 나왔다.\n\n관리해야할 상태 객체가 늘어나 확장성이 요구될 때 용이하다.\n\nstate에 대한 에러가 발생하였을 때 에러 핸들링이 용이하다. (상황에 따라 렌더링 할지 말지 결정 가능)\n\nstate가 변경되거나 재할당 되는 경우를 한곳에서 관리하여 용이하다.\n\n\n2. filter 함수를 사용한 코드 리팩터12345678910111213141516// beforelet filteredTodos;if (state.filterId === &quot;completed&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; todo.completed);&#125; else if (state.filterId === &quot;active&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; !todo.completed);&#125; else &#123;  filteredTodos = state.todos;&#125;// afterconst filteredTodos = state.todos.filter((todo) =&gt; &#123;  if (state.filterId === &quot;completed&quot;) return todo.completed;  if (state.filterId === &quot;active&quot;) return !todo.completed;  return todo;&#125;);\n\nif 문으로 filter 함수 반환값이 다르게 filteredTodos 값이 할당되는 경우라면 filter 함수 안에 로직을 넣어서 해결해보자.\n&#x3D;&gt; 훨씬 더 간결해진다.\n3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다.1234567891011121314151617// beforeconst addTodo = (content) =&gt; &#123;  state.todos = [    &#123; id: generateNextTodoId(), content, completed: false &#125;,    ...state.todos,  ];  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst addTodo = (content) =&gt;  setState(&#123;    todos: [      &#123; id: generateNextTodoId(), content, completed: false &#125;,      ...state.todos,    ],  &#125;);\n\n위 예제에서 addTodo 함수는 내부에서 state.todos에 새로운 값을 할당 해준뒤 state를 변경하는 함수를 호출하여 렌더링 해주고 있다.\n하지만, addTodo 함수의 기능은 Model의 todos 배열에 todo 요소 하나를 추가하는 것일 뿐이므로 before 처럼 state.todos(원본)에 재할당 하는 것은 옮지 않다.\nsetState 함수에게 새로운 객체(상태)를 전달하여 state의 변경에 따라 화면에 렌더링 되도록 로직을 짜는 것이 더 통일성을 지킬 수 있다.\n4. 함수의 매개변수를 명확하게 적어주자.1234567891011121314151617181920// beforeconst toggleAllCompleted = (boolean) =&gt; &#123;  state.todos = state.todos.map((todo) =&gt; (&#123; ...todo, completed: boolean &#125;));  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst toggleAll = (checked) =&gt; &#123;  checked    ? setState(&#123;        todos: state.todos.map((todo) =&gt;          !todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;)    : setState(&#123;        todos: state.todos.map((todo) =&gt;          todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;);&#125;;\n\nbefore 처럼 매개변수를 boolean 으로 설정하는 것은 옳지 않다. boolean은 타입을 나타내는 것이지 매개변수에 대한 설명으로는 부적절하다.\n\nafter 코드에서는 인수로 넘어온 모든 check를 토글로 켰다 껐다 할 수 있는 함수이다.\n\n5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자오늘 코딩할 때 이 부분에서 문제를 계속 부딪혀서 시간을 많이 할애하였다.\n1234567891011$todoList.addEventListener(&quot;dblclick&quot;, (e) =&gt; &#123;  e.path[2].classList.add(&quot;editing&quot;);  // e.target.parentNode.parentNode.classList.add(&#x27;editing&#x27;);  e.path[1].nextElementSibling.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;    const content = e.target.value.trim();    if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;    editTodo(content, e.path[1].dataset.id);  &#125;);&#125;);\n\n위 코드에서 ul 태그에서 더블클릭 이벤트 발생하면 div가 안보이게되고 input이 보이게 된다.\n이 때, 내가 어떤 요소를 선택하여 어떤 타입의 이벤트를 등록하였고 그 타입에 따른 이벤트 객체는 무엇이 나오는지를 명확히 이해하고 코딩을 하자.\n헷갈린다면 console.log()를 찍어보면서 확인하자. 그림을 그리거나 HTML 구조와 비교해가면서 이해하면 수월하다.\n소감오늘 MVC TodoList V2를 만들어보면서 아침 10시부터 저녁 12시까지 이거만 집중해봤는데, 확실히 아직 익숙하지 않아서 버벅거리는 거 같다고 생각이 든다. 이해가 안되는 부분은 없지만 손으로 코딩이 술술 나오지가 않아서 어렵게 느껴졌다. 앞으로도 더 손 코딩을 많이 해보는 습관을 길러야 겠다.\n","dateCreated":"2022-09-06T23:33:42+09:00","dateModified":"2022-11-18T17:23:08+09:00","datePublished":"2022-09-06T23:33:42+09:00","description":"","headline":"vanillaJS로 구현한 todoList (MVC패턴) 2탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"}</script>
+    <meta name="description" content="오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다. 1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다. 이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="vanillaJS로 구현한 todoList (MVC패턴) 2탄">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다. 1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다. 이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-06T14:33:42.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:23:08.837Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            vanillaJS로 구현한 todoList (MVC패턴) 2탄
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-09-06T23:33:42+09:00">
+	
+		    2022/09/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다.</p>
+<h1 id="1-setState를-왜-쓰는지"><a href="#1-setState를-왜-쓰는지" class="headerlink" title="1. setState를 왜 쓰는지?"></a>1. setState를 왜 쓰는지?</h1><p>직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다.</p>
+<p>이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여쭤보니 다음과 같은 이점때문에 setState 함수를 만들어 사용하는 것이 좋다는 결론이 나왔다.</p>
+<ol>
+<li><p>관리해야할 상태 객체가 늘어나 확장성이 요구될 때 용이하다.</p>
+</li>
+<li><p>state에 대한 에러가 발생하였을 때 에러 핸들링이 용이하다. (상황에 따라 렌더링 할지 말지 결정 가능)</p>
+</li>
+<li><p>state가 변경되거나 재할당 되는 경우를 한곳에서 관리하여 용이하다.</p>
+</li>
+</ol>
+<h1 id="2-filter-함수를-사용한-코드-리팩터"><a href="#2-filter-함수를-사용한-코드-리팩터" class="headerlink" title="2. filter 함수를 사용한 코드 리팩터"></a>2. filter 함수를 사용한 코드 리팩터</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">let</span> filteredTodos;</span><br><span class="line"><span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;completed&quot;</span>) &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;active&quot;</span>) &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> !todo.<span class="property">completed</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;completed&quot;</span>) <span class="keyword">return</span> todo.<span class="property">completed</span>;</span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;active&quot;</span>) <span class="keyword">return</span> !todo.<span class="property">completed</span>;</span><br><span class="line">  <span class="keyword">return</span> todo;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>if 문으로 filter 함수 반환값이 다르게 filteredTodos 값이 할당되는 경우라면 filter 함수 안에 로직을 넣어서 해결해보자.</p>
+<p>&#x3D;&gt; 훨씬 더 간결해진다.</p>
+<h1 id="3-MVC-패턴으로-나누었다면-그에-알맞게-자신만의-역할을-하도록-분류한다"><a href="#3-MVC-패턴으로-나누었다면-그에-알맞게-자신만의-역할을-하도록-분류한다" class="headerlink" title="3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다."></a>3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다.</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">content</span>) =&gt; &#123;</span><br><span class="line">  state.<span class="property">todos</span> = [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="title function_">generateNextTodoId</span>(), content, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    ...state.<span class="property">todos</span>,</span><br><span class="line">  ];</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">todos</span>: state.<span class="property">todos</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">content</span>) =&gt;</span><br><span class="line">  <span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">todos</span>: [</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="title function_">generateNextTodoId</span>(), content, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      ...state.<span class="property">todos</span>,</span><br><span class="line">    ],</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위 예제에서 addTodo 함수는 내부에서 state.todos에 새로운 값을 할당 해준뒤 state를 변경하는 함수를 호출하여 렌더링 해주고 있다.</p>
+<p>하지만, addTodo 함수의 기능은 Model의 todos 배열에 todo 요소 하나를 추가하는 것일 뿐이므로 before 처럼 state.todos(원본)에 재할당 하는 것은 옮지 않다.</p>
+<p>setState 함수에게 새로운 객체(상태)를 전달하여 state의 변경에 따라 화면에 렌더링 되도록 로직을 짜는 것이 더 <span style="color:red">통일성</span>을 지킬 수 있다.</p>
+<h1 id="4-함수의-매개변수를-명확하게-적어주자"><a href="#4-함수의-매개변수를-명확하게-적어주자" class="headerlink" title="4. 함수의 매개변수를 명확하게 적어주자."></a>4. 함수의 매개변수를 명확하게 적어주자.</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleAllCompleted</span> = (<span class="params">boolean</span>) =&gt; &#123;</span><br><span class="line">  state.<span class="property">todos</span> = state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> (&#123; ...todo, <span class="attr">completed</span>: boolean &#125;));</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">todos</span>: state.<span class="property">todos</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleAll</span> = (<span class="params">checked</span>) =&gt; &#123;</span><br><span class="line">  checked</span><br><span class="line">    ? <span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span></span><br><span class="line">          !todo.<span class="property">completed</span> ? &#123; ...todo, <span class="attr">completed</span>: checked &#125; : todo</span><br><span class="line">        ),</span><br><span class="line">      &#125;)</span><br><span class="line">    : <span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span></span><br><span class="line">          todo.<span class="property">completed</span> ? &#123; ...todo, <span class="attr">completed</span>: checked &#125; : todo</span><br><span class="line">        ),</span><br><span class="line">      &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>before 처럼 매개변수를 boolean 으로 설정하는 것은 옳지 않다. boolean은 타입을 나타내는 것이지 매개변수에 대한 설명으로는 부적절하다.</p>
+<blockquote>
+<p>after 코드에서는 인수로 넘어온 모든 check를 토글로 켰다 껐다 할 수 있는 함수이다.</p>
+</blockquote>
+<h1 id="5-이벤트-핸들러-사용시-이벤트-객체와-선택한-요소를-명확히-이해하자"><a href="#5-이벤트-핸들러-사용시-이벤트-객체와-선택한-요소를-명확히-이해하자" class="headerlink" title="5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자"></a>5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자</h1><p>오늘 코딩할 때 이 부분에서 문제를 계속 부딪혀서 시간을 많이 할애하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$todoList.<span class="title function_">addEventListener</span>(<span class="string">&quot;dblclick&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  e.<span class="property">path</span>[<span class="number">2</span>].<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;editing&quot;</span>);</span><br><span class="line">  <span class="comment">// e.target.parentNode.parentNode.classList.add(&#x27;editing&#x27;);</span></span><br><span class="line"></span><br><span class="line">  e.<span class="property">path</span>[<span class="number">1</span>].<span class="property">nextElementSibling</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = e.<span class="property">target</span>.<span class="property">value</span>.<span class="title function_">trim</span>();</span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Enter&quot;</span> || content === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">editTodo</span>(content, e.<span class="property">path</span>[<span class="number">1</span>].<span class="property">dataset</span>.<span class="property">id</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 ul 태그에서 더블클릭 이벤트 발생하면 div가 안보이게되고 input이 보이게 된다.</p>
+<p>이 때, 내가 어떤 요소를 선택하여 어떤 타입의 이벤트를 등록하였고 그 타입에 따른 이벤트 객체는 무엇이 나오는지를 명확히 이해하고 코딩을 하자.</p>
+<p>헷갈린다면 console.log()를 찍어보면서 확인하자. 그림을 그리거나 HTML 구조와 비교해가면서 이해하면 수월하다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘 MVC TodoList V2를 만들어보면서 아침 10시부터 저녁 12시까지 이거만 집중해봤는데, 확실히 아직 익숙하지 않아서 버벅거리는 거 같다고 생각이 든다. 이해가 안되는 부분은 없지만 손으로 코딩이 술술 나오지가 않아서 어렵게 느껴졌다. 앞으로도 더 손 코딩을 많이 해보는 습관을 길러야 겠다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/07/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
+                    data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 3탄"
+                    aria-label="이전: vanillaJS로 구현한 todoList(MVC패턴) 3탄"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 1탄"
+                    aria-label="다음: vanillaJS로 구현한 todoList(MVC패턴) 1탄"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/07/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
+                    data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 3탄"
+                    aria-label="이전: vanillaJS로 구현한 todoList(MVC패턴) 3탄"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 1탄"
+                    aria-label="다음: vanillaJS로 구현한 todoList(MVC패턴) 1탄"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

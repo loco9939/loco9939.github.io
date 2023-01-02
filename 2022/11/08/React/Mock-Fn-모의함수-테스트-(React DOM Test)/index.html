@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>Mock Fn(모의함수) 테스트 (React DOM Test) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.\n1234567891011121314151617181920test(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  let expected = &quot;triggering toggle event&quot;;  let received = &quot;&quot;;  render(    &lt;ToggleButton      onToggle=&#123;() =&gt; &#123;        received = expected;      &#125;&#125;    /&gt;  );  expect(received).not.toBe(expected);  const element = screen.queryByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(received).toBe(expected);&#125;);\n\n\n위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.\n\n테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.\n이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.\n그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.\n123456789101112// mock Fntest(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  const mockFn = jest.fn();  render(&lt;ToggleButton onToggle=&#123;mockFn&#125; /&gt;);  const element = screen.getByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(mockFn).toHaveBeenCalled();&#125;);\n\n✏️ React VirtualDOM Test리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.\n1234567test(&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;A11yHidden data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;span&quot;);&#125;);\n\n\nRealDOM에서 querySelector()로 요소를 가져오는 것처럼 VirtualDOM에서는 screen으로 요소를 가져올 수 있다.\n해당 요소를 가져오기 위해서 data-testId 값을 사용하였다.\n\n❗️ localName vs nodeName 차이\nlocalName : 소문자를 반환\nnodeName : 대문자를 반환\n\ndefaultProps 사용하기리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.\n\n직접 파라미터에 App(&#123; as: ComponentName = &#39;div&#39; &#125;) 이런식으로 주는 것을 안티패턴으로 본다.\n\n1234567891011import styles from &quot;./A11yHidden.module.css&quot;;export function A11yHidden(&#123; as: ComponentName, ...restProps &#125;) &#123;  return (    &lt;ComponentName className=&#123;styles.container&#125; &#123;...restProps&#125;&gt;&lt;/ComponentName&gt;  );&#125;A11yHidden.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n\nas 라는 props를 받으면 해당하는 ComponentName으로 태그를 감싸서 컴포넌트를 생성한다.\n\n\ncomponent는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.\n\ngetByRole vs getByTestId기본적으로 div, span 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.\n그에 대한 대안으로 테스트용 data-testId=&quot;tester&quot; 값을 주고 getByTestId()를 사용하여 요소를 가져올 수 있다.\n123456789101112131415// div 요소 가져올 경우test(&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;, () =&gt; &#123;  render(&lt;Banner as=&quot;div&quot; data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;div&quot;);&#125;);// figure 요소 가져올 경우test(&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;Banner /&gt;);  const element = screen.getByRole(&quot;figure&quot;);  expect(element.localName).toBe(&quot;figure&quot;);&#125;);\n\n\nfigure, img 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 getByRole()를 이용하여 가져올 수 있다.\n\n🏓 소감마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.\n이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 storyBook도 사용해봐야겠다.\n","dateCreated":"2022-11-08T21:17:48+09:00","dateModified":"2022-11-08T21:46:43+09:00","datePublished":"2022-11-08T21:17:48+09:00","description":"","headline":"Mock Fn(모의함수) 테스트 (React DOM Test)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/","keywords":"mock, jest"}</script>
+    <meta name="description" content="📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다. 1234567891011121314151617181920test(&quot;&#96;onToggle&#96; 속성(prop)에 연결된 함수가 정상적으로 실">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Mock Fn(모의함수) 테스트 (React DOM Test)">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다. 1234567891011121314151617181920test(&quot;&#96;onToggle&#96; 속성(prop)에 연결된 함수가 정상적으로 실">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-08T12:17:48.000Z">
+<meta property="article:modified_time" content="2022-11-08T12:46:43.103Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="mock">
+<meta property="article:tag" content="jest">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Mock Fn(모의함수) 테스트 (React DOM Test)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-08T21:17:48+09:00">
+	
+		    2022/11/08
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-Mock-Fn-모의함수-란"><a href="#📌-Mock-Fn-모의함수-란" class="headerlink" title="📌 Mock Fn(모의함수)란?"></a>📌 Mock Fn(모의함수)란?</h1><p>테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> expected = <span class="string">&quot;triggering toggle event&quot;</span>;</span><br><span class="line">  <span class="keyword">let</span> received = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        received = expected;</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;</span></span><br><span class="line"><span class="language-xml">    /&gt;</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="property">not</span>.<span class="title function_">toBe</span>(expected);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">queryByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="title function_">toBe</span>(expected);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.</li>
+</ul>
+<p>테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.</p>
+<p><strong>이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.</strong></p>
+<p>그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mock Fn</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> mockFn = jest.<span class="title function_">fn</span>();</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onToggle</span>=<span class="string">&#123;mockFn&#125;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(mockFn).<span class="title function_">toHaveBeenCalled</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="✏️-React-VirtualDOM-Test"><a href="#✏️-React-VirtualDOM-Test" class="headerlink" title="✏️ React VirtualDOM Test"></a>✏️ React VirtualDOM Test</h2><p>리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 <strong>RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">A11yHidden</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;span&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>RealDOM에서 <code>querySelector()</code>로 요소를 가져오는 것처럼 VirtualDOM에서는 <code>screen</code>으로 요소를 가져올 수 있다.</li>
+<li>해당 요소를 가져오기 위해서 <code>data-testId</code> 값을 사용하였다.</li>
+</ul>
+<h3 id="❗️-localName-vs-nodeName-차이"><a href="#❗️-localName-vs-nodeName-차이" class="headerlink" title="❗️ localName vs nodeName 차이"></a>❗️ localName vs nodeName 차이</h3><ul>
+<li>localName : 소문자를 반환</li>
+<li>nodeName : 대문자를 반환</li>
+</ul>
+<h3 id="defaultProps-사용하기"><a href="#defaultProps-사용하기" class="headerlink" title="defaultProps 사용하기"></a>defaultProps 사용하기</h3><p>리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.</p>
+<blockquote>
+<p>직접 파라미터에 <code>App(&#123; as: ComponentName = &#39;div&#39; &#125;)</code> 이런식으로 주는 것을 안티패턴으로 본다.</p>
+</blockquote>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&quot;./A11yHidden.module.css&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">A11yHidden</span>(<span class="params">&#123; <span class="keyword">as</span>: ComponentName, ...restProps &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ComponentName</span> <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span> &#123;<span class="attr">...restProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">ComponentName</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A11yHidden.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>as 라는 props를 받으면 해당하는 <strong>ComponentName으로</strong> 태그를 감싸서 컴포넌트를 생성한다.</li>
+</ul>
+<blockquote>
+<p>component는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.</p>
+</blockquote>
+<h3 id="getByRole-vs-getByTestId"><a href="#getByRole-vs-getByTestId" class="headerlink" title="getByRole vs getByTestId"></a>getByRole vs getByTestId</h3><p>기본적으로 <code>div, span</code> 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.</p>
+<p>그에 대한 대안으로 테스트용 <code>data-testId=&quot;tester&quot;</code> 값을 주고 <code>getByTestId()</code>를 사용하여 요소를 가져올 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// div 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> <span class="attr">as</span>=<span class="string">&quot;div&quot;</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// figure 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>figure, img</code> 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 <code>getByRole()</code>를 이용하여 가져올 수 있다.</p>
+</blockquote>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.</p>
+<p>이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 <strong>storyBook도</strong> 사용해봐야겠다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/jest/" rel="tag">jest</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/mock/" rel="tag">mock</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                    data-tooltip="stateless 컴포넌트와 stateful 컴포넌트"
+                    aria-label="이전: stateless 컴포넌트와 stateful 컴포넌트"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/08/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%E2%9A%BE%EF%B8%8F-%EC%88%AB%EC%9E%90-%EC%95%BC%EA%B5%AC-%EA%B2%8C%EC%9E%84/"
+                    data-tooltip="우테코 프리코스 - ⚾️ 숫자 야구 게임"
+                    aria-label="다음: 우테코 프리코스 - ⚾️ 숫자 야구 게임"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                    data-tooltip="stateless 컴포넌트와 stateful 컴포넌트"
+                    aria-label="이전: stateless 컴포넌트와 stateful 컴포넌트"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/08/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%E2%9A%BE%EF%B8%8F-%EC%88%AB%EC%9E%90-%EC%95%BC%EA%B5%AC-%EA%B2%8C%EC%9E%84/"
+                    data-tooltip="우테코 프리코스 - ⚾️ 숫자 야구 게임"
+                    aria-label="다음: 우테코 프리코스 - ⚾️ 숫자 야구 게임"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

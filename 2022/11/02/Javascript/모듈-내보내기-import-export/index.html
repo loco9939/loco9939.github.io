@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>모듈 내보내기(import,export) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다.\n📌 모듈이란?모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다.\n시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용할 수 있게 되었다.\n모듈 특징\n모듈파일을 사용하기 위해서는 import 해온 script 파일에 type 속성이 module로 설정되어 있어야한다.\n\n1&lt;script type=&quot;module&quot; src=&quot;index.js&quot;&gt;&lt;/script&gt;\n\n\n모듈 스코프를 가진다.\nStrict mode\n지연 실행된다(defer) -&gt; 스크립트의 상대적인 순서가 유지될 수 있는 이유\n확장자를 꼭 적어줘야한다.\n\n모듈은 단독적으로 사용하는 경우는 드물고 주로 웹팩(Webpack)이라는 번들러를 사용하여 모듈을 한번에 묶어 서버에 올리는 방식을 사용한다.\n웹팩에 대해서는 새로운 게시물에서 다뤄보도록 하고 이제 모듈을 불러오고 내보내는 방법에 대해 알아보자.\nCommonJS vs ES6 방식1. CommonJS\nrequire : 가져오기 위한 키워드\n\n12// index.jsconst sayHi = require(&quot;./sayHi.js&quot;);\n\n\nexports : 내보내기 위한 키워드\n\n1234// sayHi.jsconst foo = () =&gt; console.log(&quot;sayHi~!&quot;);module.exports = foo;\n\n2. ES6 방식\nimport : 가져오기 위한 키워드\n\n12// index.jsimport foo from &quot;./sayHi.js&quot;;\n\n\nexport\n\n1234// sayHi.jsconst foo = () =&gt; console.log(&quot;sayHi~!&quot;);export default foo;\n\n둘의 차이에 대해 알아두고 앞으로는 ES6 문법을 사용할 것이니 이에 대해서 자세히 알아보자.\nexport모듈을 내보내는 방식은 다양하다.\n\n선언부에서 내보내기\n\n1export const name = &quot;loco&quot;;\n\n\n단, 함수나 클래스를 내보내기할 경우에는 ; (세미콜론)을 붙이지 않아야 한다.\n\n\n선언부와 떨어진 곳에서 내보내기\n\n123const name = &#x27;loco&#x27;;export name;\n\n만약 여러개를 내보내고 싶다면 객체로 감싸서 내보내기 해야한다.\n12345678910// say.jsconst sayHi = (name) =&gt; &#123;  console.log(`Hi~ $&#123;name&#125;!`);&#125;;const sayBye = (name) =&gt; &#123;  console.log(`Bye~ $&#123;name&#125;!`);&#125;;export &#123; sayHi, sayBye &#125;;\n\nimport12345// main.jsimport &#123; sayHi, sayBye &#125; from &quot;./say.js&quot;;sayHi(&quot;John&quot;); // Hi~ John!sayBye(&quot;selly&quot;); // Bye~ selly!\n\nexport 할 때, 객체형태로 감싸서 내보내기를 하였으면 불러올 때도 객체형태로 감싸 이름 그대로 가져와야한다.\n하지만 가져와야할 함수나 변수가 100만개라면? 일일히 언제 써주기가 힘드니 이럴 경우 * (에스터리스트)를 사용하여 모두 가져오기하여 객체처럼 사용할 수 있다.\n12345// main.jsimport * as greeting from &quot;./say.js&quot;;greeting.sayHi(&quot;Yong&quot;); // Hi~ Yong!greeting.sayBye(&quot;Jin&quot;); // Bye~ Jin!\n\n하지만 이런 경우는 드물고, 대게 어떤 대상을 가져오는지를 구체적으로 하는 것 명시하는 것이 좋다.\n왜냐하면 웹팩을 사용하면 로딩속도를 높이기 위해 최적화를 하게되는데 이 경우 사용하지 않는 리소스는 삭제되기 때문이다.\nimport asas를 사용하여 이름을 바꿔서 가져올 수 있다. export 에서도 가능하지만 주로 import 에서만 사용하는 것이 명시적이다.\n12345// main.jsimport &#123; sayHi as hi, sayBye as bye &#125; from &quot;./say.js&quot;;hi(&quot;John&quot;); // Hi~ John!bye(&quot;John&quot;); // Bye~ John!\n\nexport default모듈은 크게 2가지 종류로 나뉘게 된다.\n\n위 처럼 say라는 함수들이 다수있는 라이브러리 형태의 모듈\n개체 하나만 선언된 모듈\n\n유틸 함수들을 내보내는 경우가 아니라면 주로 2번의 경우를 선호한다.\n해당 모듈에 개체가 1개만 있다는 것을 명시적으로 구분하기 위해 export default 키워드를 사용한다.\n123import validation from &quot;./validation.js&quot;;const isValid = validation();\n\n\nexport default로 내보내기한 경우에 가져오기할 때는 중괄호{}가 필요없고 원하는 이름으로 가져올 수 있다.\n또한, 개체 한개만 내보낸 것을 가져오기 때문에 export default로 내보낼 때는 식별자나 이름없이 내보낼 수 있다.\n\n🔥 [22.11.09 추가]❗️ component 폴더의 index.js 모아서 다시 내보내기123456789101112131415161718// components/ToggleButton/ToggleButton.jsexport function ToggleButton() &#123;  return &lt;button&gt;&lt;/button&gt;;&#125;// components/index.jsexport * from &quot;./Demo&quot;;export * from &quot;./ToggleButton&quot;;export * from &quot;./A11yHidden&quot;;export * from &quot;./Banner&quot;;// app/App.jsximport &#123; ToggleButton &#125; from &quot;components&quot;;export default function App() &#123;  &lt;div className=&quot;App&quot;&gt;    &lt;ToggleButton /&gt;  &lt;/div&gt;;&#125;\n\n\nToggleButton 컴포넌트를 이름 내보내기 해주고 있다.\n위와 같이 components 폴더의 index.js파일에 여러 컴포넌트를 다시 내보내기로 보내줄 때, 만약 ToggleButton 컴포넌트를 기본 내보내기를 해주었다면 아래처럼 index.js에서 다시내보내기 해줄 때, {}로 감싸고 default로 받은 객체를 이름으로 설정해주고 내보내줘야한다.\n\n1export &#123; default as ToggleButton &#125; from &#x27;./ToggleButton&quot;;\n\n왜냐하면, ToggleButton 이외의 다른 컴포넌트들도 default로 내보냈기 때문에 구분을 하기 위해서 다시 내보내기 할 때, 이름을 설정해줘야한다.\n이러한 불편함 때문에 이름 내보내기를 사용한다.\n❗️ 화살표 함수로 내보내기시 주의사항123export default (&#123; onText, offText, on, onToggle, activeClass &#125;) =&gt; &#123;  return &lt;button&gt;...&lt;/button&gt;;&#125;;\n\n\n위와 같이 화살표 함수로 한줄로 작성하여 익명함수로 내보내고 App.jsx에서 이름을 정하여 받아서 사용하더라도 브라우저 환경에서 컴포넌트 구조를 확인하면 컴포넌트 이름이 Annonymous라고 뜬다.\n\n🏓 소감수업시간에 모듈을 기본 내보내기, 이름 내보내기를 사용하면서 둘의 차이가 무엇인지? 그리고 CommonJS와 ES6에서 모듈을 불러오고 내보내는 방식의 차이에 대해 확실히 알고 가는 시간이여서 한층 성장하였다고 느낀다.\n","dateCreated":"2022-11-02T10:05:15+09:00","dateModified":"2022-11-09T13:37:34+09:00","datePublished":"2022-11-02T10:05:15+09:00","description":"","headline":"모듈 내보내기(import,export)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/","keywords":"import, export"}</script>
+    <meta name="description" content="이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다. 📌 모듈이란?모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다. 시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="모듈 내보내기(import,export)">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다. 📌 모듈이란?모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다. 시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-02T01:05:15.000Z">
+<meta property="article:modified_time" content="2022-11-09T04:37:34.215Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="import">
+<meta property="article:tag" content="export">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            모듈 내보내기(import,export)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-02T10:05:15+09:00">
+	
+		    2022/11/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다.</p>
+<h1 id="📌-모듈이란"><a href="#📌-모듈이란" class="headerlink" title="📌 모듈이란?"></a>📌 모듈이란?</h1><p><bold>모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다.</bold></p>
+<p>시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용할 수 있게 되었다.</p>
+<h2 id="모듈-특징"><a href="#모듈-특징" class="headerlink" title="모듈 특징"></a>모듈 특징</h2><ul>
+<li>모듈파일을 사용하기 위해서는 import 해온 script 파일에 type 속성이 module로 설정되어 있어야한다.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span> <span class="attr">src</span>=<span class="string">&quot;index.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모듈 스코프를 가진다.</li>
+<li>Strict mode</li>
+<li>지연 실행된다(defer) -&gt; 스크립트의 상대적인 순서가 유지될 수 있는 이유</li>
+<li><red>확장자를 꼭 적어줘야한다.</red></li>
+</ul>
+<p>모듈은 단독적으로 사용하는 경우는 드물고 주로 <red>웹팩(Webpack)</red>이라는 번들러를 사용하여 모듈을 한번에 묶어 서버에 올리는 방식을 사용한다.</p>
+<p>웹팩에 대해서는 새로운 게시물에서 다뤄보도록 하고 이제 모듈을 불러오고 내보내는 방법에 대해 알아보자.</p>
+<h2 id="CommonJS-vs-ES6-방식"><a href="#CommonJS-vs-ES6-방식" class="headerlink" title="CommonJS vs ES6 방식"></a>CommonJS vs ES6 방식</h2><h3 id="1-CommonJS"><a href="#1-CommonJS" class="headerlink" title="1. CommonJS"></a>1. CommonJS</h3><ul>
+<li>require : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> sayHi = <span class="built_in">require</span>(<span class="string">&quot;./sayHi.js&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>exports : 내보내기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = foo;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-ES6-방식"><a href="#2-ES6-방식" class="headerlink" title="2. ES6 방식"></a>2. ES6 방식</h3><ul>
+<li>import : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> foo <span class="keyword">from</span> <span class="string">&quot;./sayHi.js&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> foo;</span><br></pre></td></tr></table></figure>
+
+<p>둘의 차이에 대해 알아두고 앞으로는 ES6 문법을 사용할 것이니 이에 대해서 자세히 알아보자.</p>
+<h2 id="export"><a href="#export" class="headerlink" title="export"></a>export</h2><p>모듈을 내보내는 방식은 다양하다.</p>
+<ol>
+<li>선언부에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">&quot;loco&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>단, 함수나 클래스를 내보내기할 경우에는 <red>; (세미콜론)을 붙이지 않아야 한다.</red></li>
+</ul>
+<ol start="2">
+<li>선언부와 떨어진 곳에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> name;</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러개를 내보내고 싶다면 객체로 감싸서 내보내기 해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// say.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayHi</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayBye</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Bye~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; sayHi, sayBye &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="import"><a href="#import" class="headerlink" title="import"></a>import</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi, sayBye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">sayHi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">sayBye</span>(<span class="string">&quot;selly&quot;</span>); <span class="comment">// Bye~ selly!</span></span><br></pre></td></tr></table></figure>
+
+<p>export 할 때, 객체형태로 감싸서 내보내기를 하였으면 불러올 때도 객체형태로 감싸 이름 그대로 가져와야한다.</p>
+<p>하지만 가져와야할 함수나 변수가 100만개라면? 일일히 언제 써주기가 힘드니 이럴 경우 <bold>* (에스터리스트)를 사용하여 모두 가져오기하여 객체처럼 사용할 수 있다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> greeting <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line">greeting.<span class="title function_">sayHi</span>(<span class="string">&quot;Yong&quot;</span>); <span class="comment">// Hi~ Yong!</span></span><br><span class="line">greeting.<span class="title function_">sayBye</span>(<span class="string">&quot;Jin&quot;</span>); <span class="comment">// Bye~ Jin!</span></span><br></pre></td></tr></table></figure>
+
+<p>하지만 이런 경우는 드물고, 대게 어떤 대상을 가져오는지를 구체적으로 하는 것 명시하는 것이 좋다.</p>
+<p>왜냐하면 웹팩을 사용하면 로딩속도를 높이기 위해 최적화를 하게되는데 이 경우 사용하지 않는 리소스는 삭제되기 때문이다.</p>
+<h3 id="import-as"><a href="#import-as" class="headerlink" title="import as"></a>import as</h3><p>as를 사용하여 이름을 바꿔서 가져올 수 있다. export 에서도 가능하지만 주로 import 에서만 사용하는 것이 명시적이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi <span class="keyword">as</span> hi, sayBye <span class="keyword">as</span> bye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">hi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">bye</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Bye~ John!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="export-default"><a href="#export-default" class="headerlink" title="export default"></a>export default</h2><p>모듈은 크게 2가지 종류로 나뉘게 된다.</p>
+<ol>
+<li>위 처럼 say라는 함수들이 다수있는 라이브러리 형태의 모듈</li>
+<li>개체 하나만 선언된 모듈</li>
+</ol>
+<p>유틸 함수들을 내보내는 경우가 아니라면 주로 2번의 경우를 선호한다.</p>
+<p>해당 모듈에 개체가 1개만 있다는 것을 명시적으로 구분하기 위해 <bold>export default 키워드를 사용한다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> validation <span class="keyword">from</span> <span class="string">&quot;./validation.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isValid = <span class="title function_">validation</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export default로 내보내기한 경우에 가져오기할 때는 <bold>중괄호{}가 필요없고 원하는 이름으로 가져올 수 있다.</bold></li>
+<li>또한, 개체 한개만 내보낸 것을 가져오기 때문에 <bold>export default로 내보낼 때는 식별자나 이름없이 내보낼 수 있다.</bold></li>
+</ul>
+<h1 id="🔥-22-11-09-추가"><a href="#🔥-22-11-09-추가" class="headerlink" title="🔥 [22.11.09 추가]"></a>🔥 [22.11.09 추가]</h1><h2 id="❗️-component-폴더의-index-js-모아서-다시-내보내기"><a href="#❗️-component-폴더의-index-js-모아서-다시-내보내기" class="headerlink" title="❗️ component 폴더의 index.js 모아서 다시 내보내기"></a>❗️ component 폴더의 index.js 모아서 다시 내보내기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// components/ToggleButton/ToggleButton.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// components/index.js</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Demo&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./ToggleButton&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./A11yHidden&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Banner&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// app/App.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&quot;components&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ToggleButton</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ToggleButton 컴포넌트를 이름 내보내기 해주고 있다.</li>
+<li>위와 같이 components 폴더의 index.js파일에 여러 컴포넌트를 다시 내보내기로 보내줄 때, <strong>만약 ToggleButton 컴포넌트를 기본 내보내기를 해주었다면</strong> 아래처럼 index.js에서 다시내보내기 해줄 때, {}로 감싸고 default로 받은 객체를 이름으로 설정해주고 내보내줘야한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./ToggleButton&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>왜냐하면, <strong>ToggleButton 이외의 다른 컴포넌트들도 default로 내보냈기 때문에 구분을 하기 위해서</strong> 다시 내보내기 할 때, 이름을 설정해줘야한다.</p>
+<p>이러한 불편함 때문에 이름 내보내기를 사용한다.</p>
+<h2 id="❗️-화살표-함수로-내보내기시-주의사항"><a href="#❗️-화살표-함수로-내보내기시-주의사항" class="headerlink" title="❗️ 화살표 함수로 내보내기시 주의사항"></a>❗️ 화살표 함수로 내보내기시 주의사항</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123; onText, offText, on, onToggle, activeClass &#125;) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>...<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위와 같이 화살표 함수로 한줄로 작성하여 익명함수로 내보내고 App.jsx에서 이름을 정하여 받아서 사용하더라도 브라우저 환경에서 컴포넌트 구조를 확인하면 컴포넌트 이름이 <red><strong>Annonymous</strong>라고 뜬다.</red></li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>수업시간에 모듈을 기본 내보내기, 이름 내보내기를 사용하면서 둘의 차이가 무엇인지? 그리고 CommonJS와 ES6에서 모듈을 불러오고 내보내는 방식의 차이에 대해 확실히 알고 가는 시간이여서 한층 성장하였다고 느낀다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/export/" rel="tag">export</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/import/" rel="tag">import</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
+                    data-tooltip="React에서 Upload Button Component 만들기"
+                    aria-label="이전: React에서 Upload Button Component 만들기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
+                    data-tooltip="우테코 프리코스 - 🐶 중복 문자 제거"
+                    aria-label="다음: 우테코 프리코스 - 🐶 중복 문자 제거"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
+                    data-tooltip="React에서 Upload Button Component 만들기"
+                    aria-label="이전: React에서 Upload Button Component 만들기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
+                    data-tooltip="우테코 프리코스 - 🐶 중복 문자 제거"
+                    aria-label="다음: 우테코 프리코스 - 🐶 중복 문자 제거"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

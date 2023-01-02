@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>Portal(포털) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.\n\n포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.\n\n🔨 사용방법1ReactDOM.createPortal(child, container);\n\n\nchild는 렌더링할 수 있는 자식\ncontainer는 DOM 요소이다.\n\n123456render() &#123;    return ReactDOM.createPortal(        this.props.children,        domNode    )&#125;\n\n\n위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.\ndomNode는 DOM 내부의 어디에 있던지 간에 상관없다.\n\n\n시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, 키보드 포커스 관리와 접근성을 고려해줘야한다.\n\n🌈 다이얼로그 예시다이얼로그 특징\n다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.\n다이얼로그 바깥으로 초점이동되면 안된다.\ndialog 역할(role)을 부여해야한다.\n모달 기능일 경우 aria-modal=true 이여야한다.\n다이얼로그 제목은 aria-label, aria-labelledby로 설정한다.\n\n1. 부모 컴포넌트1234567891011121314151617181920212223242526272829303132333435363738394041424344454647export class DemoDialog extends React.Component &#123;  #opennerRef = React.createRef(null);  state = &#123;    show: false,  &#125;;  handleShowDialog = () =&gt; &#123;    this.setState(&#123; show: true &#125;);  &#125;;  handleHideDialog = () =&gt; &#123;    this.setState(&#123; show: false &#125;);  &#125;;  render() &#123;    return (      &lt;div className=&#123;styles.box&#125;&gt;        &lt;button          ref=&#123;this.#opennerRef&#125;          type=&quot;button&quot;          className=&#123;styles.openDialogButton&#125;          aria-haspopup=&quot;dialog&quot;          aria-label=&quot;모달 다이얼로그 열기&quot;          title=&quot;모달 다이얼로그 열기&quot;          onClick=&#123;this.handleShowDialog&#125;        &gt;          모달열기        &lt;/button&gt;        &#123;this.state.show &amp;&amp; (          &lt;Dialog            modal            onClose=&#123;this.handleHideDialog&#125;            openner=&#123;this.#opennerRef.current&#125;          &gt;            &lt;Dialog.Header&gt;              &lt;h3&gt;불금 다이얼로그&lt;/h3&gt;            &lt;/Dialog.Header&gt;            &lt;Dialog.Body&gt;              &lt;ul&gt;...&lt;/ul&gt;            &lt;/Dialog.Body&gt;          &lt;/Dialog&gt;        )&#125;      &lt;/div&gt;    );  &#125;&#125;\n\n\n부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.\n\n2. 모달 컴포넌트(자식)root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.\n1234567// public/index.html&lt;body&gt;    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;    &lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;    &lt;div id=&quot;dialogZone&quot;&gt;&lt;/div&gt;&lt;/boyd&gt;\n\n123456789101112131415161718192021222324252627282930313233// Dialog.jsxconst &#123; documentElement: htmlElement &#125; = document;const reactDomContainer = document.getElementById(&quot;root&quot;);export class Dialog extends React.Component &#123;  #containerRef = React.createRef(null);  handleClose = () =&gt; &#123;    this.props.onClose?.();    this.props.openner.focus();  &#125;;  render() &#123;    const &#123; modal = false &#125; = this.props;    return createPortal(      &lt;&gt;        &lt;article          ref=&#123;this.#containerRef&#125;          tabIndex=&#123;-1&#125;          role=&quot;dialog&quot;          aria-modal=&#123;modal&#125;          className=&#123;styles.container&#125;        &gt;          &#123;this.props.children&#125;          &lt;Dialog.Footer onClose=&#123;this.handleClose&#125; /&gt;        &lt;/article&gt;        &#123;modal &amp;&amp; &lt;div className=&#123;styles.dim&#125; onClick=&#123;this.handleClose&#125; /&gt;&#125;      &lt;/&gt;,      document.getElementById(&quot;dialogZone&quot;)    );  &#125;&#125;\n\n\n우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.\n컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.\ncreatePortal()에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.\n모달이 켜져있을 때, Dialog.footer 자식 요소에게 onClose를 props로 전달하였다.\n\n3. 자식 컴포넌트 접근성 고려1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859export class Dialog extends React.Component &#123;    ...#tabbableElements = [];  #bindEscKeyEvents() &#123;    const handler = (e) =&gt; &#123;      if (e.key.toLowerCase().includes(&quot;escape&quot;)) &#123;        console.log(&quot;pressed esc key&quot;);        this.handleClose();      &#125;    &#125;;    document.addEventListener(&quot;keyup&quot;, handler);    // cleanup function    return () =&gt; document.removeEventListener(&quot;keyup&quot;, handler);  &#125;  #unbindEscKeyEvents = null;  componentDidMount() &#123;    this.#containerRef.current.focus();    this.#tabbableElements = getTabbableElements(this.#containerRef.current);    this.settingKeyboardTrap();    htmlElement.style.overflowY = &quot;hidden&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, true);    this.#unbindEscKeyEvents = this.#bindEscKeyEvents();  &#125;  componentWillUnmount() &#123;    htmlElement.style.overflowY = &quot;visible&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, false);    this.#unbindEscKeyEvents?.();  &#125;  settingKeyboardTrap() &#123;    const tabbles = this.#tabbableElements;    const firstElement = tabbles[0];    const lastElement = tabbles[tabbles.length - 1];    firstElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        lastElement.focus();      &#125;    &#125;);    lastElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (!e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        firstElement.focus();      &#125;    &#125;);  &#125;&#125;\n\n\nkey 이벤트를 등록해주고 제거해줄 때, 클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치시켜주면 편하다.\nkeydown 이벤트를 사용해야지만 e.preventDefault()로 기본동작을 막을 수 있다.\n\n\n모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.\nhtmlElement.style.overflowY = &quot;hidden&quot;로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.\n모달이 켜져있으면 root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.\n컴포넌트가 소멸되기 직전에 등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자. (고려하지 않는다면 성능에 문제가 생길 것이다.)\n\n4. 모달 slot 구분어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.\n합성(composition)을 사용하여 컴포넌트 간에 코드를 재사용하도록 하자.\n12345678910111213141516171819202122232425262728Dialog.Header = function DialogHeader(&#123; children &#125;) &#123;  return &lt;header className=&#123;styles.header&#125;&gt;&#123;children&#125;&lt;/header&gt;;&#125;;Dialog.Header.defaultProps = &#123;  children: &lt;h2&gt;React 포털로 연 다이얼로그(with 모달)&lt;/h2&gt;,&#125;;Dialog.Body = function DialogBody(&#123; children &#125;) &#123;  return &lt;div className=&#123;styles.body&#125;&gt;&#123;children&#125;&lt;/div&gt;;&#125;;Dialog.Footer = function DialogFooter(&#123; children, onClose &#125;) &#123;  return (    &lt;footer className=&#123;styles.footer&#125;&gt;      &lt;button        type=&quot;button&quot;        className=&#123;styles.closeButton&#125;        aria-label=&quot;모달 다이얼로그 닫기&quot;        title=&quot;모달 다이얼로그 닫기&quot;        onClick=&#123;onClose&#125;      &gt;        모달닫기      &lt;/button&gt;      &#123;children&#125;    &lt;/footer&gt;  );&#125;;\n","dateCreated":"2022-11-14T19:38:01+09:00","dateModified":"2022-11-14T20:43:12+09:00","datePublished":"2022-11-14T19:38:01+09:00","description":"","headline":"Portal(포털)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"}</script>
+    <meta name="description" content="📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.  포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.  🔨 사">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Portal(포털)">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.  포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.  🔨 사">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-14T10:38:01.000Z">
+<meta property="article:modified_time" content="2022-11-14T11:43:12.331Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Portal(포털)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-14T19:38:01+09:00">
+	
+		    2022/11/14
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-Portal이란"><a href="#📌-Portal이란" class="headerlink" title="📌 Portal이란?"></a>📌 Portal이란?</h1><p>포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 <red>root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.</red></p>
+<blockquote>
+<p>포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.</p>
+</blockquote>
+<h2 id="🔨-사용방법"><a href="#🔨-사용방법" class="headerlink" title="🔨 사용방법"></a>🔨 사용방법</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(child, container);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>child는 렌더링할 수 있는 자식</li>
+<li>container는 DOM 요소이다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">children</span>,</span><br><span class="line">        domNode</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.</li>
+<li><strong>domNode는 DOM 내부의 어디에 있던지 간에 상관없다.</strong></li>
+</ul>
+<blockquote>
+<p>시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, <red>키보드 포커스 관리와 접근성을 고려해줘야한다.</red></p>
+</blockquote>
+<h2 id="🌈-다이얼로그-예시"><a href="#🌈-다이얼로그-예시" class="headerlink" title="🌈 다이얼로그 예시"></a>🌈 다이얼로그 예시</h2><h3 id="다이얼로그-특징"><a href="#다이얼로그-특징" class="headerlink" title="다이얼로그 특징"></a>다이얼로그 특징</h3><ol>
+<li>다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.</li>
+<li>다이얼로그 바깥으로 초점이동되면 안된다.</li>
+<li>dialog 역할(role)을 부여해야한다.</li>
+<li>모달 기능일 경우 <code>aria-modal=true</code> 이여야한다.</li>
+<li>다이얼로그 제목은 <code>aria-label</code>, <code>aria-labelledby</code>로 설정한다.</li>
+</ol>
+<h3 id="1-부모-컴포넌트"><a href="#1-부모-컴포넌트" class="headerlink" title="1. 부모 컴포넌트"></a>1. 부모 컴포넌트</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoDialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #opennerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">show</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleShowDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleHideDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.box&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#opennerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.openDialogButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-haspopup</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;this.handleShowDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          모달열기</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;this.state.show &amp;&amp; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">modal</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClose</span>=<span class="string">&#123;this.handleHideDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">openner</span>=<span class="string">&#123;this.#opennerRef.current&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">h3</span>&gt;</span>불금 다이얼로그<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">ul</span>&gt;</span>...<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">Dialog</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.</li>
+</ul>
+<h3 id="2-모달-컴포넌트-자식"><a href="#2-모달-컴포넌트-자식" class="headerlink" title="2. 모달 컴포넌트(자식)"></a>2. 모달 컴포넌트(자식)</h3><p>root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 <strong>public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// public/index.html</span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;dialogZone&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">boyd</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dialog.jsx</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">documentElement</span>: htmlElement &#125; = <span class="variable language_">document</span>;</span><br><span class="line"><span class="keyword">const</span> reactDomContainer = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;root&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #containerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  handleClose = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">onClose</span>?.();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">openner</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; modal = <span class="literal">false</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">createPortal</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">article</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#containerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&#123;-1&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-modal</span>=<span class="string">&#123;modal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;this.props.children&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog.Footer</span> <span class="attr">onClose</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;modal &amp;&amp; <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.dim&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/&gt;</span></span>,</span><br><span class="line">      <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dialogZone&quot;</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.</li>
+<li>컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.</li>
+<li><code>createPortal()</code>에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.</li>
+<li>모달이 켜져있을 때, <code>Dialog.footer</code> 자식 요소에게 onClose를 props로 전달하였다.</li>
+</ul>
+<h3 id="3-자식-컴포넌트-접근성-고려"><a href="#3-자식-컴포넌트-접근성-고려" class="headerlink" title="3. 자식 컴포넌트 접근성 고려"></a>3. 자식 컴포넌트 접근성 고려</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">#tabbableElements = [];</span><br><span class="line"></span><br><span class="line">  #<span class="title function_">bindEscKeyEvents</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handler</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;escape&quot;</span>)) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;pressed esc key&quot;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">handleClose</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// cleanup function</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  #unbindEscKeyEvents = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#containerRef.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">    <span class="variable language_">this</span>.#tabbableElements = <span class="title function_">getTabbableElements</span>(<span class="variable language_">this</span>.#containerRef.<span class="property">current</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">settingKeyboardTrap</span>();</span><br><span class="line"></span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;hidden&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents = <span class="variable language_">this</span>.#<span class="title function_">bindEscKeyEvents</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;visible&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents?.();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">settingKeyboardTrap</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> tabbles = <span class="variable language_">this</span>.#tabbableElements;</span><br><span class="line">    <span class="keyword">const</span> firstElement = tabbles[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">const</span> lastElement = tabbles[tabbles.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    firstElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        lastElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    lastElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        firstElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>key 이벤트를 등록해주고 제거해줄 때, <red>클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치</red>시켜주면 편하다.<ul>
+<li><red>keydown 이벤트</red>를 사용해야지만 <code>e.preventDefault()</code>로 <strong>기본동작을 막을 수 있다.</strong></li>
+</ul>
+</li>
+<li>모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.</li>
+<li><code>htmlElement.style.overflowY = &quot;hidden&quot;</code>로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.</li>
+<li>모달이 켜져있으면 <strong>root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.</strong></li>
+<li>컴포넌트가 소멸되기 직전에 <red>등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자.</red> (고려하지 않는다면 성능에 문제가 생길 것이다.)</li>
+</ul>
+<h3 id="4-모달-slot-구분"><a href="#4-모달-slot-구분" class="headerlink" title="4. 모달 slot 구분"></a>4. 모달 slot 구분</h3><p>어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.</p>
+<p><strong>합성(composition)을 사용하여</strong> <red>컴포넌트 간에 코드를 재사용하도록 하자.</red></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span> = <span class="keyword">function</span> <span class="title function_">DialogHeader</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&#123;styles.header&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">header</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>React 포털로 연 다이얼로그(with 모달)<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Body</span> = <span class="keyword">function</span> <span class="title function_">DialogBody</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.body&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Footer</span> = <span class="keyword">function</span> <span class="title function_">DialogFooter</span>(<span class="params">&#123; children, onClose &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">footer</span> <span class="attr">className</span>=<span class="string">&#123;styles.footer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&#123;styles.closeButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;onClose&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        모달닫기</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/14/React/%EC%9E%AC%EC%82%AC%EC%9A%A9-%EB%A7%8E%EC%9D%B4-%EB%90%98%EB%8A%94-Loading-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                    data-tooltip="재사용 많이 되는 Loading 컴포넌트"
+                    aria-label="이전: 재사용 많이 되는 Loading 컴포넌트"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
+                    data-tooltip="DOM 컨트롤(ref)"
+                    aria-label="다음: DOM 컨트롤(ref)"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/14/React/%EC%9E%AC%EC%82%AC%EC%9A%A9-%EB%A7%8E%EC%9D%B4-%EB%90%98%EB%8A%94-Loading-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                    data-tooltip="재사용 많이 되는 Loading 컴포넌트"
+                    aria-label="이전: 재사용 많이 되는 Loading 컴포넌트"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
+                    data-tooltip="DOM 컨트롤(ref)"
+                    aria-label="다음: DOM 컨트롤(ref)"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>newsViewer, CBD Library Tip - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"8. news viewer\n전체적인 구조를 설명하면, Nav, NewsList는 컴포넌트로 관리하여 독립적인 요소로 관리하고 root 요소에 appendChild 해주었다.\nNav 요소가 클릭되면 state 상태 데이터를 클릭한 요소의 id와 변경해준다. ⇒ Nav 요소는 상태를 변경 시키지만 리렌더링은 일어나지 않는다.\nstate 상태 데이터가 변경이 일어나면 NewsList가 리렌더링이 발생한다.\n\nProxy12345678910111213141516let state = new Proxy(  &#123; category: &quot;all&quot; &#125;, // state 객체에 key,value로 들어가게된다.  &#123;    set: (obj, key, value) =&gt; &#123;      obj[key] = value;      window.dispatchEvent(        new CustomEvent(&quot;statechange&quot;, &#123;          detail: obj,        &#125;)      );      return true; // setter 는 성공했음을 나타내기 위해 true를 반환해줘야 한다.    &#125;,  &#125;);state[category] = &quot;business&quot;; // handler 객체의 setter 접근자 프로퍼티가 실행된다.\n\n\n프록시 객체를 생성하여 state(상태)가 변경, 할당이 발생하면 proxy의 handler에서 먼저 로직을 실행\nsetter 접근자 프로퍼티가 실행된다는 의미는 state(상태)에 변경이 일어난 경우이므로 이 때, window에게 custom event의 이벤트 객체를 보낸다.\n\nObserver(Intersection Observer API)옵저버 패턴은 이벤트를 발생 시킨 객체(subject)에 옵저버나 리스너를 등록하여서 이들이 subject를 관찰하면서 구독 혹은 구독 취소 같은 행위를 할 수 있도록 하는 패턴을 말한다.\n\n상태가 변경되면 옵저버에게 notify() 메서드로 알림을 보낸다\n옵저버(handler)는 subject가 변경될 때, 호출할 함수들이다.\n\n12345678910111213141516let observer = new IntersectionObserver(    entries =&gt; &#123;      entries.forEach(entry =&gt; &#123;        if (entry.isIntersecting) &#123;          currentNews = [...currentNews, ...getCategoryData(currentCategory)];          render(currentNews);        &#125;      &#125;);    &#125;,    &#123;      threshold: 1,    &#125;  );  observer.observe($newsList.querySelector(&#x27;.scroll-observer&#x27;));&#125;;\n\n\nspinner(’.scroll-obeserver’) 가 viewport에 지정한 임계점(threshold) 이상 나타났을 때, if문 안의 코드를 실행시킨다.\nentries forEach로 조건식 entry.isIntersecting이 true 이면 처음 스크롤을 내려서 보였을 때 실행하고 false면 다시 스크롤을 올렸을 때는 코드를 실행하지 말라는 의미이다. (양방향으로 일어나기 때문에 관리해줘야한다.)\n\n123456window.addEventListener(&quot;DOMContentLoaded&quot;, async () =&gt; &#123;  observer.subscribe(render);  intersectionObserver = createObserver();  await render();  intersectionObserver.observe($container.querySelector(&quot;.scroll-observer&quot;));&#125;);\n\n\nobserve() 메서드를 사용하여 옵저버 타겟을 설정할 수 있다.\n이 코드는 DOMContentLoaded 이벤트가 발생했을 때, 한번만 발생하면 된다. 리팩터링 이전 코드는 render 할 때마다 spinner 요소를 재생성하여 위 메서드를 사용하여 target으로 지정하기 위해서 꼭 render 함수 내부에 있어야 했는데, 이는 불필요한 함수 호출과 리렌더링이므로 이를 해결하기 위해 렌더링이 불필요한 템플릿들은 App.js에서 $container innerHTML로 미리 할당해준다.\n위와 같이 await로 렌더가 될 때 까지 기다렸다가 ‘.scroll-observer’ 요소가 생성된게 보장이 되면 옵저버 타겟을 등록한다.\n\n\n\n12345678910const addNews = (category, nextNews) =&gt; &#123;  news = &#123;    ...news,    [category]: &#123;      ...news[category],      articles: [...news[category].articles, ...nextNews],      page: news[category].page + 1,    &#125;,  &#125;;&#125;;\n\n\n기존에 있던 news 객체에 새로운 news 객체를 스프레드 문법으로 추가해줘야하는데, 추가해줄 때, 기존의 값을 스프레드 문법으로 풀어준 뒤 새로운 객체를 추가해줘야지 아니면 새로운 값만 할당된다.\n\n9. CBD123456class Component &#123;  constructor($container) &#123;    this.$container = $container;    observer.subscribe(this.render.bind(this));  &#125;&#125;\n\n\nthis.render는 handler 내부에 있는 함수이름으로 호출하면 이는 일반함수로 호출되므로 this가 전역객체에 바인딩된다. 그래서 this가 불일치하는 현상이 발생한다. 이 때 bind 메서드를 사용하여 Component로 this를 바인딩한 새로운 함수를 전달해주므로 this를 일치시켜준다.\n\n소감\n객체의 깊이가 길어지고 대괄호 표기법과 마침표 표기법 사용시점을 확실히 알지 못한다.\n구조분해 해줄 수 있는 것들은 구조분해 해줘서 간단하게 작성하자.\n클래스 new 연산자로 생성했을 때, 인스턴스의 구조가 어떤지 모른다. + super()\n8번 옵저버 패턴 구조 설명을 제대로 못한다.\n$container를 잘못이해하고있다. 클래스 구조에서 받은 $container 매개변수를 컴포넌트로 단위로 구성할 것이다. InnerHTML과 혼동하고 있다. 컴포넌트로 사용할 컨테이너를 매개변수로 받는다.\n\n","dateCreated":"2022-09-28T22:09:23+09:00","dateModified":"2022-10-29T19:16:18+09:00","datePublished":"2022-09-28T22:09:23+09:00","description":"","headline":"newsViewer, CBD Library Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/","keywords":"proxy, observer, CBD"}</script>
+    <meta name="description" content="8. news viewer 전체적인 구조를 설명하면, Nav, NewsList는 컴포넌트로 관리하여 독립적인 요소로 관리하고 root 요소에 appendChild 해주었다. Nav 요소가 클릭되면 state 상태 데이터를 클릭한 요소의 id와 변경해준다. ⇒ Nav 요소는 상태를 변경 시키지만 리렌더링은 일어나지 않는다. state 상태 데이터가 변경이 일">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="newsViewer, CBD Library Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="8. news viewer 전체적인 구조를 설명하면, Nav, NewsList는 컴포넌트로 관리하여 독립적인 요소로 관리하고 root 요소에 appendChild 해주었다. Nav 요소가 클릭되면 state 상태 데이터를 클릭한 요소의 id와 변경해준다. ⇒ Nav 요소는 상태를 변경 시키지만 리렌더링은 일어나지 않는다. state 상태 데이터가 변경이 일">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-28T13:09:23.000Z">
+<meta property="article:modified_time" content="2022-10-29T10:16:18.148Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="proxy">
+<meta property="article:tag" content="observer">
+<meta property="article:tag" content="CBD">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            newsViewer, CBD Library Tip
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-09-28T22:09:23+09:00">
+	
+		    2022/09/28
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="8-news-viewer"><a href="#8-news-viewer" class="headerlink" title="8. news viewer"></a>8. news viewer</h1><ol>
+<li>전체적인 구조를 설명하면, Nav, NewsList는 컴포넌트로 관리하여 독립적인 요소로 관리하고 root 요소에 appendChild 해주었다.</li>
+<li>Nav 요소가 클릭되면 state 상태 데이터를 클릭한 요소의 id와 변경해준다. ⇒ Nav 요소는 상태를 변경 시키지만 리렌더링은 일어나지 않는다.</li>
+<li>state 상태 데이터가 변경이 일어나면 NewsList가 리렌더링이 발생한다.</li>
+</ol>
+<h2 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = <span class="keyword">new</span> <span class="title class_">Proxy</span>(</span><br><span class="line">  &#123; <span class="attr">category</span>: <span class="string">&quot;all&quot;</span> &#125;, <span class="comment">// state 객체에 key,value로 들어가게된다.</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">set</span>: <span class="function">(<span class="params">obj, key, value</span>) =&gt;</span> &#123;</span><br><span class="line">      obj[key] = value;</span><br><span class="line">      <span class="variable language_">window</span>.<span class="title function_">dispatchEvent</span>(</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">CustomEvent</span>(<span class="string">&quot;statechange&quot;</span>, &#123;</span><br><span class="line">          <span class="attr">detail</span>: obj,</span><br><span class="line">        &#125;)</span><br><span class="line">      );</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// setter 는 성공했음을 나타내기 위해 true를 반환해줘야 한다.</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">state[category] = <span class="string">&quot;business&quot;</span>; <span class="comment">// handler 객체의 setter 접근자 프로퍼티가 실행된다.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>프록시 객체를 생성하여 state(상태)가 변경, 할당이 발생하면 proxy의 handler에서 먼저 로직을 실행</li>
+<li>setter 접근자 프로퍼티가 실행된다는 의미는 state(상태)에 변경이 일어난 경우이므로 이 때, window에게 custom event의 이벤트 객체를 보낸다.</li>
+</ul>
+<h2 id="Observer-Intersection-Observer-API"><a href="#Observer-Intersection-Observer-API" class="headerlink" title="Observer(Intersection Observer API)"></a>Observer(Intersection Observer API)</h2><p>옵저버 패턴은 이벤트를 발생 시킨 객체(subject)에 옵저버나 리스너를 등록하여서 이들이 subject를 관찰하면서 구독 혹은 구독 취소 같은 행위를 할 수 있도록 하는 패턴을 말한다.</p>
+<ul>
+<li>상태가 변경되면 옵저버에게 notify() 메서드로 알림을 보낸다</li>
+<li>옵저버(handler)는 subject가 변경될 때, 호출할 함수들이다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(</span><br><span class="line">    <span class="function"><span class="params">entries</span> =&gt;</span> &#123;</span><br><span class="line">      entries.<span class="title function_">forEach</span>(<span class="function"><span class="params">entry</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (entry.<span class="property">isIntersecting</span>) &#123;</span><br><span class="line">          currentNews = [...currentNews, ...<span class="title function_">getCategoryData</span>(currentCategory)];</span><br><span class="line">          <span class="title function_">render</span>(currentNews);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">threshold</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  observer.<span class="title function_">observe</span>($newsList.<span class="title function_">querySelector</span>(<span class="string">&#x27;.scroll-observer&#x27;</span>));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>spinner(’.scroll-obeserver’)</code> 가 viewport에 지정한 임계점(threshold) 이상 나타났을 때, if문 안의 코드를 실행시킨다.</li>
+<li>entries forEach로 조건식 entry.isIntersecting이 true 이면 처음 스크롤을 내려서 보였을 때 실행하고 false면 다시 스크롤을 올렸을 때는 코드를 실행하지 말라는 의미이다. (양방향으로 일어나기 때문에 관리해줘야한다.)</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  observer.<span class="title function_">subscribe</span>(render);</span><br><span class="line">  intersectionObserver = <span class="title function_">createObserver</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">render</span>();</span><br><span class="line">  intersectionObserver.<span class="title function_">observe</span>($container.<span class="title function_">querySelector</span>(<span class="string">&quot;.scroll-observer&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>observe() 메서드를 사용하여 옵저버 타겟을 설정할 수 있다.<ul>
+<li>이 코드는 DOMContentLoaded 이벤트가 발생했을 때, 한번만 발생하면 된다. 리팩터링 이전 코드는 render 할 때마다 spinner 요소를 재생성하여 위 메서드를 사용하여 target으로 지정하기 위해서 꼭 render 함수 내부에 있어야 했는데, 이는 불필요한 함수 호출과 리렌더링이므로 이를 해결하기 위해 렌더링이 불필요한 템플릿들은 App.js에서 $container innerHTML로 미리 할당해준다.</li>
+<li>위와 같이 await로 렌더가 될 때 까지 기다렸다가 <code>‘.scroll-observer’</code> 요소가 생성된게 보장이 되면 옵저버 타겟을 등록한다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">addNews</span> = (<span class="params">category, nextNews</span>) =&gt; &#123;</span><br><span class="line">  news = &#123;</span><br><span class="line">    ...news,</span><br><span class="line">    [category]: &#123;</span><br><span class="line">      ...news[category],</span><br><span class="line">      <span class="attr">articles</span>: [...news[category].<span class="property">articles</span>, ...nextNews],</span><br><span class="line">      <span class="attr">page</span>: news[category].<span class="property">page</span> + <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기존에 있던 news 객체에 새로운 news 객체를 스프레드 문법으로 추가해줘야하는데, 추가해줄 때, <strong>기존의 값을 스프레드 문법으로 풀어준 뒤 새로운 객체를 추가해줘야지 아니면 새로운 값만 할당된다.</strong></li>
+</ul>
+<h1 id="9-CBD"><a href="#9-CBD" class="headerlink" title="9. CBD"></a>9. CBD</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">$container</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$container</span> = $container;</span><br><span class="line">    observer.<span class="title function_">subscribe</span>(<span class="variable language_">this</span>.<span class="property">render</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>this.render는 handler 내부에 있는 함수이름으로 호출하면 이는 일반함수로 호출되므로 this가 전역객체에 바인딩된다. 그래서 this가 불일치하는 현상이 발생한다. 이 때 bind 메서드를 사용하여 Component로 this를 바인딩한 새로운 함수를 전달해주므로 this를 일치시켜준다.</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>객체의 깊이가 길어지고 대괄호 표기법과 마침표 표기법 사용시점을 확실히 알지 못한다.</li>
+<li>구조분해 해줄 수 있는 것들은 구조분해 해줘서 간단하게 작성하자.</li>
+<li>클래스 new 연산자로 생성했을 때, 인스턴스의 구조가 어떤지 모른다. + super()</li>
+<li>8번 옵저버 패턴 구조 설명을 제대로 못한다.</li>
+<li>$container를 잘못이해하고있다. 클래스 구조에서 받은 $container 매개변수를 컴포넌트로 단위로 구성할 것이다. InnerHTML과 혼동하고 있다. 컴포넌트로 사용할 컨테이너를 매개변수로 받는다.</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/CBD/" rel="tag">CBD</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/observer/" rel="tag">observer</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/proxy/" rel="tag">proxy</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"
+                    data-tooltip="CBD Library Tip"
+                    aria-label="이전: CBD Library Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/27/PairProgramming/level%202/sidebar,%20tictactoe,%20acordion%20Tip/"
+                    data-tooltip="sidebar, tictactoe, acordion Tip"
+                    aria-label="다음: sidebar, tictactoe, acordion Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"
+                    data-tooltip="CBD Library Tip"
+                    aria-label="이전: CBD Library Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/27/PairProgramming/level%202/sidebar,%20tictactoe,%20acordion%20Tip/"
+                    data-tooltip="sidebar, tictactoe, acordion Tip"
+                    aria-label="다음: sidebar, tictactoe, acordion Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

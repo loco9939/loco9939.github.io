@@ -1,0 +1,745 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>🐥 타마스 러버덕 1일차 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 TypeScript와 JavaScript 관계모든 JavaScript는 TypeScript이지만, 모든 TypeScript가 JavaScript는 아니다.\n12345678910interface State &#123;  name: string;  capital: string;&#125;const states: State[] = [  &#123; name: &quot;yiju&quot;, capital: &quot;경기도&quot; &#125;,  &#123; name: &quot;kim&quot;, capitol: &quot;서울&quot; &#125;,]; // Error// Type &#x27;&#123; name: string; capitol: string; &#125;&#x27; is not assignable to type &#x27;State&#x27;.//   Object literal may only specify known properties, but &#x27;capitol&#x27; does not exist in type &#x27;State&#x27;. Did you mean to write &#x27;capital&#x27;?\n\n위 예시를 설명하면, 앞서 말한 모든 타입스크립트가 자바스크립트다 라고 하는 말은 틀렸다.\n\n\n우리는 타입에 맞도록 작성하기 위해 타입스크립트를 사용하려는 것이므로 타입에 맞게 코드를 작성할 때만 진정 타입스크립트 코드를 작성했다고 말할 수 있다.\n타입스크립트 프로그램 $\\supset$ ( 자바스크립트 프로그램 $\\cap$ 타입체커를 통과한 타입스크립트 )\n📌 코드 생성과 타입은 관련이 없다.TypeScript로 작성한 코드가 컴파일 과정을 통해 JavaScript로 변환된다.\n이 때, 타입 코드들은 사라지게된다.\n123456// TypeScriptinterface State &#123;  name: string;  capital: string;&#125;const states: State[] = [&#123; name: &quot;yiju&quot;, capital: &quot;경기도&quot; &#125;];\n\n위 코드를 JavaScript로 컴파일하면 다음과 같은 결과만 남는다.\n123// JavaScript&quot;use strict&quot;;const states = [&#123; name: &quot;yiju&quot;, capital: &quot;경기도&quot; &#125;];\n\n컴파일 이후 런타임 시점에 JavaScript 코드가 실행된다.\n즉, 컴파일이 코드 생성을 말하는 것이고 런타임 시점에는 타입을 체크할 수 없을 뿐더러 당연히 타입스크립트 타입은 런타임 성능에 영향을 주지 않습니다.\n📌 any 타입 지양하기\nany 타입은 안전성이 없다.\n함수 시그니처(contract: 계약)을 무시한다.\n\n12345function calcAge(birthDate: Date): number &#123;  //...&#125;let birthDate: any = &quot;1995-12-04&quot;;calcAge(birthDate); // 정상\n\n\n언어 서비스가 적용되지 않는다.(자동완성 및 도움말)\n코드 설계를 예측할 수 없게 만들고 신뢰도를 떨어뜨린다.\n\n⭐️⭐️⭐️⭐️⭐️ 타입은 값들의 집합이다.타입은 값들의 집합이다. 또한 이 집합은 타입의 범위라고 말한다. 이 개념을 알아둬야 타입에 대해 이해하기 용이하다.\nTypeScript는 타입을 검사할 때, 선언된 타입에 할당 가능한 지(assignable)를 판단한다.\n123type AB = &quot;A&quot; | &quot;B&quot;;const c: AB = &quot;C&quot;; // Error: Type &#x27;&quot;C&quot;&#x27; is not &quot;assignable&quot; to type &#x27;AB&#x27;.\n\n\n“C” 형식은 AB 형식에 할당할 수 없습니다.\n“C” 형식은 AB 형식의 부분집합이 아니다.\n“C” 형식은 AB 형식의 원소가 아니다.\n“C” 형식은 AB 형식의 서브타입이 아니다.\n“C” 형식은 AB 형식의 상속 받지 않는다.\n\n모두 같은 말이므로 염두하자.\n🕹 &amp; 연산자 (교집합, intersection)1234567891011121314interface Person &#123;  name: string;&#125;interface Lifespan &#123;  birth: Date;  death?: Date;&#125;type PersonSpan = Person &amp; Lifespan;const ps: PersonSpan = &#123;  name: &quot;yiju&quot;,  birth: new Date(&quot;1995/12/04&quot;),  death: new Date(&quot;2100/10/10&quot;),&#125;; // 정상\n\n\n&amp; 연산자는 두 타입의 인터섹션(교집합)을 계산한다.\n\n언뜻 보면 교집합이라하면 공통으로 가지고 있는 요소만 확인한다고 생각이 들어 위 예시가 잘못되었다고 생각이 든다.\n하지만, 타입 연산자는 인터페이스 속성이 아닌 타입의 범위(값의 집합)에 적용된다. 해당 타입과 더불어 추가적인 값을 가지는 값도 PersonSpan 타입에 속한다.\n즉, PersonSpan은 Person 이라는 속성을 포함하는 집합과 Lifespan 이라는 속성을 포함하는 집합의 교집합이 되기 위해서는 Person의 name 프로퍼티도 가져야 하고 Lifespan의 birth 속성을 가진 집합을 의미한다. (deate 속성은 optional하므로…)\n헷갈린다면… extends 구문으로 선언할 수 있다.\n1234567interface Person &#123;  name: string;&#125;interface PersonSpan extends Person &#123;  birth: Date;  death?: Date;&#125;\n\n유니온에서 &amp; 연산자1type K = keyof (Person | Lifespan); // type is &#x27;never&#x27;\n\nkeyof 연산자는 객체의 키 값들을 숫자나 문자열 리터럴 유니언을 생성한다.\n즉, Person의 key값 name, Lifespan의 key값 birth,death의 유니온인 name | birth 에 속하는 값은 어떠한 키도 없기 때문에 never가 된다.\n명확히 사용하면 아래와 같다\n12keyof (A&amp;B) = (keyof A) | (keyof B); // A의 key 값이거나 B의 key 값인 것keyof (A|B) = (keyof A) &amp; (keyof B); // A의 key 값이면서 B의 key 값인 것\n\n✈️ 제네릭 상속1234567891011121314151617interface Point &#123;  x: number;  y: number;&#125;type PointKeys = keyof Point; // type is &quot;x&quot; | &quot;y&quot;function sortBy&lt;K extends keyof T, T&gt;(vals: T[], key: K): T[] &#123;  // ...&#125;const pts: Point[] = [  &#123; x: 1, y: 1 &#125;,  &#123; x: 2, y: 0 &#125;,];sortBy(pts, &quot;x&quot;); // 정상 &#x27;x&#x27;는 &#x27;x&#x27;|&#x27;y&#x27;를 상속받는다.sortBy(pts, &quot;y&quot;); // 정상 &#x27;y&#x27;는 &#x27;x&#x27;|&#x27;y&#x27;를 상속받는다.sortBy(pts, &quot;z&quot;); // Error: Argument of type &#x27;&quot;z&quot;&#x27; is not assignable to parameter of type &#x27;keyof Point&#x27;.\n\n\ntype K는 type T의 상속을 받는다.\n위 함수에서 T가 곧 Point 이다.\n그러므로 K는 keyof T이므로 ‘x’|’y’ 이다.\nK extends keyof T를 사용하여 제한된 타입을 구현하였다.\n\n🦖 타입 공간과 값 공간 구분하기JavaScript의 symbol은 타입 공간이나 값 공간 중 한 곳에 존재한다. symbol은 이름이 같더라도 속하는 공간에 따라 나타내는 것이 다르다.\n12345type T1 = &quot;string literal&quot;;type T2 = 123;const v1 = &quot;string literal&quot;;const v2 = 123;\n\n\ntype 뒤의 심볼인 T1, T2는 타입 공간에 있으므로 타입을 나타낸다. 컴파일 과정에서 사라진다.\n\nclass와 enum은 상황에 따라 값, 타입 두가지 모두 가능1234567891011121314class Cylinder &#123;  radius = 1;  height = 1;&#125;function calcVolume(shape: unknown) &#123;  if (shape instanceof Cylinder) &#123;    shape; // 정상, 타입은 Cylinder    shape.radius; // 정상, 타입은 number  &#125;&#125;const v = typeof Cylinder; // 값이 &#x27;function&#x27;type T = typeof Cylinder; // 타입이 typeof Cylinder\n\n\n클래스가 값으로 쓰일 때는 생성자가 사용되지만 타입으로 사용될 때는 속성과 메서드가 사용된다.\n여기서 중요한 것은 Cylinder가 인스턴스의 타입이 아니라는 것이다.\n\n","dateCreated":"2022-11-18T11:02:51+09:00","dateModified":"2022-11-23T20:16:44+09:00","datePublished":"2022-11-18T11:02:51+09:00","description":"📌 TypeScript와 JavaScript 관계모든 JavaScript는 TypeScript이지만, 모든 TypeScript가 JavaScript는 아니다.\n12345678910interface State &#123;  name: string;  capital: string;&#125;const states: State[] = [  &#123; name: &quot;yiju&quot;, capital: &quot;경기도&quot; &#125;,  &#123; name: &quot;kim&quot;, capitol: &quot;서울&quot; &#125;,]; // Error// Type &#x27;&#123; name: string; capitol: string; &#125;&#x27; is not assignable to type &#x27;State&#x27;.//   Object literal may only specify known properties, but &#x27;capitol&#x27; does not exist in type &#x27;State&#x27;. Did you mean to write &#x27;capital&#x27;?\n\n위 예시를 설명하면, 앞서 말한 모든 타입스크립트가 자바스크립트다 라고 하는 말은 틀렸다.","headline":"🐥 타마스 러버덕 1일차","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"}</script>
+    <meta name="description" content="📌 TypeScript와 JavaScript 관계모든 JavaScript는 TypeScript이지만, 모든 TypeScript가 JavaScript는 아니다. 12345678910interface State &amp;#123;  name: string;  capital: string;&amp;#125;const states: State[] &#x3D; [  &amp;#123; name">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="🐥 타마스 러버덕 1일차">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 TypeScript와 JavaScript 관계모든 JavaScript는 TypeScript이지만, 모든 TypeScript가 JavaScript는 아니다. 12345678910interface State &amp;#123;  name: string;  capital: string;&amp;#125;const states: State[] &#x3D; [  &amp;#123; name">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-18T02:02:51.000Z">
+<meta property="article:modified_time" content="2022-11-23T11:16:44.336Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            🐥 타마스 러버덕 1일차
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-18T11:02:51+09:00">
+	
+		    2022/11/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-TypeScript와-JavaScript-관계"><a href="#📌-TypeScript와-JavaScript-관계" class="headerlink" title="📌 TypeScript와 JavaScript 관계"></a>📌 TypeScript와 JavaScript 관계</h1><p>모든 JavaScript는 TypeScript이지만, <red>모든 TypeScript가 JavaScript는 아니다.</red></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">State</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">capital</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">states</span>: <span class="title class_">State</span>[] = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">capital</span>: <span class="string">&quot;경기도&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;kim&quot;</span>, <span class="attr">capitol</span>: <span class="string">&quot;서울&quot;</span> &#125;,</span><br><span class="line">]; <span class="comment">// Error</span></span><br><span class="line"><span class="comment">// Type &#x27;&#123; name: string; capitol: string; &#125;&#x27; is not assignable to type &#x27;State&#x27;.</span></span><br><span class="line"><span class="comment">//   Object literal may only specify known properties, but &#x27;capitol&#x27; does not exist in type &#x27;State&#x27;. Did you mean to write &#x27;capital&#x27;?</span></span><br></pre></td></tr></table></figure>
+
+<p>위 예시를 설명하면, 앞서 말한 <code>모든 타입스크립트가 자바스크립트다</code> <red>라고 하는 말은 틀렸다.</red></p>
+<span id="more"></span>
+
+<p>우리는 타입에 맞도록 작성하기 위해 타입스크립트를 사용하려는 것이므로 타입에 맞게 코드를 작성할 때만 진정 타입스크립트 코드를 작성했다고 말할 수 있다.</p>
+<p><strong><red>타입스크립트 프로그램 $\supset$ ( 자바스크립트 프로그램 $\cap$ 타입체커를 통과한 타입스크립트 )</red></strong></p>
+<h1 id="📌-코드-생성과-타입은-관련이-없다"><a href="#📌-코드-생성과-타입은-관련이-없다" class="headerlink" title="📌 코드 생성과 타입은 관련이 없다."></a>📌 코드 생성과 타입은 관련이 없다.</h1><p>TypeScript로 작성한 코드가 컴파일 과정을 통해 JavaScript로 변환된다.</p>
+<p>이 때, 타입 코드들은 사라지게된다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TypeScript</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">State</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">capital</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">states</span>: <span class="title class_">State</span>[] = [&#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">capital</span>: <span class="string">&quot;경기도&quot;</span> &#125;];</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 JavaScript로 컴파일하면 다음과 같은 결과만 남는다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JavaScript</span></span><br><span class="line"><span class="meta">&quot;use strict&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> states = [&#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">capital</span>: <span class="string">&quot;경기도&quot;</span> &#125;];</span><br></pre></td></tr></table></figure>
+
+<p>컴파일 이후 런타임 시점에 JavaScript 코드가 실행된다.</p>
+<p>즉, 컴파일이 코드 생성을 말하는 것이고 <strong>런타임 시점에는 타입을 체크할 수 없을 뿐더러 당연히 타입스크립트 타입은 런타임 성능에 영향을 주지 않습니다.</strong></p>
+<h1 id="📌-any-타입-지양하기"><a href="#📌-any-타입-지양하기" class="headerlink" title="📌 any 타입 지양하기"></a>📌 any 타입 지양하기</h1><ul>
+<li>any 타입은 안전성이 없다.</li>
+<li>함수 시그니처(contract: 계약)을 무시한다.</li>
+</ul>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">calcAge</span>(<span class="params">birthDate: <span class="built_in">Date</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">birthDate</span>: <span class="built_in">any</span> = <span class="string">&quot;1995-12-04&quot;</span>;</span><br><span class="line"><span class="title function_">calcAge</span>(birthDate); <span class="comment">// 정상</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>언어 서비스가 적용되지 않는다.(자동완성 및 도움말)</li>
+<li>코드 설계를 예측할 수 없게 만들고 신뢰도를 떨어뜨린다.</li>
+</ul>
+<h1 id="⭐️⭐️⭐️⭐️⭐️-타입은-값들의-집합이다"><a href="#⭐️⭐️⭐️⭐️⭐️-타입은-값들의-집합이다" class="headerlink" title="⭐️⭐️⭐️⭐️⭐️ 타입은 값들의 집합이다."></a>⭐️⭐️⭐️⭐️⭐️ 타입은 값들의 집합이다.</h1><p>타입은 값들의 집합이다. 또한 이 집합은 타입의 범위라고 말한다. 이 개념을 알아둬야 타입에 대해 이해하기 용이하다.</p>
+<p>TypeScript는 타입을 검사할 때, 선언된 타입에 <red>할당 가능한 지(assignable)</red>를 판단한다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="variable constant_">AB</span> = <span class="string">&quot;A&quot;</span> | <span class="string">&quot;B&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">c</span>: <span class="variable constant_">AB</span> = <span class="string">&quot;C&quot;</span>; <span class="comment">// Error: Type &#x27;&quot;C&quot;&#x27; is not &quot;assignable&quot; to type &#x27;AB&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>“C” 형식은 AB 형식에 할당할 수 없습니다.</li>
+<li>“C” 형식은 AB 형식의 부분집합이 아니다.</li>
+<li>“C” 형식은 AB 형식의 원소가 아니다.</li>
+<li>“C” 형식은 AB 형식의 서브타입이 아니다.</li>
+<li>“C” 형식은 AB 형식의 상속 받지 않는다.</li>
+</ul>
+<p>모두 같은 말이므로 염두하자.</p>
+<h2 id="🕹-amp-연산자-교집합-intersection"><a href="#🕹-amp-연산자-교집합-intersection" class="headerlink" title="🕹 &amp; 연산자 (교집합, intersection)"></a>🕹 &amp; 연산자 (교집합, intersection)</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Lifespan</span> &#123;</span><br><span class="line">  <span class="attr">birth</span>: <span class="title class_">Date</span>;</span><br><span class="line">  death?: <span class="title class_">Date</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">PersonSpan</span> = <span class="title class_">Person</span> &amp; <span class="title class_">Lifespan</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">ps</span>: <span class="title class_">PersonSpan</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">birth</span>: <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&quot;1995/12/04&quot;</span>),</span><br><span class="line">  <span class="attr">death</span>: <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&quot;2100/10/10&quot;</span>),</span><br><span class="line">&#125;; <span class="comment">// 정상</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>&amp; 연산자는 두 타입의 인터섹션(교집합)을 계산한다.</li>
+</ul>
+<p>언뜻 보면 교집합이라하면 공통으로 가지고 있는 요소만 확인한다고 생각이 들어 위 예시가 잘못되었다고 생각이 든다.</p>
+<p>하지만, <red>타입 연산자는 인터페이스 속성이 아닌 타입의 범위(값의 집합)에 적용된다.</red> 해당 타입과 더불어 추가적인 값을 가지는 값도 PersonSpan 타입에 속한다.</p>
+<p>즉, PersonSpan은 Person 이라는 속성을 포함하는 집합과 Lifespan 이라는 속성을 포함하는 집합의 교집합이 되기 위해서는 Person의 name 프로퍼티도 가져야 하고 Lifespan의 birth 속성을 가진 집합을 의미한다. (deate 속성은 optional하므로…)</p>
+<p>헷갈린다면… <strong>extends 구문으로 선언할 수 있다.</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">PersonSpan</span> <span class="keyword">extends</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="attr">birth</span>: <span class="title class_">Date</span>;</span><br><span class="line">  death?: <span class="title class_">Date</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="유니온에서-amp-연산자"><a href="#유니온에서-amp-연산자" class="headerlink" title="유니온에서 &amp; 연산자"></a>유니온에서 &amp; 연산자</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> K = keyof (<span class="title class_">Person</span> | <span class="title class_">Lifespan</span>); <span class="comment">// type is &#x27;never&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>keyof 연산자는 객체의 키 값들을 숫자나 문자열 리터럴 유니언을 생성한다.</p>
+<p>즉, Person의 key값 name, Lifespan의 key값 birth,death의 유니온인 name | birth 에 속하는 값은 어떠한 키도 없기 때문에 <code>never</code>가 된다.</p>
+<p>명확히 사용하면 아래와 같다</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">keyof (A&amp;B) = (keyof A) | (keyof B); <span class="comment">// A의 key 값이거나 B의 key 값인 것</span></span><br><span class="line">keyof (A|B) = (keyof A) &amp; (keyof B); <span class="comment">// A의 key 값이면서 B의 key 값인 것</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="✈️-제네릭-상속"><a href="#✈️-제네릭-상속" class="headerlink" title="✈️ 제네릭 상속"></a>✈️ 제네릭 상속</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">  <span class="attr">x</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">y</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">PointKeys</span> = keyof <span class="title class_">Point</span>; <span class="comment">// type is &quot;x&quot; | &quot;y&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> sortBy&lt;K <span class="keyword">extends</span> keyof T, T&gt;(<span class="attr">vals</span>: T[], <span class="attr">key</span>: K): T[] &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">pts</span>: <span class="title class_">Point</span>[] = [</span><br><span class="line">  &#123; <span class="attr">x</span>: <span class="number">1</span>, <span class="attr">y</span>: <span class="number">1</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">x</span>: <span class="number">2</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;,</span><br><span class="line">];</span><br><span class="line"><span class="title function_">sortBy</span>(pts, <span class="string">&quot;x&quot;</span>); <span class="comment">// 정상 &#x27;x&#x27;는 &#x27;x&#x27;|&#x27;y&#x27;를 상속받는다.</span></span><br><span class="line"><span class="title function_">sortBy</span>(pts, <span class="string">&quot;y&quot;</span>); <span class="comment">// 정상 &#x27;y&#x27;는 &#x27;x&#x27;|&#x27;y&#x27;를 상속받는다.</span></span><br><span class="line"><span class="title function_">sortBy</span>(pts, <span class="string">&quot;z&quot;</span>); <span class="comment">// Error: Argument of type &#x27;&quot;z&quot;&#x27; is not assignable to parameter of type &#x27;keyof Point&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type K는 type T의 상속을 받는다.</li>
+<li>위 함수에서 T가 곧 Point 이다.</li>
+<li>그러므로 K는 keyof T이므로 ‘x’|’y’ 이다.</li>
+<li><code>K extends keyof T</code>를 사용하여 제한된 타입을 구현하였다.</li>
+</ul>
+<h2 id="🦖-타입-공간과-값-공간-구분하기"><a href="#🦖-타입-공간과-값-공간-구분하기" class="headerlink" title="🦖 타입 공간과 값 공간 구분하기"></a>🦖 타입 공간과 값 공간 구분하기</h2><p>JavaScript의 symbol은 타입 공간이나 값 공간 중 한 곳에 존재한다. symbol은 이름이 같더라도 <strong>속하는 공간에 따라 나타내는 것이 다르다.</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="variable constant_">T1</span> = <span class="string">&quot;string literal&quot;</span>;</span><br><span class="line"><span class="keyword">type</span> <span class="variable constant_">T2</span> = <span class="number">123</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> v1 = <span class="string">&quot;string literal&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> v2 = <span class="number">123</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type 뒤의 심볼인 T1, T2는 타입 공간에 있으므로 타입을 나타낸다. 컴파일 과정에서 사라진다.</li>
+</ul>
+<h3 id="class와-enum은-상황에-따라-값-타입-두가지-모두-가능"><a href="#class와-enum은-상황에-따라-값-타입-두가지-모두-가능" class="headerlink" title="class와 enum은 상황에 따라 값, 타입 두가지 모두 가능"></a>class와 enum은 상황에 따라 값, 타입 두가지 모두 가능</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Cylinder</span> &#123;</span><br><span class="line">  radius = <span class="number">1</span>;</span><br><span class="line">  height = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">calcVolume</span>(<span class="params">shape: <span class="built_in">unknown</span></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (shape <span class="keyword">instanceof</span> <span class="title class_">Cylinder</span>) &#123;</span><br><span class="line">    shape; <span class="comment">// 정상, 타입은 Cylinder</span></span><br><span class="line">    shape.<span class="property">radius</span>; <span class="comment">// 정상, 타입은 number</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> v = <span class="keyword">typeof</span> <span class="title class_">Cylinder</span>; <span class="comment">// 값이 &#x27;function&#x27;</span></span><br><span class="line"><span class="keyword">type</span> T = <span class="keyword">typeof</span> <span class="title class_">Cylinder</span>; <span class="comment">// 타입이 typeof Cylinder</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클래스가 값으로 쓰일 때는 생성자가 사용되지만 타입으로 사용될 때는 속성과 메서드가 사용된다.</li>
+<li>여기서 중요한 것은 <red>Cylinder가 인스턴스의 타입이 아니라는 것이다.</red></li>
+</ul>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    data-tooltip="✈️ 리액트 Hooks"
+                    aria-label="이전: ✈️ 리액트 Hooks"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
+                    data-tooltip="타입스크립트 들어가기 전..."
+                    aria-label="다음: 타입스크립트 들어가기 전..."
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    data-tooltip="✈️ 리액트 Hooks"
+                    aria-label="이전: ✈️ 리액트 Hooks"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
+                    data-tooltip="타입스크립트 들어가기 전..."
+                    aria-label="다음: 타입스크립트 들어가기 전..."
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
