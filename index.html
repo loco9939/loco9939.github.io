@@ -350,12 +350,12 @@
             
                 <div class="postShorten-content">
                     <h1 id="this는-무엇인가"><a href="#this는-무엇인가" class="headerlink" title="this는 무엇인가?"></a>this는 무엇인가?</h1><p>this는 자바스크립트 언어에서 매우 추상적인 부분 중에 하나이다. 그래도 한마디로 단정짓는다면, <strong>this는 자기 자신을 나타내기 위한 키워드이다.</strong></p>
-<p>좀 더 자세히 말하면 자신이 속한 객체나 자신이 생성할 객체를 가리키는 자기 참조 변수로, 아래 두 객체를 참조할 수 있다.</p>
-<ol>
-<li>자신이 속한 객체</li>
-<li>자신이 생성할 객체</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// this로 자신이 속한 객체 참조</span></span><br><span class="line"><span class="keyword">const</span> test = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="attr">copy</span>: <span class="variable language_">this</span>.<span class="property">value</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(test.<span class="property">copy</span>); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 자신이 생성할 객체 참조</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Circle</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<p>좀 더 자세히 말하면 <strong>자신이 속한 객체나 자신이 생성할 객체를 가리키는 자기 참조 변수이다.</strong></p>
+<ul>
+<li>this는 자바스크립트 엔진에 의해 암묵적으로 생성된다.</li>
+</ul>
+<p>함수를 호출하면 arguments 객체와 this가 암묵적으로 함수 내부에 전달된다. arguments 객체를 함수 내부에서 지역변수처럼 사용할 수 있듯이 this도 마찬가지이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// this로 자신이 속한 객체 참조</span></span><br><span class="line"><span class="keyword">const</span> test = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="title function_">getValue</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">value</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(test.<span class="title function_">getValue</span>()); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 자신이 생성할 객체 참조</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Circle</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
 
 <p style="color:red;">this에 바인딩될 값은 함수 호출 방식에 의해 동적으로 결정되는 특징이 있다.</p> 
 그러므로 this를 어떻게 호출하느냐에 따라 this 값이 달라지게 된다.
@@ -585,7 +585,7 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
+                            href="/2023/01/02/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
                             aria-label=": 모의 면접 회고"
                         >
                             모의 면접 회고
@@ -620,7 +620,11 @@
 </ol>
 <h3 id="💦-아쉬운-점"><a href="#💦-아쉬운-점" class="headerlink" title="💦 아쉬운 점"></a>💦 아쉬운 점</h3><ol>
 <li>의견, 주장이 강해보여 의견 충돌 시 강한 타입처럼 느껴질 수 있을 것 같아보인다.</li>
-<li>어떤 개발자가 되고 싶냐는 질문에 좀 더 직무, 역량 관점에서 답변할 수 있으면 좋을 것 같다.</li>
+<li>어떤 개발자가 되고 싶냐는 질문에 좀 더 <strong>직무, 역량 관점에서 답변할 수 있으면 좋을 것</strong> 같다.</li>
+<li>면접볼 때는 흔들의자에 앉지 말고 고정된 의자에 앉도록 하자.</li>
+<li>개발자로서 역량 설명할 때 커뮤니케이션 부분에서 누구와 협업을 하는지에 대해서도 간략하게 짚고 넘어갔으면 좋았을 것 같다.</li>
+<li>협업 경험에 대해 설명할 때, 부정적인 얘기를 했던게 기억에 남을 것 같다. 이 부분을 나의 약점을 잘 살려냈던 것처럼 풀어나가보면 좋을 것 같다.</li>
+<li><strong>신입,주니어 라는 용어 사용 금지</strong></li>
 </ol>
 <h2 id="2-🛠-기술-면접"><a href="#2-🛠-기술-면접" class="headerlink" title="2. 🛠 기술 면접"></a>2. 🛠 기술 면접</h2><p>기술면접은 프로젝트 경험에 대해 질문해주셨고 기술적으로 깊은 고민을 해본 적이 있는지, 면접자가 기술에 사용 이유와 원리를 알고 사용하는 것인지 확인하는 질문들이었다.</p>
 <h3 id="👍-좋았던-점-1"><a href="#👍-좋았던-점-1" class="headerlink" title="👍 좋았던 점"></a>👍 좋았던 점</h3><ol>
@@ -638,6 +642,7 @@
 <li><strong>트러블 슈팅 질문에 대한 소스들을 미리 준비해두면 도움이 될 것 같다.</strong></li>
 </ul>
 </li>
+<li>리팩터링 질문이 나왔을 때, 너무 협업에만 집중해서 이야기한 것이 아쉽다. 그렇다면 성능 개선, 최적화 등에 대한 고민을 하지 않는 것처럼 보여서 아쉬웠다.</li>
 </ol>
 
                     
@@ -648,7 +653,7 @@
                     
                         <p>
                             <a
-                                href="/2023/01/02/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/#post-footer"
+                                href="/2023/01/02/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
