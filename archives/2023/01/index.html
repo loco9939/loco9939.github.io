@@ -325,6 +325,241 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 브라우저 렌더링 과정에 대해 설명하라"
+                        >
+                            브라우저 렌더링 과정에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T15:10:40+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
+<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
+<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html이다.</p>
+<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다.</p>
+<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
+<ol>
+<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
+<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
+<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
+</ol>
+<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
+<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
+<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
+<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
+<ul>
+<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
+<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
+<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
+</ul>
+<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
+<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
+<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
+<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
+<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
+<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 DOM 생성을 재개한다.</p>
+<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
+<blockquote>
+<p>리플로우가 발생하면 성능을 저하시키므로 리플로우가 발생하는 메서드 사용을 최소화 하여야 한다. 일단 가독성 위주로 코딩을 하되 성능 측정하여 렌더링에 2초 이상 걸린다면 리팩터링을 하여 성능을 개선해야한다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 호이스팅에 대해 설명하라"
+                        >
+                            호이스팅에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T14:24:56+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
+<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
+<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
+<blockquote>
+<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
+</blockquote>
+<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
+<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
+                            aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
+                        >
+                            클로저는 무엇이고 언제, 어떻게 사용하나요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T13:25:25+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📚-클로저란-무엇인가요"><a href="#📚-클로저란-무엇인가요" class="headerlink" title="📚 클로저란 무엇인가요?"></a>📚 클로저란 무엇인가요?</h1><p>클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.</p>
+<h1 id="❓-클로저는-왜-사용-하나요"><a href="#❓-클로저는-왜-사용-하나요" class="headerlink" title="❓ 클로저는 왜 사용 하나요?"></a>❓ 클로저는 왜 사용 하나요?</h1><p>클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.</p>
+<p>C++과 같은 객체지향 프로그래밍 언어와 달리 <strong>자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.</strong></p>
+<p>때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.</p>
+<h1 id="❓-클로저는-언제-어떻게-사용하나요"><a href="#❓-클로저는-언제-어떻게-사용하나요" class="headerlink" title="❓ 클로저는 언제, 어떻게 사용하나요?"></a>❓ 클로저는 언제, 어떻게 사용하나요?</h1><p>클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.</p>
+<ol>
+<li>함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.</li>
+<li>외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
+<p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
+<p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                             aria-label=": 프로토타입이란 무엇인가요?"
                         >

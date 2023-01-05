@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>프로토타입이란 무엇인가요? - Loco&#39;s Dev Blog</title>
+    <title>브라우저 렌더링 과정에 대해 설명하라 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -17,23 +17,20 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.\n프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.\n프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.\n프로토타입이 어떻게 동작하나요?프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.\n__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.\n\\\n\n생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능\n프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능\n생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능\n\n\n사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.\n\n프로토타입 체인이란?자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.\n이를 프로토타입 체인이라고 한다.\n\n","dateCreated":"2023-01-04T14:05:09+09:00","dateModified":"2023-01-04T14:57:17+09:00","datePublished":"2023-01-04T14:05:09+09:00","description":"","headline":"프로토타입이란 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
-    <meta name="description" content="프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다. 프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다. 프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.\n브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.\n이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html이다.\n2. HTML 파싱과 DOM 생성브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다.\n그래서 HTML 문서를 파싱하여 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다.\n\n문자열로 변환된 HTML문서를 토큰화한다.\n각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등\nHTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.\n\n3. CSS 파싱과 CSSOM 생성렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 DOM 생성을 일시중단한다.\n그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.\n4. 렌더 트리 생성앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 브라우저 화면에 렌더링되지 않는 노드(meta태그, script 태그 등)와 CSS에 의해 표시되지 않는(display:none) 노드들은 포함하지 않는다.\n지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. 렌더링이 반복 실행되는 원인은 다음과 같다.\n\n자바스크립트에 의한 노드 추가 또는 삭제\n브라우저 창의 리사이징에 의한 viewport 크기 변경\nHTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경\n\n이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 리렌더링이 적게 발생하도록 하여야한다.\n5. 자바스크립트 파싱과 실행HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.\n즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.\nCSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.\n이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 자바스크립트 엔진에 제어권을 넘긴다. (렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)\n이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 DOM 생성을 재개한다.\n6. 리플로우와 리페인트만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.\n\n리플로우가 발생하면 성능을 저하시키므로 리플로우가 발생하는 메서드 사용을 최소화 하여야 한다. 일단 가독성 위주로 코딩을 하되 성능 측정하여 렌더링에 2초 이상 걸린다면 리팩터링을 하여 성능을 개선해야한다.\n\n","dateCreated":"2023-01-05T15:10:40+09:00","dateModified":"2023-01-05T15:31:13+09:00","datePublished":"2023-01-05T15:10:40+09:00","description":"","headline":"브라우저 렌더링 과정에 대해 설명하라","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"}</script>
+    <meta name="description" content="브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다. 브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="프로토타입이란 무엇인가요?">
-<meta property="og:url" content="https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/index.html">
+<meta property="og:title" content="브라우저 렌더링 과정에 대해 설명하라">
+<meta property="og:url" content="https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다. 프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다. 프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자">
+<meta property="og:description" content="브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다. 브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://loco9939.github.io/images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png">
-<meta property="og:image" content="https://loco9939.github.io/images/prototype/prototypeChain.png">
-<meta property="article:published_time" content="2023-01-04T05:05:09.000Z">
-<meta property="article:modified_time" content="2023-01-04T05:57:17.187Z">
+<meta property="article:published_time" content="2023-01-05T06:10:40.000Z">
+<meta property="article:modified_time" content="2023-01-05T06:31:13.691Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://loco9939.github.io/images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png">
     
     
         
@@ -329,14 +326,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            프로토타입이란 무엇인가요?
+            브라우저 렌더링 과정에 대해 설명하라
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-01-04T14:05:09+09:00">
+    <time datetime="2023-01-05T15:10:40+09:00">
 	
-		    2023/01/04
+		    2023/01/05
     	
     </time>
     
@@ -354,23 +351,35 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="프로토타입이란"><a href="#프로토타입이란" class="headerlink" title="프로토타입이란?"></a>프로토타입이란?</h1><p>자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.</p>
-<p>프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.</p>
-<h2 id="프로토타입을-왜-사용하나요"><a href="#프로토타입을-왜-사용하나요" class="headerlink" title="프로토타입을 왜 사용하나요?"></a>프로토타입을 왜 사용하나요?</h2><p>객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.</p>
-<h2 id="프로토타입이-어떻게-동작하나요"><a href="#프로토타입이-어떻게-동작하나요" class="headerlink" title="프로토타입이 어떻게 동작하나요?"></a>프로토타입이 어떻게 동작하나요?</h2><p>프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.</p>
-<p>__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.</p>
-<p><img src="/../../images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png" alt="prototype">\</p>
+            <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
+<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
+<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html이다.</p>
+<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다.</p>
+<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
+<ol>
+<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
+<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
+<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
+</ol>
+<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
+<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
+<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
+<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
 <ul>
-<li>생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능</li>
-<li>프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능</li>
-<li>생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능</li>
+<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
+<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
+<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
 </ul>
+<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
+<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
+<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
+<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
+<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
+<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 DOM 생성을 재개한다.</p>
+<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
 <blockquote>
-<p>사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.</p>
+<p>리플로우가 발생하면 성능을 저하시키므로 리플로우가 발생하는 메서드 사용을 최소화 하여야 한다. 일단 가독성 위주로 코딩을 하되 성능 측정하여 렌더링에 2초 이상 걸린다면 리팩터링을 하여 성능을 개선해야한다.</p>
 </blockquote>
-<h2 id="프로토타입-체인이란"><a href="#프로토타입-체인이란" class="headerlink" title="프로토타입 체인이란?"></a>프로토타입 체인이란?</h2><p>자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.</p>
-<p>이를 프로토타입 체인이라고 한다.</p>
-<p><img src="/../../images/prototype/prototypeChain.png" alt="프로토타입 체인"></p>
 
             
 
@@ -385,14 +394,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                    aria-label="이전: 클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -402,9 +408,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="this가 어떻게 작동하나요?"
-                    aria-label="다음: this가 어떻게 작동하나요?"
+                    href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="호이스팅에 대해 설명하라"
+                    aria-label="다음: 호이스팅에 대해 설명하라"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -429,7 +435,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -442,7 +448,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -455,7 +461,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -500,14 +506,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                    aria-label="이전: 클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -517,9 +520,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="this가 어떻게 작동하나요?"
-                    aria-label="다음: this가 어떻게 작동하나요?"
+                    href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="호이스팅에 대해 설명하라"
+                    aria-label="다음: 호이스팅에 대해 설명하라"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -544,7 +547,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -557,7 +560,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -570,7 +573,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -604,7 +607,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -617,7 +620,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -630,7 +633,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

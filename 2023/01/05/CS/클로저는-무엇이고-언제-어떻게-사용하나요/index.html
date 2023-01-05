@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>프로토타입이란 무엇인가요? - Loco&#39;s Dev Blog</title>
+    <title>클로저는 무엇이고 언제, 어떻게 사용하나요? - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -17,23 +17,20 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.\n프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.\n프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.\n프로토타입이 어떻게 동작하나요?프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.\n__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.\n\\\n\n생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능\n프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능\n생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능\n\n\n사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.\n\n프로토타입 체인이란?자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.\n이를 프로토타입 체인이라고 한다.\n\n","dateCreated":"2023-01-04T14:05:09+09:00","dateModified":"2023-01-04T14:57:17+09:00","datePublished":"2023-01-04T14:05:09+09:00","description":"","headline":"프로토타입이란 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
-    <meta name="description" content="프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다. 프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다. 프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📚 클로저란 무엇인가요?클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.\n❓ 클로저는 왜 사용 하나요?클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.\nC++과 같은 객체지향 프로그래밍 언어와 달리 자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.\n때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.\n❓ 클로저는 언제, 어떻게 사용하나요?클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.\n\n함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.\n외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.\n\n1234567891011121314151617181920const counter = (function () &#123;  // 카운트 상태 변수  let num = 0;  // 클로저인 메서드를 갖는 객체를 반환한다.  return &#123;    increase() &#123;      return ++num;    &#125;,    decrease() &#123;      return num &gt; 0 ? --num : 0;    &#125;,  &#125;;&#125;)();console.log(counter.increase()); // 1console.log(counter.increase()); // 2console.log(counter.decrease()); // 1console.log(counter.decrease()); // 0\n\n📌 정리클로저는 보다 안전하게 객체를 다루기 위해 사용한다.\n하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.\n예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.\n","dateCreated":"2023-01-05T13:25:25+09:00","dateModified":"2023-01-05T14:23:28+09:00","datePublished":"2023-01-05T13:25:25+09:00","description":"","headline":"클로저는 무엇이고 언제, 어떻게 사용하나요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"}</script>
+    <meta name="description" content="📚 클로저란 무엇인가요?클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다. ❓ 클로저는 왜 사용 하나요?클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다. C++과 같은 객체지향 프로그래밍 언어와 달리 자바스크립트는 private 같">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="프로토타입이란 무엇인가요?">
-<meta property="og:url" content="https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/index.html">
+<meta property="og:title" content="클로저는 무엇이고 언제, 어떻게 사용하나요?">
+<meta property="og:url" content="https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="프로토타입이란?자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다. 프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다. 프로토타입을 왜 사용하나요?객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자">
+<meta property="og:description" content="📚 클로저란 무엇인가요?클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다. ❓ 클로저는 왜 사용 하나요?클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다. C++과 같은 객체지향 프로그래밍 언어와 달리 자바스크립트는 private 같">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://loco9939.github.io/images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png">
-<meta property="og:image" content="https://loco9939.github.io/images/prototype/prototypeChain.png">
-<meta property="article:published_time" content="2023-01-04T05:05:09.000Z">
-<meta property="article:modified_time" content="2023-01-04T05:57:17.187Z">
+<meta property="article:published_time" content="2023-01-05T04:25:25.000Z">
+<meta property="article:modified_time" content="2023-01-05T05:23:28.901Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://loco9939.github.io/images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png">
     
     
         
@@ -329,14 +326,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            프로토타입이란 무엇인가요?
+            클로저는 무엇이고 언제, 어떻게 사용하나요?
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-01-04T14:05:09+09:00">
+    <time datetime="2023-01-05T13:25:25+09:00">
 	
-		    2023/01/04
+		    2023/01/05
     	
     </time>
     
@@ -354,23 +351,20 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="프로토타입이란"><a href="#프로토타입이란" class="headerlink" title="프로토타입이란?"></a>프로토타입이란?</h1><p>자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.</p>
-<p>프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.</p>
-<h2 id="프로토타입을-왜-사용하나요"><a href="#프로토타입을-왜-사용하나요" class="headerlink" title="프로토타입을 왜 사용하나요?"></a>프로토타입을 왜 사용하나요?</h2><p>객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.</p>
-<h2 id="프로토타입이-어떻게-동작하나요"><a href="#프로토타입이-어떻게-동작하나요" class="headerlink" title="프로토타입이 어떻게 동작하나요?"></a>프로토타입이 어떻게 동작하나요?</h2><p>프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.</p>
-<p>__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.</p>
-<p><img src="/../../images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png" alt="prototype">\</p>
-<ul>
-<li>생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능</li>
-<li>프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능</li>
-<li>생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능</li>
-</ul>
-<blockquote>
-<p>사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.</p>
-</blockquote>
-<h2 id="프로토타입-체인이란"><a href="#프로토타입-체인이란" class="headerlink" title="프로토타입 체인이란?"></a>프로토타입 체인이란?</h2><p>자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.</p>
-<p>이를 프로토타입 체인이라고 한다.</p>
-<p><img src="/../../images/prototype/prototypeChain.png" alt="프로토타입 체인"></p>
+            <h1 id="📚-클로저란-무엇인가요"><a href="#📚-클로저란-무엇인가요" class="headerlink" title="📚 클로저란 무엇인가요?"></a>📚 클로저란 무엇인가요?</h1><p>클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.</p>
+<h1 id="❓-클로저는-왜-사용-하나요"><a href="#❓-클로저는-왜-사용-하나요" class="headerlink" title="❓ 클로저는 왜 사용 하나요?"></a>❓ 클로저는 왜 사용 하나요?</h1><p>클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.</p>
+<p>C++과 같은 객체지향 프로그래밍 언어와 달리 <strong>자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.</strong></p>
+<p>때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.</p>
+<h1 id="❓-클로저는-언제-어떻게-사용하나요"><a href="#❓-클로저는-언제-어떻게-사용하나요" class="headerlink" title="❓ 클로저는 언제, 어떻게 사용하나요?"></a>❓ 클로저는 언제, 어떻게 사용하나요?</h1><p>클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.</p>
+<ol>
+<li>함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.</li>
+<li>외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
+<p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
+<p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
 
             
 
@@ -388,9 +382,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                    aria-label="이전: 클로저는 무엇이고 언제, 어떻게 사용하나요?"
+                    href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="호이스팅에 대해 설명하라"
+                    aria-label="이전: 호이스팅에 대해 설명하라"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -402,9 +396,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="this가 어떻게 작동하나요?"
-                    aria-label="다음: this가 어떻게 작동하나요?"
+                    href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="프로토타입이란 무엇인가요?"
+                    aria-label="다음: 프로토타입이란 무엇인가요?"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -429,7 +423,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -442,7 +436,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -455,7 +449,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -503,9 +497,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                    aria-label="이전: 클로저는 무엇이고 언제, 어떻게 사용하나요?"
+                    href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="호이스팅에 대해 설명하라"
+                    aria-label="이전: 호이스팅에 대해 설명하라"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -517,9 +511,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
-                    data-tooltip="this가 어떻게 작동하나요?"
-                    aria-label="다음: this가 어떻게 작동하나요?"
+                    href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="프로토타입이란 무엇인가요?"
+                    aria-label="다음: 프로토타입이란 무엇인가요?"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -544,7 +538,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -557,7 +551,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -570,7 +564,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -604,7 +598,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -617,7 +611,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -630,7 +624,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

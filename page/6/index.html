@@ -324,6 +324,345 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
+                            aria-label=": React에서 Upload Button Component 만들기"
+                        >
+                            React에서 Upload Button Component 만들기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-02T16:21:03+09:00">
+	
+		    2022/11/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="요구사항"><a href="#요구사항" class="headerlink" title="요구사항"></a>요구사항</h1><p><img src="/../../images/uploadButton/result.png" alt="결과물"></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 버튼 컴포넌트를 만들어 재사용 가능하게 만들어라</li>
+<li><input checked="" disabled="" type="checkbox"> 아이콘 컴포넌트를 만들어 재사용 가능하게 만들어라</li>
+<li><input checked="" disabled="" type="checkbox"> 컴포넌트를 분리하여라</li>
+</ul>
+<h2 id="해결"><a href="#해결" class="headerlink" title="해결"></a>해결</h2><h3 id="1-src-x2F-main-js-파일에서-렌더링-준비를-한다"><a href="#1-src-x2F-main-js-파일에서-렌더링-준비를-한다" class="headerlink" title="1. src&#x2F;main.js 파일에서 렌더링 준비를 한다."></a>1. src&#x2F;main.js 파일에서 렌더링 준비를 한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> root = <span class="title class_">React</span>.<span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Get Ready?<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>업로드 버튼 컴포넌트의 type, content를 지정해주어 컴포넌트를 재사용할 수 있다.</li>
+<li>사용자가 컴포넌트를 사용하려면 type과 content를 입력하여 아이콘과 내용을 적어주면 된다.</li>
+</ul>
+<h3 id="2-버튼-컴포넌트-생성"><a href="#2-버튼-컴포넌트-생성" class="headerlink" title="2. 버튼 컴포넌트 생성"></a>2. 버튼 컴포넌트 생성</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = props =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span>  &#123;children, type&#125; = props;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&quot;upload-button&quot;</span> <span class="attr">disabled</span>=<span class="string">&#123;type</span> === <span class="string">&#x27;disabled&#x27;</span> ? &quot;<span class="attr">disabled</span>&quot; <span class="attr">:</span> &#x27;&#x27;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;<span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&#123;type&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Button</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>버튼 컴포넌트에게 전달받은 props의 type값을 그대로 Icon 컴포넌트에게 전달해주었다.</li>
+<li>props 객체로 전달받은 type값에 따라 조건부로 disable 속성을 등록&#x2F;해제 해주었다.</li>
+</ul>
+<h3 id="3-아이콘-컴포넌트-생성"><a href="#3-아이콘-컴포넌트-생성" class="headerlink" title="3. 아이콘 컴포넌트 생성"></a>3. 아이콘 컴포넌트 생성</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> icons = &#123;</span><br><span class="line">    <span class="string">&quot;idle&quot;</span> : <span class="string">&quot;M1.80202 3.65685L5.27085 0.292893C5.67355 -0.0976316 6.32645 -0.0976317 6.72915 0.292893L10.198 3.65685C10.6007 4.04738 10.6007 4.68054 10.198 5.07107C9.79528 5.46159 9.14238 5.46159 8.73968 5.07107L7.03117 3.41421L7.03117 11C7.03117 11.5523 6.5695 12 6 12C5.4305 12 4.96883 11.5523 4.96883 11L4.96883 3.41421L3.26032 5.07107C2.85762 5.46159 2.20472 5.46159 1.80202 5.07107C1.39933 4.68054 1.39933 4.04738 1.80202 3.65685Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;pending&quot;</span>: <span class="string">&quot;M9.96461 3.87118C9.61452 3.2192 9.10905 2.66362 8.49296 2.25365C7.87687 1.84368 7.16918 1.59198 6.43257 1.52084C5.69597 1.4497 4.95319 1.56132 4.27003 1.84582C3.58688 2.13031 2.98442 2.5789 2.51604 3.15184C2.04766 3.72478 1.7278 4.40439 1.58481 5.13047C1.44181 5.85656 1.48009 6.6067 1.69626 7.31445C1.91242 8.02221 2.29979 8.66573 2.82407 9.18802C3.34834 9.7103 3.99333 10.0952 4.7019 10.3087L5.1124 8.94617C4.6279 8.8002 4.18687 8.53699 3.82839 8.17987C3.46991 7.82275 3.20503 7.38273 3.05723 6.89879C2.90942 6.41484 2.88325 5.90192 2.98102 5.40544C3.0788 4.90897 3.2975 4.44427 3.61777 4.05251C3.93804 3.66075 4.34998 3.35402 4.8171 3.15949C5.28422 2.96496 5.79211 2.88864 6.29578 2.93728C6.79945 2.98592 7.28335 3.15803 7.70461 3.43835C8.12588 3.71868 8.47151 4.09857 8.71088 4.54438L9.96461 3.87118Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;resolved&quot;</span>: <span class="string">&quot;M11.6321 0.725152C12.0601 1.07426 12.124 1.70419 11.7749 2.13214L4.43311 11.1321C4.24683 11.3605 3.96931 11.4951 3.67466 11.4999C3.38 11.5047 3.09822 11.3794 2.90454 11.1573L0.246308 8.10888C-0.116669 7.69263 -0.0734819 7.06094 0.34277 6.69796C0.759022 6.33499 1.39071 6.37817 1.75369 6.79443L3.63274 8.94927L10.2251 0.867921C10.5742 0.439968 11.2042 0.376047 11.6321 0.725152Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;rejected&quot;</span>: <span class="string">&quot;M6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12ZM3.40106 3.25359C3.79159 2.86306 4.42475 2.86306 4.81528 3.25359L6.01883 4.45714L7.22238 3.25359C7.61291 2.86306 8.24607 2.86306 8.6366 3.25359C9.02712 3.64411 9.02712 4.27728 8.6366 4.6678L7.43304 5.87135L8.6366 7.07491C9.02712 7.46543 9.02712 8.0986 8.6366 8.48912C8.24607 8.87964 7.61291 8.87964 7.22238 8.48912L6.01883 7.28557L4.81528 8.48912C4.42475 8.87964 3.79159 8.87964 3.40106 8.48912C3.01054 8.0986 3.01054 7.46543 3.40106 7.07491L4.60462 5.87135L3.40106 4.6678C3.01054 4.27728 3.01054 3.64411 3.40106 3.25359Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;disabled&quot;</span>: <span class="string">&quot;M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6ZM9.65221 6.00001C9.65221 8.01707 8.01707 9.65221 6.00001 9.65221C5.37082 9.65221 4.77878 9.4931 4.26195 9.21293L9.21292 4.26194C9.4931 4.77878 9.65221 5.37081 9.65221 6.00001ZM2.83053 7.81592L7.81591 2.83053C7.28103 2.52342 6.66103 2.34781 6.00001 2.34781C3.98296 2.34781 2.34781 3.98296 2.34781 6.00001C2.34781 6.66103 2.52342 7.28104 2.83053 7.81592Z&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Icon</span> = props =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;type&#125; = props;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">className</span>=<span class="string">&#123;</span>`<span class="attr">button-icon</span> $&#123;<span class="attr">type</span> === <span class="string">&#x27;pending&#x27;</span> ? &quot;<span class="attr">spinner_V8m1</span>&quot; <span class="attr">:</span> &quot;&quot;&#125;`&#125; <span class="attr">width</span>=<span class="string">&#123;12&#125;</span> <span class="attr">height</span>=<span class="string">&#123;12&#125;</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 12 12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">path</span> <span class="attr">fillRule</span>=<span class="string">&quot;evenodd&quot;</span> <span class="attr">clipRule</span>=<span class="string">&quot;evenodd&quot;</span> <span class="attr">d</span>=<span class="string">&#123;icons[type]&#125;</span> <span class="attr">fill</span>=<span class="string">&#123;type</span> === <span class="string">&#x27;disabled&#x27;</span> ? &quot;#<span class="attr">ADAEB6</span>&quot; <span class="attr">:</span> &quot;#<span class="attr">525577</span>&quot;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>props 객체로 전달받은 type 값을 가지고 상황에 맞는 아이콘을 보여주고 그에 따라 스타일링도 해주었다.</li>
+<li>icons 객체에 props 객체로 받은 타입에 대한 값을 저장하여 관리하였다.</li>
+</ul>
+<h3 id="4-컴포넌트-분리"><a href="#4-컴포넌트-분리" class="headerlink" title="4. 컴포넌트 분리"></a>4. 컴포넌트 분리</h3><p>이 모든 코드가 한 파일에 있기에 이를 컴포넌트 단위와 역할별로 구분해주어야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./main.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">UploadButton</span> <span class="keyword">from</span> <span class="string">&#x27;./components/Button.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> root = <span class="title class_">ReactDOM</span>.<span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">UploadButton</span> <span class="attr">type</span>=<span class="string">&quot;idle&quot;</span>&gt;</span>업로드<span class="tag">&lt;/<span class="name">UploadButton</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">UploadButton</span> <span class="attr">type</span>=<span class="string">&quot;pending&quot;</span>&gt;</span>업로드 중<span class="tag">&lt;/<span class="name">UploadButton</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">UploadButton</span> <span class="attr">type</span>=<span class="string">&quot;resolved&quot;</span>&gt;</span>완료<span class="tag">&lt;/<span class="name">UploadButton</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">UploadButton</span> <span class="attr">type</span>=<span class="string">&quot;rejected&quot;</span>&gt;</span>실패<span class="tag">&lt;/<span class="name">UploadButton</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">UploadButton</span> <span class="attr">type</span>=<span class="string">&quot;disabled&quot;</span>&gt;</span>업로드<span class="tag">&lt;/<span class="name">UploadButton</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./components/UploadButton.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Icon</span> <span class="keyword">from</span> <span class="string">&#x27;./Icon.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = props =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span>  &#123;children, type&#125; = props;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&quot;upload-button&quot;</span> <span class="attr">disabled</span>=<span class="string">&#123;type</span> === <span class="string">&#x27;disabled&#x27;</span> ? &quot;<span class="attr">disabled</span>&quot; <span class="attr">:</span> &#x27;&#x27;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;<span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&#123;type&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Button</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ./components/Icon.js</span></span><br><span class="line"><span class="keyword">const</span> icons = &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Icon</span> = props =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;type&#125; = props;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">className</span>=<span class="string">&#123;</span>`<span class="attr">button-icon</span> $&#123;<span class="attr">type</span> === <span class="string">&#x27;pending&#x27;</span> ? &quot;<span class="attr">spinner_V8m1</span>&quot; <span class="attr">:</span> &quot;&quot;&#125;`&#125; <span class="attr">width</span>=<span class="string">&#123;12&#125;</span> <span class="attr">height</span>=<span class="string">&#123;12&#125;</span> <span class="attr">viewBox</span>=<span class="string">&quot;0 0 12 12&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">path</span> <span class="attr">fillRule</span>=<span class="string">&quot;evenodd&quot;</span> <span class="attr">clipRule</span>=<span class="string">&quot;evenodd&quot;</span> <span class="attr">d</span>=<span class="string">&#123;icons[type]&#125;</span> <span class="attr">fill</span>=<span class="string">&#123;type</span> === <span class="string">&#x27;disabled&#x27;</span> ? &quot;#<span class="attr">ADAEB6</span>&quot; <span class="attr">:</span> &quot;#<span class="attr">525577</span>&quot;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Icon</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모듈이 하나의 개체로 이루어져 있으므로 기본 내보내기를 해주었다.</li>
+<li>기본 내보내기를 해주었으므로 import시 이름을 변경하여 가져올 수 있다.</li>
+</ul>
+<h2 id="💪-맞닥뜨린-문제"><a href="#💪-맞닥뜨린-문제" class="headerlink" title="💪 맞닥뜨린 문제"></a>💪 맞닥뜨린 문제</h2><h3 id="1-리액트-import-오류"><a href="#1-리액트-import-오류" class="headerlink" title="1. 리액트 import 오류"></a>1. 리액트 import 오류</h3><p><img src="/../../images/uploadButton/importError.png" alt="import오류"></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;createRoot, <span class="title class_">StrictMode</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;./react.js&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> root = <span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hi~!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">StrictMode</span>&gt;</span></span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 import를 해오고 싶었지만 <bold>CDN으로 React를 사용하는 것이기 때문에</bold> <red>react.js를 불러올 수 없다.</red></p>
+<p>그러므로 ReactDOM, React로 객체처럼 사용해야만 했다.</p>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>간단한 업로드 버튼 컴포넌트를 구현하는 과제를 해보면서 리액트와 좀 더 친숙해지는 계기가 된 것 같다. figma 시안이 워낙 꼼꼼하게 잘 나와있어서 스타일링 하는데는 큰 어려움 없이 해서 좋았다.</p>
+<p>처음 딱 시작하려는 순간부터 오류를 맞이해서 당황하였지만 문제도 잘 해결했고 SVG 파일에 애니메이션과 스타일을 입혀보는 것을 직접 해보니 더 기억에 오래 남을 것 같다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                            aria-label=": 모듈 내보내기(import,export)"
+                        >
+                            모듈 내보내기(import,export)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-02T10:05:15+09:00">
+	
+		    2022/11/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다.</p>
+<h1 id="📌-모듈이란"><a href="#📌-모듈이란" class="headerlink" title="📌 모듈이란?"></a>📌 모듈이란?</h1><p><bold>모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다.</bold></p>
+<p>시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용할 수 있게 되었다.</p>
+<h2 id="모듈-특징"><a href="#모듈-특징" class="headerlink" title="모듈 특징"></a>모듈 특징</h2><ul>
+<li>모듈파일을 사용하기 위해서는 import 해온 script 파일에 type 속성이 module로 설정되어 있어야한다.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span> <span class="attr">src</span>=<span class="string">&quot;index.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모듈 스코프를 가진다.</li>
+<li>Strict mode</li>
+<li>지연 실행된다(defer) -&gt; 스크립트의 상대적인 순서가 유지될 수 있는 이유</li>
+<li><red>확장자를 꼭 적어줘야한다.</red></li>
+</ul>
+<p>모듈은 단독적으로 사용하는 경우는 드물고 주로 <red>웹팩(Webpack)</red>이라는 번들러를 사용하여 모듈을 한번에 묶어 서버에 올리는 방식을 사용한다.</p>
+<p>웹팩에 대해서는 새로운 게시물에서 다뤄보도록 하고 이제 모듈을 불러오고 내보내는 방법에 대해 알아보자.</p>
+<h2 id="CommonJS-vs-ES6-방식"><a href="#CommonJS-vs-ES6-방식" class="headerlink" title="CommonJS vs ES6 방식"></a>CommonJS vs ES6 방식</h2><h3 id="1-CommonJS"><a href="#1-CommonJS" class="headerlink" title="1. CommonJS"></a>1. CommonJS</h3><ul>
+<li>require : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> sayHi = <span class="built_in">require</span>(<span class="string">&quot;./sayHi.js&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>exports : 내보내기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = foo;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-ES6-방식"><a href="#2-ES6-방식" class="headerlink" title="2. ES6 방식"></a>2. ES6 방식</h3><ul>
+<li>import : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> foo <span class="keyword">from</span> <span class="string">&quot;./sayHi.js&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> foo;</span><br></pre></td></tr></table></figure>
+
+<p>둘의 차이에 대해 알아두고 앞으로는 ES6 문법을 사용할 것이니 이에 대해서 자세히 알아보자.</p>
+<h2 id="export"><a href="#export" class="headerlink" title="export"></a>export</h2><p>모듈을 내보내는 방식은 다양하다.</p>
+<ol>
+<li>선언부에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">&quot;loco&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>단, 함수나 클래스를 내보내기할 경우에는 <red>; (세미콜론)을 붙이지 않아야 한다.</red></li>
+</ul>
+<ol start="2">
+<li>선언부와 떨어진 곳에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> name;</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러개를 내보내고 싶다면 객체로 감싸서 내보내기 해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// say.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayHi</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayBye</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Bye~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; sayHi, sayBye &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="import"><a href="#import" class="headerlink" title="import"></a>import</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi, sayBye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">sayHi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">sayBye</span>(<span class="string">&quot;selly&quot;</span>); <span class="comment">// Bye~ selly!</span></span><br></pre></td></tr></table></figure>
+
+<p>export 할 때, 객체형태로 감싸서 내보내기를 하였으면 불러올 때도 객체형태로 감싸 이름 그대로 가져와야한다.</p>
+<p>하지만 가져와야할 함수나 변수가 100만개라면? 일일히 언제 써주기가 힘드니 이럴 경우 <bold>* (에스터리스트)를 사용하여 모두 가져오기하여 객체처럼 사용할 수 있다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> greeting <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line">greeting.<span class="title function_">sayHi</span>(<span class="string">&quot;Yong&quot;</span>); <span class="comment">// Hi~ Yong!</span></span><br><span class="line">greeting.<span class="title function_">sayBye</span>(<span class="string">&quot;Jin&quot;</span>); <span class="comment">// Bye~ Jin!</span></span><br></pre></td></tr></table></figure>
+
+<p>하지만 이런 경우는 드물고, 대게 어떤 대상을 가져오는지를 구체적으로 하는 것 명시하는 것이 좋다.</p>
+<p>왜냐하면 웹팩을 사용하면 로딩속도를 높이기 위해 최적화를 하게되는데 이 경우 사용하지 않는 리소스는 삭제되기 때문이다.</p>
+<h3 id="import-as"><a href="#import-as" class="headerlink" title="import as"></a>import as</h3><p>as를 사용하여 이름을 바꿔서 가져올 수 있다. export 에서도 가능하지만 주로 import 에서만 사용하는 것이 명시적이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi <span class="keyword">as</span> hi, sayBye <span class="keyword">as</span> bye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">hi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">bye</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Bye~ John!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="export-default"><a href="#export-default" class="headerlink" title="export default"></a>export default</h2><p>모듈은 크게 2가지 종류로 나뉘게 된다.</p>
+<ol>
+<li>위 처럼 say라는 함수들이 다수있는 라이브러리 형태의 모듈</li>
+<li>개체 하나만 선언된 모듈</li>
+</ol>
+<p>유틸 함수들을 내보내는 경우가 아니라면 주로 2번의 경우를 선호한다.</p>
+<p>해당 모듈에 개체가 1개만 있다는 것을 명시적으로 구분하기 위해 <bold>export default 키워드를 사용한다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> validation <span class="keyword">from</span> <span class="string">&quot;./validation.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isValid = <span class="title function_">validation</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export default로 내보내기한 경우에 가져오기할 때는 <bold>중괄호{}가 필요없고 원하는 이름으로 가져올 수 있다.</bold></li>
+<li>또한, 개체 한개만 내보낸 것을 가져오기 때문에 <bold>export default로 내보낼 때는 식별자나 이름없이 내보낼 수 있다.</bold></li>
+</ul>
+<h1 id="🔥-22-11-09-추가"><a href="#🔥-22-11-09-추가" class="headerlink" title="🔥 [22.11.09 추가]"></a>🔥 [22.11.09 추가]</h1><h2 id="❗️-component-폴더의-index-js-모아서-다시-내보내기"><a href="#❗️-component-폴더의-index-js-모아서-다시-내보내기" class="headerlink" title="❗️ component 폴더의 index.js 모아서 다시 내보내기"></a>❗️ component 폴더의 index.js 모아서 다시 내보내기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// components/ToggleButton/ToggleButton.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// components/index.js</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Demo&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./ToggleButton&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./A11yHidden&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Banner&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// app/App.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&quot;components&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ToggleButton</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ToggleButton 컴포넌트를 이름 내보내기 해주고 있다.</li>
+<li>위와 같이 components 폴더의 index.js파일에 여러 컴포넌트를 다시 내보내기로 보내줄 때, <strong>만약 ToggleButton 컴포넌트를 기본 내보내기를 해주었다면</strong> 아래처럼 index.js에서 다시내보내기 해줄 때, {}로 감싸고 default로 받은 객체를 이름으로 설정해주고 내보내줘야한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./ToggleButton&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>왜냐하면, <strong>ToggleButton 이외의 다른 컴포넌트들도 default로 내보냈기 때문에 구분을 하기 위해서</strong> 다시 내보내기 할 때, 이름을 설정해줘야한다.</p>
+<p>이러한 불편함 때문에 이름 내보내기를 사용한다.</p>
+<h2 id="❗️-화살표-함수로-내보내기시-주의사항"><a href="#❗️-화살표-함수로-내보내기시-주의사항" class="headerlink" title="❗️ 화살표 함수로 내보내기시 주의사항"></a>❗️ 화살표 함수로 내보내기시 주의사항</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123; onText, offText, on, onToggle, activeClass &#125;) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>...<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위와 같이 화살표 함수로 한줄로 작성하여 익명함수로 내보내고 App.jsx에서 이름을 정하여 받아서 사용하더라도 브라우저 환경에서 컴포넌트 구조를 확인하면 컴포넌트 이름이 <red><strong>Annonymous</strong>라고 뜬다.</red></li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>수업시간에 모듈을 기본 내보내기, 이름 내보내기를 사용하면서 둘의 차이가 무엇인지? 그리고 CommonJS와 ES6에서 모듈을 불러오고 내보내는 방식의 차이에 대해 확실히 알고 가는 시간이여서 한층 성장하였다고 느낀다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
+                            aria-label=": 우테코 프리코스 - 🐶 중복 문자 제거"
+                        >
+                            우테코 프리코스 - 🐶 중복 문자 제거
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-01T22:24:44+09:00">
+	
+		    2022/11/01
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>암호문을 좋아하는 괴짜 개발자 브라운이 이번에는 중복 문자를 이용한 새로운 암호를 만들었다. 예를 들어 “browoanoommnaon”이라는 암호문은 다음과 같은 순서로 해독할 수 있다.</p>
+<ol>
+<li>“browoanoommnaon”</li>
+<li>“browoannaon”</li>
+<li>“browoaaon”</li>
+<li>“browoon”</li>
+<li>“brown”</li>
+</ol>
+<p>임의의 문자열 cryptogram이 매개변수로 주어질 때, 연속하는 중복 문자들을 삭제한 결과를 return 하도록 solution 메서드를 완성하라.</p>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a><strong>제한사항</strong></h2><ul>
+<li>cryptogram은 길이가 1 이상 1000 이하인 문자열이다.</li>
+<li>cryptogram은 알파벳 소문자로만 이루어져 있다.</li>
+</ul>
+<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a><strong>실행 결과 예시</strong></h2><h2 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem2</span>(<span class="params">cryptogram</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cryptogram !== cryptogram.<span class="title function_">toLowerCase</span>()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 소문자만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (!cryptogram.<span class="property">length</span> || cryptogram.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1자 이상 1000자 이하만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> strArr = [...cryptogram];</span><br><span class="line">  <span class="keyword">let</span> duplicatedStrPosition = [];</span><br><span class="line">  <span class="keyword">let</span> hasDuplicatedStr = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(hasDuplicatedStr) &#123;</span><br><span class="line">    strArr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_, i, init</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (init[i] === init[i+<span class="number">1</span>]) duplicatedStrPosition = [i, ...duplicatedStrPosition];</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    hasDuplicatedStr = !duplicatedStrPosition.<span class="property">length</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    duplicatedStrPosition = duplicatedStrPosition.<span class="title function_">filter</span>(<span class="function"><span class="params">elem</span> =&gt;</span> &#123;</span><br><span class="line">      strArr = [...strArr.<span class="title function_">slice</span>(<span class="number">0</span>, elem), ...strArr.<span class="title function_">slice</span>(elem + <span class="number">2</span>)];</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strArr.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>strArr로 문자열을 배열로 관리</li>
+<li>strArr 배열이 더 이상 중복이 없을 때 까지 반복해야하고, 문자열의 순회하며 중복을 확인해야 하므로 시간 복잡도 $n^2$</li>
+<li>Spread문법으로 원본 배열의 변형을 최소화하는 방향으로 배열을 관리</li>
+<li>for문 대신 배열 메서드 forEach문 사용</li>
+<li>원본 배열을 변형시키는 splice 메서드 대신 slice 메서드 사용</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
+<li>내가 코드를 처음 보는 사람의 입장으로 변수명부터 잘 이해할 수 있는지 고려하여 리팩터링을 하였다.</li>
+<li>처음에는 while 조건식을 단순히 true라고 하였는데, 의미를 부여하여 코드의 가독성을 높이기 위해 변수에 할당해주었다.</li>
+<li>배열을 다루기 때문에 for문 대신 forEach문을 사용하였다.</li>
+<li>splice 메서드 같이 원본을 변형시키는 메서드 대신 spread 문법과 slice 메서드를 사용하였다.</li>
+<li>리팩터링 전에는 duplicatedStrPosition 배열을 직접 빈 배열로 초기화해주었지만, 리팩터링을 하면서 filter 메서드를 사용하여 좀 더 배열을 다루는 의미를 부여하였다.</li>
+</ul>
+<p>하나 걸리는 부분은 제한사항을 에러처리를 해주어야 하나 고민을 하였다. 사용자가 제한사항에 벗어나는 입력을 할 수도 있으므로 이에 대한 에러를 발생시켜주는 것이 사용성에 더 옳다고 생각하여 if 조건문을 통해 에러처리를 해주었습니다.</p>
+<p>에러처리에 대해서는 깊게 생각해보지 못했는데, 제한사항에 대해 한번 더 깊이 생각해보면서 에러처리의 필요성을 느낄 수 있었던 문제여서 즐거웠다.</p>
+<p>또한 stack 자료구조를 생각하면서 문제를 해석하면 지금의 코드보다 훨씬 더 간결하고 가독성있는 코드를 구현할 수 있다는 것을 오늘 코드리뷰를 통해 깨닫게 되었다. stack으로 구현해보는 것은 다음 시간에 해보도록 하자.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/"
                             aria-label=": React(리액트)는 어떻게 작동하는가?"
                         >
@@ -1049,293 +1388,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/"
-                            aria-label=": git fork 제대로 파헤치기"
-                        >
-                            git fork 제대로 파헤치기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-29T19:35:46+09:00">
-	
-		    2022/10/29
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-git-fork"><a href="#📌-git-fork" class="headerlink" title="📌 git fork"></a>📌 git fork</h1><p><img src="/images/fork/fork.png" alt="fork"></p>
-<p>git fork는 위 사진 처럼 강사님의 원격 저장소의 레포지토리를 나의 원격 저장소로 복제해오는 것이다. 복제해오는 것이지 연결되는 것은 아니다.</p>
-<h2 id="사용하는-이유"><a href="#사용하는-이유" class="headerlink" title="사용하는 이유"></a>사용하는 이유</h2><ol>
-<li><p>프로젝트를 할 때, 팀장 원격 저장소를 두고 팀원들이 fork하여 각자의 원격 저장소에서 작업을 하여 분업화가 가능하다.</p>
-</li>
-<li><p>팀장의 원격 저장소는 배포와 밀접한 관련이 있으므로 직접적으로 팀장 원격 저장소로 코드를 push 하지 못하고 Pull Request를 통해 연결할 수 있으므로 안정적인 개발이 가능하다.</p>
-</li>
-</ol>
-<h2 id="사용-방법-및-주의사항"><a href="#사용-방법-및-주의사항" class="headerlink" title="사용 방법 및 주의사항"></a>사용 방법 및 주의사항</h2><ol>
-<li>팀장의 원격 저장소를 나의 원격 저장소로 fork 해온다.</li>
-</ol>
-<p><strong>이 때, main 브랜치만 복사해오는 옵션이 있는데, main만 가져오고 싶다면 체크하고 아니면 해제한다.</strong></p>
-<ol start="2">
-<li><p>fork한 나의 원격 저장소를 나의 로컬로 clone 해온다.</p>
-</li>
-<li><p>원격 저장소 목록에 팀장의 원격 저장소를 ‘Leader’라는 이름으로 저장하여 추가한다.</p>
-</li>
-</ol>
-<p><code>git remote add Leader &lt;팀장의 원격 저장소 URL&gt;</code></p>
-<blockquote>
-<p>URL이지 git clone 링크와는 다르다.</p>
-</blockquote>
-<ol start="4">
-<li>만약 팀장이 코드를 변경하고 push하여 팀장의 원격 저장소가 바뀌고 이를 나의 로컬로 가져오고 싶다면 ?</li>
-</ol>
-<p><code>git fetch Leader</code></p>
-<p>이 때, 팀장의 모든 브랜치가 아닌 특정 브랜치만 가져오고 싶다면</p>
-<p><code>git fetch Leader &lt;branch 명&gt;</code></p>
-<ol start="5">
-<li>가져온 코드를 내 로컬과 병합해줘야 한다면 ?</li>
-</ol>
-<p><code>git pull Leader &lt;branch 명&gt;</code></p>
-<p>처음 팀장 원격 저장소 fork 해와서 나의 로컬의 main 브랜치는 팀장의 원격 저장소의 main 브랜치와 연결이 되어있다. <strong>정확히는 track 추적을 할 수 있다.</strong></p>
-<p>하지만, 팀장의 원격 저장소에서 새로운 브랜치를 생성하였고 나의 로컬에서도 해당 브랜치를 가져오고 싶다면 추가적으로 track 명령어를 실행해줘야한다.</p>
-<ol start="6">
-<li>팀장이 브랜치 새로 파고 내 로컬에서 가져오고 싶다면?</li>
-</ol>
-<p><code>git fetch Leader &lt;branch 명&gt;</code></p>
-<p>우선 fetch로 해당 branch를 가져온다.</p>
-<p><code>git checkout -t Leader &lt;branch 명&gt;</code></p>
-<p>내 로컬에서 해당 브랜치로 checkout 하여 브랜치를 옮길 때, -t or track 명령어로 추적한다.</p>
-<p><code>git pull Leader &lt;branch 명&gt;</code></p>
-<p>이제 pull을 받아오면 코드를 가져올 수 있다.</p>
-<p>만약 추적을 안하고 가져오게 된다면 변경사항이 없는 상태인데도, pull 해올 때 마다 <strong>Merge commit을 하라는 문구가 뜨게될 것 이다…</strong></p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>수업 중에 강사님 원격 저장소와 연결했는데 문제가 생겼다. 처음 fork 할 때는 강사님 원격 저장소에는 main branch 밖에 없어서 내가 fork 해왔을 때, 연결된 branch는 main branch 뿐이었던 것을 몰랐다.</p>
-<p>수업 중 강사님께서 브랜치를 새로 생성하셨고 나도 똑같이 fetch, checkout, pull을 하였는데, 다음과 같은 오류가 발생했다.</p>
-<p><strong>“관계 없는 커밋 내역의 병합을 거부합니다”</strong></p>
-<p>이러한 오류가 발생한 이유는 새로 생성한 branch를 fetch로 가져오기만 하고 강사님의 원격 저장소의 branch를 추적하지 않기 때문에 발생한 문제였다.</p>
-<p><code>git branch -vv</code></p>
-<p>위 명령어를 사용하면 현재 branch가 어떤 branch를 추적하고 있는지 알 수 있다. 그래서 이미 생성된 branch를 <code>git branch -D &lt;branch 명&gt;</code> 명령어로 삭제한 뒤 위의 방법대로 새롭게 생성한 뒤 추적을 해주었더니 문제가 해결되었다.</p>
-<p>앞으로 git 사용하다가 오류가 나오면 무시하지 말고 어떤 오류인지 제대로 파악하고 해결하도록 해야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/20/Project/holymoly/holymoly%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/"
-                            aria-label=": holymoly 프로젝트 회고"
-                        >
-                            holymoly 프로젝트 회고
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-20T21:13:54+09:00">
-	
-		    2022/10/20
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="프로젝트를-마치며…"><a href="#프로젝트를-마치며…" class="headerlink" title="프로젝트를 마치며…"></a>프로젝트를 마치며…</h1><ul>
-<li><p>기획을 할 때, 기술적으로 어떻게 풀어나갈지 기술기획을 꼼꼼히 하지 못한 것이 아쉬움</p>
-</li>
-<li><p>이 때, 기술기획이 제대로 안이루어져서 CBD 라이브러리를 사용하면서 앞으로 겪게될 문제를 개발 과정에 파악하게 되어서 난감하였다. ex) 지역 상태 관리 어려운 점…</p>
-</li>
-<li><p>노션으로 일정관리와 문서화를 템플릿을 적극 활용하여 일관성있게 해야겠다.</p>
-</li>
-<li><p>라우터가 App에 종속되어 있는 것이 아니라 render 함수처럼 따로 분리되도록 하고 싶었는데, 그러기 위해서구조를 대폭 수정해야하여 시간적 어려움이 있어 아쉬웠다.</p>
-</li>
-<li><p>매번 새로운 지식을 얻어감에 즐거움을 느꼈다. 공식문서 읽는 것은 아직 어렵지만, 예제를 따라해보고 이해한 후 공식문서 읽으면 잘 읽히는 것을 알게되었다.</p>
-</li>
-<li><p>이전 프로젝트 때 했던 실수를 어느정도 개선해나가며 진행할 수 있어서 좋았다. ex) this 바인딩</p>
-</li>
-<li><p>해결책을 생각해낼 때 과연 이게 진짜 해결책인지, 회피인지 한번 더 생각해보는 안목이 생겼다.</p>
-</li>
-<li><p>어렵고 막히는 부분이 있을 때 팀원에게 물어보면서 같이 해결해나갈 수 있어 든든하고 즐거웠다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/20/Project/holymoly/holymoly%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/"
-                            aria-label=": Software Development Life Cycle (SDLC)와 협업 모델"
-                        >
-                            Software Development Life Cycle (SDLC)와 협업 모델
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-18T22:38:09+09:00">
-	
-		    2022/10/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-Software-Development-Life-Cycle-SDLC"><a href="#1-Software-Development-Life-Cycle-SDLC" class="headerlink" title="1. Software Development Life Cycle (SDLC)"></a>1. Software Development Life Cycle (SDLC)</h1><p>소프트웨어 개발의 전체적인 라이프 사이클을 이해하여 개발 과정에서 발생하는 일을 정략적으로 관리하자.</p>
-<p><strong>해야할 일</strong></p>
-<ol>
-<li><p>요구사항 분석</p>
-</li>
-<li><p>설계</p>
-</li>
-<li><p>구현</p>
-</li>
-<li><p>테스트</p>
-</li>
-<li><p>유지보수</p>
-</li>
-</ol>
-<p>위 과정을 진행하기 위한 대표적인 모델은 다음과 같다.</p>
-<h2 id="1-1-Waterfall"><a href="#1-1-Waterfall" class="headerlink" title="1.1. Waterfall"></a>1.1. Waterfall</h2><p>SDLC 일련의 단계를 모든 팀원들이 참여한다. 심각한 문제라면 다시 이전단계로 돌아가야하겠지만, 작은 문제라면 일단 다음 단계로 넘어간다.(작은 문제를 지금 고친다 하더라도 사이드 이펙트 발생까지 생각하기 어렵다.)</p>
-<p><strong>장점</strong></p>
-<ul>
-<li><p>팀을 관리하기가 편하여 대규모 팀에 적합</p>
-</li>
-<li><p>어떤 단계가 마무리되면 결과가 뚜렷함</p>
-</li>
-</ul>
-<h2 id="1-2-Agile"><a href="#1-2-Agile" class="headerlink" title="1.2. Agile"></a>1.2. Agile</h2><p>작은 기능들의 성공을 반복시켜서 프로젝트 완성, 너무 많은 플랜을 지양하고 요구사항에 맞는 코드를 작성한다.</p>
-<p><strong>커뮤니케이션 중요(daily scrum, 코드리뷰, 회고)</strong></p>
-<h2 id="Daily-scrum"><a href="#Daily-scrum" class="headerlink" title="Daily scrum"></a>Daily scrum</h2><p>매일 15분간 회의를 진행하여 본인이 진행할 기능, 수정사항에 대해 우선순위를 부여하고 순서대로 진행한다.</p>
-<ul>
-<li>Product Backlog: 제품 전체의 요구사항</li>
-<li>Sprint Backlog : 프로덕트 기능 하나하나에 대해서 적어 놓음</li>
-</ul>
-<h2 id="Sprint"><a href="#Sprint" class="headerlink" title="Sprint"></a>Sprint</h2><p>Sprint는 2주 단위로 진행을 한다. 첫날에 planning meeting을 진행하여 2주간 일정을 세세하게 세운다.</p>
-<p>ex) 10월 25일 HTML설계, 10월 26일 컴포넌트 구조 설계 …</p>
-<h2 id="회고"><a href="#회고" class="headerlink" title="회고"></a>회고</h2><p>2주간의 Sprint가 끝나면 회고를 진행한다.</p>
-<ul>
-<li>3L 전략(Liked, Learned, Lacked)</li>
-</ul>
-<h2 id="Sprint-전-준비사항"><a href="#Sprint-전-준비사항" class="headerlink" title="Sprint 전 준비사항"></a>Sprint 전 준비사항</h2><ol>
-<li>UseCase 작성하기</li>
-</ol>
-<p>UseCase는 flowchart와 다르니 flowchart화 되고 있다면 재고해봐야한다.</p>
-<p>UseCase는 사용자가 어떤 행동을 할 수 있는지를 나열하고 이들간의 관계를 연결한 구조로 작성한다.</p>
-<blockquote>
-<p>flowchart가 아니므로 순서를 따를 필요가 없다.</p>
-</blockquote>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>점점 막히는 부분도 많아지고 이전에 제대로 구조를 설계하지 않고 회피하고 구현에만 집중하다보니 리팩터링을 어떻게 시작해야할지 막막하다…</p>
-<p>프로젝트 막바지에 다가오니 의욕도 떨어지는 것 같다. 재충전이 필요하다.</p>
-<p>그래도 이틀남았으니 내일 하루는 리팩터링에 시간을 쏟고 목요일은 배포와 회고, 발표준비를 하면 프로젝트를 잘 마무리 할 수 있을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1362,7 +1414,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 6 of 12</li>
+        <li class="pagination-number">page 6 of 13</li>
     </ul>
 </div>
 
