@@ -325,6 +325,121 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/08/30/Javascript/DOM%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A9%E1%84%83%E1%85%B3(attribute%20vs%20property)/"
+                            aria-label=": DOM과 노드(attribute vs property)"
+                        >
+                            DOM과 노드(attribute vs property)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-08-30T16:53:29+09:00">
+	
+		    2022/08/30
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h1><p>렌더링 엔진에 의해 HTML 문서를 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다. <strong>DOM이란, HTML문서의 계층적인 구조와 정보를 표현하며 이를 제어할 수 있는 API, 즉 프로퍼티와 메서드를 제공하는 트리 자료구조이다.</strong></p>
+<h1 id="노드"><a href="#노드" class="headerlink" title="노드"></a>노드</h1><p>HTML 요소는 렌더링 엔진에 의해 DOM을 구성하는 요소 노드 객체로 변환된다. HTML 요소의 어트리뷰트는 어트리뷰트 노드로, HTML 요소의 텍스트 컨텐츠는 텍스트 노드로 변환된다.</p>
+<p>노드 객체들로 구성된 트리 자료구조를 DOM이라한다.</p>
+<blockquote>
+<p>노드도 자바스크립트 객체이므로 프로토타입에 의한 상속 구조를 갖는다.</p>
+</blockquote>
+<h2 id="주의사항"><a href="#주의사항" class="headerlink" title="주의사항"></a>주의사항</h2><p>상속관계를 아는 것보다 어떤 DOM API를 사용하여 동적으로 변경하고 조작할 수 있는지를 알아야한다.</p>
+<p><code>querySelector, querySelectorAll</code> 메서드가 다소 느리긴 하더라도 CSS 선택자로 요소 노드 취득시 구체적인 조건과 일관된 방식으로 요소 노드 취득할 수 있으므로 id 어트리뷰트가 있는 요소는 <code>getElementById</code> 메서드를 사용하고 그 외의 경우에는 <code>querySelector, querySelectorAll</code> 메서드를 사용하자.</p>
+<h2 id="HTMLCollection과-NodeList"><a href="#HTMLCollection과-NodeList" class="headerlink" title="HTMLCollection과 NodeList"></a>HTMLCollection과 NodeList</h2><p>DOM 컬렉션 객체이 두 객체는 DOM API가 여러 개의 결과값을 반환하기 위한 객체이다. 둘 다 <strong>유사 배열 객체</strong>이면서 <strong>이터러블</strong>이다. 그러므로 for…of문으로 순회할 수 있으며 스프레드 문법을 사용하여 간단히 배열로 변환할 수 있다.</p>
+<ul>
+<li>HTMLCollection과 NodeList는 <strong>노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 객체</strong>이다.</li>
+<li>HTMLCollection은 언제나 live 객체로 동작한다.</li>
+<li>NodeList는 <strong>대부분의 경우 상태 변화를 실시간으로 반영하지 않고 과거의 정적 상태를 유지</strong>하는 non-live 객체로 동작하지만 <strong>경우에 따라 live 객체로 동작</strong>한다.</li>
+</ul>
+<h3 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h3><p>HTMLCollection, NodeList 객체를 사용하지 말아라. 유사 배열 객체이면서 이터러블인 <strong>NodeList,</strong> <strong>HTMLCollection 객체를 배열로 변환하면 부작용을 제거할 수 있다.</strong> 유용한 배열 고차함수 forEach, map, filter 등을 사용할 수 있다.</p>
+<h1 id="DOM-조작"><a href="#DOM-조작" class="headerlink" title="DOM 조작"></a>DOM 조작</h1><p>DOM 조작은 새로운 노드를 생성하여 DOM에 추가하거나 기존 노드 삭제 또는 교체 하는 것을 말한다. <strong>이 경우 리플로우와 리페인트가 발생한다.</strong></p>
+<h2 id="innerHTML"><a href="#innerHTML" class="headerlink" title="innerHTML"></a>innerHTML</h2><p>시작 태그와 종료 태그 사이의 모든 마크업을 문자열로 반환한다. HTML 마크업도 포함된 문자열을 반환하는 것이 textContent 프로퍼티와 차이점이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;foo&quot;</span>&gt;</span>Hello <span class="tag">&lt;<span class="name">span</span>&gt;</span>world!<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// #foo 요소의 콘텐츠 영역 내의 HTML 마크업을 문자열로 취득한다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;foo&#x27;</span>).<span class="property">innerHTML</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// &quot;Hello &lt;span&gt;world!&lt;/span&gt;&quot;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>요소 노드의 innerHTML 프로퍼티에 문자열 할당하면 요소 노드의 모든 자식 노드가 제거되고 할당한 문자열이 텍스트로 추가된다. 이 때 <strong>HTML 마크업이 포함되어 있으면 파싱되어 요소 노드의 자식 노드로 DOM에 반영된다.</strong></li>
+</ul>
+<aside>
+💡 단, innerHTML 프로퍼티에 사용자로부터 입력받은 데이터를 그대로 할당하는 것은 크**로스 사이트 스크립팅 공격에 취약하므로 위험**하다.
+
+</aside>
+
+<h2 id="복수의-노드-생성과-추가-⭐️"><a href="#복수의-노드-생성과-추가-⭐️" class="headerlink" title="복수의 노드 생성과 추가 ⭐️"></a>복수의 노드 생성과 추가 ⭐️</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;fruits&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $fruits = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;fruits&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    [<span class="string">&#x27;Apple&#x27;</span>, <span class="string">&#x27;Banana&#x27;</span>, <span class="string">&#x27;Orange&#x27;</span>].<span class="title function_">forEach</span>(<span class="function"><span class="params">text</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 1. 요소 노드 생성</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">const</span> $li = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 2. 텍스트 노드 생성</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">const</span> textNode = <span class="variable language_">document</span>.<span class="title function_">createTextNode</span>(text);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 3. 텍스트 노드를 $li 요소 노드의 자식 노드로 추가</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $li.<span class="title function_">appendChild</span>(textNode);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 4. $li 요소 노드를 #fruits 요소 노드의 마지막 자식 노드로 추가</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $fruits.<span class="title function_">appendChild</span>($li);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제는 3개의 요소 노드가 생성하여 DOM에 3번 추가하여 DOM이 3번 변경된다. 이러한 방법은 <strong>리플로우를 많이 발생 시키므로 피해야한다.</strong></li>
+</ul>
+<p>⇒ 컨테이너 요소를 미리 생성한 후 DOM에 추가할 3개 요소 노드를 컨테이너 요소의 자식 노드로 추가한 뒤 컨테이너 요소를 #fruits 요소에 자식으로 추가한다. 하지만 이 또한, 불필요한 컨테이너 요소(div)가 DOM에 추가되어 바람직 하지 않다.</p>
+<h1 id="어트리뷰트"><a href="#어트리뷰트" class="headerlink" title="어트리뷰트"></a>어트리뷰트</h1><h2 id="어트리뷰트-노드와-attributes-프로퍼티"><a href="#어트리뷰트-노드와-attributes-프로퍼티" class="headerlink" title="어트리뷰트 노드와 attributes 프로퍼티"></a>어트리뷰트 노드와 attributes 프로퍼티</h2><p>HTML 문서의 요소는 여러 개의 어트리뷰트를 가질 수 있다. ex) class, checked, aria-label…</p>
+<ul>
+<li>모든 HTML 요소에 공통적인 것부터 해당 요소만 사용할 수 있는 어트리뷰트가 있다.</li>
+<li>HTML 요소의 어트리뷰트는 어트리뷰트 노드로 변환되어 요소 노드와 연결된다. 이는 NamedNodeMap 객체에 담겨 요소 노드의 attributes 프로퍼티에 저장된다.</li>
+<li><strong>attributes 프로퍼티는 getter만 존재하는 접근자 프로퍼티이다.</strong></li>
+</ul>
+<h2 id="HTML-어트리뷰트-vs-DOM-프로퍼티"><a href="#HTML-어트리뷰트-vs-DOM-프로퍼티" class="headerlink" title="HTML 어트리뷰트 vs DOM 프로퍼티"></a>HTML 어트리뷰트 vs DOM 프로퍼티</h2><ul>
+<li>HTML 어트리뷰트는 <strong>초기값 (변하지 않는다.)</strong></li>
+<li>DOM 프로퍼티는 HTML 프로퍼티를 초기값으로 가지고 <strong>변경될 수 있다.</strong></li>
+</ul>
+<p>첫렌더링 까지 어트리뷰트 노드의 어트리뷰트 값과 요소 노드의 value 프로퍼티에 할당된 값은 HTML 어트리뷰트 값과 동일하다. 하지만 첫 렌더링 이후 사용자가 input 요소에 무언가 입력시 바뀌게 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">value</span>=<span class="string">&quot;ungmo2&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $input = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;user&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// attributes 프로퍼티에 저장된 value 어트리뷰트 값</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>($input.<span class="title function_">getAttribute</span>(<span class="string">&#x27;value&#x27;</span>)); <span class="comment">// ungmo2</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 요소 노드의 value 프로퍼티에 저장된 value 어트리뷰트 값</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>($input.<span class="property">value</span>); <span class="comment">// ungmo2</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>input 요소 노드는 상태를 가지고 있고 사용자의 입력에 의한 변경된 <strong>최신 상태를 관리해야 할뿐더러</strong> HTML 어트리뷰트로 지정한 <strong>초기 상태도 관리해야</strong>한다.</li>
+</ul>
+<p>즉, 요소 노드의 <strong>초기 상태는 어트리뷰트 노드가 관리</strong>하며 요소 노드의 <strong>최신 상태는 DOM 프로퍼티가 관리</strong>한다.</p>
+<h3 id="HTML-어트리뷰트와-DOM-프로퍼티의-대응-관계"><a href="#HTML-어트리뷰트와-DOM-프로퍼티의-대응-관계" class="headerlink" title="HTML 어트리뷰트와 DOM 프로퍼티의 대응 관계"></a>HTML 어트리뷰트와 DOM 프로퍼티의 대응 관계</h3><p>대부분은 HTML 어트리뷰트는 HTML 어트리뷰트 이름과 동일한 DOM 프로퍼티와 1:1로 대응한다. 반드시는 아니다.</p>
+<ul>
+<li>id 어트리뷰트와 id 프로퍼티는 1:1 대응, 동일한 값으로 연동한다.</li>
+<li>input 요소의 value 어트리뷰트는 value 프로퍼티와 1:1 대응, <strong>value 어트리뷰트는 초기상태</strong>를, <strong>value 프로퍼티는 최신 상태</strong>를 갖는다.</li>
+<li>class 어트리뷰트에 대응하는 DOM 프로퍼티는 className, classList 프로퍼티이다.</li>
+</ul>
+<h3 id="DOM-프로퍼티-값의-타입"><a href="#DOM-프로퍼티-값의-타입" class="headerlink" title="DOM 프로퍼티 값의 타입"></a>DOM 프로퍼티 값의 타입</h3><p>getAttribute 메서드로 취득한 어트리뷰트 값은 언제나 문자열이지만 DOM 프로퍼티로 취득한 최신 상태 값은 문자열이 아닐 수 있다. boolean 타입일 수 있다.</p>
+<p>ex) checkbox요소의 checked 어트리뷰트 값은 문자열 이지만 checked 프로퍼티 값은 불리언이다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/08/30/Javascript/DOM%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A9%E1%84%83%E1%85%B3(attribute%20vs%20property)/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/08/29/Javascript/%E1%84%87%E1%85%B3%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%84%8C%E1%85%A5%20%E1%84%85%E1%85%A6%E1%86%AB%E1%84%83%E1%85%A5%E1%84%85%E1%85%B5%E1%86%BC%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A5%E1%86%BC/"
                             aria-label=": 브라우저 렌더링 과정"
                         >
@@ -1471,94 +1586,6 @@
                         <p>
                             <a
                                 href="/2022/08/19/Javascript/this/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/18/Javascript/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A9%E1%86%A8/"
-                            aria-label=": 상속"
-                        >
-                            상속
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-18T19:35:34+09:00">
-	
-		    2022/08/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>자바스크립트에서 상속을 구현하기 위해 프로토타입을 기반으로 구현한다고 이전시간에 배워보았다.</p>
-<p>그럼 상속을 구현하는 방법이 과연 이 방법뿐일까? 한번 알아보자.</p>
-<h1 id="직접상속"><a href="#직접상속" class="headerlink" title="직접상속"></a>직접상속</h1><h2 id="Object-create에-의한-직접-상속-정적메서드"><a href="#Object-create에-의한-직접-상속-정적메서드" class="headerlink" title="Object.create에 의한 직접 상속 (정적메서드)"></a>Object.create에 의한 직접 상속 (정적메서드)</h2><p>Object.create 메서드는 명시적으로 프로토타입을 지정하여 새로운 객체를 생성한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="title function_">create</span>(생성할 객체의 프로토타입, 생성할 객체의 프로퍼티키와 프로퍼티 디스크립터 객체로 이뤄진 객체)</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">create</span>(prototype[, propertiesObject])</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 프로토타입이 null인 객체를 생성한다. 생성된 객체는 프로토타입 체인의 종점에 위치한다.</span></span><br><span class="line"><span class="comment">// obj → null</span></span><br><span class="line"><span class="keyword">let</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"><span class="comment">// Object.prototype을 상속받지 못한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="title function_">toString</span>()); <span class="comment">// TypeError: obj.toString is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// obj → Object.prototype → null</span></span><br><span class="line"><span class="comment">// obj = &#123; x: 1 &#125;;와 동일하다.</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>, &#123;</span><br><span class="line">  <span class="attr">x</span>: &#123; <span class="attr">value</span>: <span class="number">1</span>, <span class="attr">writable</span>: <span class="literal">true</span>, <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">configurable</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 위 코드는 다음과 동일하다.</span></span><br><span class="line"><span class="comment">// obj = Object.create(Object.prototype);</span></span><br><span class="line"><span class="comment">// obj.x = 1;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">x</span>); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 빈객체만 생성하는 것이 아니다.</span></span><br><span class="line"><span class="keyword">const</span> obj1 = <span class="title class_">Object</span>.<span class="title function_">create</span>(obj, &#123;</span><br><span class="line">  <span class="attr">x</span>: &#123; <span class="attr">value</span>: <span class="number">10</span> &#125;,</span><br><span class="line">  <span class="attr">y</span>: &#123; <span class="attr">value</span>: <span class="number">20</span>, <span class="attr">writable</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj1); <span class="comment">// &#123;x: 10, y: 20&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myProto = &#123; <span class="attr">x</span>: <span class="number">10</span> &#125;;</span><br><span class="line"><span class="comment">// 객체리터럴로 생성된 객체를 직접 상속받는다.</span></span><br><span class="line"><span class="comment">// obj → myProto → Object.prototype → null</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(myProto);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">x</span>); <span class="comment">// 10</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === myProto); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// obj → Person.prototype → Object.prototype → null</span></span><br><span class="line"><span class="comment">// obj = new Person(&#x27;Lee&#x27;)와 동일하다.</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;Lee&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">name</span>); <span class="comment">// Lee</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>Object.create 메서드의 첫번째 인수로 전달한 객체를 프로토타입으로 하는 프로토타입 체인에 속하는 객체를 생성한다. 즉, 객체를 생성하면서 직접적인 상속을 구현하는 것이다.</p>
-<ul>
-<li>new 연산자 없이 객체 생성 가능</li>
-<li>프로토타입을 지정하면서 객체 생성 가능</li>
-<li>객체 리터럴로 생성된 객체도 상속받을 수 있다.</li>
-</ul>
-<p>Object.prototype의 빌트인 메서드를 직접 호출하는 것은 위험하다. 그 이유는 Object.create 메서드를 사용하여 <span style="color:red">프로토타입 체인 종점에 위치하는 객체</span>를 생성할 수도 있기 때문이다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 프로토타입이 null인 객체, 즉 프로토타입 체인의 종점에 위치하는 객체를 생성한다.</span></span><br><span class="line"><span class="keyword">const</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>);</span><br><span class="line">obj.<span class="property">a</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// obj는 Object.prototype의 빌트인 메서드를 사용할 수 없다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="title function_">hasOwnProperty</span>(<span class="string">&quot;a&quot;</span>)); <span class="comment">// TypeError: obj.hasOwnProperty is not a function</span></span><br></pre></td></tr></table></figure>
-
-<p>그러므로 Object.prototype의 빌트인 메서드는 call,apply 등을 통해 간접적으로 호출하는 것을 권장한다.</p>
-<p>하지만 위 방법은 너무 길다…</p>
-<p><span style="font-size:1.2rem">그래서 새로나온 문법을 사용하자</span></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="title function_">hasOwn</span>(obj, property);</span><br></pre></td></tr></table></figure>
-
-<p>위 방법을 사용하여 같은 기능을 구현할 수 있다.</p>
-<h1 id="정적-프로퍼티-x2F-메소드"><a href="#정적-프로퍼티-x2F-메소드" class="headerlink" title="정적 프로퍼티&#x2F;메소드"></a>정적 프로퍼티&#x2F;메소드</h1><p>생성자 함수로 <span style="color:red">인스턴스를 생성하지 않아도</span> 참조,호출할 수 있는 프로퍼티, 메소드를 말한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 프로토타입 메서드</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHello</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! My name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 프로퍼티</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property">staticProp</span> = <span class="string">&quot;static prop&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 메서드</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property">staticMethod</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;staticMethod&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수에 추가한 정적 프로퍼티/메서드는 생성자 함수로 참조/호출한다.</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="title function_">staticMethod</span>(); <span class="comment">// staticMethod</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 프로퍼티/메서드는 생성자 함수가 생성한 인스턴스로 참조/호출할 수 없다.</span></span><br><span class="line"><span class="comment">// 인스턴스로 참조/호출할 수 있는 프로퍼티/메서드는 프로토타입 체인 상에 존재해야 한다.</span></span><br><span class="line">me.<span class="title function_">staticMethod</span>(); <span class="comment">// TypeError: me.staticMethod is not a function</span></span><br></pre></td></tr></table></figure>
-
-<p>생성자 함수로 생성한 인스턴스로 정적 프로퍼티와 메소드를 참조, 호출할 수 없다.</p>
-<p>생성자 함수가 생성한 인스턴스는 프로퍼티, 메소드를 참조할 때 <span style="color:red">프로토타입 체인 내에서만 할 수 있다.</span></p>
-<p>정적 프로퍼티,메소드는 인스턴스의 프로토타입 체인 내에 없기 때문에 참조, 호출할 수 없다.</p>
-<aside>
-💡 MDN에 보면 정적메서드와 프로토타입 메서드를 구분하여 소개한다. 정적 메서드는 Object.isExtensible(), Object.keys() 처럼 중간에 prototype이 들어가지 않지만 프로토타입 메서드는 Object.prototype.hasOwnProperty() 처럼 중간에 prototype이 들어간다.
-</aside>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/18/Javascript/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A9%E1%86%A8/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
