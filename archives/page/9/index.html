@@ -325,6 +325,106 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/"
+                            aria-label=": diff Algorithm Tip"
+                        >
+                            diff Algorithm Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-30T18:21:26+09:00">
+	
+		    2022/09/30
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="diffing-구현"><a href="#diffing-구현" class="headerlink" title="diffing 구현"></a>diffing 구현</h1><p>React에서는 화면에서 바뀐 부분만 부분적으로 렌더링 해주기 위해 diffing 알고리즘을 구현하였다.</p>
+<p>virtualDOM과 realDOM을 비교해주기 위해 리액트 홈페이지에서 설명한 방법으로 vanilla JS로 diffing 알고리즘을 구현해보자.</p>
+<h1 id="0-두-요소의-길이부터-비교한다"><a href="#0-두-요소의-길이부터-비교한다" class="headerlink" title="0. 두 요소의 길이부터 비교한다."></a>0. 두 요소의 길이부터 비교한다.</h1><p>우리가 작업하고 있는 요소를 $old, 새롭게 생성된 요소를 $new 요소라고 하자. 우리는 $new를 기준으로 $old의 요소들을 일치 시켜주는 행위를 하면 된다.</p>
+<p>$new의 노드길이가 $old의 노드 길이보다 길다면, $old에서 추가해주면 되지만, $new가 $old보다 길이가 짧다면, $old의 나머지 부분을 제거해줘야한다.</p>
+<h2 id="0-1-길이가-짧은-경우"><a href="#0-1-길이가-짧은-경우" class="headerlink" title="0.1. 길이가 짧은 경우"></a>0.1. 길이가 짧은 경우</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">diff</span> = (<span class="params">$new, $old</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newNodes = [...$new.<span class="property">childNodes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldNodes = [...$old.<span class="property">childNodes</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (oldNodes.<span class="property">length</span> &gt; newNodes.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; oldNodes.<span class="property">length</span> - newNodes.<span class="property">length</span>; i++)</span><br><span class="line">      $old.<span class="title function_">removeChild</span>($old.<span class="property">lastChild</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0-2-길이가-긴-경우"><a href="#0-2-길이가-긴-경우" class="headerlink" title="0.2. 길이가 긴 경우"></a>0.2. 길이가 긴 경우</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ($o === <span class="literal">undefined</span>) &#123;</span><br><span class="line">    $old.<span class="title function_">appendChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>));</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이전 요소에 새로운 요소가 가진 자식 노드가 없다면 이전 요소에 추가해준다.</li>
+</ul>
+<blockquote>
+<p>cloneNode(true)는 해당 요소의 자식노드들 까지 모두 복제해주기 위한 옵션이다.</p>
+</blockquote>
+<h1 id="1-두-요소의-루트-노드부터-비교한다"><a href="#1-두-요소의-루트-노드부터-비교한다" class="headerlink" title="1. 두 요소의 루트 노드부터 비교한다."></a>1. 두 요소의 루트 노드부터 비교한다.</h1><p>먼저 두 루트 요소의 타입이 다르면 $old 요소에서 제거하고 새로운 트리를 구축한다.</p>
+<p>ex) <a>에서 <div>로, <Article>에서 <Comment>로 바뀌는 경우</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ($o.<span class="property">tagName</span> !== $n.<span class="property">tagName</span>) &#123;</span><br><span class="line">    $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이전 요소의 자식노드과 새로운 요소의 자식노드를 1:1로 tagName을 비교하여 서로 다르면 교체를 해주었다.</li>
+</ul>
+<h1 id="2-textNode-commentNode-들은-textContent를-비교한-뒤-교체해준다"><a href="#2-textNode-commentNode-들은-textContent를-비교한-뒤-교체해준다" class="headerlink" title="2. textNode, commentNode 들은 textContent를 비교한 뒤 교체해준다."></a>2. textNode, commentNode 들은 textContent를 비교한 뒤 교체해준다.</h1><p>앞서 tagName으로 비교하여 같지 않을 때, 자식노드까지 비교해주었는데, textNode와 commentNode는 서로 tagName이 같으므로 이들의 textContent로 비교해주어야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line">  <span class="comment">// textNode:3, commentNode:8</span></span><br><span class="line">  <span class="keyword">if</span> ($n.<span class="property">nodeType</span> === <span class="number">3</span> || $n.<span class="property">nodeType</span> === <span class="number">8</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">textContent</span> !== $o.<span class="property">textContent</span>)</span><br><span class="line">      $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-이제-각-노드의-attribute-노드를-비교한다"><a href="#3-이제-각-노드의-attribute-노드를-비교한다" class="headerlink" title="3. 이제 각 노드의 attribute 노드를 비교한다."></a>3. 이제 각 노드의 attribute 노드를 비교한다.</h1><p>2번까지의 과정으로 $old 요소의 자식노드와 $new 요소의 자식노드들의 비교가 끝났고 일치까지 시켜줬다. 그러므로 이제는 자식 노드가 가지고 있는 attribute(class, inline-style, checked, disabled…)를 비교해줘야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newAttrs = [...$n.<span class="property">attributes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldAttrs = [...$o.<span class="property">attributes</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> $nAttr <span class="keyword">of</span> newAttrs) &#123;</span><br><span class="line">    <span class="keyword">const</span> $sameAttr = oldAttrs.<span class="title function_">find</span>(<span class="function">(<span class="params">$oAttr</span>) =&gt;</span> $oAttr.<span class="property">name</span> === $nAttr.<span class="property">name</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($sameAttr === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      $old.<span class="title function_">replaceChild</span>($n.<span class="title function_">cloneNode</span>(<span class="literal">true</span>), $o);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($sameAttr.<span class="property">value</span> !== $nAttr.<span class="property">value</span>) $sameAttr.<span class="property">value</span> = $nAttr.<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  oldAttrs.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$oAttr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!newAttrs.<span class="title function_">find</span>(<span class="function">(<span class="params">$nAttr</span>) =&gt;</span> $nAttr.<span class="property">name</span> === $oAttr.<span class="property">name</span>))</span><br><span class="line">      $o.<span class="title function_">removeAttribute</span>($oAttr.<span class="property">name</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">diff</span>($n, $o);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>새로운 노드의 attritube 중 이전 노드의 attribute와 같은 attribute가 없다면, 이전 요소 노드의 attribute를 새로운 노드의 attribute로 추가해준다.</p>
+</li>
+<li><p>이전 노드의 attribute 값과 새로운 노드의 attribute 값이 다르면 이전 노드 attribute에 값을 할당해준다.</p>
+</li>
+<li><p>만약 이전 노드의 attribute 중 새로운 노드의 attribute가 없다면 이전 노드의 해당 attribute를 제거해준다.</p>
+</li>
+</ul>
+<p>그리고 마지막으로 자식 노드들을 재귀적으로 diff 함수를 호출해주면 자식 노드까지 바뀐 부분만 확인해줄 수 있다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li><p>diff 알고리즘을 경현님과 같이 이야기 하면서 작성하다보니 완성할 수 있어서 기뻤다.</p>
+</li>
+<li><p>이전 노드의 attribute와 새로운 노드의 attribute가 다를 때, attribute를 추가해주기 위해 setAttribute()를 사용하였는데, attribute는 HTML 구조의 초기값을 설정해주는 것이므로, 사용자의 화면에 변화되는 것이 반영되지 않고 todo를 삭제할 때, 삭제한 다음 요소에 삭제 요소의 attribute가 남아있는 것처럼 보이는 문제가 발생하여 attribute를 추가하는 경우에는 replaceChild() 메서드를 사용하여 해당 요소의 노드를 바꿔주는 방식을 사용하였다.</p>
+</li>
+</ul>
+<p>때문에 attribute를 추가하는 경우에는 li 요소가 전부 렌더링 되는 모습을 보이고 attribute를 제거할 때는 input에 있는 checked attribute만 제거되므로 li 요소가 아닌 li 자식 요소의 input과 input의 다음 형제 요소들만 렌더링 되는 모습을 볼 수 있었다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/30/PairProgramming/level%202/diff%20Algorithm%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"
                             aria-label=": CBD Library Tip"
                         >
@@ -1314,138 +1414,6 @@
                         <p>
                             <a
                                 href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/"
-                            aria-label=": transition 이벤트, counter, isPalindrome Tip"
-                        >
-                            transition 이벤트, counter, isPalindrome Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-16T19:02:17+09:00">
-	
-		    2022/09/16
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="CarouselSlider-구현중-느낀점"><a href="#CarouselSlider-구현중-느낀점" class="headerlink" title="CarouselSlider 구현중 느낀점"></a>CarouselSlider 구현중 느낀점</h1><h2 id="1-구현-중-필요한-상수-또는-변수는-따로-구분해주자"><a href="#1-구현-중-필요한-상수-또는-변수는-따로-구분해주자" class="headerlink" title="1. 구현 중 필요한 상수 또는 변수는 따로 구분해주자."></a>1. 구현 중 필요한 상수 또는 변수는 따로 구분해주자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Data</span></span><br><span class="line"><span class="keyword">const</span> duration = <span class="number">500</span>;</span><br><span class="line"><span class="keyword">const</span> direction = &#123;</span><br><span class="line">  <span class="attr">prev</span>: -<span class="number">1</span>,</span><br><span class="line">  <span class="attr">next</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> newImages = [images[images.<span class="property">length</span> - <span class="number">1</span>], ...images, images[<span class="number">0</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> currentSlide = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> transitionComplete = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>로직 중간에 재할당이 발생하지 않은 요소는 const 키워드로 선언하여 의도치 않은 재할당을 방지한다.</p>
-</li>
-<li><p>currentSlide는 DOM API를 사용하여 필요할 때마다 가져왔는데, 값을 데이터 부분에서 한번만 가져와서 그 값을 가지고 사용하는 방법으로 하면 DOM API를 자주 사용하여 발생하는 코드의 복잡성을 해결할 수 있다.</p>
-</li>
-</ul>
-<h2 id="2-transitionend-이벤트와-transitioncancel-이벤트"><a href="#2-transitionend-이벤트와-transitioncancel-이벤트" class="headerlink" title="2. transitionend 이벤트와 transitioncancel 이벤트"></a>2. transitionend 이벤트와 transitioncancel 이벤트</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">setTransitionCompleteTrue</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  transitionComplete = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;transitionend&quot;</span>, setTransitionCompleteTrue);</span><br><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;transitioncancel&quot;</span>, setTransitionCompleteTrue);</span><br><span class="line"></span><br><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.carousel-control&quot;</span>) || !transitionComplete) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&#x27;.prev&#x27;</span>) <span class="comment">// prettier-ignore</span></span><br><span class="line">    ? <span class="title function_">slideImage</span>(direction.<span class="property">prev</span>, <span class="number">0</span>, newImages.<span class="property">length</span> - <span class="number">2</span>)</span><br><span class="line">    : <span class="title function_">slideImage</span>(direction.<span class="property">next</span>, newImages.<span class="property">length</span> - <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>transitionend 이벤트는 요소 노드의 trnasition 이벤트가 완료될 때, 이벤트 핸들러가 호출된다.</p>
-</li>
-<li><p>transitioncancel 이벤트는 요소 노드의 trnasition 이벤트가 취소될 때, 이벤트 핸들러가 호출된다.</p>
-</li>
-</ul>
-<p>처음에 캐러셀을 구현할 때, 1-4번 사진에서 next 버튼 클릭시 transition-delay가 유지되면서 다음 사진으로 이동했는데, 연타로 클릭하니 transition-delay가 유지되지 않고 다음 사진으로 이동하여 이를 어떻게 구현할 지 생각해보고 구글링을 하다가 transition 이벤트를 알게되어 사용하였다.</p>
-<p>transition이 완료될 때, transitionComplete를 true로 할당하고 클릭 이벤트가 발생하였을 때는 위와 같이 이미지를 슬라이드 해주는 함수를 구현하였다.</p>
-<p>slideImage 함수 내부의 로직은 위 부분에서 알 필요가 없고 위 부분에서는 단지 클릭 이벤트가 일어났을 때, 이미지를 슬라이드 해주는 <span style="color:red">관심사</span>가 중요하기 때문에 다른 것은 알 필요가 없도록 코드를 구현하는 것이 바로 <span style="color:red">관심사</span>의 구분이다.</p>
-<h3 id="transitionend-이벤트가-가끔-사라지는-경우"><a href="#transitionend-이벤트가-가끔-사라지는-경우" class="headerlink" title="transitionend 이벤트가 가끔 사라지는 경우"></a>transitionend 이벤트가 가끔 사라지는 경우</h3><p><img src="/images/220916/transitioncancel.gif" alt="transitioncancel"></p>
-<p>next 버튼, prev 버튼을 연타해서 클릭하거나 예상치 못한 경우에 transition이벤트가 완료되지 않고 갑자기 사라지는 경우가 발생하였다.</p>
-<p>위와 같이 갑자기 클릭을 계속하여도 transitionend 이벤트가 동작하지 않아 transitionComplete값이 true로 할당되지 않으므로 정상동작하지 않는 것을 볼 수 있다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;transitioncancel&quot;</span>, setTransitionCompleteTrue);</span><br></pre></td></tr></table></figure>
-
-<p>이러한 예외경우를 위해서 transitioncancel이벤트로 이벤트 핸들러로 다뤄주면 예외 처리가 가능하다.</p>
-<h2 id="3-마지막-캐러셀이-슬라이드-되고-난-후-다시-처음-슬라이드로-이동시키기-눈속임"><a href="#3-마지막-캐러셀이-슬라이드-되고-난-후-다시-처음-슬라이드로-이동시키기-눈속임" class="headerlink" title="3. 마지막 캐러셀이 슬라이드 되고 난 후 다시 처음 슬라이드로 이동시키기 (눈속임)"></a>3. 마지막 캐러셀이 슬라이드 되고 난 후 다시 처음 슬라이드로 이동시키기 (눈속임)</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">slideImage</span> = (<span class="params">direction, <span class="keyword">from</span>, to</span>) =&gt; &#123;</span><br><span class="line">  transitionComplete = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  currentSlide += direction;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setSlidesProperty</span>(<span class="string">&quot;--duration&quot;</span>, duration);</span><br><span class="line">  <span class="title function_">setSlidesProperty</span>(<span class="string">&quot;--currentSlide&quot;</span>, currentSlide);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (currentSlide === <span class="keyword">from</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      currentSlide = to;</span><br><span class="line"></span><br><span class="line">      <span class="title function_">setSlidesProperty</span>(<span class="string">&quot;--duration&quot;</span>, <span class="number">0</span>);</span><br><span class="line">      <span class="title function_">setSlidesProperty</span>(<span class="string">&quot;--currentSlide&quot;</span>, currentSlide);</span><br><span class="line">    &#125;, duration);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>코드를 해석하자면 다음과 같다.</p>
-<ol>
-<li><p>transitionend 이벤트가 발생하면 transitionComplete가 true로 할당이 된다. 즉, transition이벤트가 끝나면 currentSlide를 해당 방향으로 한칸 이동시킨다.</p>
-</li>
-<li><p>만약 현재 슬라이드가 마지막(from)이라면, transition-delay가 완료되는 시간인 duration 후에 currentSlide에 처음 슬라이드 번호를 할당하고 duration 속성을 0으로 초기화하여 transition 이벤트가 발생하지 않도록 한 후 현재 보이는 슬라이드를 처음 슬라이드 번호로 바뀐 값으로 설정해준다.</p>
-</li>
-</ol>
-<p>이렇게 되면 사용자는 마지막 슬라이드로 이동했을 때, 다시 처음 슬라이드로 돌아온 것으로 무한 루프를 구현한 것처럼 느끼게 된다.</p>
-<h1 id="Counter-리팩토링하면서-느낀점"><a href="#Counter-리팩토링하면서-느낀점" class="headerlink" title="Counter 리팩토링하면서 느낀점"></a>Counter 리팩토링하면서 느낀점</h1><h2 id="1-이벤트-핸들러-부분과-함수의-역할에-따라-구분해주자"><a href="#1-이벤트-핸들러-부분과-함수의-역할에-따라-구분해주자" class="headerlink" title="1. 이벤트 핸들러 부분과 함수의 역할에 따라 구분해주자."></a>1. 이벤트 핸들러 부분과 함수의 역할에 따라 구분해주자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 리팩토링 전</span></span><br><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">helper</span>) &#123;</span><br><span class="line">    counter = <span class="title function_">helper</span>(counter);</span><br><span class="line">    <span class="keyword">return</span> counter;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">increaseCount</span> = (<span class="params">counter</span>) =&gt; &#123;</span><br><span class="line">  counter += <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> counter;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">decreaseCount</span> = (<span class="params">counter</span>) =&gt; &#123;</span><br><span class="line">  counter = counter &gt; <span class="number">0</span> ? counter - <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> counter;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> $counter = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.counter&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.increase&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  $counter.<span class="property">textContent</span> = <span class="title function_">counter</span>(increaseCount);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.decrease&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  $counter.<span class="property">textContent</span> = <span class="title function_">counter</span>(decreaseCount);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>리팩토링 전에는 헬퍼함수라는 콜백함수를 받아 클로저를 구현해서 increaseCount, decreaseCount 함수가 counter 함수에서만 사용하는데 전역코드에 존재하므로 다른 곳에서도 사용할 수 있는 함수로 오해할 수 있으므로 이들 함수간의 응집도를 눂혀줘야한다.</p>
-</li>
-<li><p>또한, 이벤트 핸들러 함수가 렌더링을 해주고 있는데 이보다 렌더링 해주는 함수, 카운트 증가시키는 함수, 카운트 감소시키는 함수 등으로 역할에 따라 구분하는 것이 적절하다.</p>
-</li>
-</ul>
-<p>위 두가지 개선사항을 반영하여 나온 코드가 아래 코드이다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 리팩토링 후</span></span><br><span class="line"><span class="keyword">const</span> counter = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> $counter = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.counter&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    $counter.<span class="property">textContent</span> = count;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      count += <span class="number">1</span>;</span><br><span class="line">      <span class="title function_">render</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (count &gt; <span class="number">0</span>) count -= <span class="number">1</span>;</span><br><span class="line">      <span class="title function_">render</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.increase&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">increase</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.decrease&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">decrease</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>counter 식별자에 즉시실행함수의 반환값(객체)를 할당하여 처음 Js 파일이 로드되었을 때, 한번만 호출되거나 실행되는 부분과 여러번 호출되는 부분을 구분하였다.</p>
-</li>
-<li><p>이벤트 핸들러가 직관적으로 클릭하면 무슨일을 하는 지 알 수 있다.</p>
-</li>
-</ul>
-<blockquote>
-<p>더 나아가 위 코드를 각 역할에 맞도록 모듈로 구분할 수도 있다.</p>
-</blockquote>
-<h1 id="isPalindrome-리팩토링-중-느낀점"><a href="#isPalindrome-리팩토링-중-느낀점" class="headerlink" title="isPalindrome 리팩토링 중 느낀점"></a>isPalindrome 리팩토링 중 느낀점</h1><h2 id="1-응집도-높이기"><a href="#1-응집도-높이기" class="headerlink" title="1. 응집도 높이기"></a>1. 응집도 높이기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 리팩토링 전</span></span><br><span class="line"><span class="keyword">const</span> $input = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-input&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">isPalindrome</span> = (<span class="params">string</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newString = string.<span class="title function_">toUpperCase</span>().<span class="title function_">replace</span>(<span class="regexp">/[^A-Za-z0-9가-힣]/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (newString === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> reversedString = newString.<span class="title function_">split</span>(<span class="string">&quot;&quot;</span>).<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> newString === reversedString;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-checker&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;submit&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line">    <span class="keyword">const</span> value = $input.<span class="property">value</span>.<span class="title function_">trim</span>();</span><br><span class="line">    <span class="keyword">if</span> (value === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-result&quot;</span>).<span class="property">textContent</span> = <span class="title function_">isPalindrome</span>(</span><br><span class="line">      value</span><br><span class="line">    )</span><br><span class="line">      ? <span class="string">`&quot;<span class="subst">$&#123;value&#125;</span>&quot; is a palindrome`</span></span><br><span class="line">      : <span class="string">`&quot;<span class="subst">$&#123;value&#125;</span>&quot; is not a palindrome`</span>;</span><br><span class="line"></span><br><span class="line">    $input.<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>isPalindrome함수는 아래 이벤트 핸들러함수 안에서만 사용될 것인데 전역 코드에 있으므로 응집도를 높혀줘야한다.</p>
-</li>
-<li><p>split을 사용하여 배열화 하는 것보다 스프레드 문법을 사용하자.</p>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 리팩토링 후</span></span><br><span class="line"><span class="keyword">const</span> checkPalindrome = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $input = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-input&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> $result = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-result&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">isPalindrome</span> = (<span class="params">string</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> newString = string.<span class="title function_">toUpperCase</span>().<span class="title function_">replace</span>(<span class="regexp">/[^A-Za-z0-9가-힣]/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (newString === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> reversedString = [...newString].<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> newString === reversedString;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> value = $input.<span class="property">value</span>.<span class="title function_">trim</span>();</span><br><span class="line">    <span class="keyword">if</span> (value === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    $result.<span class="property">textContent</span> = <span class="string">`&quot;<span class="subst">$&#123;value&#125;</span>&quot; is <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      isPalindrome(value) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;not&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span> a palindrome`</span>;</span><br><span class="line"></span><br><span class="line">    $input.<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.palindrome-checker&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;submit&quot;</span>, checkPalindrome);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>isPalindrome 함수와 이벤트 핸들러 함수의 응집도를 높히기 위해 즉시실행함수로 감싸주었다.</p>
-</li>
-<li><p>즉시실행함수는 이벤트 객체를 인수로 받는 함수를 반환한다. 이 함수에다가 리팩토링 전에 이벤트 핸들러 안에 있던 코드들을 담아주었다. 즉시실행함수가 반환하는 함수는 외부함수의 식별자를 참조하고 있고 외부함수보다 생명주기가 더 길어서 <span style='color:red'>클로저</span>이다.</p>
-</li>
-<li><p>문자열을 렌더링해주는 부분에서 조건에 따라 ‘not’이 있고 없고 차이가 있으므로 바꿔주었다.</p>
-</li>
-<li><p>이터러블 요소에는 스프레드 문법을 사용할 수 있다. 문자열은 이터러블하므로 split() 대신에 spread 문법을 사용하여 배열화 해주었다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
