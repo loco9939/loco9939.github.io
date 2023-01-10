@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>JWT 토큰 방식은 무엇인가요? - Loco&#39;s Dev Blog</title>
+    <title>비동기 함수를 이벤트 루프 관점에서 설명하라 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -17,20 +17,22 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"🛠 JWT 토큰 방식이란?JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다.\n기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다.\n이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는 JWT를 사용하게 되었다.\n\n토큰은 로그인 이후 서버가 만들어주는 문자열이고, 토큰 안에는 사용자의 로그인 정보와 서버의 서명이 들어있다.\n\nJWT 토큰 방식 순서\n사용자가 로그인을 하면 서버는 사용자에게 사용자 로그인 정보 및 서버의 서명이 들어간 토큰을 발급한다.\n사용자는 토큰을 가지고 권한이 필요한 API 작업을 요청한다.\n서버는 토큰의 유효성 검사를 통해 요청에 응답한다.\n\nJWT 토큰 특징👍 장점\n서버에서 사용자 정보를 저장해둘 필요가 없어 서버 스케일링시 큰 문제가 없다.\n별도의 I&#x2F;O 작업 없는 빠른 인증 처리 가능\n\n👎 단점\n한번 발급된 토큰은 수정 및 폐기가 불가능하다.(클라이언트에게 있으니깐!)\n그렇기 때문에 유효기간을 짧게 설정해주는것이 중요하다.\n\n\n토큰의 길이가 늘어날 수록 네트워크 부하가 심해진다.\n\n","dateCreated":"2023-01-09T11:31:32+09:00","dateModified":"2023-01-09T17:51:54+09:00","datePublished":"2023-01-09T11:31:32+09:00","description":"","headline":"JWT 토큰 방식은 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
-    <meta name="description" content="🛠 JWT 토큰 방식이란?JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다. 기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다. 이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.\n그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.\n이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.\n\n이벤트 루프는 브라우저에 내장된 기능 중 하나이다.\n\n\n위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.\n\n콜 스택 : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.\n태스크 큐 : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.\n이벤트 루프 : 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, 태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.\n\n\n비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.\n\n","dateCreated":"2023-01-10T16:30:09+09:00","dateModified":"2023-01-10T16:42:20+09:00","datePublished":"2023-01-10T16:30:09+09:00","description":"","headline":"비동기 함수를 이벤트 루프 관점에서 설명하라","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"}</script>
+    <meta name="description" content="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다. 그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다. 이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="JWT 토큰 방식은 무엇인가요?">
-<meta property="og:url" content="https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/index.html">
+<meta property="og:title" content="비동기 함수를 이벤트 루프 관점에서 설명하라">
+<meta property="og:url" content="https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="🛠 JWT 토큰 방식이란?JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다. 기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다. 이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는">
+<meta property="og:description" content="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다. 그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다. 이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-01-09T02:31:32.000Z">
-<meta property="article:modified_time" content="2023-01-09T08:51:54.880Z">
+<meta property="og:image" content="https://loco9939.github.io/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png">
+<meta property="article:published_time" content="2023-01-10T07:30:09.000Z">
+<meta property="article:modified_time" content="2023-01-10T07:42:20.085Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png">
     
     
         
@@ -326,14 +328,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            JWT 토큰 방식은 무엇인가요?
+            비동기 함수를 이벤트 루프 관점에서 설명하라
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-01-09T11:31:32+09:00">
+    <time datetime="2023-01-10T16:30:09+09:00">
 	
-		    2023/01/09
+		    2023/01/10
     	
     </time>
     
@@ -351,28 +353,22 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="🛠-JWT-토큰-방식이란"><a href="#🛠-JWT-토큰-방식이란" class="headerlink" title="🛠 JWT 토큰 방식이란?"></a>🛠 JWT 토큰 방식이란?</h1><p>JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다.</p>
-<p>기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다.</p>
-<p>이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는 JWT를 사용하게 되었다.</p>
+            <h1 id="이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라"><a href="#이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라" class="headerlink" title="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라."></a>이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.</h1><p>우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.</p>
+<p>그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.</p>
+<p>이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.</p>
 <blockquote>
-<p>토큰은 로그인 이후 서버가 만들어주는 문자열이고, 토큰 안에는 사용자의 로그인 정보와 서버의 서명이 들어있다.</p>
+<p>이벤트 루프는 브라우저에 내장된 기능 중 하나이다.</p>
 </blockquote>
-<h1 id="JWT-토큰-방식-순서"><a href="#JWT-토큰-방식-순서" class="headerlink" title="JWT 토큰 방식 순서"></a>JWT 토큰 방식 순서</h1><ol>
-<li>사용자가 로그인을 하면 서버는 사용자에게 사용자 로그인 정보 및 서버의 서명이 들어간 토큰을 발급한다.</li>
-<li>사용자는 토큰을 가지고 권한이 필요한 API 작업을 요청한다.</li>
-<li>서버는 토큰의 유효성 검사를 통해 요청에 응답한다.</li>
-</ol>
-<h1 id="JWT-토큰-특징"><a href="#JWT-토큰-특징" class="headerlink" title="JWT 토큰 특징"></a>JWT 토큰 특징</h1><h2 id="👍-장점"><a href="#👍-장점" class="headerlink" title="👍 장점"></a>👍 장점</h2><ul>
-<li>서버에서 사용자 정보를 저장해둘 필요가 없어 서버 스케일링시 큰 문제가 없다.</li>
-<li>별도의 I&#x2F;O 작업 없는 빠른 인증 처리 가능</li>
+<p><img src="/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png" alt="이벤트 루프"></p>
+<p>위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.</p>
+<ul>
+<li><strong>콜 스택</strong> : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.</li>
+<li><strong>태스크 큐</strong> : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.</li>
+<li><strong>이벤트 루프 :</strong> 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, <strong>태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.</strong></li>
 </ul>
-<h2 id="👎-단점"><a href="#👎-단점" class="headerlink" title="👎 단점"></a>👎 단점</h2><ul>
-<li>한번 발급된 토큰은 수정 및 폐기가 불가능하다.(클라이언트에게 있으니깐!)<ul>
-<li>그렇기 때문에 유효기간을 짧게 설정해주는것이 중요하다.</li>
-</ul>
-</li>
-<li>토큰의 길이가 늘어날 수록 네트워크 부하가 심해진다.</li>
-</ul>
+<blockquote>
+<p>비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.</p>
+</blockquote>
 
             
 
@@ -390,9 +386,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
-                    data-tooltip="모의 면접 2차 회고"
-                    aria-label="이전: 모의 면접 2차 회고"
+                    href="/2023/01/10/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="객체 불변성에 대해 설명하라"
+                    aria-label="이전: 객체 불변성에 대해 설명하라"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -404,9 +400,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/06/CS/SPA%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                    data-tooltip="SPA는 무엇인가요?"
-                    aria-label="다음: SPA는 무엇인가요?"
+                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="모의 면접 2차 회고"
+                    aria-label="다음: 모의 면접 2차 회고"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -431,7 +427,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -444,7 +440,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -457,7 +453,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -505,9 +501,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
-                    data-tooltip="모의 면접 2차 회고"
-                    aria-label="이전: 모의 면접 2차 회고"
+                    href="/2023/01/10/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    data-tooltip="객체 불변성에 대해 설명하라"
+                    aria-label="이전: 객체 불변성에 대해 설명하라"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -519,9 +515,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/06/CS/SPA%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                    data-tooltip="SPA는 무엇인가요?"
-                    aria-label="다음: SPA는 무엇인가요?"
+                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="모의 면접 2차 회고"
+                    aria-label="다음: 모의 면접 2차 회고"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -546,7 +542,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -559,7 +555,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -572,7 +568,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -606,7 +602,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -619,7 +615,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -632,7 +628,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

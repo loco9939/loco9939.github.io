@@ -325,6 +325,252 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/10/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 객체 불변성에 대해 설명하라"
+                        >
+                            객체 불변성에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-10T16:49:01+09:00">
+	
+		    2023/01/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="객체-불변성에-대해-설명하라"><a href="#객체-불변성에-대해-설명하라" class="headerlink" title="객체 불변성에 대해 설명하라."></a>객체 불변성에 대해 설명하라.</h1><p>자바스크립트에서 데이터는 변경 불가능한 원시값, 변경 가능한 참조값으로 구성된다.</p>
+<p>변경 가능한 참조값이 바로 객체를 말하는데, 객체는 값을 참조값으로 전달하고 전달 받으므로 객체가 참조를 통해 공유되어 있다면 하나를 바꿨을 때, 다른 것들도 바뀔 위험이 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">a</span>: <span class="number">10</span>, <span class="attr">b</span>: <span class="number">200</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> c = a;</span><br><span class="line"></span><br><span class="line">c.<span class="property">a</span> = <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c); <span class="comment">// &#123;a: 30, b: 200&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// &#123;a: 30, b: 200&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 문제를 해결하기 위한 방법으로 객체를 불변객체로 만들거나, 참조값을 복사하는 것이 아닌 객체의 값을 복사하여 새로운 객체를 생성하는 방법이 있다.</p>
+<p>객체를 불변 객체로 만드는 방법은 Object.freeze메서드와 Object.seal 메서드를 사용하는 방법이 있다. 두 메서드는 직속 프로퍼티에만 적용된다(얕은 방지).</p>
+<blockquote>
+<p>Object.freeze(), Object.seal()의 차이는 Object.freeze()는 해당 객체에 속성 추가, 기존 속성 변경, 삭제가 모두 불가능하지만 Object.seal()은 새로운 속성 추가및 삭제가 불가능하고 기존 속성 변경은 가능하다.</p>
+</blockquote>
+<p>객체의 값을 복사하는 방법으로는 Object.assign()를 사용하는 방법, ES6 Spread 문법이 있다. 이 두가지 방법 역시 얕은 복사이므로, 깊은 복사를 하려면 라이브러리를 사용하거나 새로 추가된 structedClone() 메서드를 사용하는 방법이 있다.</p>
+<blockquote>
+<p>structedClone() 메서드는 Function 객체, DOM Node, 객체들의 몇몇 파라미터 일부 기능에 제한이 있다.</p>
+</blockquote>
+<h2 id="리액트에서-Props-State를-불변객체로-다루는-이유는"><a href="#리액트에서-Props-State를-불변객체로-다루는-이유는" class="headerlink" title="리액트에서 Props, State를 불변객체로 다루는 이유는?"></a>리액트에서 Props, State를 불변객체로 다루는 이유는?</h2><p>리액트에서는 Props와 State의 변경을 불변성을 이용해 감지하고 리렌더링을 발생시킨다.</p>
+<p>만약 불변 객체를 사용하지 않는다면, 객체의 값이 어디에서 바뀌게 되었는지 예상하기 어렵고 해당 객체도 엉망이 될 것이다.</p>
+<blockquote>
+<p>setState는 비동기적으로 State를 변경시키는데, 불변 객체로 다루지 않고 직접 State를 변경시킨다면 이전의 값이 반환될 수 있다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/10/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 비동기 함수를 이벤트 루프 관점에서 설명하라"
+                        >
+                            비동기 함수를 이벤트 루프 관점에서 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-10T16:30:09+09:00">
+	
+		    2023/01/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라"><a href="#이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라" class="headerlink" title="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라."></a>이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.</h1><p>우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.</p>
+<p>그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.</p>
+<p>이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.</p>
+<blockquote>
+<p>이벤트 루프는 브라우저에 내장된 기능 중 하나이다.</p>
+</blockquote>
+<p><img src="/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png" alt="이벤트 루프"></p>
+<p>위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.</p>
+<ul>
+<li><strong>콜 스택</strong> : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.</li>
+<li><strong>태스크 큐</strong> : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.</li>
+<li><strong>이벤트 루프 :</strong> 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, <strong>태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.</strong></li>
+</ul>
+<blockquote>
+<p>비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
+                            aria-label=": 모의 면접 2차 회고"
+                        >
+                            모의 면접 2차 회고
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-10T15:45:38+09:00">
+	
+		    2023/01/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-1분-자기소개-파트"><a href="#📌-1분-자기소개-파트" class="headerlink" title="📌 1분 자기소개 파트"></a>📌 1분 자기소개 파트</h1><p>기술면접만 진행하실 줄 알았는데 갑자기 자기소개를 하라하셔서 당황하여 말을 제대로 못했다.</p>
+<ul>
+<li>~ 하는 편입니다. 보다는 ~ 합니다. 라고 명료하게 답변하자</li>
+</ul>
+<h1 id="📚-기술면접-파트"><a href="#📚-기술면접-파트" class="headerlink" title="📚 기술면접 파트"></a>📚 기술면접 파트</h1><h3 id="비동기-함수와-이벤트-루프에-대한-설명해라"><a href="#비동기-함수와-이벤트-루프에-대한-설명해라" class="headerlink" title="비동기 함수와 이벤트 루프에 대한 설명해라"></a>비동기 함수와 이벤트 루프에 대한 설명해라</h3><ul>
+<li>Web API, setTimeout, 이벤트리스너등의 특수한 경우에서 자바스크립트는 멀티스레드로 동작하는 것처럼 보이는 것이다. 실제로 자바스크립트는 싱글 스레드이다.</li>
+<li>일련의 과정을 설명하는데 짜임새가 부족하였다.</li>
+<li>자바스크립트는 원래 싱글 스레드인데, 런타임 이전에서 AJAX나 비동기 코드를 위해 불가피하게 멀티 스레드를 두어 사용하게 되었다 라는 보충 설명 해주면 좋을 것 같다.</li>
+</ul>
+<h3 id="객체-불변성에-대해-설명해라"><a href="#객체-불변성에-대해-설명해라" class="headerlink" title="객체 불변성에 대해 설명해라"></a>객체 불변성에 대해 설명해라</h3><ul>
+<li>리액트와 객체 불변성을 연관짓는 설명이 부족하다.</li>
+<li>~ 한다고 생각합니다 대신 ~ 할 수 있습니다로 바꿔서 말하기</li>
+</ul>
+<h3 id="This-설명하라"><a href="#This-설명하라" class="headerlink" title="This 설명하라"></a>This 설명하라</h3><ul>
+<li>처음에 4가지 분류를 말하였는데 말하다보니 까먹어서 3가지밖에 말하지 못한 부분이 아쉬웠다.</li>
+<li>화살표 함수는 this를 가지고 있지 않으므로, 내부의 this는 상위 스코프의 this에 바인딩된다.</li>
+</ul>
+<h3 id="var-let-const-비교-설명하라"><a href="#var-let-const-비교-설명하라" class="headerlink" title="var, let, const 비교 설명하라"></a>var, let, const 비교 설명하라</h3><ul>
+<li>스코프 설명하면서 함수레벨 스코프, 블록 레벨 스코프가 왜 더 안전한 코드를 짤 수 있도록 하는 지에 대한 설명 보충</li>
+</ul>
+<h3 id="함수가-일급-객체인-이유는"><a href="#함수가-일급-객체인-이유는" class="headerlink" title="함수가 일급 객체인 이유는?"></a>함수가 일급 객체인 이유는?</h3><ul>
+<li>좀 더 자세한 설명이 필요하다.</li>
+<li>특징을 2가지 밖에 말하지 못하여 아쉬웠다.</li>
+</ul>
+<h3 id="클로저-설명-장점-및-주의점"><a href="#클로저-설명-장점-및-주의점" class="headerlink" title="클로저 설명, 장점 및 주의점"></a>클로저 설명, 장점 및 주의점</h3><ul>
+<li>주의점 설명이 부족했다. 클로저는 외부 함수의 실행 컨텍스트가 사라져도 내부 함수에 대한 참조가 유지되고 있기 때문에 메모리 누수에 대한 부분도 고려해줘야한다.</li>
+<li>리액트내에서도 useEffect 함수 내부에서 클린업 함수를 해주어 메모리 누수를 방지하여야 한다.</li>
+</ul>
+<h3 id="CORS-우회-방법-설명하라"><a href="#CORS-우회-방법-설명하라" class="headerlink" title="CORS 우회 방법 설명하라"></a>CORS 우회 방법 설명하라</h3><ul>
+<li>프록시 객체라는 설명이 모호해서 아쉬웠다. 프록시 서버에 대한 설명을 프록시 객체로 잘못 답변하였다.</li>
+</ul>
+<h3 id="제너레이터에-대해-설명하라"><a href="#제너레이터에-대해-설명하라" class="headerlink" title="제너레이터에 대해 설명하라"></a>제너레이터에 대해 설명하라</h3><ul>
+<li>제너레이터 공부하자…</li>
+</ul>
+<h1 id="✏️-총평"><a href="#✏️-총평" class="headerlink" title="✏️ 총평"></a>✏️ 총평</h1><ul>
+<li>정제된 단어로 정리해서 답변을 하면 더 좋을 것 같다.</li>
+<li>객체 변경 불가성 중요하니깐 제대로 알아두자. 상태값을 객체로 주로 저장하기 때문에, 이 자체의 참조값을 바꿔야지만 내부적으로 렌더링이 일어난다.</li>
+<li>클로저의 주의점에 대해서는 클린업 함수, 메모리 누수 설명 보충하자.</li>
+<li>1급 객체에 대한 특징 및 조건 설명을 풍부하게 해보자.</li>
+<li>CORS 해결 방법에 대한 설명을 제대로 답변하지 못하였으니 공부하자.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                             aria-label=": JWT 토큰 방식은 무엇인가요?"
                         >
@@ -688,6 +934,8 @@
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
 
+<h1 id="❗️-주의점"><a href="#❗️-주의점" class="headerlink" title="❗️ 주의점"></a>❗️ 주의점</h1><p>클로저는 외부함수의 실행 컨텍스트가 제거되어도 내부함수가 외부함수의 변수를 기억하고 있는데 이는 추후에 메모리 누수가 발생할 수 있다.</p>
+<p>예를 들어 리액트에서 useEffect 함수를 사용하여 렌더링 이후에 이벤트를 등록하였을 때, 이를 다시 렌더링이 되었을 때, 기존 이벤트를 클린업 해주지 않는 다면 같은 역할을 하는 이벤트가 중복등록이 되고 이는 성능상 문제를 일으킬 수 있으므로 이러한 점을 주의해야한다.</p>
 <h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
 <p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
 <p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
@@ -893,246 +1141,6 @@
                         <p>
                             <a
                                 href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"
-                            aria-label=": AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기"
-                        >
-                            AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-02T23:02:32+09:00">
-	
-		    2023/01/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Emotion-Styled-Component-Cascading-문제"><a href="#Emotion-Styled-Component-Cascading-문제" class="headerlink" title="Emotion Styled Component Cascading 문제"></a>Emotion Styled Component Cascading 문제</h1><p>Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>styled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.</p>
-<p><img src="/../../../images/TRST/emotionStyled/emotionStyled.png" alt="emotion styled component"></p>
-<h1 id="TypeScript-오류-사용량-덮어씜"><a href="#TypeScript-오류-사용량-덮어씜" class="headerlink" title="TypeScript 오류 - 사용량 덮어씜"></a>TypeScript 오류 - 사용량 덮어씜</h1><p><img src="/../../../images/TRST/emotionStyled/tsduplicated.png" alt="ts덮어씜"></p>
-<p>props를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Component</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  className?: <span class="built_in">string</span>;</span><br><span class="line">  children?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">React</span>.<span class="property">ComponentPropsWithRef</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TabPanelProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  dataIndex?: <span class="title class_">TabsContextValue</span>[<span class="string">&quot;selected&quot;</span>];</span><br><span class="line">&#125; &amp; <span class="title class_">Component</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.</li>
-<li>styled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/"
-                            aria-label=": 이벤트 위임이란 무엇이고 왜 사용하는가?"
-                        >
-                            이벤트 위임이란 무엇이고 왜 사용하는가?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-02T22:18:30+09:00">
-	
-		    2023/01/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>이벤트 위임에 대해 알기 전 우선 이벤트와 이벤트 핸들러에 대해 알고 가자.</p>
-<h1 id="이벤트와-이벤트-핸들러"><a href="#이벤트와-이벤트-핸들러" class="headerlink" title="이벤트와 이벤트 핸들러"></a>이벤트와 이벤트 핸들러</h1><p>브라우저는 사용자가 어떤 행동을 하였을 때, 이를 감지하여 이벤트를 발생시킨다.</p>
-<p>ex) 참된 개발자: 브라우저야 사용자가 제출하기 버튼을 클릭 했을 때, 정보를 제출하는 함수를 호출(실행)해줘~</p>
-<p>이 때 사용자가 언제 행동을 할지 모르기 때문에 개발자는 브라우저에게 대신 함수를 호출해달라고 한다.</p>
-<p><strong>이벤트 발생 시 호출할 함수를 이벤트 핸들러</strong>라고 한다.</p>
-<ul>
-<li>이벤트 발생 시 호출될 함수: 이벤트 핸들러</li>
-<li>이벤트 발생 시 브라우저에게 이벤트 핸들러 호출을 위임: 이벤트 핸들러 등록</li>
-<li>이벤트 핸들러를 등록하는 방법은 여러가지가 있는데 설명을 위해 이번 장에서는 <strong>이벤트 리스너 방식을 사용하겠습니다.</strong></li>
-</ul>
-<h1 id="이벤트-위임"><a href="#이벤트-위임" class="headerlink" title="이벤트 위임"></a>이벤트 위임</h1><p>이벤트 위임은 이벤트 리스너를 하위 요소에 추가하는 대신 상위 요소에 추가하여 이벤트를 위임하는 것을 말한다.</p>
-<p>이벤트 리스너는 이벤트 버블링(Event Bubbling)으로 인해 하위 요소에서 이벤트가 발생할 때 마다 이벤트 리스너가 실행된다.</p>
-<p>아래 그림은 이벤트 전파가 일어나는 흐름을 설명한 그림이다. 이벤트 전파에 대한 설명은 그림으로 대체한다.</p>
-<p><img src="/../../images/event/eventFlow.png" alt="이벤트 Flow"></p>
-<h1 id="이벤트-위임을-사용하는-이유"><a href="#이벤트-위임을-사용하는-이유" class="headerlink" title="이벤트 위임을 사용하는 이유"></a>이벤트 위임을 사용하는 이유</h1><p>이벤트 위임을 사용하면 하위 요소에 같은 동작을 하는 이벤트를 중복해서 등록해주지 않고 상위 요소에 이벤트 위임을 통해 등록하여 중복을 피하고 불필요한 메모리 낭비를 줄일 수 있다.</p>
-<p>또한, 제거된 요소에 이벤트를 해제하고 새 요소에 이벤트를 다시 등록하는 번거로운 작업을 할 필요가 없어지므로 적절한 상황에 맞게 유용하게 사용할 수 있다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/02/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/"
-                            aria-label=": 모의 면접 회고"
-                        >
-                            모의 면접 회고
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-02T21:32:10+09:00">
-	
-		    2023/01/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-모의-면접-회고"><a href="#📌-모의-면접-회고" class="headerlink" title="📌 모의 면접 회고"></a>📌 모의 면접 회고</h1><p>HTML 수업 때 데레사 강사님께 기술면접을 1:1로 본 이후로 오래간만에 모의 면접을 보게되었다.</p>
-<p>박신영 강사님께서 인성면접을, 다른 수강생은 기술면접을 면접관 입장이 되어 나에게 질문해주었다.</p>
-<h2 id="1-😃-인성-면접"><a href="#1-😃-인성-면접" class="headerlink" title="1. 😃 인성 면접"></a>1. 😃 인성 면접</h2><p>어떤 개발자가 되길 원하는가?, 프로젝트 및 협업 과정에서 어떤 갈등을 겪었고 어떻게 해결하였는지 등 개발자로서 어떤 마인드를 가지고 있고 어떤 사람인지 판단할 수 있을 만한 질문들이었다.</p>
-<p>모든 질문에 어떻게 답변했는지는 기억나지 않지만 피드백을 받은 것을 이야기해보자면,</p>
-<h3 id="👍-좋았던-점"><a href="#👍-좋았던-점" class="headerlink" title="👍 좋았던 점"></a>👍 좋았던 점</h3><ol>
-<li>시작할 때 웃는 모습이 좋은 사람이라는 인상을 주고 마음을 편안하게 해주어 좋았다.</li>
-<li>커뮤니케이션과 협업을 일관되게 강조하고 중요시하고 있다는 점이 좋았다.</li>
-<li>말의 끝맺음을 제대로 하여 듣는 사람 입장에서 좋았다.<ul>
-<li><strong>추가로 대화에서, 개발에서 정리를 잘하는 사람인데 이 부분으로 어필할 수 있으면 더욱 좋을듯!</strong></li>
-</ul>
-</li>
-<li>Why? 에 대해 생각하는 사람으로 느껴져서 좋았다.</li>
-<li>약점에 대해서 스스로 대안이 있어서 인상적이었다.</li>
-</ol>
-<h3 id="💦-아쉬운-점"><a href="#💦-아쉬운-점" class="headerlink" title="💦 아쉬운 점"></a>💦 아쉬운 점</h3><ol>
-<li>의견, 주장이 강해보여 의견 충돌 시 강한 타입처럼 느껴질 수 있을 것 같아보인다.</li>
-<li>어떤 개발자가 되고 싶냐는 질문에 좀 더 <strong>직무, 역량 관점에서 답변할 수 있으면 좋을 것</strong> 같다.</li>
-<li>면접볼 때는 흔들의자에 앉지 말고 고정된 의자에 앉도록 하자.</li>
-<li>개발자로서 역량 설명할 때 커뮤니케이션 부분에서 누구와 협업을 하는지에 대해서도 간략하게 짚고 넘어갔으면 좋았을 것 같다.</li>
-<li>협업 경험에 대해 설명할 때, 부정적인 얘기를 했던게 기억에 남을 것 같다. 이 부분을 나의 약점을 잘 살려냈던 것처럼 풀어나가보면 좋을 것 같다.</li>
-<li><strong>신입,주니어 라는 용어 사용 금지</strong></li>
-</ol>
-<h2 id="2-🛠-기술-면접"><a href="#2-🛠-기술-면접" class="headerlink" title="2. 🛠 기술 면접"></a>2. 🛠 기술 면접</h2><p>기술면접은 프로젝트 경험에 대해 질문해주셨고 기술적으로 깊은 고민을 해본 적이 있는지, 면접자가 기술에 사용 이유와 원리를 알고 사용하는 것인지 확인하는 질문들이었다.</p>
-<h3 id="👍-좋았던-점-1"><a href="#👍-좋았던-점-1" class="headerlink" title="👍 좋았던 점"></a>👍 좋았던 점</h3><ol>
-<li>페어프로그래밍을 통해 기술적인 단계를 깊이있게 공부하고 블로그에 정리해두었다는 점이 인상깊었다.</li>
-<li><strong>기술 블로그에 대해 피드백을 받고 개선한다는 부분을 차별점으로 어필하는 모습 좋았다.</strong></li>
-</ol>
-<h3 id="💦-아쉬운-점-1"><a href="#💦-아쉬운-점-1" class="headerlink" title="💦 아쉬운 점"></a>💦 아쉬운 점</h3><ol>
-<li>전반적으로 기술적인 답변이 제대로 나오지 않아 아쉬웠다.</li>
-<li>CBD 라이브러리를 만들었다고 할 때 정확히 어떤 부분까지 만들어보았는지 자세한 설명이 부족했다.</li>
-<li>회피와 타협이라는 부정적인 단어 사용이 잦아서 아쉬웠다.<ul>
-<li><strong>부정적인 단어 대신 “라이브러리를 고치는 것은 비용이 많이 드는 작업이어서 프로젝트 기간에는 해당 부분을 이런 식으로 구현하여 해결하였다”로 사용해보자.</strong></li>
-</ul>
-</li>
-<li>트러블 슈팅 질문에 대한 답변이 기술적인 이슈 해결이 아닌 다른 답변이 나와서 아쉬웠다.<ul>
-<li><strong>트러블 슈팅 질문에 대한 소스들을 미리 준비해두면 도움이 될 것 같다.</strong></li>
-</ul>
-</li>
-<li>리팩터링 질문이 나왔을 때, 너무 협업에만 집중해서 이야기한 것이 아쉽다. 그렇다면 성능 개선, 최적화 등에 대한 고민을 하지 않는 것처럼 보여서 아쉬웠다.</li>
-</ol>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/02/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-%ED%9A%8C%EA%B3%A0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
