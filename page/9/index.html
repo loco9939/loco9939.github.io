@@ -324,6 +324,137 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                            aria-label=": 페어프로그래밍 level 2 기술적 회고"
+                        >
+                            페어프로그래밍 level 2 기술적 회고
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-06T22:22:54+09:00">
+	
+		    2022/10/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="1-scrollSide"><a href="#1-scrollSide" class="headerlink" title="1. scrollSide"></a>1. scrollSide</h1><h2 id="불필요한-서버-요청을-최소화-하자"><a href="#불필요한-서버-요청을-최소화-하자" class="headerlink" title="불필요한 서버 요청을 최소화 하자."></a>불필요한 서버 요청을 최소화 하자.</h2><ul>
+<li>토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다.<ul>
+<li><span style='color:red'>서버에 요청을 최소화하자!</span></li>
+<li>서버 요청을 최소화하기 위해 localStorage에서 값을 가져올 때는 DOMContentLoaded 이벤트가 발생할 때 가져온다.</li>
+<li>localStorage에 값을 저장할 때는 페이지를 나가거나 새로고침했을 때 발생하면 되므로 <code>beforeunload 이벤트 핸들러</code>를 사용하였다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="2-tictactoe"><a href="#2-tictactoe" class="headerlink" title="2. tictactoe"></a>2. tictactoe</h1><h2 id="얕은-복사를-하게-되면-접근자-프로퍼티가-제대로-복사되지-않는다"><a href="#얕은-복사를-하게-되면-접근자-프로퍼티가-제대로-복사되지-않는다" class="headerlink" title="얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다."></a>얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다.</h2><ul>
+<li><p>getWinner 함수는 상태값을 가지고 winner가 있는지? 있다면 누구인지를 반환해준다. state에서만 사용되는 함수이므로 접근자 프로퍼티로 사용하여 응집도를 높이는 것이 좋다고 판단하였다.</p>
+<ul>
+<li>하지만, setState에서 newState로 재할당이 이루어지면서 접근자 프로퍼티가 제대로 복사되지 않는 문제가 발생하였기 때문에 다시 원래대로 돌려놓았다.</li>
+<li>아니면 재할당을 할 때, 접근자 프로퍼티를 제외한 즉, key,value 쌍이 있는 값만 재할당을 해주는 방법도 있다.</li>
+</ul>
+</li>
+<li><p>즉시실행함수로 감싸서 정보은닉을 하려고 하였지만 정보 은닉만을 위해서 tictactoe를 전부 즉시실행함수로 만드는 것은 어색하다. 왜냐하면 즉시실행함수가 root 컨테이너를 참조하고 있기 때문에 독립적이라고 할 수 없는데 응집시켜놓은 것으로 보여지기 때문이다.</p>
+<ul>
+<li>tictactoe에 Container를 건네주고 컴포넌트로 만들었다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="3-accordion"><a href="#3-accordion" class="headerlink" title="3. accordion"></a>3. accordion</h1><ul>
+<li>toggle 함수에서 옵션을 주는 경우와 기본값인 경우를 리팩토링으로 나눠보려고 하였는데 더 나은 방법이 떠오르지 않아 그냥 두었다.</li>
+</ul>
+<h1 id="4-drag-amp-drop"><a href="#4-drag-amp-drop" class="headerlink" title="4. drag &amp; drop"></a>4. drag &amp; drop</h1><ul>
+<li>dragleave 이벤트와 dragenter 이벤트가 거의 동시에 발생하는데, draggable 요소의 자식 요소에 마우스 포인터가 될 때도 두 이벤트가 발생하여 over 클래스가 붙혔다 떨어져 깜빡이는 현상 발생<ul>
+<li>dragleave 이벤트를 제거하고 dragenter 이벤트에 toggle을 달아주어 <code>querySelectorAll(’li’)</code>로 개선하였다.</li>
+<li>dropzone 바깥에서 drop을했을 때 over 클래스가 제거되지 않는 문제가 발생하였는데 dragleave 이벤트를 제거했기 때문이다. dragend 이벤트로 대신 구현하였다.</li>
+<li>dragleave 와 dragenter 발생시 toggle 메서드로 달아주는 방법도 있다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="5-analog-clock"><a href="#5-analog-clock" class="headerlink" title="5. analog clock"></a>5. analog clock</h1><ul>
+<li>숫자배열 하드 코딩하는 것 보다 array.from 을 사용하면 각 요소에게 콜백함수를 줘서 map 함수 사용을 제거할 수 있다.</li>
+<li>timeToDeg 함수의 return 값을 객체형태로 바꿈<ul>
+<li>인자가 많아지면서, 구조분해 할당 할 시 더 안정적임</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-star-rating"><a href="#6-star-rating" class="headerlink" title="6. star rating"></a>6. star rating</h1><ul>
+<li>querySelectorAll을 변수에 미리 담아줌<ul>
+<li>렌더링이 한번만 되고 이벤트 발생시마다 DOM API를 호출할 필요가 없기 때문</li>
+</ul>
+</li>
+<li>array.from 콜백처리하여 map을 제거</li>
+</ul>
+<h1 id="7-calendar"><a href="#7-calendar" class="headerlink" title="7. calendar"></a>7. calendar</h1><ul>
+<li>background 클릭시 모든 캘린더를 hidden 하는 역할은 input이나 calendar에 종속된 역할이 아님</li>
+<li>상태들을 state 객체로 묶어서 관리<ul>
+<li>state 변경 함수를 거치지 않고 수정하는등의 부수효과를 막기위해</li>
+</ul>
+</li>
+<li>이벤트 핸들러 내의 내용을 함수로 추출함<ul>
+<li>이벤트 핸들러는 간단히 흐름을 파악할 수 있게 해주고, 자세한 동작은 함수에 정의하는 것이 가독성이 좋다고 생각함.</li>
+</ul>
+</li>
+</ul>
+<h1 id="8-newsviewer"><a href="#8-newsviewer" class="headerlink" title="8. newsviewer"></a>8. newsviewer</h1><ul>
+<li>viewport를 줄여서 observer-target이 한 화면에 보이면 intersectionObserver API에 문제를 발생한다. scrolling해도 데이터를 가져오지 못한다.<ul>
+<li>뷰포트 크기를 계산하여 <code>window.innerHeight</code>와 observer-target의 Y를 계산하여 나눈 값만큼 데이터를 fetch 시켜줘서 화면 비율이 크든 작든 뷰포트에 맞게 데이터를 가져와야한다. 즉, viewport가 확대된 상태면 <code>Math.floor(window.innerHeight / observer-tagetY)</code> 갯수만큼 fetch를 시켜줘서 화면크기에 맞게 초기 렌더링을 해줘야 한다.</li>
+<li><code>element.getBoundingClientRect()</code> 로 element의 뷰포트 위치를 구할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="나의-부족한-점"><a href="#나의-부족한-점" class="headerlink" title="나의 부족한 점"></a>나의 부족한 점</h1><ul>
+<li>어떤 문제가 발생했을 때, 문제의 원인을 찾지 못한다.<ul>
+<li>해당 문제가 발생한 원인을 제대로 알지 못하여 어떤 부분을 수정해야할지 찾기 어렵다.</li>
+</ul>
+</li>
+<li>가치판단이 잘 서지 않는다. A, B가 있을 때 어떤 방법이 더 나은 것인지 선택하기 어렵다. 기준이 나의 생각이라고는 하는데, 남의 얘기를 들어보면 그것도 맞는 것 같다.</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>내일이면 페어프로그래밍2도 끝난다. 페어1을 할 때보단 그래도 조금 실력이 늘었다고 생각하지만, 아직 전체적인 틀을 생각하는 연습이 필요하다고 생각했다. 또한, 주어진 요구사항에 맞는 한가지일을 구현하려고 하지 않고 다른 환경까지 고려하는 행동때문에 코드 작성하기를 망설이는 행동도 조금 나아져서 다행이다.</p>
+<p>나보다 훨씬 잘하는 짝과 함께 해서 진도도 빠르게 나가고 배운 것이 많아서 좋았다. 서로 의견을 편하게 말하면서 코딩을 하다보니 재미도 경험도 더 많이 쌓을 수 있어서 좋은 경험이라고 생각한다. 다만 내가 새로운 지식을 얻기 위해서는 내가 가진 지식을 100% 이해하고 다른 사람에게 설명할 수 있을 정도로 알고 있어야 하므로, 내가 배운 지식을 기록만 하지말고 최대한 다른 사람과 의견을 공유하는 방향으로도 나가봐야겠다고 생각이 들었다.</p>
+<p>나중에 회사에 취업하게 되어도 이런 개발 환경이 갖춰진 회사에서 열심히 배워서 역량을 키워보고 싶다!</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
                             aria-label=": drag이벤트 상태관리"
                         >
@@ -1178,169 +1309,6 @@
                         <p>
                             <a
                                 href="/2022/09/23/PairProgramming/level%201/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%201%20%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"
-                            aria-label=": scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
-                        >
-                            scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-22T19:09:28+09:00">
-	
-		    2022/09/22
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="2번째-리팩터링-하면서-느낀점"><a href="#2번째-리팩터링-하면서-느낀점" class="headerlink" title="2번째 리팩터링 하면서 느낀점"></a>2번째 리팩터링 하면서 느낀점</h1><h1 id="scrollGotoTop"><a href="#scrollGotoTop" class="headerlink" title="scrollGotoTop"></a>scrollGotoTop</h1><ul>
-<li>스크롤 깊이와 스로틀 딜레이와 같은 정해진 숫자는 상수이므로, 가독성을 높이기 위해 대문자로 네이밍해주었다.<ul>
-<li>은닉해야할 정보가 없기 때문에 클로저로 만들어줄 필요가 없다.</li>
-</ul>
-</li>
-</ul>
-<h1 id="counter"><a href="#counter" class="headerlink" title="counter"></a>counter</h1><ul>
-<li>리팩터링 전 코드에서는 생성자 함수로 만들어서 인스턴스를 생성하여 클로저를 구현하였다<ul>
-<li>하지만 이 방식은 불필요한 인스턴스 생성을 한다는 생각이 들었다.</li>
-<li>리팩토링한 코드는 즉시 실행 함수로 감싸서 변수 할당 같이 한번만 실행해도 되는 것들은 한 번만 실행되도록 만들어주었고, 내부의 데이터에 유일하게 접근할 수 있는 해당 함수를 return 해주어 데이터를 은닉해주었다.</li>
-<li>counter에 관련된(해당 기능에만 사용되는) 데이터들과 함수들을 한데 묶어줘 응집도를 높여주었다</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//document.body.addEventListener(&#x27;click&#x27;, e =&gt; &#123;</span></span><br><span class="line"><span class="comment">//  if (!e.target.matches(&#x27;button&#x27;)) return;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  e.target.matches(&#x27;.increase&#x27;) ? counter.increase() : counter.decrease();</span></span><br><span class="line"><span class="comment">//&#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.increase&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">increase</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.decrease&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">decrease</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>증가, 감소 버튼을 이벤트 위임으로 작성해보았다. 이럴 경우 이벤트 핸들러 등록 갯수가 줄어들어 증감 버튼에 대한 로직을 한곳에서 관리할 수 있고 각각의 이벤트 마다 이벤트 핸들러를 등록하지 않아도 된다는 장점이 있다고 생각했다.<ul>
-<li>하지만, 이벤트 위임의 경우 각 버튼이 다른 기능을 해야하는 경우라면 이벤트가 발생한 요소에 대한 조건문이 많아지고 그에 따라 코드가 복잡해질 수 있으므로 이벤트 위임 대신 각 요소에 이벤트 핸들러를 등록하는 방법으로 선택하였다.</li>
-</ul>
-</li>
-</ul>
-<h1 id="isPalindrome"><a href="#isPalindrome" class="headerlink" title="isPalindrome"></a>isPalindrome</h1><ul>
-<li>문자열을 배열로 만들어 주는 경우 <code>str.split(&#39;&#39;)</code> 를 사용하는 것보단 문자열이 이터러블 요소인 것을 감안하여 스프레드 문법(<code>[…string]</code>)을 사용하였다.<ul>
-<li>메서드를 사용하기위해 알아야 할 것들이 많은데 스프레드 문법은 알아야할 정보가 적어 코드의 이해성을 높일 수 있다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//$result.textContent = isPalindrome(value) ? `&quot;$&#123;value&#125;&quot; is a palindrome` : `&quot;$&#123;value&#125;&quot; is not a palindrome`</span></span><br><span class="line"></span><br><span class="line">$result.<span class="property">textContent</span> = <span class="string">`&quot;<span class="subst">$&#123;value&#125;</span>&quot; is <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">  isPalindrome(value) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;not&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">&#125;</span> a palindrome`</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>중복이 아닌 부분만 삼항 연산자를 이용하여 중복을 줄였다.</li>
-<li>innerHTML 대신 textContent를 사용한 이유는 해당 요소에 할당한 값이 text 요소로만 이루어져 있기 때문이다.<ul>
-<li>innerText는 숨겨진 텍스트는 무시하고 사용자에게 보여지는 text만 가져올 수 있기 때문에 원하지 않는 오류가 발생할 수 있다. 내부에 특별히 스타일 적용이 없는 문자열을 할당할 때는 성능상 적합하지 않다.</li>
-</ul>
-</li>
-</ul>
-<h1 id="DarkMode"><a href="#DarkMode" class="headerlink" title="DarkMode"></a>DarkMode</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// +getComputedStyle(document.querySelector(&#x27;:root&#x27;)).getPropertyValue(&#x27;--transition-duration&#x27;)</span></span><br><span class="line"></span><br><span class="line">+<span class="title function_">getComputedStyle</span>(<span class="variable language_">document</span>.<span class="property">documentElement</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">  <span class="string">&quot;--transition-duration&quot;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>:root 에 존재하는 사용자 정의 변수를 가지고 올 경우에는 document.documentElement로 접근해야 한다.<ul>
-<li><code>document.querySelector(&#39;:root&#39;)</code> 도 가능하지만 querySelector 메서드를 사용하는 것보다 프로퍼티를 접근하는 것이 더 효율적이므로 판단하여 사용하자.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getCurrentMode</span> = (<span class="params"></span>) =&gt; <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;isDark&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>로컬스토리지에 정보를 저장할 때 문자열로 저장되기 때문에 이를 getter 함수로 가져올 때 문자열 ‘true’ 값을 boolean 값으로 받기 위해 JSON.parse() 메서드를 사용하였다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// const setCurrentMode = selectedMode =&gt; &#123;</span></span><br><span class="line"><span class="comment">//    localStorage.setItem(&#x27;isDark&#x27;, selectedMode);</span></span><br><span class="line"><span class="comment">//    toggleMode();</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">init</span>(<span class="params"></span>) &#123;</span><br><span class="line">   <span class="comment">// localStorage.getItem(&#x27;isDark&#x27;) === null ? setCurrentMode(userTheme) : toggleMode();</span></span><br><span class="line">   <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;isDark&#x27;</span>, <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;isDark&#x27;</span>) ?? userTheme);</span><br><span class="line">   <span class="title function_">toggleMode</span>();</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">   <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;isDark&#x27;</span>, !<span class="title function_">getCurrentMode</span>());</span><br><span class="line">   <span class="title function_">toggleMode</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>기존에는 삼항연산자를 사용하였지만, 초기값이 없는 null 상태일 때 null 병합 연산자를 사용하여 초기값을 할당함으로써 함수를 줄일 수 있었다. 또한, setCurrentMode 함수가 필요없으므로 함수를 제거하여 코드의 이해성과 가독성을 높였다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, setDarkMode.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, setDarkMode.<span class="property">preventBlink</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>렌더링 되는 시점이 다르면 다른 역할을 하는 함수로 판단한다.</li>
-</ul>
-<h1 id="popupModal"><a href="#popupModal" class="headerlink" title="popupModal"></a>popupModal</h1><ul>
-<li>변수를 사용한 이유는 단지 코드의 중복때문만이 아니라 이벤트가 발생할 때마다 호출될 필요가 없는 함수의 반환값을 변수에 저장하여 사용하기 위함이다.</li>
-<li>특정 목적을 위해서 밀접하게 연관된 기능들을 한데 모아 관리하면 해당 함수에 대한 이해도가 증가하게 되고 이는 유지보수성을 높이는데 도움이 된다. 또한 코드의 재사용성도 증가하는 장점도 있어 응집도를 높이는 구조로 코드를 설계하였습니다. 응집도를 높인 코드를 짜면서 정보를 안전하게 다룰 수 있도록 클로저를 구현하였습니다.</li>
-<li>요구사항에 맞게 Enter키 입력과 OK버튼 클릭시 중복을 줄이는 코드를 작성하기 위해서 이들을 form 태그로 감싸주었고 ‘submit’ 이벤트 타입으로 이벤트 핸들러를 등록하였습니다. cancel 버튼도 연관성을 위해 form 태그 안에 추가하였는데, cancel 버튼은 기본타입을 버튼으로 변경하여 submit 이벤트가 발생하지 않도록 하였습니다.</li>
-<li>is-open 클래스를 이용하여 모달창을 보여주고 사라지도록 구현하였습니다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> popupModal = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $modalContainer = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> $modal = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> $popupMessage = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-message&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">      $modal.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;is-open&quot;</span>);</span><br><span class="line">      $modalContainer.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;background-gray&quot;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//    remove() &#123;</span></span><br><span class="line">    <span class="comment">//      $modal.classList.remove(&#x27;is-open&#x27;);</span></span><br><span class="line">    <span class="comment">//      $modalContainer.classList.remove(&#x27;background-gray&#x27;);</span></span><br><span class="line">    <span class="comment">//   &#125;,</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params">e</span>) &#123;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>();</span><br><span class="line">      $popupMessage.<span class="property">textContent</span> = <span class="string">`from popup : <span class="subst">$&#123;e.target.firstElementChild.value&#125;</span>`</span>;</span><br><span class="line">      popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-form&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;submit&quot;</span>, popupModal.<span class="property">render</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.is-close&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// popupModal.remove()</span></span><br><span class="line">  popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.modal-container&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// popupModal.remove()</span></span><br><span class="line">  popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>e ⇒ &#123;popupModal.render(e)&#125; === popupModal</code> 인수 전달안해줘도 event 객체 첫번째 인수로 넘어간다. <strong>축약형</strong></li>
-<li>toggle 메서드를 사용하여 remove 메서드가 필요없어지므로 제거하였다.</li>
-</ul>
-<h1 id="stopWatch"><a href="#stopWatch" class="headerlink" title="stopWatch"></a>stopWatch</h1><ul>
-<li>동일한 버튼을 구분할 때 textContent가 Start인지 Stop인지로 판단하는 것은 매우 좋지 않은 방식이므로, isStarted라는 현재 상태(시작&#x2F;정지)를 판단하는 변수를 사용하였습니다.</li>
-<li>leftButton &#x2F; rightButton , laps&#x2F; title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.<ul>
-<li>리팩터링 이후 이벤트 핸들러를 위한 leftButton, rightButton만 querySelectorAll로 받아오고 lap,title은 내부적으로 해결하였다.</li>
-</ul>
-</li>
-<li>스톱워치내에서 관리해야할 데이터(isStarted, elapsedTime, timerId)를 하나의 객체에 담았다.<ul>
-<li>isStarted : 스톱워치가 시작되었는지 여부 (true &#x2F; false)</li>
-<li>elapsedTime : Start 버튼을 누르고 경과된 시간<br>(setInterval의 delay마다 값이 증가하며, 이를 convertTime 함수를 통해 display에 표시한다.)</li>
-<li>timerId : setInterval 함수의 리턴값을 가지며 clearInterval 함수와 함께 stop 기능을 구현하였다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">convertTime</span> = (<span class="params">time</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> minutes =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>(time / <span class="number">6000</span>) &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time / <span class="number">6000</span>)&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time / <span class="number">6000</span>)&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> seconds =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>((time % <span class="number">6000</span>) / <span class="number">100</span>) &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor((time % <span class="number">6000</span>) / <span class="number">100</span>)&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor((time % <span class="number">6000</span>) / <span class="number">100</span>)&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> ms =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>(time % <span class="number">6000</span>) % <span class="number">100</span> &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time % <span class="number">6000</span>) % <span class="number">100</span>&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time % <span class="number">6000</span>) % <span class="number">100</span>&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;minutes&#125;</span>:<span class="subst">$&#123;seconds&#125;</span>:<span class="subst">$&#123;ms&#125;</span>`</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>convert 함수는 display에 보여질 시간으로 변환하고 그 값을 문자열로 리턴한다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// $laps.children.length</span></span><br><span class="line">$laps.<span class="property">childElementCount</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>리팩터링 전에는 자식노드의 갯수를 알기 위해서 자식노드(children)로 접근한 다음 길이(length)로 접근하여 값을 얻었지만, childElementCount라는 프로퍼티를 이용하여 한 번에 값을 얻을 수 있었다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$laps.<span class="title function_">insertAdjacentHTML</span>(<span class="string">&quot;beforeend&quot;</span>, newLap);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>리팩터링 전에는 laps를 배열로 관리하여 이를 innerHTML으로 하나가 추가되더라도 모든 부분을 렌더링하였지만, 리팩터링 후에는 insertAdjacentHTML 메서드를 사용하여 HTML을 동적으로 추가해주어 추가된 부분만 렌더링 되도록 해주었다. (참고 : 여기서 beforeend 는 해당 요소의 자식노드 마지막에 삽입하는 것을 의미한다)</li>
-<li>reset 함수에서도 insertAdjacentHTML처럼 추가된 부분만 삭제해주고 싶었지만, 고려해야할 조건들이 많아져 가독성을 위해 기존의 innerHTML을 사용하였다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line">  toggle,</span><br><span class="line">  <span class="title function_">lapAndReset</span>(<span class="params"></span>) &#123;</span><br><span class="line">    !data.<span class="property">isStarted</span> ? <span class="title function_">addLap</span>() : <span class="title function_">reset</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$rightButton.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, stopWatch.<span class="property">lapAndReset</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>이벤트 핸들러에서 data.isStarted를 이용하여 조건에 따라 함수를 실행해주려 하였으나 클로저로 구현하였기 때문에 클로저 바깥에서 data.isStarted 값을 참조할 수 없기 때문에 클로저 내부에서 data.isStarted를 참조하여 조건에 맞게 해당 함수를 실행하는 함수를 return하였다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
