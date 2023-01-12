@@ -324,6 +324,96 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                            aria-label=": vanillaJS로 구현한 todoList (MVC패턴) 2탄"
+                        >
+                            vanillaJS로 구현한 todoList (MVC패턴) 2탄
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-06T23:33:42+09:00">
+	
+		    2022/09/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다.</p>
+<h1 id="1-setState를-왜-쓰는지"><a href="#1-setState를-왜-쓰는지" class="headerlink" title="1. setState를 왜 쓰는지?"></a>1. setState를 왜 쓰는지?</h1><p>직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다.</p>
+<p>이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여쭤보니 다음과 같은 이점때문에 setState 함수를 만들어 사용하는 것이 좋다는 결론이 나왔다.</p>
+<ol>
+<li><p>관리해야할 상태 객체가 늘어나 확장성이 요구될 때 용이하다.</p>
+</li>
+<li><p>state에 대한 에러가 발생하였을 때 에러 핸들링이 용이하다. (상황에 따라 렌더링 할지 말지 결정 가능)</p>
+</li>
+<li><p>state가 변경되거나 재할당 되는 경우를 한곳에서 관리하여 용이하다.</p>
+</li>
+</ol>
+<h1 id="2-filter-함수를-사용한-코드-리팩터"><a href="#2-filter-함수를-사용한-코드-리팩터" class="headerlink" title="2. filter 함수를 사용한 코드 리팩터"></a>2. filter 함수를 사용한 코드 리팩터</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">let</span> filteredTodos;</span><br><span class="line"><span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;completed&quot;</span>) &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;active&quot;</span>) &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> !todo.<span class="property">completed</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  filteredTodos = state.<span class="property">todos</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> filteredTodos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;completed&quot;</span>) <span class="keyword">return</span> todo.<span class="property">completed</span>;</span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">filterId</span> === <span class="string">&quot;active&quot;</span>) <span class="keyword">return</span> !todo.<span class="property">completed</span>;</span><br><span class="line">  <span class="keyword">return</span> todo;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>if 문으로 filter 함수 반환값이 다르게 filteredTodos 값이 할당되는 경우라면 filter 함수 안에 로직을 넣어서 해결해보자.</p>
+<p>&#x3D;&gt; 훨씬 더 간결해진다.</p>
+<h1 id="3-MVC-패턴으로-나누었다면-그에-알맞게-자신만의-역할을-하도록-분류한다"><a href="#3-MVC-패턴으로-나누었다면-그에-알맞게-자신만의-역할을-하도록-분류한다" class="headerlink" title="3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다."></a>3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다.</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">content</span>) =&gt; &#123;</span><br><span class="line">  state.<span class="property">todos</span> = [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="title function_">generateNextTodoId</span>(), content, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    ...state.<span class="property">todos</span>,</span><br><span class="line">  ];</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">todos</span>: state.<span class="property">todos</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">content</span>) =&gt;</span><br><span class="line">  <span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">todos</span>: [</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="title function_">generateNextTodoId</span>(), content, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      ...state.<span class="property">todos</span>,</span><br><span class="line">    ],</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위 예제에서 addTodo 함수는 내부에서 state.todos에 새로운 값을 할당 해준뒤 state를 변경하는 함수를 호출하여 렌더링 해주고 있다.</p>
+<p>하지만, addTodo 함수의 기능은 Model의 todos 배열에 todo 요소 하나를 추가하는 것일 뿐이므로 before 처럼 state.todos(원본)에 재할당 하는 것은 옮지 않다.</p>
+<p>setState 함수에게 새로운 객체(상태)를 전달하여 state의 변경에 따라 화면에 렌더링 되도록 로직을 짜는 것이 더 <span style="color:red">통일성</span>을 지킬 수 있다.</p>
+<h1 id="4-함수의-매개변수를-명확하게-적어주자"><a href="#4-함수의-매개변수를-명확하게-적어주자" class="headerlink" title="4. 함수의 매개변수를 명확하게 적어주자."></a>4. 함수의 매개변수를 명확하게 적어주자.</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleAllCompleted</span> = (<span class="params">boolean</span>) =&gt; &#123;</span><br><span class="line">  state.<span class="property">todos</span> = state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> (&#123; ...todo, <span class="attr">completed</span>: boolean &#125;));</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">todos</span>: state.<span class="property">todos</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleAll</span> = (<span class="params">checked</span>) =&gt; &#123;</span><br><span class="line">  checked</span><br><span class="line">    ? <span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span></span><br><span class="line">          !todo.<span class="property">completed</span> ? &#123; ...todo, <span class="attr">completed</span>: checked &#125; : todo</span><br><span class="line">        ),</span><br><span class="line">      &#125;)</span><br><span class="line">    : <span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span></span><br><span class="line">          todo.<span class="property">completed</span> ? &#123; ...todo, <span class="attr">completed</span>: checked &#125; : todo</span><br><span class="line">        ),</span><br><span class="line">      &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>before 처럼 매개변수를 boolean 으로 설정하는 것은 옳지 않다. boolean은 타입을 나타내는 것이지 매개변수에 대한 설명으로는 부적절하다.</p>
+<blockquote>
+<p>after 코드에서는 인수로 넘어온 모든 check를 토글로 켰다 껐다 할 수 있는 함수이다.</p>
+</blockquote>
+<h1 id="5-이벤트-핸들러-사용시-이벤트-객체와-선택한-요소를-명확히-이해하자"><a href="#5-이벤트-핸들러-사용시-이벤트-객체와-선택한-요소를-명확히-이해하자" class="headerlink" title="5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자"></a>5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자</h1><p>오늘 코딩할 때 이 부분에서 문제를 계속 부딪혀서 시간을 많이 할애하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$todoList.<span class="title function_">addEventListener</span>(<span class="string">&quot;dblclick&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  e.<span class="property">path</span>[<span class="number">2</span>].<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;editing&quot;</span>);</span><br><span class="line">  <span class="comment">// e.target.parentNode.parentNode.classList.add(&#x27;editing&#x27;);</span></span><br><span class="line"></span><br><span class="line">  e.<span class="property">path</span>[<span class="number">1</span>].<span class="property">nextElementSibling</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = e.<span class="property">target</span>.<span class="property">value</span>.<span class="title function_">trim</span>();</span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Enter&quot;</span> || content === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">editTodo</span>(content, e.<span class="property">path</span>[<span class="number">1</span>].<span class="property">dataset</span>.<span class="property">id</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 ul 태그에서 더블클릭 이벤트 발생하면 div가 안보이게되고 input이 보이게 된다.</p>
+<p>이 때, 내가 어떤 요소를 선택하여 어떤 타입의 이벤트를 등록하였고 그 타입에 따른 이벤트 객체는 무엇이 나오는지를 명확히 이해하고 코딩을 하자.</p>
+<p>헷갈린다면 console.log()를 찍어보면서 확인하자. 그림을 그리거나 HTML 구조와 비교해가면서 이해하면 수월하다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘 MVC TodoList V2를 만들어보면서 아침 10시부터 저녁 12시까지 이거만 집중해봤는데, 확실히 아직 익숙하지 않아서 버벅거리는 거 같다고 생각이 든다. 이해가 안되는 부분은 없지만 손으로 코딩이 술술 나오지가 않아서 어렵게 느껴졌다. 앞으로도 더 손 코딩을 많이 해보는 습관을 길러야 겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                             aria-label=": vanillaJS로 구현한 todoList(MVC패턴) 1탄"
                         >
@@ -1284,157 +1374,6 @@
                         <p>
                             <a
                                 href="/2022/08/26/Javascript/%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%E1%84%85%E1%85%A5%E1%84%87%E1%85%B3%E1%86%AF%E1%84%80%E1%85%AA%20%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%E1%84%85%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/25/Javascript/%E1%84%86%E1%85%A6%E1%84%89%E1%85%A5%E1%84%83%E1%85%B3%E1%84%8B%E1%85%AA%20%E1%84%92%E1%85%AA%E1%84%89%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD%20%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/"
-                            aria-label=": 메서드와 화살표 함수"
-                        >
-                            메서드와 화살표 함수
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-25T17:54:12+09:00">
-	
-		    2022/08/25
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="ES6-이후-메서드"><a href="#ES6-이후-메서드" class="headerlink" title="ES6 이후 메서드"></a>ES6 이후 메서드</h1><p>ES6 이전의 함수는 사용 목적에 따라 일반함수로 호출이 가능했고 생성자 함수로 호출이 가능했다. <strong>즉, ES6 이전의 모든 함수는 callable이면서 constructor다.</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">map</span>(<span class="keyword">function</span> (<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> item * <span class="number">2</span>;</span><br><span class="line">&#125;); <span class="comment">// [ 2, 4, 6 ]</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>심지어 콜백함수도 constructor이기 때문에 불필요한 프로토타입 객체를 생성한다.</li>
-</ul>
-<p>이처럼 ES6 이전의 모든 함수는 사용 목적에 따라 명확한 구분이 없어 호출방식에 제약이 없고 생성자 함수로 호출되지 않아도 프로토타입 객체를 생성한다. 이는 혼란스러워 실수를 유발하고 성능에도 좋지 않다.</p>
-<ul>
-<li>ES6 이후부터는 오류에 엄격하도록 만들고 있다. ⇒ 오류를 발생시킬 여지가 있는 것들은 그 부분을 개선해주고 있다.</li>
-</ul>
-<p><strong>ES6 사양에서 메서드는 <span style="color:red">메서드 축약표현으로 정의된 함수만을 의미</span>한다.</strong></p>
-<p>⇒ <strong>인스턴스 생성할 수 없는 non-constructor이다.</strong></p>
-<ul>
-<li>인스턴스 생성 불가</li>
-<li>prototype 프로퍼티 없다</li>
-<li>프로토타입 생성 불가</li>
-</ul>
-<p><strong>ES6 메서드는 자신을 바인딩한 객체를 가리키는 내부 슬롯 [[HomeObject]]를 갖는다.</strong></p>
-<h1 id="함수-사용-목적에-따라-구분한-ES6에서의-함수"><a href="#함수-사용-목적에-따라-구분한-ES6에서의-함수" class="headerlink" title="함수 사용 목적에 따라 구분한 ES6에서의 함수"></a>함수 사용 목적에 따라 구분한 ES6에서의 함수</h1><p>이를 해결하기 위해 ES6에서는 함수를 사용 목적에 따라 3가지로 구분하였다.</p>
-<table>
-<thead>
-<tr>
-<th>ES6 함수의 구분</th>
-<th>constructor</th>
-<th>prototype</th>
-<th>super</th>
-<th>arguments</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>일반함수</td>
-<td>O</td>
-<td>O</td>
-<td>X</td>
-<td>O</td>
-</tr>
-<tr>
-<td>메서드</td>
-<td>X</td>
-<td>X</td>
-<td>O</td>
-<td>O</td>
-</tr>
-<tr>
-<td>화살표 함수</td>
-<td>X</td>
-<td>X</td>
-<td>X</td>
-<td>X</td>
-</tr>
-</tbody></table>
-<h1 id="화살표-함수"><a href="#화살표-함수" class="headerlink" title="화살표 함수"></a>화살표 함수</h1><p>function 키워드 함수보다 표현만 간단한 것이 아니라 내부 동작도 간략한다.</p>
-<p>주로 콜백 함수 내부에서 this가 전역 객체를 가리키는 문제를 해결하기 위해 사용한다.</p>
-<h2 id="화살표-함수-정의"><a href="#화살표-함수-정의" class="headerlink" title="화살표 함수 정의"></a>화살표 함수 정의</h2><p>함수 선언문 안되고 함수 표현식으로만 정의 가능하다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params">x, y</span>) =&gt; x * y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params">x</span>) =&gt; x * y; <span class="comment">// 매개변수 1개면 소괄호 생략 가능</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params"></span>) =&gt; x * y; <span class="comment">// 매개변수 없으면 소괄호 생략 불가</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="화살표-함수-몸체-정의"><a href="#화살표-함수-몸체-정의" class="headerlink" title="화살표 함수 몸체 정의"></a>화살표 함수 몸체 정의</h2><p>함수 몸체 감싸는 {} 중괄호를 생략한 경우 표현식이 아닌 문일 경우 에러를 발생 시킨다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// concise body</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">power</span> = x =&gt; x ** <span class="number">2</span>;</span><br><span class="line"><span class="title function_">power</span>(<span class="number">2</span>); <span class="comment">// -&gt; 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 동일하다.</span></span><br><span class="line"><span class="comment">// block body</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">power</span> = x =&gt; &#123; <span class="keyword">return</span> x ** <span class="number">2</span>; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; <span class="keyword">const</span> x = <span class="number">1</span>; <span class="comment">// SyntaxError: Unexpected token &#x27;const&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 같이 해석된다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; &#123; <span class="keyword">return</span> <span class="keyword">const</span> x = <span class="number">1</span>; &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>객체 리터럴을 반환하는 경우 소괄호로 감싸줘야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">create</span> = (<span class="params">id, content</span>) =&gt; (&#123; id, content &#125;);</span><br><span class="line"><span class="title function_">create</span>(<span class="number">1</span>, <span class="string">&quot;JavaScript&quot;</span>); <span class="comment">// -&gt; &#123;id: 1, content: &quot;JavaScript&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 동일하다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">create</span> = (<span class="params">id, content</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; id, content &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="화살표-함수와-일반함수-차이"><a href="#화살표-함수와-일반함수-차이" class="headerlink" title="화살표 함수와 일반함수 차이"></a>화살표 함수와 일반함수 차이</h2><ol>
-<li>화살표 함수는 non-constructor로, 인스턴스 생성할 수 없다.</li>
-</ol>
-<ul>
-<li>인스턴스 생성 불가</li>
-<li>prototype 프로퍼티 없다</li>
-<li>프로토타입 생성 불가</li>
-</ul>
-<ol>
-<li>화살표 함수는 중복된 매개변수 이름 선언시 에러 발생</li>
-</ol>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params">a, a</span>) =&gt; a + a;</span><br><span class="line"><span class="comment">// SyntaxError: Duplicate parameter name not allowed in this context</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>화살표 함수는 this, arguments, super, <a target="_blank" rel="noopener" href="http://new.target/">new.target</a> 바인딩 갖지 않는다.</li>
-</ol>
-<p>따라서 화살표 함수 내부에서 위의 것들을 참조할 때 스코프 체인상 가장 가까운 <strong>상위 함수 중 화살표 함수가 아닌 함수의 this, arguements, super, new.target을 참조한다.</strong></p>
-<h3 id="주의사항-메서드를-화살표-함수로-정의하지-않기"><a href="#주의사항-메서드를-화살표-함수로-정의하지-않기" class="headerlink" title="주의사항 : 메서드를 화살표 함수로 정의하지 않기"></a>주의사항 : 메서드를 화살표 함수로 정의하지 않기</h3><p>단, 메서드를 화살표 함수로 정의하면 안된다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Bad</span></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="attr">sayHi</span>: <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// sayHi 프로퍼티에 할당된 화살표 함수 내부의 this는 상위 스코프인 전역의 this가 가리키는</span></span><br><span class="line"><span class="comment">// 전역 객체를 가리키므로 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는</span></span><br><span class="line"><span class="comment">// window.name과 같다. 전역 객체 window에는 빌트인 프로퍼티 name이 존재한다.</span></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi</span></span><br></pre></td></tr></table></figure>
-
-<p>메서드 정의할 때는 메서드 축약 표현을 사용하는 것이 좋다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Good</span></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi Lee</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>메서드 내부에서 this는 메서드를 호출한 인스턴스에 바인딩된다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Bad</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHi</span> = <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"><span class="comment">// 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는 window.name과 같다.</span></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>프로토타입 객체의 프로퍼티에 화살표 함수를 사용하는 것도 문제가 된다.</li>
-<li>프로퍼티 동작 추가 시에는 <strong>ES6 메서드 정의 사용할 수 없으므로 일반함수로 정의해야한다.</strong></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/25/Javascript/%E1%84%86%E1%85%A6%E1%84%89%E1%85%A5%E1%84%83%E1%85%B3%E1%84%8B%E1%85%AA%20%E1%84%92%E1%85%AA%E1%84%89%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD%20%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

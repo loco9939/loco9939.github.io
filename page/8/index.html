@@ -324,6 +324,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                            aria-label=": 라우터 파일 구분 시도"
+                        >
+                            라우터 파일 구분 시도
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-18T22:38:09+09:00">
+	
+		    2022/10/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="1-라우터-파일-구분을-해주자"><a href="#1-라우터-파일-구분을-해주자" class="headerlink" title="1. 라우터 파일 구분을 해주자."></a>1. 라우터 파일 구분을 해주자.</h1><h2 id="왜-라우터를-모듈로-빼서-관리를-해줘야-하는가"><a href="#왜-라우터를-모듈로-빼서-관리를-해줘야-하는가" class="headerlink" title="왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?"></a>왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?</h2><p>App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가?</p>
+<p>라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고, path에 맞는 컴포넌트를 반환해주는 역할을 한다.</p>
+<p><strong>이 역할을 하는 라우터를 App 컴포넌트의 프로퍼티 메서드로 종속 시키는 것이 맞는가?</strong></p>
+<p>내 생각에는 데이터가 바뀔 때 화면 렌더링에 영향을 주는 데이터를 상태로 관리 해야하므로, path가 바뀔 때, 컴포넌트가 바뀌니 path든 component든 상태로 가져야 한다.</p>
+<p><strong>즉, App도 컴포넌트이므로 그려지는데 필요한 정보를 담고 있기만 하면 된다.</strong></p>
+<ul>
+<li>라우터에서 렌더링을 호출하면 App의 domStr이 새로 그려지게되는데 이때, Page 또는 Path를 확인하여 컴포넌트를 그려줘야한다.</li>
+<li>그런데 라우터함수가 렌더만 해주는데 상태를 변경해주지 않고 어떻게 그려주지?<br>⇒ 라우터 함수가 Page를 반환하고 그 페이지를 App의 domStr에서 받아서 그려주기로 해보자.<ul>
+<li>위의 것이 될까? App에서 처음 호출될 때는 return 값으로 Page를 넘겨줄 수 있겠지</li>
+<li>하지만 이벤트 발생하거나 서버에 요청으로 라우터 변경되었을 때, router가 호출되는데, 그 때는 반환만 해주고 렌더링을 해주고 있지 않아서 변경되지 않을 것이다.</li>
+<li>그렇다고 router에 렌더링을 넣어준다고 하면 App의 domStr을 호출하여 새로 그려줄텐데… 무엇을 기준으로 그려주는 것인가? router에서 받은 path를 기준으로 그 path에 맞는 컴포넌트로 그려주는데 이것을 App에서 어떻게 알 수 있나?</li>
+</ul>
+</li>
+</ul>
+<p><strong>결론</strong></p>
+<p>이를 해결하기 위해서는 기존의 App 컴포넌트에서 setState로 render를 시켜주는 구조를 바꾸고 App에서 render를 해주고 router에서도 render를 해주는 구조로 바꿔줘야한다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘은 라우터를 파일로 분리하려는 시도와 리팩터링을 하면서 공부를 했다.</p>
+<p>내일은 GCP로 배포하는 법을 공부해서 배포를 해보려고 한다.</p>
+<p>내일 배포와 발표준비를 마치면 이제 자바스크립트 수업도 모두 끝이난다. 2달 반 정도의 시간이 참 빨리도 지나간 것 같다.</p>
+<p>역시 자바스크립트가 동료들과 페어로 하는 수업이 많아서 더 재밌게 느껴진 것 같다.</p>
+<p>앞으로 다가올 리액트 수업 때도 열심히 듣기 위해 만반의 준비를 해야겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"
                             aria-label=": 라우터 구현"
                         >
@@ -1033,86 +1111,6 @@
                         <p>
                             <a
                                 href="/2022/10/08/Algorithm/boj/boj-2525-%EC%98%A4%EB%B8%90%EC%8B%9C%EA%B3%84/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/07/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%ED%9A%8C%EA%B3%A0/"
-                            aria-label=": 페어프로그래밍 level 2 회고"
-                        >
-                            페어프로그래밍 level 2 회고
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-07T20:36:25+09:00">
-	
-		    2022/10/07
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="페어프로그래밍-2-최종-회고"><a href="#페어프로그래밍-2-최종-회고" class="headerlink" title="페어프로그래밍 2 최종 회고"></a>페어프로그래밍 2 최종 회고</h1><h2 id="코드의-가독성"><a href="#코드의-가독성" class="headerlink" title="코드의 가독성"></a>코드의 가독성</h2><ul>
-<li><p>코드가 간단하거나 짧다고 가독성이 무조건 좋은 것은 아니다. 중복되는 코드가 있더라도 가독성이 좋을 수 있다.</p>
-</li>
-<li><p>클린 코드란 것은 없다. 다만 좋은 코드란, 맥락을 모르는 다른 사람이 쉽게 읽을 수 있도록 코드를 작성하는 것이 중요하다.</p>
-</li>
-<li><p>가독성이 좋아지려면 <strong>같은 역할을 하는 것들 끼리 모아두는 것이 가독성을 높인다.</strong></p>
-</li>
-<li><p>현업에 가게되면 지금처럼 코드에 대한 퀄리티를 생각할 여건이 조성되지 않을 수 있다. 그러니 지금부터라도 좋은 습관을 가지는 것이 중요하다.</p>
-</li>
-</ul>
-<h2 id="큰-일을-해결하면-작은-일은-알아서-해결되리라"><a href="#큰-일을-해결하면-작은-일은-알아서-해결되리라" class="headerlink" title="큰 일을 해결하면 작은 일은 알아서 해결되리라"></a>큰 일을 해결하면 작은 일은 알아서 해결되리라</h2><ul>
-<li><p>작은 부분에 몰두하여 그것을 해결하려 하지 말고 요구사항을 보고 큰 부분부터 해결해나가자.</p>
-</li>
-<li><p>전체의 구조를 한곳에서 모아서 생각하지 말고 각자의 역할을 생각하며 코딩을 하자.</p>
-</li>
-</ul>
-<p>ex) 데이터를 변경하면 setState 함수가 실행된다 -&gt; setState 함수가 실행되면 render가 실행된다….</p>
-<h2 id="Test의-중요성"><a href="#Test의-중요성" class="headerlink" title="Test의 중요성"></a>Test의 중요성</h2><ul>
-<li><p>리팩터링을 할 때는 test를 꼭 같이 하면서 진행해야한다.</p>
-</li>
-<li><p>리액트를 배우고 나면 꼭 같이 배워보자!</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/07/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%ED%9A%8C%EA%B3%A0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
