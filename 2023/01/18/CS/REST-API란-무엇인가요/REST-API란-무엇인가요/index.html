@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>비동기 함수를 이벤트 루프 관점에서 설명하라 - Loco&#39;s Dev Blog</title>
+    <title>REST API란 무엇인가요? - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -17,22 +17,20 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.\n그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.\n이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.\n\n이벤트 루프는 브라우저에 내장된 기능 중 하나이다.\n\n\n위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.\n\n콜 스택 : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.\n태스크 큐 : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.\n이벤트 루프 : 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, 태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.\n\n\n비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.\n\n","dateCreated":"2023-01-10T16:30:09+09:00","dateModified":"2023-01-10T16:42:20+09:00","datePublished":"2023-01-10T16:30:09+09:00","description":"","headline":"비동기 함수를 이벤트 루프 관점에서 설명하라","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"}</script>
-    <meta name="description" content="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다. 그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다. 이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"REST API란 무엇인가요?자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다.\n즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.\nREST API의 구성\n자원 : 모든 자원에는 고유한 ID가 존재하고 ID는 &#x2F;store&#x2F;:store_ID와 같은 HTTP URI이다.\n행위 : 자원에 대한 행위 (HTTP 요청 메서드)\n표현 : 자원에 대한 행위의 구체적 내용 (페이로드, JSON)\n\nREST API 설계 규칙1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다.1234567# badGET /getTodos/1GET /todos/show/1GET /todos/1/# goodGET /todos/1\n\n2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다.\n\n\nHTTP 요청 메서드\n종류\n목적\n페이로드\n\n\n\nGET\nindex&#x2F;retrieve\n모든&#x2F;특정 리소스 취득\nX\n\n\nPOST\ncreate\n리소스 생성\nO\n\n\nPUT\nreplace\n리소스 전체 교체\nO\n\n\nPATCH\nmodify\n리소스 일부 수정\nO\n\n\nDELETE\ndelete\n모든&#x2F;특정 리소스 삭제\nX\n\n\n\n리소스에 대한 행위는 HTTP 요청 메서드를 통해 표현하며 URI에 표현하지 않는다.\n\n12345# badGET /todos/delete/1# goodDELETE /todos/1\n\n3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현1http://example.com/stores/restaurant\n\n4. 불가피하게 긴 URI인 경우 하이픈(-) 사용1http://example.com/stores/very-long-store\n\n\n단 밑줄(_)은 포함하지 않는다.\n\n5. 파일 확장자는 URI에 포함하지 않는다.12345# badhttp://example.com/stores/restaurant/:1/logo.png# goodGET /stores/restaurant/:1/logo HTTP/1.1 HOST: example.com Accept: image/png\n\n\n대신 Accept header를 사용한다.\n\nRESTful한 REST API 설계하기RESTful은 이해하기 쉽고 사용하기 쉬운 REST API를 만들고, 일관적인 컨벤션을 통해 API의 이해도를 높이는 것을 말한다.\nREST API 설계 예시\n\n\nCRUD\nHTTP verbs\nRoute\n\n\n\nresource 목록 표시\nGET\n&#x2F;resource\n\n\nresource 하나 내용 표시\nGET\n&#x2F;resource&#x2F;:id\n\n\nresource 생성\nPOST\n&#x2F;resource\n\n\nresource 수정\nPUT\n&#x2F;resource&#x2F;:id\n\n\nresource 삭제\nDELETE\n&#x2F;resource&#x2F;:id\n\n\n응답상태 코드\n\n\n상태코드\n설명\n\n\n\n1xx\n전송 프로토콜 수준의 정보 교환\n\n\n2xx\n클라이언트 요청 성공\n\n\n3xx\n클라이언트 요청 완료하기 위해 추가 행동 필요\n\n\n4xx\n클라이언트의 잘못된 요청\n\n\n5xx\n서버쪽 오류\n\n\n","dateCreated":"2023-01-18T14:30:25+09:00","dateModified":"2023-01-18T23:39:17+09:00","datePublished":"2023-01-18T14:30:25+09:00","description":"","headline":"REST API란 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
+    <meta name="description" content="REST API란 무엇인가요?자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다. 즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="비동기 함수를 이벤트 루프 관점에서 설명하라">
-<meta property="og:url" content="https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/index.html">
+<meta property="og:title" content="REST API란 무엇인가요?">
+<meta property="og:url" content="https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다. 그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다. 이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지">
+<meta property="og:description" content="REST API란 무엇인가요?자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다. 즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://loco9939.github.io/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png">
-<meta property="article:published_time" content="2023-01-10T07:30:09.000Z">
-<meta property="article:modified_time" content="2023-01-10T07:42:20.085Z">
+<meta property="article:published_time" content="2023-01-18T05:30:25.000Z">
+<meta property="article:modified_time" content="2023-01-18T14:39:17.374Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://loco9939.github.io/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png">
     
     
         
@@ -328,14 +326,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            비동기 함수를 이벤트 루프 관점에서 설명하라
+            REST API란 무엇인가요?
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-01-10T16:30:09+09:00">
+    <time datetime="2023-01-18T14:30:25+09:00">
 	
-		    2023/01/10
+		    2023/01/18
     	
     </time>
     
@@ -353,22 +351,135 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라"><a href="#이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라" class="headerlink" title="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라."></a>이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.</h1><p>우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.</p>
-<p>그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.</p>
-<p>이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.</p>
-<blockquote>
-<p>이벤트 루프는 브라우저에 내장된 기능 중 하나이다.</p>
-</blockquote>
-<p><img src="/%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EB%A3%A8%ED%94%84.png" alt="이벤트 루프"></p>
-<p>위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.</p>
-<ul>
-<li><strong>콜 스택</strong> : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.</li>
-<li><strong>태스크 큐</strong> : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.</li>
-<li><strong>이벤트 루프 :</strong> 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, <strong>태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.</strong></li>
+            <h1 id="REST-API란-무엇인가요"><a href="#REST-API란-무엇인가요" class="headerlink" title="REST API란 무엇인가요?"></a>REST API란 무엇인가요?</h1><p>자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다.</p>
+<p>즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.</p>
+<h2 id="REST-API의-구성"><a href="#REST-API의-구성" class="headerlink" title="REST API의 구성"></a>REST API의 구성</h2><ul>
+<li>자원 : 모든 자원에는 고유한 ID가 존재하고 ID는 &#x2F;store&#x2F;:store_ID와 같은 HTTP URI이다.</li>
+<li>행위 : 자원에 대한 행위 (HTTP 요청 메서드)</li>
+<li>표현 : 자원에 대한 행위의 구체적 내용 (페이로드, JSON)</li>
 </ul>
+<h2 id="REST-API-설계-규칙"><a href="#REST-API-설계-규칙" class="headerlink" title="REST API 설계 규칙"></a>REST API 설계 규칙</h2><h3 id="1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다"><a href="#1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다" class="headerlink" title="1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다."></a>1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /getTodos/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/show/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span>/</span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다"><a href="#2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다" class="headerlink" title="2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다."></a>2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다.</h3><table>
+<thead>
+<tr>
+<th>HTTP 요청 메서드</th>
+<th>종류</th>
+<th>목적</th>
+<th>페이로드</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>index&#x2F;retrieve</td>
+<td>모든&#x2F;특정 리소스 취득</td>
+<td>X</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>create</td>
+<td>리소스 생성</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>replace</td>
+<td>리소스 전체 교체</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>modify</td>
+<td>리소스 일부 수정</td>
+<td>O</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>delete</td>
+<td>모든&#x2F;특정 리소스 삭제</td>
+<td>X</td>
+</tr>
+</tbody></table>
+<ul>
+<li>리소스에 대한 행위는 HTTP 요청 메서드를 통해 표현하며 URI에 표현하지 않는다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="keyword">delete</span>/<span class="number">1</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">DELETE</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-슬래시-구분자-x2F-는-계층-관계를-표현"><a href="#3-슬래시-구분자-x2F-는-계층-관계를-표현" class="headerlink" title="3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현"></a>3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-불가피하게-긴-URI인-경우-하이픈-사용"><a href="#4-불가피하게-긴-URI인-경우-하이픈-사용" class="headerlink" title="4. 불가피하게 긴 URI인 경우 하이픈(-) 사용"></a>4. 불가피하게 긴 URI인 경우 하이픈(-) 사용</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/very-long-store</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.</p>
+<p>단 밑줄(_)은 포함하지 않는다.</p>
 </blockquote>
+<h3 id="5-파일-확장자는-URI에-포함하지-않는다"><a href="#5-파일-확장자는-URI에-포함하지-않는다" class="headerlink" title="5. 파일 확장자는 URI에 포함하지 않는다."></a>5. 파일 확장자는 URI에 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant/:1/logo.png</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /stores/restaurant/:<span class="number">1</span>/logo <span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="attr">HOST</span>: example.<span class="property">com</span> <span class="title class_">Accept</span>: image/png</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>대신 Accept header를 사용한다.</li>
+</ul>
+<h2 id="RESTful한-REST-API-설계하기"><a href="#RESTful한-REST-API-설계하기" class="headerlink" title="RESTful한 REST API 설계하기"></a>RESTful한 REST API 설계하기</h2><p>RESTful은 이해하기 쉽고 사용하기 쉬운 REST API를 만들고, 일관적인 컨벤션을 통해 API의 이해도를 높이는 것을 말한다.</p>
+<h3 id="REST-API-설계-예시"><a href="#REST-API-설계-예시" class="headerlink" title="REST API 설계 예시"></a>REST API 설계 예시</h3><table>
+<thead>
+<tr>
+<th>CRUD</th>
+<th>HTTP verbs</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource 목록 표시</td>
+<td>GET</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 하나 내용 표시</td>
+<td>GET</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 생성</td>
+<td>POST</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 수정</td>
+<td>PUT</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 삭제</td>
+<td>DELETE</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+</tbody></table>
+<h4 id="응답상태-코드"><a href="#응답상태-코드" class="headerlink" title="응답상태 코드"></a>응답상태 코드</h4><table>
+<thead>
+<tr>
+<th>상태코드</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1xx</td>
+<td>전송 프로토콜 수준의 정보 교환</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>클라이언트 요청 성공</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>클라이언트 요청 완료하기 위해 추가 행동 필요</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>클라이언트의 잘못된 요청</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>서버쪽 오류</td>
+</tr>
+</tbody></table>
 
             
 
@@ -383,14 +494,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                    data-tooltip="객체 불변성에 대해 설명하라"
-                    aria-label="이전: 객체 불변성에 대해 설명하라"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -400,9 +508,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
-                    data-tooltip="모의 면접 2차 회고"
-                    aria-label="다음: 모의 면접 2차 회고"
+                    href="/2023/01/17/CS/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/"
+                    data-tooltip="OOP에 대해 설명하세요"
+                    aria-label="다음: OOP에 대해 설명하세요"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -427,7 +535,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -440,7 +548,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -453,7 +561,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -498,14 +606,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                    data-tooltip="객체 불변성에 대해 설명하라"
-                    aria-label="이전: 객체 불변성에 대해 설명하라"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -515,9 +620,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
-                    data-tooltip="모의 면접 2차 회고"
-                    aria-label="다음: 모의 면접 2차 회고"
+                    href="/2023/01/17/CS/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/"
+                    data-tooltip="OOP에 대해 설명하세요"
+                    aria-label="다음: OOP에 대해 설명하세요"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -542,7 +647,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -555,7 +660,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -568,7 +673,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -602,7 +707,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -615,7 +720,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -628,7 +733,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/10/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
