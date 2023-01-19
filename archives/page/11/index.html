@@ -325,6 +325,232 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/15/PairProgramming/level%201/carousel%20Tip/"
+                            aria-label=": carousel Tip"
+                        >
+                            carousel Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-15T19:01:51+09:00">
+	
+		    2022/09/15
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="CarouselSlider-구현-중-느낀점"><a href="#CarouselSlider-구현-중-느낀점" class="headerlink" title="CarouselSlider 구현 중 느낀점"></a>CarouselSlider 구현 중 느낀점</h1><h2 id="1-이미지가-로드되는-시점과-동적-HTML-생성-시점이-다르다"><a href="#1-이미지가-로드되는-시점과-동적-HTML-생성-시점이-다르다" class="headerlink" title="1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다."></a>1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DOM이 로드되고 동적으로 HTML 생성(렌더링)</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, render);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 로드 후 width 및 opacity 할당</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  $container.<span class="property">style</span>.<span class="property">width</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">document</span>.querySelector(<span class="string">&quot;img&quot;</span>).clientWidth&#125;</span>px`</span>;</span><br><span class="line">  $container.<span class="property">style</span>.<span class="property">opacity</span> = <span class="number">1</span>;</span><br><span class="line">  $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--duration&quot;</span>, <span class="number">400</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>동적으로 HTML을 렌더링해주는데 DOMContentLoaded가 될 때, 이미지의 width를 가져오고 싶었지만 동적 HTML이 생성되고 약간의 시간 후에 이미지가 로드되어 동적 HTML 생성될 때, 이미지태그의 너비를 가져올 수가 없었다.</p>
+</li>
+<li><p><code>--duration</code>은 요구 사항에 맞게 초기 렌더링 때 설정해준다.</p>
+</li>
+</ul>
+<h2 id="2-CSS-inline-style이-아닌-external-CSS-값-가져오기"><a href="#2-CSS-inline-style이-아닌-external-CSS-값-가져오기" class="headerlink" title="2. CSS inline style이 아닌 external CSS 값 가져오기"></a>2. CSS inline style이 아닌 external CSS 값 가져오기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 1. prev || next return</span></span><br><span class="line">  <span class="comment">// 2. if (prev) / if (next)</span></span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.carousel-control&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line">  e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.prev&quot;</span>)</span><br><span class="line">    ? $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(</span><br><span class="line">        <span class="string">&quot;--currentSlide&quot;</span>,</span><br><span class="line">        +<span class="title function_">getComputedStyle</span>($container.<span class="property">firstElementChild</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">          <span class="string">&quot;--currentSlide&quot;</span></span><br><span class="line">        ) - <span class="number">1</span></span><br><span class="line">      )</span><br><span class="line">    : e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.next&quot;</span>)</span><br><span class="line">    ? $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(</span><br><span class="line">        <span class="string">&quot;--currentSlide&quot;</span>,</span><br><span class="line">        +<span class="title function_">getComputedStyle</span>($container.<span class="property">firstElementChild</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">          <span class="string">&quot;--currentSlide&quot;</span></span><br><span class="line">        ) + <span class="number">1</span></span><br><span class="line">      )</span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>document.querySelector(‘div’).style.getPropertyValue() 메서드는 해당 노드의 인라인 스타일의 속성값을 가져올 수 있다.</p>
+</li>
+<li><p>getComputedStyle(document.querySelector(‘div’)).getPropertyValue() 메서드는 해당 노드의 렌더링을 마친 CSS 속성값을 가져올 수 있다. 즉, 외부 CSS 파일의 속성값을 가져올 수 있다.</p>
+</li>
+</ul>
+<h2 id="3-document-querySelector-‘img’-요소가-가진-width-종류"><a href="#3-document-querySelector-‘img’-요소가-가진-width-종류" class="headerlink" title="3. document.querySelector(‘img’) 요소가 가진 width 종류"></a>3. document.querySelector(‘img’) 요소가 가진 width 종류</h2><ul>
+<li>cssWidth : 컨텐츠의 너비를 말한다.</li>
+<li>clientWidth : padding을 포함한 너비를 말한다.</li>
+<li>offsetWidth : border까지 포함한 너비를 말한다.</li>
+</ul>
+<p>처음에 이미지 태그의 너비를 자바스크립트로 가져와야하는데, 이미지 태그가 가진 너비 요소가 여러가지라서 각 너비의 특징에 대해 알게 되었다.</p>
+<p>앞으로 해당 요소 노드를 console 창에 찍어보면서 어떤 프로퍼티를 포함하고 있는지 확인해보면서 내게 필요한 프로퍼티가 무엇인지 찾아보는 팁을 얻었다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/15/PairProgramming/level%201/carousel%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"
+                            aria-label=": modal, stopwatch, tab, toaster, autocomplete Tip"
+                        >
+                            modal, stopwatch, tab, toaster, autocomplete Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-14T18:57:44+09:00">
+	
+		    2022/09/14
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="modal-창-구현-중-느낀점"><a href="#modal-창-구현-중-느낀점" class="headerlink" title="modal 창 구현 중 느낀점"></a>modal 창 구현 중 느낀점</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;modal-container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;modal&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>희준이주화이팅<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/&quot;</span> <span class="attr">class</span>=<span class="string">&quot;popup-form&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">class</span>=<span class="string">&quot;popup-input&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-ok&quot;</span>&gt;</span>OK<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-cancel is-close&quot;</span>&gt;</span>Cancel<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-close&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;bx bx-x is-close&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $modal = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $modalContainer = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-button&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      $modal.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;is-open&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">      $modalContainer.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;background-gray&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>body 태그 안에 modal div 박스 하나만 만드는 것이 아닌 다음과 같이 modal container로 감싸주는 것이 편하다.</li>
+</ul>
+<blockquote>
+<p>그렇지 않으면 modal 배경색을 입히기가 까다로워진다.</p>
+</blockquote>
+<h1 id="stopwatch-구현-중-느낀점"><a href="#stopwatch-구현-중-느낀점" class="headerlink" title="stopwatch 구현 중 느낀점"></a>stopwatch 구현 중 느낀점</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> timeId;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">updateTime</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> startTime = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line"></span><br><span class="line">  timeId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="title class_">Date</span>.<span class="title function_">now</span>() - startTime);</span><br><span class="line">    <span class="keyword">const</span> milliseconds = <span class="title class_">Math</span>.<span class="title function_">floor</span>(date.<span class="title function_">getMilliseconds</span>() / <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">const</span> seconds = date.<span class="title function_">getSeconds</span>();</span><br><span class="line">    <span class="keyword">const</span> minutes = date.<span class="title function_">getMinutes</span>();</span><br><span class="line"></span><br><span class="line">    $display.<span class="property">textContent</span> = <span class="string">`<span class="subst">$&#123;minutes &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;minutes&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;minutes&#125;</span>`</span>&#125;</span>:<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      seconds &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;seconds&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;seconds&#125;</span>`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span>:<span class="subst">$&#123;milliseconds &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;milliseconds&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;milliseconds&#125;</span>`</span>&#125;</span>`</span>;</span><br><span class="line">  &#125;, <span class="number">10</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>시간을 수정하는 로직을 함수로 구분하여 역할을 나눠보려 하였다.</li>
+</ul>
+<blockquote>
+<p>Model, Controller, View 생각하면서 리팩토링 해보자.</p>
+</blockquote>
+<h1 id="Tab-구현-중-느낀점"><a href="#Tab-구현-중-느낀점" class="headerlink" title="Tab 구현 중 느낀점"></a>Tab 구현 중 느낀점</h1><h2 id="1-비동기-코드로-전달받은-데이터-다루기"><a href="#1-비동기-코드로-전달받은-데이터-다루기" class="headerlink" title="1. 비동기 코드로 전달받은 데이터 다루기"></a>1. 비동기 코드로 전달받은 데이터 다루기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">  <span class="attr">datas</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">fetchTabsData</span>().<span class="title function_">then</span>(<span class="function">(<span class="params">tabDatas</span>) =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">datas</span> = tabDatas;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>fetchTabsData() 함수가 프로미스르 반환하는데, 프로미스 콜백함수가 1초 뒤에 데이터를 resolve 인자로 전달해준다. 그러므로 비동기로 받아온 데이터를 state로 관리해주도록 하였다.</li>
+</ul>
+<h2 id="2-CSS-사용자-정의-변수-변경-또는-값-취득하기"><a href="#2-CSS-사용자-정의-변수-변경-또는-값-취득하기" class="headerlink" title="2. CSS 사용자 정의 변수 변경 또는 값 취득하기"></a>2. CSS 사용자 정의 변수 변경 또는 값 취득하기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $tabs = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.tabs&quot;</span>);</span><br><span class="line"></span><br><span class="line">$tabs.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--tabs-length&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Js를 사용하여 CSS에서 설정한 사용자 정의 변수를 가져올 수도 있고 위처럼 직접 값을 설정해줄 수도 있다.</li>
+</ul>
+<h2 id="3-비동기로-데이터를-가져오니-화면에서-데이터를-렌더링-해주기-전에-대기시간을-주자"><a href="#3-비동기로-데이터를-가져오니-화면에서-데이터를-렌더링-해주기-전에-대기시간을-주자" class="headerlink" title="3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자"></a>3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; datas &#125; = state;</span><br><span class="line"></span><br><span class="line">  $tabs.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--tabs-length&quot;</span>, datas.<span class="property">length</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.spinner&quot;</span>).<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;none&quot;</span>;</span><br><span class="line"></span><br><span class="line">  $tabs.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;nav&gt;</span></span><br><span class="line"><span class="string">  <span class="subst">$&#123;datas</span></span></span><br><span class="line"><span class="subst"><span class="string">    .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">      (data, index) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">        <span class="string">`&lt;div class=&quot;tab&quot; data-index=&quot;<span class="subst">$&#123;index&#125;</span>&quot;&gt;<span class="subst">$&#123;data.title&#125;</span>&lt;/div&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    )</span></span></span><br><span class="line"><span class="subst"><span class="string">    .join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">  &lt;span class=&quot;glider&quot;&gt;&lt;/span&gt;</span></span><br><span class="line"><span class="string">  &lt;/nav&gt;</span></span><br><span class="line"><span class="string">  <span class="subst">$&#123;datas</span></span></span><br><span class="line"><span class="subst"><span class="string">    .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">      (data, index) =&gt; <span class="string">`&lt;div class=&quot;tab-content <span class="subst">$&#123;index === <span class="number">0</span> ? <span class="string">&quot;active&quot;</span> : <span class="string">&quot;&quot;</span>&#125;</span>&quot;&gt;</span></span></span></span><br><span class="line"><span class="string"><span class="subst"><span class="string">      <span class="subst">$&#123;data.content&#125;</span></span></span></span></span><br><span class="line"><span class="string"><span class="subst"><span class="string">    &lt;/div&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    )</span></span></span><br><span class="line"><span class="subst"><span class="string">    .join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 코드는 리팩토링을 하면서 조금더 역할을 나눠서 수정해봐야겠다.</li>
+</ul>
+<h2 id="4-template-literal로-연산을-하려면-다음과-같이-해야한다"><a href="#4-template-literal로-연산을-하려면-다음과-같이-해야한다" class="headerlink" title="4. template literal로 연산을 하려면 다음과 같이 해야한다."></a>4. template literal로 연산을 하려면 다음과 같이 해야한다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$tabs.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.tab&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.glider&quot;</span>).<span class="property">style</span>.<span class="property">transform</span> =</span><br><span class="line">    <span class="string">&quot;translateX(&quot;</span> + e.<span class="property">target</span>.<span class="property">dataset</span>.<span class="property">index</span> * <span class="number">200</span> + <span class="string">&quot;px)&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.glider&quot;</span>).<span class="property">style</span>.<span class="property">transform</span> = <span class="string">`translateX(<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    e.target.dataset.index * <span class="number">200</span></span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>px)`</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>처음에 연산결과를 ${}안에 넣지 않고 <code>document.querySelector(&#39;.glider&#39;).style.transform = $&#123;e.target.dataset.index&#125; 200 px</code> 이런식으로 했는데 이렇게 하면 안되고 위처럼 해야한다.</li>
+</ul>
+<h1 id="Toaster-구현-중-느낀점"><a href="#Toaster-구현-중-느낀점" class="headerlink" title="Toaster 구현 중 느낀점"></a>Toaster 구현 중 느낀점</h1><h2 id="1-toastBox-재사용을-위해-함수로-만들었다"><a href="#1-toastBox-재사용을-위해-함수로-만들었다" class="headerlink" title="1. toastBox 재사용을 위해 함수로 만들었다."></a>1. toastBox 재사용을 위해 함수로 만들었다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">newToastBox</span> = (<span class="params">type, title, Message</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> $div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $div.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;toast&quot;</span>, type);</span><br><span class="line">  $div.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;h4 class=&quot;toast-title&quot;&gt;<span class="subst">$&#123;title&#125;</span> <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    [...<span class="variable language_">document</span>.querySelectorAll(<span class="string">&quot;body .toast&quot;</span>)].length</span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>&lt;/h4&gt;</span></span><br><span class="line"><span class="string">  &lt;div class=&quot;toast-message&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;use xlink:href=&quot;#<span class="subst">$&#123;type&#125;</span>&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;/svg&gt;</span></span><br><span class="line"><span class="string">    &lt;p&gt;<span class="subst">$&#123;Message&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">  &lt;/div&gt;</span></span><br><span class="line"><span class="string">  &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`</span>;</span><br><span class="line"></span><br><span class="line">  $div.<span class="property">style</span>.<span class="property">bottom</span> = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> $div;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ToastBox 를 재사용하기 위해 함수를 사용하는 것을 적절했으나, 함수가 너무 많은 역할을 하고 있다. 렌더링부터 div 생성과 반환을 함께 하고 있어 리팩토링이 필요하다.</li>
+</ul>
+<h2 id="2-render-함수는-화면에-rendering-해주는-역할을-한다"><a href="#2-render-함수는-화면에-rendering-해주는-역할을-한다" class="headerlink" title="2. render 함수는 화면에 rendering 해주는 역할을 한다."></a>2. render 함수는 화면에 rendering 해주는 역할을 한다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  [...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;body .toast&quot;</span>)].<span class="title function_">forEach</span>(<span class="function">(<span class="params">toast, index</span>) =&gt;</span> &#123;</span><br><span class="line">    toast.<span class="property">style</span>.<span class="property">bottom</span> =</span><br><span class="line">      ([...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;body .toast&quot;</span>)].<span class="property">length</span> - index - <span class="number">1</span>) * <span class="number">100</span> +</span><br><span class="line">      <span class="string">&quot;px&quot;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 render 함수는 토스트 요소에 bottom style 값을 할당해주는 역할을 하고 있으므로, 리팩토링이 필요하다.</li>
+</ul>
+<h1 id="Autocomplete-구현-중-느낀점"><a href="#Autocomplete-구현-중-느낀점" class="headerlink" title="Autocomplete 구현 중 느낀점"></a>Autocomplete 구현 중 느낀점</h1><h2 id="1-e-target-matches-vs-e-target-closest"><a href="#1-e-target-matches-vs-e-target-closest" class="headerlink" title="1. e.target.matches() vs e.target.closest()"></a>1. e.target.matches() vs e.target.closest()</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;body&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.autocomplete&quot;</span>)) &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.autocomplete-suggester&quot;</span>).<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>해당 요소 바깥쪽을 클릭하였을 때 .autocomplete-suggester에 hide 클래스를 추가해주는 로직이다.</p>
+</li>
+<li><p>e.target.closest(‘.autocomplete’)는 이벤트 발생한 요소의 상위 요소를 찾아가면서 인자로 넘겨준 요소를 찾고 반환한다.<br>만약 없다면 null 값을 반환한다.</p>
+</li>
+<li><p>하지만, e.target.matches(‘.autocomplete’)는 이벤트 발생한 요소가 인자로 넘겨준 요소를 가지고 있는지 판단하여 불리언값을 반환한다.</p>
+</li>
+</ul>
+<blockquote>
+<p>matches()의 경우 이벤트 전파를 캐치하기가 어려우므로 상황에 따라 적절하게 사용하자.</p>
+</blockquote>
+<ol start="2">
+<li>방향키로 포커스 이동시 스크롤 이상하게 내려오는 현상</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$suggestList.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">key</span> === <span class="string">&quot;ArrowDown&quot;</span>) &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line">    e.<span class="property">target</span>.<span class="property">nextElementSibling</span> === <span class="literal">null</span></span><br><span class="line">      ? $suggestList.<span class="property">firstElementChild</span>.<span class="title function_">focus</span>()</span><br><span class="line">      : e.<span class="property">target</span>.<span class="property">nextElementSibling</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">key</span> === <span class="string">&quot;ArrowUp&quot;</span>) &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line">    e.<span class="property">target</span>.<span class="property">previousElementSibling</span> === <span class="literal">null</span> <span class="comment">// prettier-ignore</span></span><br><span class="line">      ? $suggestList.<span class="property">lastElementChild</span>.<span class="title function_">focus</span>()</span><br><span class="line">      : e.<span class="property">target</span>.<span class="property">previousElementSibling</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>방향키로 포커스 이동시 한번 이동할 때 마다 스크롤도 같이 내려와서 어색하게 동작하는 것을 방지하지 위해 방향키 값이 “ArrowDown”, “ArrowUp” 일 때만 <code>e.preventDefault();</code> 를 해주었다.</p>
+</li>
+<li><p>focus() 메서드를 사용하여 선택 요소에 포커스를 선택해주었다.</p>
+</li>
+</ul>
+<h2 id="3-lodash로-debounce-구현-제대로-하기"><a href="#3-lodash로-debounce-구현-제대로-하기" class="headerlink" title="3. lodash로 debounce 구현 제대로 하기"></a>3. lodash로 debounce 구현 제대로 하기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$searchInput.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;keyup&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setState</span>(&#123; <span class="attr">inputValue</span>: $searchInput.<span class="property">value</span> &#125;);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>위와 같이 “keyup” 이벤트 발생 시 lodash debounce 메서드를 이벤트 핸들러로 등록해줘야한다.</p>
+</li>
+<li><p>또한, debounce의 콜백함수에 실행할 코드를 입력해줄 때, setState함수가 인수를 받는다면 위와같이 써줘야한다.</p>
+</li>
+</ul>
+<blockquote>
+<p>단, 인수를 받지 않는다면 _.debounce(setState,500) 이런식으로 사용할 수 있다.</p>
+</blockquote>
+<h2 id="4-사용자가-입력한-값과-countryCode를-state로-관리하였다"><a href="#4-사용자가-입력한-값과-countryCode를-state로-관리하였다" class="headerlink" title="4. 사용자가 입력한 값과 countryCode를 state로 관리하였다."></a>4. 사용자가 입력한 값과 countryCode를 state로 관리하였다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">inputValue</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="attr">countryCode</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">`<span class="subst">$&#123;state.inputValue&#125;</span>`</span>, <span class="string">&quot;i&quot;</span>);</span><br><span class="line">  state.<span class="property">countryCode</span> = countryCode.<span class="title function_">filter</span>(<span class="function">(<span class="params">country</span>) =&gt;</span> country[<span class="number">1</span>].<span class="title function_">match</span>(regExp));</span><br><span class="line">  state.<span class="property">countryCode</span> = state.<span class="property">countryCode</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">country</span>) =&gt;</span> [</span><br><span class="line">    country[<span class="number">0</span>],</span><br><span class="line">    country[<span class="number">1</span>].<span class="title function_">replace</span>(regExp, <span class="string">`&lt;strong&gt;<span class="subst">$&#123;country[<span class="number">1</span>].match(regExp)&#125;</span>&lt;/strong&gt;`</span>),</span><br><span class="line">  ]);</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>사용자가 입력한 값을 state로 관리하여 그 값과 countryCode의 1번째 요소인 나라이름과 일치하는 부분을 찾아 strong 태그로 감싼 값으로 바꿔주었다.</p>
+</li>
+<li><p>strong 태그 대신 b 태그를 사용하면 안된다.</p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/13/PairProgramming/%E1%84%91%E1%85%A6%E1%84%8B%E1%85%A5%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%85%E1%85%A2%E1%84%86%E1%85%B5%E1%86%BC%E1%84%8B%E1%85%B5%E1%84%85%E1%85%A1%E1%86%AB?/"
                             aria-label=": 페어프로그래밍이란?"
                         >
@@ -1205,231 +1431,6 @@
                         <p>
                             <a
                                 href="/2022/08/31/Javascript/%E1%84%8B%E1%85%B5%E1%84%87%E1%85%A6%E1%86%AB%E1%84%90%E1%85%B3/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/30/Javascript/DOM%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A9%E1%84%83%E1%85%B3(attribute%20vs%20property)/"
-                            aria-label=": DOM과 노드(attribute vs property)"
-                        >
-                            DOM과 노드(attribute vs property)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-30T16:53:29+09:00">
-	
-		    2022/08/30
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h1><p>렌더링 엔진에 의해 HTML 문서를 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다. <strong>DOM이란, HTML문서의 계층적인 구조와 정보를 표현하며 이를 제어할 수 있는 API, 즉 프로퍼티와 메서드를 제공하는 트리 자료구조이다.</strong></p>
-<h1 id="노드"><a href="#노드" class="headerlink" title="노드"></a>노드</h1><p>HTML 요소는 렌더링 엔진에 의해 DOM을 구성하는 요소 노드 객체로 변환된다. HTML 요소의 어트리뷰트는 어트리뷰트 노드로, HTML 요소의 텍스트 컨텐츠는 텍스트 노드로 변환된다.</p>
-<p>노드 객체들로 구성된 트리 자료구조를 DOM이라한다.</p>
-<blockquote>
-<p>노드도 자바스크립트 객체이므로 프로토타입에 의한 상속 구조를 갖는다.</p>
-</blockquote>
-<h2 id="주의사항"><a href="#주의사항" class="headerlink" title="주의사항"></a>주의사항</h2><p>상속관계를 아는 것보다 어떤 DOM API를 사용하여 동적으로 변경하고 조작할 수 있는지를 알아야한다.</p>
-<p><code>querySelector, querySelectorAll</code> 메서드가 다소 느리긴 하더라도 CSS 선택자로 요소 노드 취득시 구체적인 조건과 일관된 방식으로 요소 노드 취득할 수 있으므로 id 어트리뷰트가 있는 요소는 <code>getElementById</code> 메서드를 사용하고 그 외의 경우에는 <code>querySelector, querySelectorAll</code> 메서드를 사용하자.</p>
-<h2 id="HTMLCollection과-NodeList"><a href="#HTMLCollection과-NodeList" class="headerlink" title="HTMLCollection과 NodeList"></a>HTMLCollection과 NodeList</h2><p>DOM 컬렉션 객체이 두 객체는 DOM API가 여러 개의 결과값을 반환하기 위한 객체이다. 둘 다 <strong>유사 배열 객체</strong>이면서 <strong>이터러블</strong>이다. 그러므로 for…of문으로 순회할 수 있으며 스프레드 문법을 사용하여 간단히 배열로 변환할 수 있다.</p>
-<ul>
-<li>HTMLCollection과 NodeList는 <strong>노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 객체</strong>이다.</li>
-<li>HTMLCollection은 언제나 live 객체로 동작한다.</li>
-<li>NodeList는 <strong>대부분의 경우 상태 변화를 실시간으로 반영하지 않고 과거의 정적 상태를 유지</strong>하는 non-live 객체로 동작하지만 <strong>경우에 따라 live 객체로 동작</strong>한다.</li>
-</ul>
-<h3 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h3><p>HTMLCollection, NodeList 객체를 사용하지 말아라. 유사 배열 객체이면서 이터러블인 <strong>NodeList,</strong> <strong>HTMLCollection 객체를 배열로 변환하면 부작용을 제거할 수 있다.</strong> 유용한 배열 고차함수 forEach, map, filter 등을 사용할 수 있다.</p>
-<h1 id="DOM-조작"><a href="#DOM-조작" class="headerlink" title="DOM 조작"></a>DOM 조작</h1><p>DOM 조작은 새로운 노드를 생성하여 DOM에 추가하거나 기존 노드 삭제 또는 교체 하는 것을 말한다. <strong>이 경우 리플로우와 리페인트가 발생한다.</strong></p>
-<h2 id="innerHTML"><a href="#innerHTML" class="headerlink" title="innerHTML"></a>innerHTML</h2><p>시작 태그와 종료 태그 사이의 모든 마크업을 문자열로 반환한다. HTML 마크업도 포함된 문자열을 반환하는 것이 textContent 프로퍼티와 차이점이다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;foo&quot;</span>&gt;</span>Hello <span class="tag">&lt;<span class="name">span</span>&gt;</span>world!<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// #foo 요소의 콘텐츠 영역 내의 HTML 마크업을 문자열로 취득한다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;foo&#x27;</span>).<span class="property">innerHTML</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// &quot;Hello &lt;span&gt;world!&lt;/span&gt;&quot;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>요소 노드의 innerHTML 프로퍼티에 문자열 할당하면 요소 노드의 모든 자식 노드가 제거되고 할당한 문자열이 텍스트로 추가된다. 이 때 <strong>HTML 마크업이 포함되어 있으면 파싱되어 요소 노드의 자식 노드로 DOM에 반영된다.</strong></li>
-</ul>
-<aside>
-💡 단, innerHTML 프로퍼티에 사용자로부터 입력받은 데이터를 그대로 할당하는 것은 크**로스 사이트 스크립팅 공격에 취약하므로 위험**하다.
-
-</aside>
-
-<h2 id="복수의-노드-생성과-추가-⭐️"><a href="#복수의-노드-생성과-추가-⭐️" class="headerlink" title="복수의 노드 생성과 추가 ⭐️"></a>복수의 노드 생성과 추가 ⭐️</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;fruits&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $fruits = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;fruits&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    [<span class="string">&#x27;Apple&#x27;</span>, <span class="string">&#x27;Banana&#x27;</span>, <span class="string">&#x27;Orange&#x27;</span>].<span class="title function_">forEach</span>(<span class="function"><span class="params">text</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 1. 요소 노드 생성</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">const</span> $li = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 2. 텍스트 노드 생성</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">const</span> textNode = <span class="variable language_">document</span>.<span class="title function_">createTextNode</span>(text);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 3. 텍스트 노드를 $li 요소 노드의 자식 노드로 추가</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $li.<span class="title function_">appendChild</span>(textNode);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 4. $li 요소 노드를 #fruits 요소 노드의 마지막 자식 노드로 추가</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $fruits.<span class="title function_">appendChild</span>($li);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제는 3개의 요소 노드가 생성하여 DOM에 3번 추가하여 DOM이 3번 변경된다. 이러한 방법은 <strong>리플로우를 많이 발생 시키므로 피해야한다.</strong></li>
-</ul>
-<p>⇒ 컨테이너 요소를 미리 생성한 후 DOM에 추가할 3개 요소 노드를 컨테이너 요소의 자식 노드로 추가한 뒤 컨테이너 요소를 #fruits 요소에 자식으로 추가한다. 하지만 이 또한, 불필요한 컨테이너 요소(div)가 DOM에 추가되어 바람직 하지 않다.</p>
-<h1 id="어트리뷰트"><a href="#어트리뷰트" class="headerlink" title="어트리뷰트"></a>어트리뷰트</h1><h2 id="어트리뷰트-노드와-attributes-프로퍼티"><a href="#어트리뷰트-노드와-attributes-프로퍼티" class="headerlink" title="어트리뷰트 노드와 attributes 프로퍼티"></a>어트리뷰트 노드와 attributes 프로퍼티</h2><p>HTML 문서의 요소는 여러 개의 어트리뷰트를 가질 수 있다. ex) class, checked, aria-label…</p>
-<ul>
-<li>모든 HTML 요소에 공통적인 것부터 해당 요소만 사용할 수 있는 어트리뷰트가 있다.</li>
-<li>HTML 요소의 어트리뷰트는 어트리뷰트 노드로 변환되어 요소 노드와 연결된다. 이는 NamedNodeMap 객체에 담겨 요소 노드의 attributes 프로퍼티에 저장된다.</li>
-<li><strong>attributes 프로퍼티는 getter만 존재하는 접근자 프로퍼티이다.</strong></li>
-</ul>
-<h2 id="HTML-어트리뷰트-vs-DOM-프로퍼티"><a href="#HTML-어트리뷰트-vs-DOM-프로퍼티" class="headerlink" title="HTML 어트리뷰트 vs DOM 프로퍼티"></a>HTML 어트리뷰트 vs DOM 프로퍼티</h2><ul>
-<li>HTML 어트리뷰트는 <strong>초기값 (변하지 않는다.)</strong></li>
-<li>DOM 프로퍼티는 HTML 프로퍼티를 초기값으로 가지고 <strong>변경될 수 있다.</strong></li>
-</ul>
-<p>첫렌더링 까지 어트리뷰트 노드의 어트리뷰트 값과 요소 노드의 value 프로퍼티에 할당된 값은 HTML 어트리뷰트 값과 동일하다. 하지만 첫 렌더링 이후 사용자가 input 요소에 무언가 입력시 바뀌게 된다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">value</span>=<span class="string">&quot;ungmo2&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $input = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;user&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// attributes 프로퍼티에 저장된 value 어트리뷰트 값</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>($input.<span class="title function_">getAttribute</span>(<span class="string">&#x27;value&#x27;</span>)); <span class="comment">// ungmo2</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 요소 노드의 value 프로퍼티에 저장된 value 어트리뷰트 값</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">console</span>.<span class="title function_">log</span>($input.<span class="property">value</span>); <span class="comment">// ungmo2</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>input 요소 노드는 상태를 가지고 있고 사용자의 입력에 의한 변경된 <strong>최신 상태를 관리해야 할뿐더러</strong> HTML 어트리뷰트로 지정한 <strong>초기 상태도 관리해야</strong>한다.</li>
-</ul>
-<p>즉, 요소 노드의 <strong>초기 상태는 어트리뷰트 노드가 관리</strong>하며 요소 노드의 <strong>최신 상태는 DOM 프로퍼티가 관리</strong>한다.</p>
-<h3 id="HTML-어트리뷰트와-DOM-프로퍼티의-대응-관계"><a href="#HTML-어트리뷰트와-DOM-프로퍼티의-대응-관계" class="headerlink" title="HTML 어트리뷰트와 DOM 프로퍼티의 대응 관계"></a>HTML 어트리뷰트와 DOM 프로퍼티의 대응 관계</h3><p>대부분은 HTML 어트리뷰트는 HTML 어트리뷰트 이름과 동일한 DOM 프로퍼티와 1:1로 대응한다. 반드시는 아니다.</p>
-<ul>
-<li>id 어트리뷰트와 id 프로퍼티는 1:1 대응, 동일한 값으로 연동한다.</li>
-<li>input 요소의 value 어트리뷰트는 value 프로퍼티와 1:1 대응, <strong>value 어트리뷰트는 초기상태</strong>를, <strong>value 프로퍼티는 최신 상태</strong>를 갖는다.</li>
-<li>class 어트리뷰트에 대응하는 DOM 프로퍼티는 className, classList 프로퍼티이다.</li>
-</ul>
-<h3 id="DOM-프로퍼티-값의-타입"><a href="#DOM-프로퍼티-값의-타입" class="headerlink" title="DOM 프로퍼티 값의 타입"></a>DOM 프로퍼티 값의 타입</h3><p>getAttribute 메서드로 취득한 어트리뷰트 값은 언제나 문자열이지만 DOM 프로퍼티로 취득한 최신 상태 값은 문자열이 아닐 수 있다. boolean 타입일 수 있다.</p>
-<p>ex) checkbox요소의 checked 어트리뷰트 값은 문자열 이지만 checked 프로퍼티 값은 불리언이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/30/Javascript/DOM%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A9%E1%84%83%E1%85%B3(attribute%20vs%20property)/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/29/Javascript/%E1%84%87%E1%85%B3%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%84%8C%E1%85%A5%20%E1%84%85%E1%85%A6%E1%86%AB%E1%84%83%E1%85%A5%E1%84%85%E1%85%B5%E1%86%BC%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A5%E1%86%BC/"
-                            aria-label=": 브라우저 렌더링 과정"
-                        >
-                            브라우저 렌더링 과정
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-29T18:59:35+09:00">
-	
-		    2022/08/29
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
-<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
-<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html</p>
-<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다. 의미없는 문자열 데이터를 브라우저가 이해할 수 있는 자료구조(객체)로 변환하여 메모리에 저장해야한다.</p>
-<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
-<ol>
-<li>서버는 요청의 응답하기 위해 요청한 HTML 파일을 읽어 메모리에 저장한 뒤 메모리에 저장된 바이트(2진수)를 인터넷을 경유하여 응답한다.</li>
-<li>브라우저는 이를 받아 meta 태그의 charset 방식에 따라(UTF-8) 문자열로 변환한다.</li>
-<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
-<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
-<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
-</ol>
-<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
-<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
-<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
-<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
-<ul>
-<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
-<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
-<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
-</ul>
-<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
-<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
-<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
-<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
-<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
-<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 다시 DOM 생성을 재개한다.</p>
-<p>자바스크립트 엔진은 자바스크립트 코드를 파싱하기 시작한다. 자바스크립트를 해석하여 <strong>AST(추상적 구문 트리)를 생성</strong>한다. 그리고 <strong>AST를 기반으로</strong> 인터프리터가 실행할 수 있는 중간 코드인 <strong>바이트 코드를 생성</strong>하여 실행한다.</p>
-<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
-<h1 id="자바스크립트-파싱에-의한-HTML-파싱중단"><a href="#자바스크립트-파싱에-의한-HTML-파싱중단" class="headerlink" title="자바스크립트 파싱에 의한 HTML 파싱중단"></a>자바스크립트 파싱에 의한 HTML 파싱중단</h1><p>렌더링 엔진과 자바스크립트 엔진은 서로 제어권을 이동시키면서 병렬적으로 파싱하지 않고 <strong>직렬적으로 파싱을 수행한다.</strong> 브라우저는 이처럼 <strong>동기적</strong>으로, 즉 순차적으로 HTML, CSS, 자바스크립트를 파싱하고 실행한다.</p>
-<p>script 태그를 만나면 제어권이 이동하기 때문에 HTML 문서 내의 script 태그의 위치는 중요한 의미를 갖는다.</p>
-<p>대표적인 문제로는 HTML이 생성되기 전에 자바스크립트 코드가 HTML요소를 동적으로 조작하려고 하면 <strong>정상적으로 동작하지 않을 수 있다.</strong> 이에 대한 해결책으로는 아래와 같다.</p>
-<ul>
-<li>body 태그 제일 하단에 script 태그(자바스크립트)를 위치 시키는 것</li>
-</ul>
-<h2 id="script-태그의-async-x2F-defer-어트리뷰트"><a href="#script-태그의-async-x2F-defer-어트리뷰트" class="headerlink" title="script 태그의 async&#x2F;defer 어트리뷰트"></a>script 태그의 async&#x2F;defer 어트리뷰트</h2><p>앞서 알아본 문제를 근본적으로 해결하기 위해서 HTML5부터 script 태그에 <strong>async</strong>와 <strong>defer 어트리뷰트</strong>가 추가되었다.</p>
-<p>두 어트리뷰트는 src 어트리뷰트를 통해 외부의 자바스크립트 파일을 로드하는 경우에만 사용할 수 있다.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;extern.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">defer</span> <span class="attr">src</span>=<span class="string">&quot;extern.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>이 둘을 사용하면 HTML 파싱과 외부 자바스크립트 파일의 로드가 비동기적으로 진행된다. 단 두 어트리뷰트의 실행 시점의 차이가 있다.</p>
-<ol>
-<li>async 어트리뷰트</li>
-</ol>
-<p>자바스크립트의 파싱과 실행은 <strong>자바스크립트 파일의 로드가 완료된 직후 진행</strong>된다. 이 때 HTML 파싱이 중단된다.</p>
-<p>여러개의 script 태그에 async 어트리뷰트를 지정하면 script 태그의 순서와는 상관없이 <strong>로드가 완료된 자바스크립트부터 먼저 실행되므로 순서가 보장되지 않는다.</strong></p>
-<p>즉, 순서보장이 필요한 script 태그는 async 어트리뷰트 지정하지 않아야 한다.</p>
-<ol start="2">
-<li>defer 어트리뷰트</li>
-</ol>
-<p>자바스크립트의 파싱과 실행은 <strong>HTML 파싱이 완료된 직후, 즉 DOM 생성이 완료된 직후</strong>(DOMContentLoaded 이벤트가 발생한다) 진행된다.</p>
-<blockquote>
-<p>모듈은 기본적으로 defer이다. async는 잘 사용하지 않지만 폰트의 경우 용량도 크고 순서가 크게 상관이 없으니 최대한 빨리 가져오기 위해 async를 사용하기도 한다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/29/Javascript/%E1%84%87%E1%85%B3%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%84%8C%E1%85%A5%20%E1%84%85%E1%85%A6%E1%86%AB%E1%84%83%E1%85%A5%E1%84%85%E1%85%B5%E1%86%BC%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A5%E1%86%BC/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
