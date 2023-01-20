@@ -325,6 +325,181 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/08/19/Javascript/this/"
+                            aria-label=": this"
+                        >
+                            this
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-08-19T19:33:57+09:00">
+	
+		    2022/08/19
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="this-키워드"><a href="#this-키워드" class="headerlink" title="this 키워드"></a>this 키워드</h1><p>메서드로 프로퍼티를 참조하고 변경하기 위해서는 우선 자신이 속한 객체를 가리키는 식별자를 참조해야만 가능한 일이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> circle = &#123;</span><br><span class="line">  <span class="comment">// 프로퍼티: 객체 고유의 상태 데이터</span></span><br><span class="line">  <span class="attr">radius</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="comment">// 메서드: 상태 데이터를 참조하고 조작하는 동작</span></span><br><span class="line">  <span class="title function_">getDiameter</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 이 메서드가 자신이 속한 객체의 프로퍼티나 다른 메서드를 참조하려면</span></span><br><span class="line">    <span class="comment">// 자신이 속한 객체인 circle을 참조할 수 있어야 한다.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * circle.<span class="property">radius</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>객체 리터럴은 circle 변수에 할당되기 직전에 평가된다?<br>&#x3D; 할당 연산자에 의해서 피연산자를 할당해주기 위해서는 우측의 객체 리터럴이 평가된 값으로 존재해야 할당을 해줄 수 있기 때문이다.</li>
+</ul>
+<p>하지만 위처럼 재귀적으로 자신이 속한 객체를 참조하는 것은 바람직하지 않다.</p>
+<p>그 예시를 생성자 함수를 통해 설명해보자</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="comment">// 이 시점에는 생성자 함수 자신이 생성할 인스턴스를 가리키는 식별자를 알 수 없다.</span></span><br><span class="line">  ????.<span class="property">radius</span> = radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Circle</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 이 시점에는 생성자 함수 자신이 생성할 인스턴스를 가리키는 식별자를 알 수 없다.</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * ????.<span class="property">radius</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수로 인스턴스를 생성하려면 먼저 생성자 함수를 정의해야 한다.</span></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>생성자 함수 내부에서 프로퍼티나 메서드를 추가하기 위해서는 자신이 생성할 인스턴스를 참조할 수 있어야 하는데, 인스턴스를 생성하려면 생성자 함수가 존재해야한다.</li>
+</ul>
+<p>따라서 자신이 속한 객체, 자신이 생성할 인스턴스를 가리킬 <strong>특별한 식별자가 필요하다.</strong></p>
+<p><strong>this란, 자신이 속한 객체 또는 자신이 생성할 인스턴스를 가리키는 자기 참조 변수이다. this를 통해 자신이 속한 객체나 자신이 생성할 인스턴스의 프로퍼티나 메서드를 참조할 수 있다.</strong></p>
+<ul>
+<li>this는 코드 어디서든 참조할 수 있다. (전역에서도 가능)</li>
+</ul>
+<aside>
+💡 단, this가 가리키는 값(this 바인딩)은 함수 호출 방식에 의해 동적으로 결정된다.
+
+</aside>
+
+<p>this는 객체의 프로퍼티나 메소드를 참조하기 위한 자기 참조 변수이므로 객체의 메서드 내부 또는 생성자 함수 내부에서만 의미가 있다. 따라서 strict mode가 선언된 일반 함수 내부의 this는 undefined가 바인딩된다. (일반함수에선 필요 없다)</p>
+<h1 id="함수-호출방식과-this-바인딩"><a href="#함수-호출방식과-this-바인딩" class="headerlink" title="함수 호출방식과 this 바인딩"></a>함수 호출방식과 this 바인딩</h1><p><strong>this에 바인딩될 값은 함수 호출 방식에 의해 동적으로 결정된다.</strong></p>
+<h2 id="1-일반-함수-호출"><a href="#1-일반-함수-호출" class="headerlink" title="1. 일반 함수 호출"></a>1. 일반 함수 호출</h2><p>전역 객체에 바인딩된다.</p>
+<p>중첩 함수 또한 일반 함수로 호출 시 함수 내부의 this는 전역 객체에 바인딩 된다.</p>
+<p>매서드 내에서 정의된 중첩함수도 일반 함수로 호출되면 역시 전역 객체에 바인딩 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티다.</span></span><br><span class="line"><span class="keyword">var</span> value = <span class="number">1</span>;</span><br><span class="line"><span class="comment">// const 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티가 아니다.</span></span><br><span class="line"><span class="comment">// const value = 1;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 100</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수도 일반 함수로 호출되면 중첩 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="title function_">bar</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+
+<p>콜백함수가 일반함수로 호출된다면 콜백함수 내부의 this에도 전역객체가 바인딩된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> value = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="comment">// 콜백 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+
+<p>하지만 메서드 내의 중첩함수와 콜백함수는 외부함수를 돕는 헬퍼 함수의 역할을 하는데 <strong>외부함수인 메서드와 중첩함수 또는 콜백함수의 this가 일치하지 않는다</strong>는 것은 중첩함수 또는 콜백함수가 헬퍼 함수로 동작하는 것을 어렵게 만든다.</p>
+<h3 id="화살표함수-내부에서-this"><a href="#화살표함수-내부에서-this" class="headerlink" title="화살표함수 내부에서 this"></a>화살표함수 내부에서 this</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> value = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 화살표 함수 내부의 this는 상위 스코프의 this를 가리킨다.</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">value</span>), <span class="number">100</span>); <span class="comment">// 100</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-메서드-호출"><a href="#2-메서드-호출" class="headerlink" title="2. 메서드 호출"></a>2. 메서드 호출</h2><p>메서드 내부의 this는 메서드를 소유한 객체가 아닌 <span style="color:red">메서드를 호출한 객체에 바인딩</span>된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 메서드 내부의 this는 메서드를 호출한 객체에 바인딩된다.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> people = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="title function_">getName</span>()); <span class="comment">// Lee</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(people.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>person 객체의 getName 프로퍼티가 가리키는 함수 객체는 person 객체에 포함된 것이 아니라 독립적으로 존재하는 별도의 객체이다? 내 생각에는 this가 가리키는 것이 메서드를 소유한 객체라고 생각해도 맞지 않나?<br>person 객체에 getName 프로퍼티 키가 가리키는 함수 객체를 소유하고 있는 것이 아니라 참조값을 가지므로 독립적으로 존재하는 객체를 가리키고 있는 것이 맞다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> anotherPerson = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// getName 메서드를 anotherPerson 객체의 메서드로 할당</span></span><br><span class="line">anotherPerson.<span class="property">getName</span> = person.<span class="property">getName</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// getName 메서드를 호출한 객체는 anotherPerson이다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(anotherPerson.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>새로운 객체의 프로퍼티에 person.getName 프로퍼티를 할당해줄 수 있다.</li>
+</ul>
+<p>this는 getName 메서드를 호출한 객체에 바인딩된다.</p>
+<p>프로토타입 메서드 내부에서도 마찬가지로 바인딩된다.</p>
+<h2 id="3-생성자-함수-호출"><a href="#3-생성자-함수-호출" class="headerlink" title="3. 생성자 함수 호출"></a>3. 생성자 함수 호출</h2><p>생성자 함수 내부의 this에는 생성자 함수가 (미래에) 생성할 인스턴스가 바인딩 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="comment">// 생성자 함수 내부의 this는 생성자 함수가 생성할 인스턴스를 가리킨다.</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 반지름이 5인 Circle 객체를 생성</span></span><br><span class="line"><span class="keyword">const</span> circle1 = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br><span class="line"><span class="comment">// 반지름이 10인 Circle 객체를 생성</span></span><br><span class="line"><span class="keyword">const</span> circle2 = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle1.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle2.<span class="title function_">getDiameter</span>()); <span class="comment">// 20</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Function-prototype-apply-x2F-call-x2F-bind-메서드에-의한-간접-호출"><a href="#4-Function-prototype-apply-x2F-call-x2F-bind-메서드에-의한-간접-호출" class="headerlink" title="4. Function.prototype.apply&#x2F;call&#x2F;bind 메서드에 의한 간접 호출"></a>4. Function.prototype.apply&#x2F;call&#x2F;bind 메서드에 의한 간접 호출</h2><p>apply, call, bind 메서드는 Function.prototype의 메서드이다. 이들 메서드는 <strong>모든 함수가 상속받아 사용 가능하다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getThisBinding</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 사용할 객체</span></span><br><span class="line"><span class="keyword">const</span> thisArg = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getThisBinding</span>()); <span class="comment">// window</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">apply</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">call</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>call,apply 메서드는 함수를 호출하면서 첫번째 인수로 전달한 객체를 호출한 함수의 this에 바인딩한다.</p>
+<ul>
+<li>위 예제에서는 getThisBinding() 함수에 인수를 전달해주지 않는다.</li>
+<li><strong>call, apply의 반환값은 호출한 함수의 반환값이다.</strong></li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getThisBinding</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">arguments</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 사용할 객체</span></span><br><span class="line"><span class="keyword">const</span> thisArg = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩한다.</span></span><br><span class="line"><span class="comment">// apply 메서드는 호출할 함수의 인수를 배열로 묶어 전달한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">apply</span>(thisArg, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]));</span><br><span class="line"><span class="comment">// Arguments(3) [1, 2, 3, callee: ƒ, Symbol(Symbol.iterator): ƒ]</span></span><br><span class="line"><span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// call 메서드는 호출할 함수의 인수를 쉼표로 구분한 리스트 형식으로 전달한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">call</span>(thisArg, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line"><span class="comment">// Arguments(3) [1, 2, 3, callee: ƒ, Symbol(Symbol.iterator): ƒ]</span></span><br><span class="line"><span class="comment">// &#123;a: 1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>call,apply 메서드로 함수를 호출하면서 호출한 함수에 인수를 전달해줄 수 있다.</p>
+<h3 id="유사배열-객체에-배열-메서드-사용"><a href="#유사배열-객체에-배열-메서드-사용" class="headerlink" title="유사배열 객체에 배열 메서드 사용"></a>유사배열 객체에 배열 메서드 사용</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">convertArgsToArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">arguments</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// arguments 객체를 배열로 변환</span></span><br><span class="line">  <span class="comment">// Array.prototype.slice를 인수없이 호출하면 배열의 복사본을 생성한다.</span></span><br><span class="line">  <span class="keyword">const</span> arr = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);</span><br><span class="line">  <span class="comment">// const arr = Array.prototype.slice.apply(arguments);</span></span><br><span class="line">  <span class="comment">// const arr = Array.from(arguments)</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(arr);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">convertArgsToArray</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>arguments 객체는 배열이 아니므로 배열 메서드를 사용할 수 없지만 apply, call 메서드를 사용하면 가능하다.</li>
+</ul>
+<blockquote>
+<p>새로 나온 Array.from() 정적 메서드를 사용할 수 있다. 하지만 arguments 객체를 잘 안쓴다.</p>
+</blockquote>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getThisBinding</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 사용할 객체</span></span><br><span class="line"><span class="keyword">const</span> thisArg = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// bind 메서드는 첫 번째 인수로 전달한 thisArg로 this 바인딩이 교체된</span></span><br><span class="line"><span class="comment">// getThisBinding 함수를 새롭게 생성해 반환한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)); <span class="comment">// getThisBinding</span></span><br><span class="line"><span class="comment">// bind 메서드는 함수를 호출하지는 않으므로 명시적으로 호출해야 한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)()); <span class="comment">// &#123;a: 1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>bind 메서드는 함수를 호출하지 않고 인수로 전달받은 객체로 this 바인딩이 교체된 함수를 새롭게 생성하여 반환한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="comment">// ①</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(callback, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// ② Hi! my name is .</span></span><br><span class="line">  <span class="comment">// 일반 함수로 호출된 콜백 함수 내부의 this.name은 브라우저 환경에서 window.name과 같다.</span></span><br><span class="line">  <span class="comment">// 브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 &#x27;&#x27;이다.</span></span><br><span class="line">  <span class="comment">// Node.js 환경에서 this.name은 undefined다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>person.foo의 콜백함수가 호출되기 전 1의 시점에서 this는 foo 메서드를 호출한 객체(person)를 가리킨다.</li>
+<li>그러나 person.foo의 콜백함수가 일반 함수로서 호출된 2의 시점에서 this는 전역객체 windows를 가리킨다.</li>
+<li>person.foo의 콜백함수는 헬퍼함수로 person.foo를 돕는 역할을 하기 때문에 서로의 this가 같아야한다.</li>
+</ul>
+<p>이 때, bind 메서드를 사용하여 this를 일치시킨다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="comment">// bind 메서드로 callback 함수 내부의 this 바인딩을 전달</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(callback.<span class="title function_">bind</span>(<span class="variable language_">this</span>), <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// Hi! my name is Lee.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>callback 함수에 this가 바인딩된 새로운 함수를 반환</li>
+</ul>
+<p><strong>코드해설</strong></p>
+<p>즉, foo안의 this는 person 객체를가리키는데, 콜백함수 호출하면 this가 window를 가리킨다. 그러므로 bind함수를 사용하여 foo 메서드가 가리키는 this를 callback 함수에 바인딩해줘서 콜백함수가 가리키는 this와 일치 시켜준다.</p>
+<blockquote>
+<p>bind, call, apply, that으로 this 바인딩을 일치 시켜주는 것 보다 화살표 함수를 사용하는 것이 간편하다. 하지만 여러 가지 방식에 대해서도 알아두자.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>함수 호출 방식</th>
+<th>this 바인딩</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>일반 함수 호출</td>
+<td>전역 객체</td>
+</tr>
+<tr>
+<td>메서드 호출</td>
+<td>메서드를 호출한 객체</td>
+</tr>
+<tr>
+<td>생성자 함수 호출</td>
+<td>생성자 함수가 (미래에) 생성할 인스턴스</td>
+</tr>
+<tr>
+<td>Function.prototype.apply&#x2F;call&#x2F;bind 메서드에 의한 간접호출</td>
+<td>Function.prototype.apply&#x2F;call&#x2F;bind 메서드에 첫번째로 전달한 객체</td>
+</tr>
+</tbody></table>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/08/19/Javascript/this/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/08/18/Javascript/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A9%E1%86%A8/"
                             aria-label=": 상속"
                         >
@@ -687,182 +862,6 @@
                         <p>
                             <a
                                 href="/2022/08/16/Javascript/%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%91%E1%85%A5%E1%84%90%E1%85%B5%E1%84%8B%E1%85%AA%20%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%91%E1%85%A5%E1%84%90%E1%85%B5%20%E1%84%8B%E1%85%A5%E1%84%90%E1%85%B3%E1%84%85%E1%85%B5%E1%84%87%E1%85%B2%E1%84%90%E1%85%B3/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/12/Javascript/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%91%E1%85%B3%E1%84%8B%E1%85%AA%20var,let,const/"
-                            aria-label=": 스코프와 var,let,const"
-                        >
-                            스코프와 var,let,const
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-12T13:57:17+09:00">
-	
-		    2022/08/12
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="스코프와-let-const-키워드"><a href="#스코프와-let-const-키워드" class="headerlink" title="스코프와 let, const 키워드"></a>스코프와 let, const 키워드</h1><p>오늘은 스코프와 ES6에서 새로 등장한 let,const 키워드에 대해 알아보자.</p>
-<hr>
-<h2 id="스코프"><a href="#스코프" class="headerlink" title="스코프"></a>스코프</h2><p>스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.</p>
-<ul>
-<li>모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.</li>
-<li>식별자는 어떤 값을 구별하기 위해 유일 해야하므로 <span style="color:red">중복될 수 없다.</span> 단, 스코프가 다르면 중복될 수 있다.</li>
-</ul>
-<h3 id="지역-스코프"><a href="#지역-스코프" class="headerlink" title="지역 스코프"></a>지역 스코프</h3><p>자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.</p>
-<p>즉, 지역 스코프는 함수에 의해서 생성된다.</p>
-<blockquote>
-<p>let, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.</p>
-<h3 id="스코프-체인"><a href="#스코프-체인" class="headerlink" title="스코프 체인"></a>스코프 체인</h3><p>스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>; <span class="comment">// 전역 스코프</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = -<span class="number">100</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 100</span></span><br><span class="line">  <span class="title function_">inner</span>(); <span class="comment">// -100</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">outer</span>();</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>전역 스코프 (최상위 스코프)</p>
-</li>
-<li><p>outer 지역 스코프</p>
-</li>
-<li><p>inner 지역 스코프</p>
-</li>
-</ol>
-<p>자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 <span style="color:red">상위 스코프 방향</span>으로 이동하며 변수를 검색한다.</p>
-<blockquote>
-<p>실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.</p>
-</blockquote>
-<h3 id="렉시컬-스코프"><a href="#렉시컬-스코프" class="headerlink" title="렉시컬 스코프"></a>렉시컬 스코프</h3><p>렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.</p>
-<p><span style="color:red">함수 호출이 아닌</span> 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.</p>
-<blockquote>
-<p>즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.</p>
-</blockquote>
-<hr>
-<h2 id="전역변수와-var-키워드"><a href="#전역변수와-var-키워드" class="headerlink" title="전역변수와 var 키워드"></a>전역변수와 var 키워드</h2><p>변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.</p>
-<ul>
-<li><p>전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.</p>
-</li>
-<li><p>지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.</p>
-</li>
-</ul>
-<h3 id="전역변수의-문제점"><a href="#전역변수의-문제점" class="headerlink" title="전역변수의 문제점"></a>전역변수의 문제점</h3><ol>
-<li><p>암묵적 결합<br>어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.</p>
-</li>
-<li><p>긴 생명주기</p>
-</li>
-</ol>
-<p>메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.</p>
-<ol start="3">
-<li>네임 스페이스 오염</li>
-</ol>
-<p>자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.</p>
-<blockquote>
-<p>그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.</p>
-</blockquote>
-<h3 id="전역변수-사용-억제-방법"><a href="#전역변수-사용-억제-방법" class="headerlink" title="전역변수 사용 억제 방법"></a>전역변수 사용 억제 방법</h3><ol>
-<li><p>즉시실행함수<br>즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.</p>
-</li>
-<li><p>모듈패턴<br>클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.</p>
-</li>
-</ol>
-<p>전역변수 억제와 캡슐화까지 가능하다.</p>
-<blockquote>
-<p>캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)</p>
-</blockquote>
-<h3 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h3><p>var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">x</span>); <span class="comment">// 10;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  z = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
-
-<p>키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.</p>
-<p>선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.</p>
-<blockquote>
-<p>키워드 없이 선언하는 것은 옳지 않다.</p>
-</blockquote>
-<p><span style="font-size:1.2rem">러버덕하면서 알게된 내용</span></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  y = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;x&quot;</span>); <span class="comment">//  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;y&quot;</span>); <span class="comment">// &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.</p>
-<p>하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.</p>
-<p>따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.</p>
-<hr>
-<h2 id="let-const-키워드"><a href="#let-const-키워드" class="headerlink" title="let, const 키워드"></a>let, const 키워드</h2><p>let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.</p>
-<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><p>var 키워드와 비교하여 let 키워드를 알아보자.</p>
-<ol>
-<li><p>변수 중복 선언 금지</p>
-</li>
-<li><p>블록 레벨 스코프</p>
-</li>
-</ol>
-<p>let 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.</p>
-<ol start="3">
-<li>변수 호이스팅</li>
-</ol>
-<p>var 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
-<p>선언단계가 자바스크립트 엔진에 의해 실행되고 <span style="color:red">초기화 단계는 변수 선언문에 도달했을 때</span>, 실행된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined</span></span><br><span class="line">a = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// Uncaught ReferenceError: b is not defined</span></span><br><span class="line"><span class="keyword">let</span> b;</span><br></pre></td></tr></table></figure>
-
-<p>언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.</p>
-<h3 id="const"><a href="#const" class="headerlink" title="const"></a>const</h3><p>let 키워드와 비교해서 알아보자</p>
-<ol>
-<li>선언과 초기화</li>
-</ol>
-<p>const 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz; <span class="comment">// Uncaught SyntaxError : Unexpected identifier</span></span><br></pre></td></tr></table></figure>
-
-<p>이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.</p>
-<ol start="2">
-<li>재할당 금지</li>
-</ol>
-<p>const 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.</p>
-<ol start="3">
-<li>상수</li>
-</ol>
-<p>변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.</p>
-<p>주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/12/Javascript/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%91%E1%85%B3%E1%84%8B%E1%85%AA%20var,let,const/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

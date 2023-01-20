@@ -324,6 +324,180 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                            aria-label=": 스코프는 무엇인가요?"
+                        >
+                            스코프는 무엇인가요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-20T10:30:56+09:00">
+	
+		    2023/01/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="스코프"><a href="#스코프" class="headerlink" title="스코프"></a>스코프</h1><p>스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.</p>
+<ul>
+<li>모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.</li>
+<li>식별자는 어떤 값을 구별하기 위해 유일 해야하므로 <span style="color:red">중복될 수 없다.</span> 단, 스코프가 다르면 중복될 수 있다.</li>
+</ul>
+<h2 id="지역-스코프"><a href="#지역-스코프" class="headerlink" title="지역 스코프"></a>지역 스코프</h2><p>자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.</p>
+<p>즉, 지역 스코프는 함수에 의해서 생성된다.</p>
+<blockquote>
+<p>let, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br></pre></td></tr></table></figure>
+
+<p>var 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.</p>
+<h2 id="스코프-체인"><a href="#스코프-체인" class="headerlink" title="스코프 체인"></a>스코프 체인</h2><p>스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>; <span class="comment">// 전역 스코프</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = -<span class="number">100</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 100</span></span><br><span class="line">  <span class="title function_">inner</span>(); <span class="comment">// -100</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">outer</span>();</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>전역 스코프 (최상위 스코프)</p>
+</li>
+<li><p>outer 지역 스코프</p>
+</li>
+<li><p>inner 지역 스코프</p>
+</li>
+</ol>
+<p>자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 <span style="color:red">상위 스코프 방향</span>으로 이동하며 변수를 검색한다.</p>
+<blockquote>
+<p>실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.</p>
+</blockquote>
+<h2 id="렉시컬-스코프"><a href="#렉시컬-스코프" class="headerlink" title="렉시컬 스코프"></a>렉시컬 스코프</h2><p>렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.</p>
+<p><span style="color:red">함수 호출이 아닌</span> 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.</p>
+<blockquote>
+<p>즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.</p>
+</blockquote>
+<hr>
+<h1 id="전역변수와-var-키워드"><a href="#전역변수와-var-키워드" class="headerlink" title="전역변수와 var 키워드"></a>전역변수와 var 키워드</h1><p>변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.</p>
+<ul>
+<li><p>전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.</p>
+</li>
+<li><p>지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.</p>
+</li>
+</ul>
+<h2 id="전역변수의-문제점"><a href="#전역변수의-문제점" class="headerlink" title="전역변수의 문제점"></a>전역변수의 문제점</h2><ol>
+<li><p>암묵적 결합<br>어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.</p>
+</li>
+<li><p>긴 생명주기</p>
+</li>
+</ol>
+<p>메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.</p>
+<ol start="3">
+<li>네임 스페이스 오염</li>
+</ol>
+<p>자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.</p>
+<blockquote>
+<p>그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.</p>
+</blockquote>
+<h2 id="전역변수-사용-억제-방법"><a href="#전역변수-사용-억제-방법" class="headerlink" title="전역변수 사용 억제 방법"></a>전역변수 사용 억제 방법</h2><ol>
+<li><p>즉시실행함수<br>즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.</p>
+</li>
+<li><p>모듈패턴<br>클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.</p>
+</li>
+</ol>
+<p>전역변수 억제와 캡슐화까지 가능하다.</p>
+<blockquote>
+<p>캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)</p>
+</blockquote>
+<h1 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h1><p>var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">x</span>); <span class="comment">// 10;</span></span><br></pre></td></tr></table></figure>
+
+<p>var 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  z = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+
+<p>키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.</p>
+<p>선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.</p>
+<blockquote>
+<p>키워드 없이 선언하는 것은 옳지 않다.</p>
+</blockquote>
+<p><span style="font-size:1.2rem">러버덕하면서 알게된 내용</span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  y = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;x&quot;</span>); <span class="comment">//  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;y&quot;</span>); <span class="comment">// &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>var 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.</p>
+<p>하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.</p>
+<p>따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.</p>
+<hr>
+<h1 id="let-const-키워드"><a href="#let-const-키워드" class="headerlink" title="let, const 키워드"></a>let, const 키워드</h1><p>let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.</p>
+<h2 id="let"><a href="#let" class="headerlink" title="let"></a>let</h2><p>var 키워드와 비교하여 let 키워드를 알아보자.</p>
+<ol>
+<li><p>변수 중복 선언 금지</p>
+</li>
+<li><p>블록 레벨 스코프</p>
+</li>
+</ol>
+<p>let 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.</p>
+<ol start="3">
+<li>변수 호이스팅</li>
+</ol>
+<p>var 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
+<p>선언단계가 자바스크립트 엔진에 의해 실행되고 <span style="color:red">초기화 단계는 변수 선언문에 도달했을 때</span>, 실행된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined</span></span><br><span class="line">a = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// Uncaught ReferenceError: b is not defined</span></span><br><span class="line"><span class="keyword">let</span> b;</span><br></pre></td></tr></table></figure>
+
+<p>언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.</p>
+<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p>let 키워드와 비교해서 알아보자</p>
+<ol>
+<li>선언과 초기화</li>
+</ol>
+<p>const 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz; <span class="comment">// Uncaught SyntaxError : Unexpected identifier</span></span><br></pre></td></tr></table></figure>
+
+<p>이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.</p>
+<ol start="2">
+<li>재할당 금지</li>
+</ol>
+<p>const 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.</p>
+<ol start="3">
+<li>상수</li>
+</ol>
+<p>변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.</p>
+<p>주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/19/CS/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%80/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%80/"
                             aria-label=": 프로세스와 스레드의 차이점은?"
                         >
@@ -1109,85 +1283,6 @@
                         <p>
                             <a
                                 href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": JWT 토큰 방식은 무엇인가요?"
-                        >
-                            JWT 토큰 방식은 무엇인가요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-09T11:31:32+09:00">
-	
-		    2023/01/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🛠-JWT-토큰-방식이란"><a href="#🛠-JWT-토큰-방식이란" class="headerlink" title="🛠 JWT 토큰 방식이란?"></a>🛠 JWT 토큰 방식이란?</h1><p>JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다.</p>
-<p>기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다.</p>
-<p>이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는 JWT를 사용하게 되었다.</p>
-<blockquote>
-<p>토큰은 로그인 이후 서버가 만들어주는 문자열이고, 토큰 안에는 사용자의 로그인 정보와 서버의 서명이 들어있다.</p>
-</blockquote>
-<h1 id="JWT-토큰-방식-순서"><a href="#JWT-토큰-방식-순서" class="headerlink" title="JWT 토큰 방식 순서"></a>JWT 토큰 방식 순서</h1><ol>
-<li>사용자가 로그인을 하면 서버는 사용자에게 사용자 로그인 정보 및 서버의 서명이 들어간 토큰을 발급한다.</li>
-<li>사용자는 토큰을 가지고 권한이 필요한 API 작업을 요청한다.</li>
-<li>서버는 토큰의 유효성 검사를 통해 요청에 응답한다.</li>
-</ol>
-<h1 id="JWT-토큰-특징"><a href="#JWT-토큰-특징" class="headerlink" title="JWT 토큰 특징"></a>JWT 토큰 특징</h1><h2 id="👍-장점"><a href="#👍-장점" class="headerlink" title="👍 장점"></a>👍 장점</h2><ul>
-<li>서버에서 사용자 정보를 저장해둘 필요가 없어 서버 스케일링시 큰 문제가 없다.</li>
-<li>별도의 I&#x2F;O 작업 없는 빠른 인증 처리 가능</li>
-</ul>
-<h2 id="👎-단점"><a href="#👎-단점" class="headerlink" title="👎 단점"></a>👎 단점</h2><ul>
-<li>한번 발급된 토큰은 수정 및 폐기가 불가능하다.(클라이언트에게 있으니깐!)<ul>
-<li>그렇기 때문에 유효기간을 짧게 설정해주는것이 중요하다.</li>
-</ul>
-</li>
-<li>토큰의 길이가 늘어날 수록 네트워크 부하가 심해진다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

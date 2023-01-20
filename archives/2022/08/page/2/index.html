@@ -884,182 +884,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2022/08/12/Javascript/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%91%E1%85%B3%E1%84%8B%E1%85%AA%20var,let,const/"
-                            aria-label=": 스코프와 var,let,const"
-                        >
-                            스코프와 var,let,const
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-12T13:57:17+09:00">
-	
-		    2022/08/12
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="스코프와-let-const-키워드"><a href="#스코프와-let-const-키워드" class="headerlink" title="스코프와 let, const 키워드"></a>스코프와 let, const 키워드</h1><p>오늘은 스코프와 ES6에서 새로 등장한 let,const 키워드에 대해 알아보자.</p>
-<hr>
-<h2 id="스코프"><a href="#스코프" class="headerlink" title="스코프"></a>스코프</h2><p>스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.</p>
-<ul>
-<li>모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.</li>
-<li>식별자는 어떤 값을 구별하기 위해 유일 해야하므로 <span style="color:red">중복될 수 없다.</span> 단, 스코프가 다르면 중복될 수 있다.</li>
-</ul>
-<h3 id="지역-스코프"><a href="#지역-스코프" class="headerlink" title="지역 스코프"></a>지역 스코프</h3><p>자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.</p>
-<p>즉, 지역 스코프는 함수에 의해서 생성된다.</p>
-<blockquote>
-<p>let, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.</p>
-<h3 id="스코프-체인"><a href="#스코프-체인" class="headerlink" title="스코프 체인"></a>스코프 체인</h3><p>스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>; <span class="comment">// 전역 스코프</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = -<span class="number">100</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 100</span></span><br><span class="line">  <span class="title function_">inner</span>(); <span class="comment">// -100</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">outer</span>();</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>전역 스코프 (최상위 스코프)</p>
-</li>
-<li><p>outer 지역 스코프</p>
-</li>
-<li><p>inner 지역 스코프</p>
-</li>
-</ol>
-<p>자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 <span style="color:red">상위 스코프 방향</span>으로 이동하며 변수를 검색한다.</p>
-<blockquote>
-<p>실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.</p>
-</blockquote>
-<h3 id="렉시컬-스코프"><a href="#렉시컬-스코프" class="headerlink" title="렉시컬 스코프"></a>렉시컬 스코프</h3><p>렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.</p>
-<p><span style="color:red">함수 호출이 아닌</span> 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.</p>
-<blockquote>
-<p>즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.</p>
-</blockquote>
-<hr>
-<h2 id="전역변수와-var-키워드"><a href="#전역변수와-var-키워드" class="headerlink" title="전역변수와 var 키워드"></a>전역변수와 var 키워드</h2><p>변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.</p>
-<ul>
-<li><p>전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.</p>
-</li>
-<li><p>지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.</p>
-</li>
-</ul>
-<h3 id="전역변수의-문제점"><a href="#전역변수의-문제점" class="headerlink" title="전역변수의 문제점"></a>전역변수의 문제점</h3><ol>
-<li><p>암묵적 결합<br>어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.</p>
-</li>
-<li><p>긴 생명주기</p>
-</li>
-</ol>
-<p>메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.</p>
-<ol start="3">
-<li>네임 스페이스 오염</li>
-</ol>
-<p>자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.</p>
-<blockquote>
-<p>그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.</p>
-</blockquote>
-<h3 id="전역변수-사용-억제-방법"><a href="#전역변수-사용-억제-방법" class="headerlink" title="전역변수 사용 억제 방법"></a>전역변수 사용 억제 방법</h3><ol>
-<li><p>즉시실행함수<br>즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.</p>
-</li>
-<li><p>모듈패턴<br>클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.</p>
-</li>
-</ol>
-<p>전역변수 억제와 캡슐화까지 가능하다.</p>
-<blockquote>
-<p>캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)</p>
-</blockquote>
-<h3 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h3><p>var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">x</span>); <span class="comment">// 10;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  z = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
-
-<p>키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.</p>
-<p>선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.</p>
-<blockquote>
-<p>키워드 없이 선언하는 것은 옳지 않다.</p>
-</blockquote>
-<p><span style="font-size:1.2rem">러버덕하면서 알게된 내용</span></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  y = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;x&quot;</span>); <span class="comment">//  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;y&quot;</span>); <span class="comment">// &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.</p>
-<p>하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.</p>
-<p>따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.</p>
-<hr>
-<h2 id="let-const-키워드"><a href="#let-const-키워드" class="headerlink" title="let, const 키워드"></a>let, const 키워드</h2><p>let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.</p>
-<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><p>var 키워드와 비교하여 let 키워드를 알아보자.</p>
-<ol>
-<li><p>변수 중복 선언 금지</p>
-</li>
-<li><p>블록 레벨 스코프</p>
-</li>
-</ol>
-<p>let 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.</p>
-<ol start="3">
-<li>변수 호이스팅</li>
-</ol>
-<p>var 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
-<p>선언단계가 자바스크립트 엔진에 의해 실행되고 <span style="color:red">초기화 단계는 변수 선언문에 도달했을 때</span>, 실행된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined</span></span><br><span class="line">a = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// Uncaught ReferenceError: b is not defined</span></span><br><span class="line"><span class="keyword">let</span> b;</span><br></pre></td></tr></table></figure>
-
-<p>언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.</p>
-<h3 id="const"><a href="#const" class="headerlink" title="const"></a>const</h3><p>let 키워드와 비교해서 알아보자</p>
-<ol>
-<li>선언과 초기화</li>
-</ol>
-<p>const 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz; <span class="comment">// Uncaught SyntaxError : Unexpected identifier</span></span><br></pre></td></tr></table></figure>
-
-<p>이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.</p>
-<ol start="2">
-<li>재할당 금지</li>
-</ol>
-<p>const 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.</p>
-<ol start="3">
-<li>상수</li>
-</ol>
-<p>변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.</p>
-<p>주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/12/Javascript/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%A9%E1%84%91%E1%85%B3%E1%84%8B%E1%85%AA%20var,let,const/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2022/08/11/Javascript/%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/"
                             aria-label=": 함수"
                         >
@@ -1638,6 +1462,117 @@
                         <p>
                             <a
                                 href="/2022/08/05/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/%EB%B0%B0%EB%8B%AC%EC%9D%98%20%EB%AF%BC%EC%A1%B1%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/08/04/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/inline%20%EC%9A%94%EC%86%8C%20%EB%B0%B0%EC%B9%98,%20nth-child()/"
+                            aria-label=": inline 요소 배치, nth-child()"
+                        >
+                            inline 요소 배치, nth-child()
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-08-04T15:58:54+09:00">
+	
+		    2022/08/04
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="오늘-공부한-것"><a href="#오늘-공부한-것" class="headerlink" title="오늘 공부한 것"></a>오늘 공부한 것</h1><h2 id="배달의-민족-프로젝트"><a href="#배달의-민족-프로젝트" class="headerlink" title="배달의 민족 프로젝트"></a>배달의 민족 프로젝트</h2><h3 id="inline-요소-layout-배치"><a href="#inline-요소-layout-배치" class="headerlink" title="inline 요소 layout 배치"></a>inline 요소 layout 배치</h3><hr>
+<p><img src="/images/220804/layout.png" alt="layout"><br>위 사진처럼 우리집(button)이 좌측으로, cate(a), alert(button), my(a)가 우측에 배치되어 있는 레이아웃을 만들어 보자.</p>
+<h4 id="마크업"><a href="#마크업" class="headerlink" title="마크업"></a>마크업</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;header__logo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;logo__link&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">&quot;logo__img&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;배달의 민족&quot;</span></span></span><br><span class="line"><span class="tag">    /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;nav-wrapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;header__address-button&quot;</span>&gt;</span>우리집<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;category&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span>&gt;</span>cate<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;header__alert-button&quot;</span>&gt;</span>alert<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;mypage&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span>&gt;</span>my<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">&quot;search-form&quot;</span> <span class="attr">action</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">legend</span> <span class="attr">class</span>=<span class="string">&quot;sr-only&quot;</span>&gt;</span>검색 폼<span class="tag">&lt;/<span class="name">legend</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;sr-only&quot;</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>검색<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;search-form__input&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">placeholder</span>=<span class="string">&quot;찾아라! 맛있는 음식과 맛집&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;search&quot;</span></span></span><br><span class="line"><span class="tag">      /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;search-form__button-submit&quot;</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>button, a 태그 둘다 인라인 요소이므로 한줄을 전부 차지하는 block 요소와 다르게 컨텐츠의 크기만큼 width,heigth를 가진다.</li>
+</ul>
+<h4 id="sass"><a href="#sass" class="headerlink" title="sass"></a>sass</h4><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 헤더</span></span><br><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$mainColor</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="built_in">rem</span>(<span class="number">19px</span>);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">20px</span> <span class="number">20px</span>;</span><br><span class="line">  &amp; <span class="selector-class">.nav-wrapper</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: flex;</span><br><span class="line">    <span class="attribute">flex-flow</span>: row nowrap;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;__address-<span class="selector-tag">button</span> &#123;</span><br><span class="line">    <span class="keyword">@include</span> size(rem(<span class="number">120px</span>), rem(<span class="number">32px</span>));</span><br><span class="line">    <span class="attribute">background</span>: transparent;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0px</span> solid black;</span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">    <span class="attribute">text-align</span>: left;</span><br><span class="line">    <span class="attribute">margin-right</span>: auto;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp; <span class="selector-class">.category</span>,</span><br><span class="line">  &amp;__alert-<span class="selector-tag">button</span>,</span><br><span class="line">  &amp; <span class="selector-class">.mypage</span> &#123;</span><br><span class="line">    <span class="keyword">@include</span> size(rem(<span class="number">32px</span>), rem(<span class="number">32px</span>));</span><br><span class="line">    <span class="attribute">background</span>: red;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;__alert-<span class="selector-tag">button</span> &#123;</span><br><span class="line">    <span class="attribute">margin-left</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">    <span class="attribute">margin-right</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>button,a 태그들을 좌우배치하기 위해 이들을 div로 감싸고 부모요소에게 flex를 주었다.</li>
+<li>button, a 태그 각각 width, heigth를 주었다.</li>
+</ul>
+<aside>
+💡 width,heigth 주지 않으면 컨텐트 크기만큼 width를 가진다. 또한, flex의 기본속성이 stretch여서 부모요소 높이만큼 자식요소도 쭈욱 높이가 늘어나게 된다.
+</aside>
+
+<ul>
+<li>a,button 태그들이 flexible 속성으로 변하게 되면서 각 content만큼 width를 갖는 inline-block 요소로 변한다.</li>
+<li>flex 요소들이 직접 width를 가지거나, 컨텐츠 크기만큼 width를 가졌을 때, 결국 각자의 width를 가지고 있기 때문에 요소들에게 <strong>margin auto 속성</strong>을 적용하여 좌우 배치할 수 있다.</li>
+</ul>
+<hr>
+<h3 id="자주-쓰는-nth-child"><a href="#자주-쓰는-nth-child" class="headerlink" title="자주 쓰는 :nth-child()"></a>자주 쓰는 :nth-child()</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">address</span> <span class="attr">class</span>=<span class="string">&quot;address&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>(주)우아한형제들<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>대표이사 김범준<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>사업자등록번호 120-87-65763<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>통신판매업 서울 송파-0515<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>호스팅서비스제공자 (주)우아한형제들<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;CS@woowahan.com&quot;</span>&gt;</span>CS@woowahan.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>서울특별시 송파구 위례성대로 2 장은빌딩<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span></span></span><br><span class="line"><span class="tag">    &gt;</span>전자금융분쟁처리 Tel <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;tel:1600-0987&quot;</span>&gt;</span>1600-0987<span class="tag">&lt;/<span class="name">a</span>&gt;</span>(유료),</span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;080-849-0987&quot;</span>&gt;</span>080-849-0987<span class="tag">&lt;/<span class="name">a</span>&gt;</span>(무료)&lt;/span</span><br><span class="line">  &gt;</span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>Fax <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;fax:050-6050-0400&quot;</span>&gt;</span>050-6050-0400<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">address</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 마크업 처럼 address 안에 span 태그의 형제요소들이 많이 있을 때, 내가 원하는 순서의 span 태그에만 스타일링 주고 싶을 때 사용</li>
+</ul>
+<h4 id="3번째-포함-그-이후-요소"><a href="#3번째-포함-그-이후-요소" class="headerlink" title="3번째 포함 그 이후 요소"></a>3번째 포함 그 이후 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">3</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3번째-부터-5번째-요소"><a href="#3번째-부터-5번째-요소" class="headerlink" title="3번째 부터 5번째 요소"></a>3번째 부터 5번째 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">3</span>)<span class="selector-pseudo">:nth-child</span>(-n + <span class="number">5</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="짝수-및-홀수-요소"><a href="#짝수-및-홀수-요소" class="headerlink" title="짝수 및 홀수 요소"></a>짝수 및 홀수 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(odd) &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(even) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="함수형-요소"><a href="#함수형-요소" class="headerlink" title="함수형 요소"></a>함수형 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(<span class="number">3</span>n + <span class="number">1</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>1, 4, 7, 10 … 요소 선택</li>
+</ul>
+<hr>
+<h3 id="after-before로-세로선-스타일링"><a href="#after-before로-세로선-스타일링" class="headerlink" title="::after,before로 세로선 스타일링"></a>::after,before로 세로선 스타일링</h3><p><img src="/images/220804/styling.png" alt="after"><br>각 a 태그 사이에 | 구분선 모양을 가상 요소 선택자를 사용하여 구현해보자.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">2</span>)<span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">90%</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$gray-100</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">6px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2번째 li 태그부터 끝까지 before 선택자로 선택하였다.</li>
+<li>position : absolute 를 주고 배치를 맞춘 뒤 배경색을 채우고 width,height를 설정하여 선처럼 보이게 하였다.</li>
+</ul>
+<aside>
+💡 이 때, 부모 요소에게 position : relative 속성을 줘야 부모를 기준으로 배치할 수 있다.
+
+</aside>
+
+<hr>
+<h1 id="오늘-소감"><a href="#오늘-소감" class="headerlink" title="오늘 소감"></a>오늘 소감</h1><p>내일은 1달간 HTML&#x2F;CSS 수업에 대한 미니 프로젝트 발표가 있는 날이다. 수업동안 상대적으로 어려운 예제를 다루다가 일반적인 레이아웃을 다루니 쉽게 레이아웃은 쉽게 느껴졌다. 하지만, 여전히 제일 어려운 것은 마크업인 것 같다. 논리적인 순서에도 맞아야 하며 배치도 적절하게 되게끔 마크업을 설계하는 것이 매우 중요하다고 생각이 들었다.</p>
+<p>중간중간 CSS 스타일링에 대해 막혔었던 부분도 TIL을 작성하며 정리하니 나중에 찾아보기도 편하고 기억에 오래 남을 것 같다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/08/04/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/inline%20%EC%9A%94%EC%86%8C%20%EB%B0%B0%EC%B9%98,%20nth-child()/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
