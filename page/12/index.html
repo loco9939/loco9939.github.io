@@ -324,6 +324,112 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/01/Javascript/setTimeout%20%E1%84%87%E1%85%B5%E1%84%83%E1%85%A9%E1%86%BC%E1%84%80%E1%85%B5%20%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/"
+                            aria-label=": setTimeout 비동기 함수"
+                        >
+                            setTimeout 비동기 함수
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-01T17:26:33+09:00">
+	
+		    2022/09/01
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>setTimeout 타이머 함수는 일정 시간이 경과된 이후 콜백 함수가 호출되도록 타이머를 생성한다. setTimeout 함수가 생성한 타이머가 만료되면 콜백함수가 호출된다.</p>
+<ul>
+<li>타이머 함수는 ECMAScript 사양에 정의된 빌트인 함수가 아니라 호스트 객체이다.</li>
+<li>setTimeout 함수가 생성한 타이머는 1번 동작하고 콜백함수도 1번 호출된다.</li>
+</ul>
+<aside>
+💡 자바스크립트는 단 하나의 실행 컨텍스트 스택을 갖기 때문에 타이머 함수는 비동기 처리 방식으로 동작한다.
+
+</aside>
+
+<h1 id="setTimeout-함수"><a href="#setTimeout-함수" class="headerlink" title="setTimeout 함수"></a>setTimeout 함수</h1><p>두번째 인수로 전달받은 시간(ms)으로 단 한번 동작하는 타이머를 생성한다. 타이머 만료되면 첫번째 인수로 전달받은 콜백함수가 호출된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> timeoutId = <span class="built_in">setTimeout</span>(func[, delay,param1, param2,...]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1초(1000ms) 후 타이머가 만료되면 콜백 함수가 호출된다.</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hi!&#x27;</span>), <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1초(1000ms) 후 타이머가 만료되면 콜백 함수가 호출된다.</span></span><br><span class="line"><span class="comment">// 이때 콜백 함수에 &#x27;Lee&#x27;가 인수로 전달된다.</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="params">name</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! <span class="subst">$&#123;name&#125;</span>.`</span>), <span class="number">1000</span>, <span class="string">&#x27;Lee&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 두 번째 인수(delay)를 생략하면 기본값 0이 지정된다.</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hello!&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>콜백함수에 전달할 인수가 있다면 세번째 이후의 인수로 전달할 수 있다.</li>
+<li>setTimeout 함수는 생성된 타이머를 식별할 수 있는 고유한 타이머 id를 반환한다.</li>
+<li>setTimeout 함수가 반환한 타이머 id를 clearTimeout 함수의 인수로 전달하여 타이머를 취소한다.</li>
+</ul>
+<h2 id="setTimeout-함수에-대한-오해"><a href="#setTimeout-함수에-대한-오해" class="headerlink" title="setTimeout 함수에 대한 오해"></a>setTimeout 함수에 대한 오해</h2><p>흔히들 setTimeout 함수를 인수로 전달해준 딜레이 시간이 지난 후에 콜백함수를 호출해준다고 알고 있다.</p>
+<p>하지만 이 말에는 정확히 짚고 넘어가야할 부분이 있다.</p>
+<p>setTimeout 함수의 첫번째 인수로 넘겨준 콜백함수는 setTimeout 함수가 호출해주는 것인가?</p>
+<p>&#x3D;&gt; <span style='color:red'>그렇지 않다.</span></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;타이머&quot;</span>), <span class="number">0</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;호출해주세요.&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>만약 위 코드에서 setTimeout 함수가 콜백함수를 호출하는 것이라면 setTimeout 함수의 실행 컨텍스트가 제거되지 않고 남아 있어 “호출해주세요”라는 메시지가 콘솔창에 출력되지 않고 Blocking 현상이 발생해야한다.</p>
+<p>하지만 그렇지 않다. 그 이유는 setTimeout 함수는 타이머를 생성하고 timeId를 반환한 후 <span style='color:red'>브라우저에게 타이머 계산과 콜백함수 호출을 위임</span>하고 setTimeout 함수의 실행 컨텍스트가 종료된다.</p>
+<p>쉽게 말해서 setTimeout 함수가 브라우저에게 일정 시간이 지나면 콜백함수를 호출해주세요~ 라고 위임하고 종료되는 것이다.</p>
+<blockquote>
+<p>즉, setTimeout 함수의 콜백함수는 브라우저가 호출하는 것이다.</p>
+</blockquote>
+<h1 id="비동기-함수"><a href="#비동기-함수" class="headerlink" title="비동기 함수"></a>비동기 함수</h1><p>자바스크립트 엔진의 콜 스택은 싱글 스레드이기 때문에 한번에 한가지 일 밖에 할 수 없다. 그리하여 시간이 오래 걸리는 작업을 하게된다면 그 작업이 끝날 때 까지 다음 코드가 실행되지 못하는 Blocking(블로킹) 현상이 발생한다.</p>
+<p>시간이 오래걸리는 작업이나 setTimeout 함수의 콜백함수, addEventListener의 이벤트 핸들러 같은 함수는 개발자가 호출하지 않고 브라우저가 호출한다. 이러한 코드들을 포함하고 있는 함수를 비동기 함수라고 한다.</p>
+<p>자바스크립트는 Blocking(블로킹) 현상을 해결하면서 동시성을 추구하기 위해 콜 스택, 태스크 큐, 이벤트 루프 구조를 생성하게 되었다.</p>
+<p><img src="/images/220901/eventLoop.png" alt="eventLoop"></p>
+<p>위 이미지를 보면서 아까의 코드를 이해해보면,</p>
+<ol>
+<li>전역 실행 컨텍스트가 생성되어 콜 스택에 쌓인다.</li>
+<li>setTimeout 함수 실행 컨텍스트가 생성되어 콜 스택에 푸시된다.</li>
+<li>setTimeout 함수는 두번째 인수로 전달받은 딜레이를 가진 타이머를 생성하고 브라우저에게 타이머 계산과 첫번째 인수로 전달받은 콜백함수를 호출할 것을 위임하고 timeId를 반환하며 종료되고 실행 컨텍스트 스택에서 pop 되어 종료된다.</li>
+<li>브라우저는 타이머를 계산하여 만료되면 태스크 큐에 콜백함수를 전달한다. 동시에 콜 스택에서는 console.log 함수 실행 컨텍스트가 생성된다.</li>
+<li>이벤트 루프는 콜 스택과 태스크 큐를 확인하면서 콜 스택이 비워지면 태스크 큐의 작업을 콜 스택으로 푸시하는 역할을 한다. 즉, console.log 함수 실행 컨텍스트가 제거되고 전역 실행 컨텍스트가 제거되기 전까지는 태스크 큐에 있는 콜백함수가 콜 스택으로 푸시될 수 없다.</li>
+<li>console.log 함수가 종료되어 실행 컨텍스트가 pop되어 제거되고 전역 실행 컨텍스트도 pop되어 제거되면 이벤트 루프가 콜 스택이 비어있는 것을 확인하여 태스크 큐의 콜백함수를 콜 스택으로 푸시한다.</li>
+<li>브라우저가 호출하여 콜백함수의 실행 컨텍스트가 생성되고 콜백함수를 실행한 뒤 종료되면 실행 컨텍스트 스택에서 pop되어 제거되고 코드가 종료된다.</li>
+</ol>
+<blockquote>
+<p>7번에서 브라우저가 콜백함수를 호출한다는 의미는 태스크 큐에 있던 콜백함수를 콜 스택으로 이동시켜준다는 의미이다.</p>
+</blockquote>
+<p>다음 시간에는 비동기 함수의 callback 패턴과 promise 패턴, async, await에 대해서 알아보자.</p>
+<p>참고자료<br><a target="_blank" rel="noopener" href="https://velog.io/@jjunyjjuny/%EB%B2%88%EC%97%AD-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8B%9C%EA%B0%81%ED%99%94-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84">https://velog.io/@jjunyjjuny/%EB%B2%88%EC%97%AD-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8B%9C%EA%B0%81%ED%99%94-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/01/Javascript/setTimeout%20%E1%84%87%E1%85%B5%E1%84%83%E1%85%A9%E1%86%BC%E1%84%80%E1%85%B5%20%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/08/31/Javascript/%E1%84%8B%E1%85%B5%E1%84%87%E1%85%A6%E1%86%AB%E1%84%90%E1%85%B3/"
                             aria-label=": 이벤트"
                         >
@@ -1545,78 +1651,6 @@
                         <p>
                             <a
                                 href="/2022/08/22/Javascript/%E1%84%89%E1%85%B5%E1%86%AF%E1%84%92%E1%85%A2%E1%86%BC%E1%84%8F%E1%85%A5%E1%86%AB%E1%84%90%E1%85%A6%E1%86%A8%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/19/Javascript/tagged%20templates/"
-                            aria-label=": tagged templates"
-                        >
-                            tagged templates
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-19T19:33:57+09:00">
-	
-		    2022/08/19
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-template-literals"><a href="#📌-template-literals" class="headerlink" title="📌 template literals"></a>📌 template literals</h1><p>템플릿 리터럴은 내장된 표현식을 허용하는 문자열 리터럴이다.</p>
-<h2 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h2><ul>
-<li>&#96; 백틱이라는 기호를 사용한다.</li>
-<li>${}를 사용하여 표현식을 삽입할 수 있다.</li>
-<li>개행을 포함한다.</li>
-</ul>
-<h2 id="tagged-templates"><a href="#tagged-templates" class="headerlink" title="tagged templates"></a>tagged templates</h2><p>템플릿 리터럴의 발전된 형태로 태그드 템플릿이 있다.</p>
-<p>마치 함수처럼 사용할 수 있다.</p>
-<h2 id="예제-1"><a href="#예제-1" class="headerlink" title="예제 1"></a>예제 1</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> virtualNode = &#123;</span><br><span class="line"><span class="attr">name</span>: <span class="string">&#x27;figure&#x27;</span>,</span><br><span class="line"><span class="attr">className</span>: <span class="string">&#x27;tagged-template-literals&#x27;</span>,</span><br><span class="line"><span class="attr">style</span>: &#123; <span class="attr">cssText</span>: <span class="string">&#x27;&#x27;</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">const</span> <span class="title function_">styled</span> = (<span class="params">strings, Node, ...value</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> el = strings.<span class="title function_">slice</span>(<span class="number">1</span>,<span class="number">3</span>).<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc,cur</span>) =&gt;</span> acc+cur.<span class="title function_">trim</span>(),<span class="string">&#x27;&#x27;</span>).<span class="title function_">split</span>(<span class="string">&#x27;;&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    el.<span class="title function_">forEach</span>(<span class="function">(<span class="params">elem,i</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Node</span>.<span class="property">style</span>.<span class="property">cssText</span> += elem + value[i] + <span class="string">&#x27;;&#x27;</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Node</span>;</span><br><span class="line">&#125;;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">let</span> values = &#123;</span><br><span class="line">    <span class="attr">margin</span>: <span class="string">&#x27;10px&#x27;</span>,</span><br><span class="line">    <span class="attr">color</span>: <span class="string">&#x27;#d08471&#x27;</span>,</span><br><span class="line">&#125;;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">const</span> received = styled<span class="string">`<span class="subst">$&#123;virtualNode&#125;</span>margin: <span class="subst">$&#123;values.margin&#125;</span>;color: <span class="subst">$&#123;values.color&#125;</span>;`</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(received);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>마치 함수처럼 인수를 받아서 템플릿 리터럴에 넣어 반환값을 원하는 대로 지정해줄 수 있다.</li>
-<li>리액트의 StyledComponent가 태그드 템플릿을 활용하여 탄생하게 되었다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>문자타입과 다른 타입을 파라미터로 사용하는 함수를 만들 때 원하는 반환값을 직관적으로 사용할 수 있어 용이해보인다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/19/Javascript/tagged%20templates/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
