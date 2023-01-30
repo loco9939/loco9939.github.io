@@ -324,6 +324,131 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                            aria-label=": toaster, autocomplete, carousel Tip"
+                        >
+                            toaster, autocomplete, carousel Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-20T18:45:54+09:00">
+	
+		    2022/09/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Toaster-리팩터링-중-느낀점"><a href="#Toaster-리팩터링-중-느낀점" class="headerlink" title="Toaster 리팩터링 중 느낀점"></a>Toaster 리팩터링 중 느낀점</h1><h2 id="1-함수의-인수는-3개를-넘지-말자"><a href="#1-함수의-인수는-3개를-넘지-말자" class="headerlink" title="1. 함수의 인수는 3개를 넘지 말자."></a>1. 함수의 인수는 3개를 넘지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">generateToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [type, title, message] = messageType;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">  $newToast.<span class="property">style</span>.<span class="property">bottom</span> = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">  $newToast.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;toast&quot;</span>, type);</span><br><span class="line"></span><br><span class="line">  $newToast.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;h4 class=&quot;toast-title&quot;&gt;<span class="subst">$&#123;title&#125;</span> <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    [...<span class="variable language_">document</span>.querySelectorAll(<span class="string">&quot;body .toast&quot;</span>)].length</span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>&lt;/h4&gt;</span></span><br><span class="line"><span class="string">    &lt;div class=&quot;toast-message&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;use xlink:href=&quot;#<span class="subst">$&#123;type&#125;</span>&quot; /&gt;</span></span><br><span class="line"><span class="string">      &lt;/svg&gt;</span></span><br><span class="line"><span class="string">      &lt;p&gt;<span class="subst">$&#123;message&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $newToast;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.</li>
+</ul>
+<h2 id="2-함수를-사용하는-이유를-고민하자"><a href="#2-함수를-사용하는-이유를-고민하자" class="headerlink" title="2. 함수를 사용하는 이유를 고민하자."></a>2. 함수를 사용하는 이유를 고민하자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">addToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="title function_">generateToast</span>(messageType);</span><br><span class="line"></span><br><span class="line">  $body.<span class="title function_">appendChild</span>($newToast);</span><br><span class="line">  <span class="title function_">lineUpToast</span>();</span><br><span class="line"></span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $newToast.<span class="title function_">remove</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">lineUpToast</span>();</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>setTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.</li>
+</ul>
+<h1 id="Autocomplete-리팩터링-중-느낀점"><a href="#Autocomplete-리팩터링-중-느낀점" class="headerlink" title="Autocomplete 리팩터링 중 느낀점"></a>Autocomplete 리팩터링 중 느낀점</h1><h2 id="1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수"><a href="#1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수" class="headerlink" title="1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수"></a>1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">countryCode</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">init</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; countryCode &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.autocomplete-toggle-button&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $suggester.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">    $searchInput.<span class="title function_">focus</span>();</span><br><span class="line"></span><br><span class="line">    autocomplete.<span class="title function_">init</span>();</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.</p>
+</li>
+<li><p>또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.</p>
+</li>
+</ul>
+<h2 id="2-함수-역할의-분리"><a href="#2-함수-역할의-분리" class="headerlink" title="2. 함수 역할의 분리"></a>2. 함수 역할의 분리</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">findCountry</span> = (<span class="params">inputValue</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(inputValue, <span class="string">&quot;i&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newCountryCode = countryCode</span><br><span class="line">    .<span class="title function_">filter</span>(<span class="function">(<span class="params">[, country]</span>) =&gt;</span> country.<span class="title function_">match</span>(regExp))</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function">(<span class="params">[code, country]</span>) =&gt;</span> [</span><br><span class="line">      code,</span><br><span class="line">      country.<span class="title function_">replace</span>(regExp, <span class="string">`&lt;strong&gt;<span class="subst">$&#123;country.match(regExp)&#125;</span>&lt;/strong&gt;`</span>),</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">countryCode</span>: newCountryCode &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.</p>
+</li>
+<li><p>또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.</p>
+</li>
+</ul>
+<blockquote>
+<p>([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.</p>
+</blockquote>
+<h2 id="3-함수의-가독성을-높이자"><a href="#3-함수의-가독성을-높이자" class="headerlink" title="3. 함수의 가독성을 높이자."></a>3. 함수의 가독성을 높이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">selectCountry</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  $toggleButtonSpan.<span class="property">innerHTML</span> = target.<span class="property">firstElementChild</span>.<span class="property">innerHTML</span>;</span><br><span class="line">  $toggleButtonSpan.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;country&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>selectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.</li>
+</ul>
+<h1 id="Carousel-리팩터링-중-느낀점"><a href="#Carousel-리팩터링-중-느낀점" class="headerlink" title="Carousel 리팩터링 중 느낀점"></a>Carousel 리팩터링 중 느낀점</h1><h2 id="1-state로-관리해야하는-데이터와-그렇지-않은-데이터"><a href="#1-state로-관리해야하는-데이터와-그렇지-않은-데이터" class="headerlink" title="1. state로 관리해야하는 데이터와 그렇지 않은 데이터"></a>1. state로 관리해야하는 데이터와 그렇지 않은 데이터</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">currentSlide</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> isTransitioned = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DURATION</span> = <span class="number">500</span>;</span><br><span class="line"><span class="keyword">const</span> newImages = [images[images.<span class="property">length</span> - <span class="number">1</span>], ...images, images[<span class="number">0</span>]];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.</li>
+</ul>
+<h3 id="state로-관리해야하는-데이터"><a href="#state로-관리해야하는-데이터" class="headerlink" title="state로 관리해야하는 데이터"></a>state로 관리해야하는 데이터</h3><ol>
+<li><p>사용자의 액션에 의해서 변경되는 데이터</p>
+</li>
+<li><p>실제 화면의 렌더링에 영향을 끼치는 데이터</p>
+</li>
+<li><p>서버에 저장해야할 필요가 있는 데이터</p>
+</li>
+</ol>
+<p>위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.</p>
+<p>그에 대한 근거는 다음 예시를 통해 알아보자.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">isTransitioned</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  isTransitioned = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.</li>
+</ul>
+<p>즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.</p>
+<h2 id="2-Model과-Controller-패턴의-사용"><a href="#2-Model과-Controller-패턴의-사용" class="headerlink" title="2. Model과 Controller 패턴의 사용"></a>2. Model과 Controller 패턴의 사용</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">carousel</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> carouselSlider = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      init,</span><br><span class="line">      setStyle,</span><br><span class="line">      prev,</span><br><span class="line">      next,</span><br><span class="line">      completeTransition,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)();</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">carousel</span>(<span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.carousel&#x27;</span>), [images...])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>addEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.</li>
+</ul>
+<h2 id="3-DOMContentLoaded와-load-이벤트-핸들러"><a href="#3-DOMContentLoaded와-load-이벤트-핸들러" class="headerlink" title="3. DOMContentLoaded와 load 이벤트 핸들러"></a>3. DOMContentLoaded와 load 이벤트 핸들러</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, carouselSlider.<span class="property">setStyle</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.</p>
+</li>
+<li><p>또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.</p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"
                             aria-label=": darkmode, modal, stopwatch Tip"
                         >
@@ -1244,120 +1369,6 @@
                         <p>
                             <a
                                 href="/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/02/Javascript/CORS/"
-                            aria-label=": CORS"
-                        >
-                            CORS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-02T15:32:58+09:00">
-	
-		    2022/09/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="CORS란"><a href="#CORS란" class="headerlink" title="CORS란?"></a>CORS란?</h1><p>크롬, 사파리 같은 브라우저에서 보안상의 이슈때문에 모든 웹 사이트는 같은 출처에 대한 데이터 요청은 허락하지만(SOP, 동일 출처 정책), 다른 출처로 데이터를 요청할 경우 특별한 규칙에 따라 허락을 받아야한다.</p>
-<p><span style="font-size:1.5rem">Cross Origin Resource Sharing</span></p>
-<p>교차 출처 정보 공유에 대한 정책으로, <span style="color:red">브라우저가 출처가 불분명한 응답을 막고 있는 것을 풀어주는 역할</span>을 한다.</p>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><p>내가 은행 사이트 서버에 요청을 보내서 은행 홈페이지에 로그인을 하였다. 그러면 브라우저 쿠키에 사용자의 인증정보 및 쿠키가 저장되어 있는데, 해커가 어떤 사이트 링크를 내게 보내서 내가 그 링크를 클릭하여 앞서 말한 인증 정보, 쿠키를 서버로 가져오는 Script 코드가 포함된 리소스를 응답으로 보내서 내가 만약에 그 응답을 받게 된다면, 해커가 나의 인증 정보와 쿠키를 가져갈 수 있게 된다.</p>
-<p>이러한 보안상의 이슈를 방지하기 위해 브라우저가 동일한 출처의 요청이 아니라면 응답을 막아주는 것이다.</p>
-<blockquote>
-<p>또한 쿠키를 못읽게 자바스크립트 코드로 만들어줘야한다.</p>
-</blockquote>
-<p>즉, CORS는 다른 출처 간의 리소스를 공유할 수 있도록 하는 정책이다.</p>
-<ul>
-<li>여기서 말하는 출처란, 보내고 받는 위치 즉, 웹 사이트랑 API 주소이다.</li>
-<li>리소스는 주고 받는 데이터를 말한다.</li>
-</ul>
-<p>내가 만든 사이트와 어떤 API라는 서로 다른 출처끼리 정보교환이 가능하려면 CORS 정책을 지켜야 한다는 말이다.</p>
-<h1 id="CORS-과정"><a href="#CORS-과정" class="headerlink" title="CORS 과정"></a>CORS 과정</h1><p><span style="font-size:1.2rem">요청을 받는 서버쪽에서 허락할 웹사이트를 미리 명시해줘야한다.</span></p>
-<h2 id="Simple-Request-GET-POST-방식일-때-사용"><a href="#Simple-Request-GET-POST-방식일-때-사용" class="headerlink" title="Simple Request (GET, POST 방식일 때 사용)"></a>Simple Request (GET, POST 방식일 때 사용)</h2><ol>
-<li>브라우저는 다른 출처끼리의 요청을 보낼 때에는 요청에 Origin 이라는 header를 추가한다.</li>
-</ol>
-<aside>
-💡 header란, 데이터가 다른 곳으로 전송될 때 데이터의 맨 앞쪽에 붙는 보충 정보이다.
-
-</aside>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">https</span>:<span class="comment">//이주의사이트.com:5000</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Origin은 요청하는 쪽의 scheme, 도메인, 포트가 담겨있다.<ul>
-<li>scheme은 요청할 자원에 접근할 방법(Http, FTP, telnet…) &#x3D; <strong>프로토콜</strong></li>
-</ul>
-</li>
-<li>https - scheme</li>
-<li><a target="_blank" rel="noopener" href="http://이주의사이트.com/">이주의사이트.com</a> - 도메인</li>
-<li>:5000 - 포트</li>
-</ul>
-<ol>
-<li><p>요청을 받은 API 서버는 응답의 헤더에 지정된 ACAO(Access Control Allow Origin) 정보를 실어서 보낸다.</p>
-<ul>
-<li>ACAO 정보에는 미리 명시된 URL들이 들어가있다.</li>
-</ul>
-</li>
-<li><p>브라우저가 ACAO정보가 담긴 응답과 요청의 Origin을 비교하여 동일하면 허락해준다.</p>
-</li>
-<li><p>만약 동일하지 않아 허락못받으면 응답만 못받아온다. 빨간색 에러 발생</p>
-</li>
-</ol>
-<p>추가로 토큰과 같은 사용자 식별 정보가 담긴 요청에 대해서는 더 엄격한데 요청의 옵션에 credentials 항목을 true로 세팅해줘야하며, 받는 쪽에서도 아무 출처나 다 된다는 의미의 와일드 카드(*)가 아니라 보내는 쪽의 출처와 웹페이지 주소를 명확히 명시하고 Access Control Allow Credentials 항목을 true로 맞춰줘야 한다.</p>
-<aside>
-💡 심플리퀘스트로 요청을 보낼 때에도 서버쪽에서 신경을 안써놓으면 서버에 저장된 데이터에 변경이 가해질 수 있으므로 SOP만 믿으면 되는 것이 아니라 서버 개발자가 이런 경우를 대비해서 서버를 프로그래밍 해야한다.
-
-</aside>
-
-<h2 id="Preflighted-PUT-DELETE-방식일-때-사용"><a href="#Preflighted-PUT-DELETE-방식일-때-사용" class="headerlink" title="Preflighted (PUT, DELETE 방식일 때 사용)"></a>Preflighted (PUT, DELETE 방식일 때 사용)</h2><p>Preflight 요청을 먼저 보내서 그에 대한 서버의 응답을 보고 안전한지 먼저 확인한다. 여기서 서버의 허락이 받아야지만 본 요청을 보낼 수 있다.</p>
-<p>본 요청에 대한 과정은 심플리퀘스트와 동일하다.</p>
-<ul>
-<li>Origin, credentials, method 가 담긴 요청</li>
-</ul>
-<p>⇒ 서버의 데이터에 영향을 줄 수 있는 요청이기 때문에 요청 보내기 전에 먼저 허용 여부를 검증해줘야 한다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/02/Javascript/CORS/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
