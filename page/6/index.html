@@ -324,6 +324,451 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/09/CS/HTTP%EC%9D%98-%EC%97%AD%EC%82%AC%EC%99%80-HTTPS/"
+                            aria-label=": HTTP의 역사와 HTTPS"
+                        >
+                            HTTP의 역사와 HTTPS
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-09T17:01:41+09:00">
+	
+		    2022/11/09
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-HTTP"><a href="#📌-HTTP" class="headerlink" title="📌 HTTP"></a>📌 HTTP</h1><p><strong>서버&#x2F;클라이언트 모델을 따라 데이터를 주고받기 위한 프로토콜</strong>이다.</p>
+<p>일반적으로 프로토콜을 이용하여 HTML 파일을 주고받을 수 있는 공간을 의미한다.</p>
+<ul>
+<li>텍스트 교환으로 보안에 취약하다.</li>
+</ul>
+<h2 id="역사"><a href="#역사" class="headerlink" title="역사"></a>역사</h2><p>초기 웹 페이지는 단순한 서버-클라이언트의 구조를 따랐다. 처음부터 TCP &#x2F; IP 위에서 구현되도록 설계되었다. 지금의 TCP는 무겁고 느리다고 까이지만, 이 당시에는 연결 지향적 특성 때문에 안정적이고 신뢰성있는 통신을 제공하여 평이 좋았다.</p>
+<p>초기 HTTP 구조는 매우 간단했다. 요청 메서드도 GET 한가지였고, 헤더나 상태 코드도 없었고 응답은 무조건 HTML 파일 그 자체였다.</p>
+<p>하지만 웹이 인기를 끌다 보니 기존 HTTP 사양만으로는 사용자들의 요구사항을 충족시킬 수 없었고 <strong>명시적으로 약속된 사양이 없어</strong> 여러 브라우저들 간의 혼란이 있어서 HTTP 기본 구조를 그대로 유지하면서 <strong>HTTP를 표준화</strong>하기 위해 HTTP WG 조직이 탄생하고 이 때 <strong>HTTP&#x2F;1.0이 탄생</strong>하게되었다.</p>
+<h1 id="📌-HTTP-x2F-1-0"><a href="#📌-HTTP-x2F-1-0" class="headerlink" title="📌 HTTP&#x2F;1.0"></a>📌 HTTP&#x2F;1.0</h1><ul>
+<li>HTTP Header에 버전정보 명시되어있다.</li>
+<li>요청 메서드 GET, POST, HEAD 3가지</li>
+<li>상태 코드 추가 되어 클라이언트 측에서 요청 결과에 따라 동작하도록 설계 가능</li>
+<li><strong>Content-type의 도움으로 HTML 이외의 파일도 전송</strong>할 수 있게되었다.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 요청 --&gt;</span><br><span class="line">GET /mypage.html HTTP/1.0</span><br><span class="line">User-Agent: ...</span><br><span class="line"></span><br><span class="line">&lt;!-- 응답 --&gt;</span><br><span class="line">200 OK</span><br><span class="line">...</span><br><span class="line">Content-Type: text/html</span><br><span class="line">&lt;HTML&gt;</span><br><span class="line">  A page with on image</span><br><span class="line">  &lt;img src=&quot;/myimage.jpg&quot; /&gt;</span><br><span class="line">&lt;/HTML&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>HTTP&#x2F;1.0의 간단한 요청과 응답 예시이다.</li>
+</ul>
+<h1 id="📌-HTTP-x2F-1-1"><a href="#📌-HTTP-x2F-1-1" class="headerlink" title="📌 HTTP&#x2F;1.1"></a>📌 HTTP&#x2F;1.1</h1><h2 id="❓-HTTP-x2F-1-0의-문제"><a href="#❓-HTTP-x2F-1-0의-문제" class="headerlink" title="❓ HTTP&#x2F;1.0의 문제"></a>❓ <strong>HTTP&#x2F;1.0의 문제</strong></h2><ul>
+<li>HTTP&#x2F;1.0에서는 요청에 따른 응답이 수신되면 TCP 연결 바로 종료<ul>
+<li>웹 페이지가 복잡해짐에 따라 이러한 TCP 핸드쉐이크 과정을 새로 거쳐야 하여 속도가 느려지는 문제가 있었다.</li>
+</ul>
+</li>
+<li>1개의 요청을 보내면 1개의 응답을 받고 1번의 연결이 종료된다. 만약 10번의 요청을 보내면 TCP 연결을 10번 해야하므로 서버에 부담이 된다.</li>
+</ul>
+<h2 id="❗️-문제-해결책"><a href="#❗️-문제-해결책" class="headerlink" title="❗️ 문제 해결책"></a>❗️ 문제 해결책</h2><p><img src="/../../images/HTTP/pipe.png" alt="pipe"></p>
+<ul>
+<li><strong>연결 상태 유지(Persistent connection)</strong> : 기본적으로 한번 수립한 연결을 재사용 할 수 있도록 설정<ul>
+<li>지정한 시간동안 연결을 끊지 않는 방식</li>
+<li>연결 유지 시간 길어지면 서버 부하 🔺</li>
+</ul>
+</li>
+<li><strong>Pipelining(파이프라이닝)</strong> : 클라이언트가 여러 요청 연달아 보내야할 때, 먼저 보낸 요청의 응답을 기다리는 것이 아니라 <strong>발생한 요청은 일단 전송하는 방식</strong><ul>
+<li>클라이언트에서 여러 요청을 순차적으로 보내면 <strong>서버는 받은 순서에 따라 응답을 제공한다.</strong></li>
+</ul>
+</li>
+</ul>
+<h1 id="📌-HTTP-x2F-2"><a href="#📌-HTTP-x2F-2" class="headerlink" title="📌 HTTP&#x2F;2"></a>📌 HTTP&#x2F;2</h1><h2 id="❓-HTTP-x2F-1-1의-문제"><a href="#❓-HTTP-x2F-1-1의-문제" class="headerlink" title="❓ HTTP&#x2F;1.1의 문제"></a>❓ <strong>HTTP&#x2F;1.1의 문제</strong></h2><ul>
+<li>매 요청마다 <strong>헤더를 중복</strong>해서 전송해야만 하는데 이것이 굉장한 낭비였다.</li>
+<li>서버가 항상 요청받은 순서대로 응답해야하므로 <strong>HOLB(Head-of-Line Blocking)</strong> 방식이었다.</li>
+<li>하나의 연결 내에서 응답 다중화(multiplexing)을 할 수 없어 요청이 순차적으로 처리되어야 했는데, <strong>서버가 응답 작성 중간에 문제가 생기면 후속 요청들이 전송되지 못하고 지연되는 문제가 있었다.</strong></li>
+</ul>
+<h2 id="❗️-문제-해결책-1"><a href="#❗️-문제-해결책-1" class="headerlink" title="❗️ 문제 해결책"></a>❗️ 문제 해결책</h2><p><img src="/../../images/HTTP/SPDY.png" alt="spdy"></p>
+<ul>
+<li>SPDY 프로토콜 기반으로 동작 ⇒ <red>웹 페이지 로드 시간 단축</red><ul>
+<li>이진 프로토콜 : 단순 텍스트를 전송하는 것보다 컴퓨터 입장에서 훨씬 더 효율적으로 데이터 전송 가능</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../images/HTTP/multiplexing.png" alt="mutiplexing"></p>
+<ul>
+<li>응답 다중화 지원 : 하나의 TCP 연결에서 여러 요청을 동시에 처리할 수 있다. 바이너리 프레이밍으로 TCP 연결을 스트림, 메시지, 프레임으로 세분화하였다. <red>이는 요청 별 순서를 반드시 지켜야 했던 HTTP&#x2F;1.1과 대조적이다.</red><ul>
+<li>스트림 : 요청과 응답이 양방향으로 오가는 연결 단위</li>
+<li>메시지 : 하나의 요청과 응답을 구성하는 단위</li>
+<li>프레임 : 메시지를 구성하는 최소 단위</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../images/HTTP/multiplexing2.png" alt="mutiplexing2"></p>
+<ul>
+<li>위 사진에서 하나의 TCP 연결에서 3개의 스트림이 존재한다.</li>
+<li>5번 스트림은 클라이언트 측에서 서버로 데이터 전송하고, 1,3번 스트림은 서버 측에서 클라이언트로 데이터를 전송중이다.</li>
+<li>1번 프레임 사이에 3번 스트림의 프레임이 끼워져있다.</li>
+</ul>
+<p>이로써 HTTP&#x2F;1.1에서 발생한 <strong>HOLB 문제 해결할 수 있었다.</strong></p>
+<p><img src="/../../images/HTTP/headerCompressing.png" alt="headerCompressing"></p>
+<ul>
+<li>헤더 필드 압축 지원 : 달라진 부분만 다시 전송하는 코딩 기법 사용</li>
+</ul>
+<h1 id="📌-HTTP-x2F-3"><a href="#📌-HTTP-x2F-3" class="headerlink" title="📌 HTTP&#x2F;3"></a>📌 HTTP&#x2F;3</h1><h2 id="❗️-TCP로-인한-문제점"><a href="#❗️-TCP로-인한-문제점" class="headerlink" title="❗️ TCP로 인한 문제점"></a>❗️ <strong>TCP로 인한 문제점</strong></h2><p>앞서 헤더 필드 압축을 통해 HTTP&#x2F;1.1에서 발생한 HOLB 문제를 해결했다고 하였지만 이와 별개로 <red>TCP로 인해 발생하는 HOLB 문제는 해결할 수 없다는 한계가 있었다.</red></p>
+<ul>
+<li>신뢰성 지향하기에 데이터 손실 발생 시 데이터를 재전송하는데 순서대로 처리해야하기 때문에 HOLB 문제를 해결할 수 없다.</li>
+<li>혼잡제어를 수행하기 때문에 전송 속도를 낮은 상태에서 높이는 방식으로 속도 제어를 하는데 이는 네트워크 상황이 좋을 때 불필요한 지연을 발생시킨다.</li>
+</ul>
+<p>문제를 해결하기 위해 TCP&#x2F;IP기반이 아닌 <red>UDP기반인 QUIC 프로토콜 위에서 동작하는 HTTP&#x2F;3</red>가 나왔다.</p>
+<p>⇒ UDP는 신뢰성을 보장하지 않는데 <strong>QUIC 신뢰성 기능을 직접 구현하여 신뢰성 기능이 제공되는 UDP 기반의 프로토콜</strong>이다.</p>
+<h2 id="👍-HTTP-x2F-3-장점"><a href="#👍-HTTP-x2F-3-장점" class="headerlink" title="👍 HTTP&#x2F;3 장점"></a>👍 HTTP&#x2F;3 장점</h2><p><img src="/../../images/HTTP/RTT.png" alt="RTT"></p>
+<ul>
+<li><strong>0-RTT 기능</strong> : 연결 정보를 캐싱하여 재사용하여 다음 연결때는 바로 연결이 가능</li>
+</ul>
+<p><img src="/../../images/HTTP/UDP.png" alt="UDP"></p>
+<ul>
+<li><strong>연결 다중화 지원</strong> : 각 스트림이 독립적으로 동작한다.<ul>
+<li>HTTP&#x2F;2 방식의 경우 TCP 특성상 데이터 손실이 발생할 경우 <strong>데이터 복구를 우선 처리하여 HOLB가 발생</strong>한다.</li>
+<li>HTTP&#x2F;3는 데이터 손실이 발생해도 연결 내 스트림이 독립적으로 동작하기 때문에 <red>다른 스트림에 영향을 주지 않는다.</red></li>
+</ul>
+</li>
+<li><strong>연결 별 고유 UUID 지원</strong><ul>
+<li>TCP 기반의 통신은 wifi 환경에서 셀룰러 환경으로 이동하는경우 IP주소가 변경되어 연결 재수립 과정을 거쳐야하지만, QUIC는 UUID(Connection ID) 연결 ID 기반으로 식별하여 연결을 유지할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="📌-HTTP-Message"><a href="#📌-HTTP-Message" class="headerlink" title="📌 HTTP Message"></a>📌 HTTP Message</h1><p>HTTP 메시지는 서버와 클라이언트 간에 데이터가 교환되는 방식이다. 메시지 타입에는 <strong>요청(Request), 응답(Response)이 있다.</strong></p>
+<p><img src="/../../images/HTTP/httpmsgstructure2.png" alt="request와response"></p>
+<p>요청과 응답의 구조는 유사하다.</p>
+<ol>
+<li><p>실행 되어야 할 요청 또는 요청의 성공, 실패가 기록된 한줄</p>
+</li>
+<li><p>요청에 대한 설명, 메시지 본문에 대한 설명이 포함된 <strong>HTTP Header 세트</strong>(optional)</p>
+</li>
+<li><p>요청에 대한 모든 메타 정보가 전송되었음을 알리는 빈 줄(blank line)</p>
+</li>
+<li><p>요청과 관련된 내용이 옵션으로 들어가거나, 응답과 관련된 문서가 들어간다. 본문의 존재 유무는 첫 줄과 HTTP Header에 명시된다.</p>
+</li>
+</ol>
+<h2 id="✏️-HTTP-Request"><a href="#✏️-HTTP-Request" class="headerlink" title="✏️ HTTP Request"></a>✏️ HTTP Request</h2><p>요청은 클라이언트가 서버로 전달해서 서버의 액션이 일어나게끔 하는 메시지이다.</p>
+<h3 id="1-Start-Line"><a href="#1-Start-Line" class="headerlink" title="1. Start Line"></a>1. Start Line</h3><ol>
+<li>HTTP 메서드</li>
+</ol>
+<p>GET,POST 등의 서버가 수행해야 할 동작을 나타낸다.</p>
+<ol start="2">
+<li>요청 타겟 : URL 또는 (프로토콜,포트, 도메인)</li>
+</ol>
+<p>요청 타겟 포맷은 HTTP 메서드에 따라 달라진다.</p>
+<ul>
+<li>Origin 형식 : 끝에 ‘?’와 쿼리 문자열이 붙는 절대경로이다. 가장 일반적인 형식으로 GET, POST, HEAD, OPTIONS 메서드와 함께 사용한다.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST / HTTP 1.1</span><br><span class="line">GET /background.png HTTP/1.0</span><br><span class="line">HEAD /test.html?query=alibaba HTTP/1.1</span><br><span class="line">OPTIONS /anypage.html HTTP/1.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>absolute 형식 : 완전한 URL 형식으로, 프록시에 연결하는 경우 대부분 GET과 사용한다.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>마지막으로 HTTP 버전이 들어간다.</li>
+</ol>
+<h3 id="2-Header"><a href="#2-Header" class="headerlink" title="2. Header"></a><strong>2. Header</strong></h3><p>대소문자 구분없는 문자열 다음에 콜론(:)이 붙고 그 뒤에 오는 값은 Header에 따라 달라진다.</p>
+<p><img src="/../../images/HTTP/http_request_headers3.png" alt="header"></p>
+<ul>
+<li>HTTP Method</li>
+<li>HTTP Version</li>
+<li>Host</li>
+<li>Content-Type</li>
+</ul>
+<h3 id="3-Body-본문"><a href="#3-Body-본문" class="headerlink" title="3. Body(본문)"></a>3. Body(본문)</h3><p>모든 요청에 본문이 들어가지 않는다. GET, HEAD, DELETE, OPTIONS 처럼 리소스를 가져오는 요청은 본문이 필요 없다.</p>
+<p>보통 POST 요청으로 서버에 데이터를 업데이트 하기 위해 본문이 필요하다.</p>
+<p>본문은 두가지 종류로 나뉜다.</p>
+<ul>
+<li>단일-리소스 본문(single-resource bodies) : Header 2개(Content-Type, Content-Length)로 정의된 단일 파일</li>
+<li>다중-리소스 본문(muliple-resource bodies) : 파트마다 다른 정보를 지닌다.</li>
+</ul>
+<h2 id="✏️-HTTP-Response"><a href="#✏️-HTTP-Response" class="headerlink" title="✏️ HTTP Response"></a>✏️ HTTP Response</h2><p>응답은 요청에 대한 서버의 답변이다.</p>
+<h3 id="1-Start-Line-1"><a href="#1-Start-Line-1" class="headerlink" title="1. Start Line"></a>1. Start Line</h3><ol>
+<li><p>프로토콜 버전 (보통 HTTP&#x2F;1.1)</p>
+</li>
+<li><p>상태 코드 : 요청의 성공 여부를 나타낸다. 200, 404 또는 302</p>
+</li>
+<li><p>상태 텍스트 : 상태 코드에 대한 설명글</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 404 Not Found.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Header-1"><a href="#2-Header-1" class="headerlink" title="2. Header"></a><strong>2. Header</strong></h3><p>요청 Header와 동일한 구조이다.</p>
+<p><img src="/../../images/HTTP/http_response_headers3.png" alt="resHeader"></p>
+<ul>
+<li>HTTP Version</li>
+<li>Status</li>
+<li>Content-Type</li>
+<li><strong>Set-Cookie</strong></li>
+</ul>
+<h3 id="3-Body"><a href="#3-Body" class="headerlink" title="3. Body"></a>3. Body</h3><p>모든 응답에 Body가 들어가지는 않는다. 201, 204 상태 코드를 가진 응답은 Body가 없다.</p>
+<h1 id="📌-HTTPS"><a href="#📌-HTTPS" class="headerlink" title="📌 HTTPS"></a>📌 HTTPS</h1><p>기존 프로토콜에서 데이터가 쉽게 도난당하는 것을 방지하기 위해 <strong>SSL(Secure Socket Layer) 또는 TLS(Transport Layer Security) 프로토콜</strong> 을 사용하여 <strong>브라우저와 서버를 암호화하여 연결해준다.</strong></p>
+<p>또한 데이터가 전송중에 손상되거나 수정되는 것을 방지한다.</p>
+<ul>
+<li>구글같은 포털에서 SEO 가산점을 준다.</li>
+</ul>
+<h2 id="✏️-SSL-Secure-Socket-Layer-프로토콜"><a href="#✏️-SSL-Secure-Socket-Layer-프로토콜" class="headerlink" title="✏️ SSL(Secure Socket Layer) 프로토콜"></a>✏️ SSL(Secure Socket Layer) 프로토콜</h2><p>HTTPS 프로토콜이 텍스트를 암호화 할 수 있도록 도와주는 프로토콜이다. 암호화 원리는 <strong>공개키 암호화 방식</strong>이다.</p>
+<blockquote>
+<p>SSL 프로토콜 통제권을 IETF로 넘기면서 TLS로 바뀐 상태인데 현재는 두가지를 혼용해서 사용하고 있다.</p>
+</blockquote>
+<h3 id="공개키-암호화-방식"><a href="#공개키-암호화-방식" class="headerlink" title="공개키 암호화 방식"></a>공개키 암호화 방식</h3><p>공개키 암호화 방식은 공개키와 개인키를 사용하는 방식이다.</p>
+<ul>
+<li>공개키는 모두에게 공개해서 사용하는 키이다.</li>
+<li>개인키는 서버에서만 가지고 있는 키이다.</li>
+</ul>
+<h3 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h3><ol>
+<li>A 서버가 HTTPS 적용하기 위해 공개키와 개인키를 만든다.</li>
+<li>CA 기업을 선택하고 해당 CA 기업에게 공개키 관리를 부탁하며 계약한다.</li>
+<li>CA 기업은 <strong>기업명, A 서버 공개키, 공개키 암호화 방법</strong>을 담은 인증서를 만들고 해당 인증서를 CA 기업의 개인키로 암호화해서 A 서버에게 제공한다.</li>
+<li>A 서버는 CA 기업의 개인키로 암호화된 인증서를 가지고서 클라이언트로부터 HTTPS이 아닌 요청이 오면 암호화된 인증서를 건네준다.</li>
+<li>클라이언트는 예를 들어 <code>main.html</code> 을 서버에 요청했다고 하자. HTTPS 요청이 아니기 때문에 CA기업의 개인키로 암호화된 인증서를 받게된다.<ul>
+<li>CA 기업의 공개키는 모두에게 공개되므로 클라이언트는 인증서를 공개키로 복호화하여 A 서버 공개키를 얻었다.</li>
+</ul>
+</li>
+<li>클라이언트가 A 서버에 요청을 보낼 때 텍스트를 공개키로 암호화하며 HTTPS 요청을 보낸다.</li>
+<li>서버는 개인키로 암호화된 텍스트를 복호화하여 데이터를 해석하고 응답을 개인키로 암호화하여 클라이언트에게 보낸다.</li>
+<li>클라이언트는 다시 공개키로 응답을 해석하여 해당 서버가 인증된 서버임을 알 수 있다.</li>
+</ol>
+<aside>
+📌 단, 신뢰받는 CA 기업이 아닌 자체 인증서를 발급한 경우 브라우저에서 `주의 요함`, `안전하지 않는 사이트`같은 주의를 받게된다.
+
+</aside>
+
+<h2 id="📚-참고"><a href="#📚-참고" class="headerlink" title="📚 참고"></a>📚 참고</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://velog.io/@jiseung/02-what-is-http#http3-2021">Velog&#x2F;@Jiseung</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/ko/docs/Web/HTTP">[MDN] HTTP</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://gyoogle.dev/blog/computer-science/network/HTTP%20&%20HTTPS.html">Tech Interview</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://yozm.wishket.com/magazine/detail/1686/?utm_source=stibee&utm_medium=email&utm_campaign=newsletter_yozm&utm_content=contents">웹 개발자라면 알고 있어야 할 HTTP의 진화 과정 | 요즘IT</a></p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/09/CS/HTTP%EC%9D%98-%EC%97%AD%EC%82%AC%EC%99%80-HTTPS/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                            aria-label=": stateless 컴포넌트와 stateful 컴포넌트"
+                        >
+                            stateless 컴포넌트와 stateful 컴포넌트
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-09T10:57:01+09:00">
+	
+		    2022/11/09
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🛤-Class-Component-vs-Function-Component"><a href="#🛤-Class-Component-vs-Function-Component" class="headerlink" title="🛤 Class Component vs Function Component"></a>🛤 Class Component vs Function Component</h1><p>과거의 리액트는 상태를 가지는 컴포넌트는 클래스형으로, 상태를 가지지 않는 컴포넌트는 함수형으로 작성하였다. <strong>왜 그랬을까?</strong></p>
+<p><img src="/../images/stateless/class&function.png" alt="class&amp;function-components"></p>
+<p>Container 컴포넌트는 상태를 가지는데, 함수형 컴포넌트로 생성하게 되면 <red>함수 호출하여 컴포넌트를 생성할 때 마다 상태가 초기화된</red> 값을 가지기 때문에 Container 컴포넌트는 클래스형으로만 작성하였다.</p>
+<ul>
+<li>this를 사용하기 때문에 <strong>클래스형 컴포넌트가 생성방식이 더 복잡하다.</strong></li>
+<li>클래스형 컴포넌트에는 <code>render()</code> 메서드가 꼭 있어야 한다.</li>
+<li>클래스형 컴포넌트에서 이벤트 등록 시 this 바인딩을 꼭 해줘야만 한다.</li>
+</ul>
+<h1 id="📌-stateless-컴포넌트"><a href="#📌-stateless-컴포넌트" class="headerlink" title="📌 stateless 컴포넌트"></a>📌 stateless 컴포넌트</h1><p>stateless 컴포넌트는 말 그대로 상태를 가지지 않는 컴포넌트이다. 이러한 컴포넌트를 stateless 컴포넌트 또는 presentational(프레젠테이셔널) 컴포넌트라고 한다.</p>
+<h2 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h2><ul>
+<li><red>시각적 표현에 중점</red>을 둔 컴포넌트</li>
+<li>시각적 표현을 목적으로 하니 복잡한 비즈니스 로직 필요없다</li>
+<li><red>상태를 가질 필요가 없고</red> 외부에서 전달 받은 데이터를 화면에 그려준다.</li>
+</ul>
+<h2 id="✏️-stateless-컴포넌트는-함수형으로-작성한다"><a href="#✏️-stateless-컴포넌트는-함수형으로-작성한다" class="headerlink" title="✏️ stateless 컴포넌트는 함수형으로 작성한다?"></a>✏️ stateless 컴포넌트는 함수형으로 작성한다?</h2><p>표현을 목적으로 하는 컴포넌트는 복잡한 비즈니스 로직이 필요없고 이를 클래스로 작성할 경우 Babel 컴파일러가 클래스를 컴파일 해줄 때 함수형 컴포넌트일 때 보다 훨씬 더 많은 코드로 컴파일 해주기 때문에 <strong>stateless 컴포넌트를 클래스형으로 작성하는 것은 낭비이다.</strong></p>
+<h1 id="📌-stateful-컴포넌트"><a href="#📌-stateful-컴포넌트" class="headerlink" title="📌 stateful 컴포넌트"></a>📌 stateful 컴포넌트</h1><p>상태를 가지는 컴포넌트를 stateful 컴포넌트 또는 Container(컨테이너) 컴포넌트라고 한다.</p>
+<h2 id="목적-1"><a href="#목적-1" class="headerlink" title="목적"></a>목적</h2><ul>
+<li>비즈니스 로직을 가지고 있다.</li>
+<li><red>state(상태)</red>를 가진다.</li>
+<li>Presentational 컴포넌트에게 Props를 전달하여 UI 렌더링 하도록 한다.</li>
+<li>화면을 그리는 최소한의 스타일 정보를 가진다.</li>
+</ul>
+<h2 id="❓-stateful-컴포넌트는-함수형으로-작성하지-않는다"><a href="#❓-stateful-컴포넌트는-함수형으로-작성하지-않는다" class="headerlink" title="❓ stateful 컴포넌트는 함수형으로 작성하지 않는다?"></a>❓ stateful 컴포넌트는 <red>함수형으로 작성하지 않는다?</red></h2><p>하지만, <strong>React Hook</strong>의 등장으로 함수형 컴포넌트로도 Container 컴포넌트의 역할이 가능해졌다.</p>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>클래스형 컴포넌트와 함수형 컴포넌트에 차이에 대해 알게되었다.</p>
+<p>프로젝트를 시작하게 될 때, 컴포넌트를 생성할텐데 이 때, 이 컴포넌트가 상태를 가지는 컴포넌트인지 상태를 갖지 않는 컴포넌트인지 구분을 짓고 컴포넌트를 생성해야겠다.</p>
+<p>오늘날 리액트에서 React Hook이 등장하게 되면서 클래스형으로만 작성되던 stateful Component가 어떻게 함수형 컴포넌트로 바뀌게 되었는지를 배우게 되면 리액트에 대한 이해가 한층 더 깊어질 것 같다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
+                            aria-label=": Mock Fn(모의함수) 테스트 (React DOM Test)"
+                        >
+                            Mock Fn(모의함수) 테스트 (React DOM Test)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-08T21:17:48+09:00">
+	
+		    2022/11/08
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-Mock-Fn-모의함수-란"><a href="#📌-Mock-Fn-모의함수-란" class="headerlink" title="📌 Mock Fn(모의함수)란?"></a>📌 Mock Fn(모의함수)란?</h1><p>테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> expected = <span class="string">&quot;triggering toggle event&quot;</span>;</span><br><span class="line">  <span class="keyword">let</span> received = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        received = expected;</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;</span></span><br><span class="line"><span class="language-xml">    /&gt;</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="property">not</span>.<span class="title function_">toBe</span>(expected);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">queryByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="title function_">toBe</span>(expected);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.</li>
+</ul>
+<p>테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.</p>
+<p><strong>이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.</strong></p>
+<p>그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mock Fn</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> mockFn = jest.<span class="title function_">fn</span>();</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onToggle</span>=<span class="string">&#123;mockFn&#125;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(mockFn).<span class="title function_">toHaveBeenCalled</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="✏️-React-VirtualDOM-Test"><a href="#✏️-React-VirtualDOM-Test" class="headerlink" title="✏️ React VirtualDOM Test"></a>✏️ React VirtualDOM Test</h2><p>리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 <strong>RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">A11yHidden</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;span&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>RealDOM에서 <code>querySelector()</code>로 요소를 가져오는 것처럼 VirtualDOM에서는 <code>screen</code>으로 요소를 가져올 수 있다.</li>
+<li>해당 요소를 가져오기 위해서 <code>data-testId</code> 값을 사용하였다.</li>
+</ul>
+<h3 id="❗️-localName-vs-nodeName-차이"><a href="#❗️-localName-vs-nodeName-차이" class="headerlink" title="❗️ localName vs nodeName 차이"></a>❗️ localName vs nodeName 차이</h3><ul>
+<li>localName : 소문자를 반환</li>
+<li>nodeName : 대문자를 반환</li>
+</ul>
+<h3 id="defaultProps-사용하기"><a href="#defaultProps-사용하기" class="headerlink" title="defaultProps 사용하기"></a>defaultProps 사용하기</h3><p>리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.</p>
+<blockquote>
+<p>직접 파라미터에 <code>App(&#123; as: ComponentName = &#39;div&#39; &#125;)</code> 이런식으로 주는 것을 안티패턴으로 본다.</p>
+</blockquote>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&quot;./A11yHidden.module.css&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">A11yHidden</span>(<span class="params">&#123; <span class="keyword">as</span>: ComponentName, ...restProps &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ComponentName</span> <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span> &#123;<span class="attr">...restProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">ComponentName</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A11yHidden.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>as 라는 props를 받으면 해당하는 <strong>ComponentName으로</strong> 태그를 감싸서 컴포넌트를 생성한다.</li>
+</ul>
+<blockquote>
+<p>component는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.</p>
+</blockquote>
+<h3 id="getByRole-vs-getByTestId"><a href="#getByRole-vs-getByTestId" class="headerlink" title="getByRole vs getByTestId"></a>getByRole vs getByTestId</h3><p>기본적으로 <code>div, span</code> 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.</p>
+<p>그에 대한 대안으로 테스트용 <code>data-testId=&quot;tester&quot;</code> 값을 주고 <code>getByTestId()</code>를 사용하여 요소를 가져올 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// div 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> <span class="attr">as</span>=<span class="string">&quot;div&quot;</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// figure 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>figure, img</code> 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 <code>getByRole()</code>를 이용하여 가져올 수 있다.</p>
+</blockquote>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.</p>
+<p>이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 <strong>storyBook도</strong> 사용해봐야겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/08/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%E2%9A%BE%EF%B8%8F-%EC%88%AB%EC%9E%90-%EC%95%BC%EA%B5%AC-%EA%B2%8C%EC%9E%84/"
                             aria-label=": 우테코 프리코스 - ⚾️ 숫자 야구 게임"
                         >
@@ -926,301 +1371,6 @@
                         <p>
                             <a
                                 href="/2022/11/05/Settings/ESLint%EC%99%80-Prettier-%EC%84%A4%EC%A0%95/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/05/Settings/loader-%EB%A1%9C%EB%8D%94-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"
-                            aria-label=": loader(로더) 설정하기"
-                        >
-                            loader(로더) 설정하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-05T15:25:06+09:00">
-	
-		    2022/11/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Settings/">Settings</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <h1 id="📌-Loader-로더-란"><a href="#📌-Loader-로더-란" class="headerlink" title="📌 Loader(로더)란?"></a>📌 Loader(로더)란?</h1><p>webpack은 기본적으로 Javascript, JSON 파일만 해석할 수 있다.</p>
-<p>webpack이 로더를 사용하여 번들링 할 때에 다른 타입의 파일을 처리하거나 유효한 모듈로 변환하여 애플리케이션에서 사용할 수 있도록 도와준다.</p>
-                    
-                        <a
-                            href="/2022/11/05/Settings/loader-%EB%A1%9C%EB%8D%94-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": loader(로더) 설정하기"
-                        >
-                            계속 읽기
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"
-                            aria-label=": webpack 설정하기"
-                        >
-                            webpack 설정하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-05T14:22:42+09:00">
-	
-		    2022/11/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Settings/">Settings</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-webpack-이란"><a href="#📌-webpack-이란" class="headerlink" title="📌 webpack 이란?"></a>📌 webpack 이란?</h1><p>모듈로 관리하는 파일들을 번들링 해주는 툴이다.</p>
-<h2 id="🔨-사용방법"><a href="#🔨-사용방법" class="headerlink" title="🔨 사용방법"></a>🔨 사용방법</h2><h3 id="명령어-환경-구성"><a href="#명령어-환경-구성" class="headerlink" title="명령어 환경 구성"></a>명령어 환경 구성</h3><p>Webpack 모듈 번들러를 명령어 환경에서 사용하기 위해 webpack, webpack-cli를 설치합니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$npm</span> i -D webpack webpack-cli</span><br></pre></td></tr></table></figure>
-
-<h3 id="번들-명령어-등록"><a href="#번들-명령어-등록" class="headerlink" title="번들 명령어 등록"></a>번들 명령어 등록</h3><p>package.json 파일에 webpack 번들링을 수행하는 bundle 명령을 등록합니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">	<span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;webpack:config&quot;</span>: <span class="string">&quot;webpack --target=browserslist --entry=./src/main.js --output-path=public&quot;</span>,</span><br><span class="line">    <span class="string">&quot;webpack:dev&quot;</span>: <span class="string">&quot;npm run webpack:config -- --mode=development&quot;</span>,</span><br><span class="line">    <span class="string">&quot;webpack:prod&quot;</span>: <span class="string">&quot;npm run webpack:config -- --mode=production&quot;</span></span><br><span class="line">	&#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>entry 폴더와 output 폴더 경로를 지정해주면 된다.</li>
-<li>dev는 개발환경 번들링 작업을 위한 명령이고 prod는 배포환경을 위한 번들링 작업이다. <bold>prod의 결과물은 배포 최적화되어 있다.</bold></li>
-<li>target 속성은 어떤 브라우저 환경을 대상으로 번들링할 것인지를 명시해주는 것이다. <bold>프로젝트 루트 위치에 <code>.browserslistrc</code> 파일을 생성한다.</bold></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; 0.5% in KR</span><br><span class="line">last 2 versions</span><br><span class="line">not dead</span><br><span class="line">ie 11</span><br></pre></td></tr></table></figure>
-
-<h3 id="명령-실행"><a href="#명령-실행" class="headerlink" title="명령 실행"></a>명령 실행</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$npm</span> run webpack:dev</span><br><span class="line"></span><br><span class="line"><span class="variable">$npm</span> run webpack:prod</span><br></pre></td></tr></table></figure>
-
-<h2 id="🔨-Webpack-구성-파일"><a href="#🔨-Webpack-구성-파일" class="headerlink" title="🔨 Webpack 구성 파일"></a>🔨 Webpack 구성 파일</h2><p>기본적인 구성으로도 번들링 훌륭하지만 복잡한 구성을 위해서 구성파일을 별도로 작성해 관리하는 것이 좋습니다.</p>
-<h3 id="공통-구성-파일"><a href="#공통-구성-파일" class="headerlink" title="공통 구성 파일"></a>공통 구성 파일</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack/common.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; resolve &#125; <span class="keyword">from</span> <span class="string">&quot;node:path&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> commonConfig = &#123;</span><br><span class="line">  <span class="attr">target</span>: <span class="string">&quot;browserslist&quot;</span>,</span><br><span class="line">  <span class="attr">entry</span>: &#123;</span><br><span class="line">    <span class="attr">main</span>: <span class="title function_">resolve</span>(<span class="string">&quot;src/main.js&quot;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="title function_">resolve</span>(<span class="string">&quot;public&quot;</span>),</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&quot;[name].bundle.js&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> commonConfig;</span><br></pre></td></tr></table></figure>
-
-<h3 id="개발-구성-파일"><a href="#개발-구성-파일" class="headerlink" title="개발 구성 파일"></a>개발 구성 파일</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack/dev.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; merge &#125; <span class="keyword">from</span> <span class="string">&quot;webpack-merge&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> commonConfig <span class="keyword">from</span> <span class="string">&quot;./common.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devConfig = <span class="title function_">merge</span>(commonConfig, &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;development&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="string">&quot;eval-cheap-source-map&quot;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> devConfig;</span><br></pre></td></tr></table></figure>
-
-<h3 id="빌드-구성-파일"><a href="#빌드-구성-파일" class="headerlink" title="빌드 구성 파일"></a>빌드 구성 파일</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack/prod.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; merge &#125; <span class="keyword">from</span> <span class="string">&quot;webpack-merge&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> commonConfig <span class="keyword">from</span> <span class="string">&quot;./common.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prodConfig = <span class="title function_">merge</span>(commonConfig, &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;production&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    ...commonConfig.<span class="property">output</span>,</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&quot;[name].min.js&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> prodConfig;</span><br></pre></td></tr></table></figure>
-
-<h3 id="개발-빌드-명령-등록"><a href="#개발-빌드-명령-등록" class="headerlink" title="개발, 빌드 명령 등록"></a>개발, 빌드 명령 등록</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;bundle&quot;</span>: <span class="string">&quot;webpack bundle -c webpack/dev.js&quot;</span>,</span><br><span class="line">    <span class="string">&quot;build&quot;</span>: <span class="string">&quot;webpack build --progress -c webpack/prod.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>이제 기본 webpack 구성이 아닌 직접 생성한 파일을 통해서 번들링 작업을 해줄 수 있다.</p>
-<h2 id="🔨-Webpack-개발-서버-구성"><a href="#🔨-Webpack-개발-서버-구성" class="headerlink" title="🔨 Webpack 개발 서버 구성"></a>🔨 Webpack 개발 서버 구성</h2><p>Webpack 전용 개발 서버를 구동하기위해 패키지를 설치한다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$npm</span> i -D webpack-dev-server</span><br></pre></td></tr></table></figure>
-
-<h3 id="서버-구성-파일"><a href="#서버-구성-파일" class="headerlink" title="서버 구성 파일"></a>서버 구성 파일</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack/server.js</span></span><br><span class="line"><span class="keyword">const</span> devServer = &#123;</span><br><span class="line">  <span class="attr">host</span>: <span class="string">&quot;localhost&quot;</span>,</span><br><span class="line">  <span class="attr">port</span>: <span class="number">5000</span>,</span><br><span class="line">  <span class="attr">hot</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">open</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">compress</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">liveReload</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">static</span>: [<span class="string">&quot;public&quot;</span>],</span><br><span class="line">  <span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">client</span>: &#123;</span><br><span class="line">    <span class="attr">logging</span>: <span class="string">&quot;info&quot;</span>,</span><br><span class="line">    <span class="attr">overlay</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">reconnect</span>: <span class="number">3</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">watchFiles</span>: &#123;</span><br><span class="line">    <span class="attr">paths</span>: [<span class="string">&quot;src/**/*.*&quot;</span>, <span class="string">&quot;public/**/*.*&quot;</span>],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> devServer;</span><br></pre></td></tr></table></figure>
-
-<h3 id="서버-구성-파일-불러오기"><a href="#서버-구성-파일-불러오기" class="headerlink" title="서버 구성 파일 불러오기"></a>서버 구성 파일 불러오기</h3><p>개발 환경에서 서버 구성 파일을 불러온다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack/dev.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; merge &#125; <span class="keyword">from</span> <span class="string">&quot;webpack-merge&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> commonConfig <span class="keyword">from</span> <span class="string">&quot;./common.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> devServer <span class="keyword">from</span> <span class="string">&quot;./server.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> devConfig = <span class="title function_">merge</span>(commonConfig, &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;development&quot;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: <span class="string">&quot;eval-cheap-source-map&quot;</span>,</span><br><span class="line">  devServer,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> devConfig;</span><br></pre></td></tr></table></figure>
-
-<h3 id="서버-구동-명령어-등록"><a href="#서버-구동-명령어-등록" class="headerlink" title="서버 구동 명령어 등록"></a>서버 구동 명령어 등록</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run server -- --open&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run server&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span> <span class="string">&quot;webpack server -c webpack/dev.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bundle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;webpack bundle -c webpack/dev.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="string">&quot;webpack build -c webpack/prod.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="HTML-Entry-수정"><a href="#HTML-Entry-수정" class="headerlink" title="HTML Entry 수정"></a>HTML Entry 수정</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;ko-KR&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.bundle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/04/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B8-%EC%B2%AD%EA%B0%9C%EA%B5%AC%EB%A6%AC-%EC%82%AC%EC%A0%84/"
-                            aria-label=": 우테코 프리코스 - 🐸 청개구리 사전"
-                        >
-                            우테코 프리코스 - 🐸 청개구리 사전
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-04T21:45:43+09:00">
-	
-		    2022/11/04
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>어느 연못에 엄마 말씀을 좀처럼 듣지 않는 청개구리가 살고 있었다. 청개구리는 엄마가 하는 말은 무엇이든 반대로 말하였다.</p>
-<p>엄마 말씀 word가 매개변수로 주어질 때, 아래 청개구리 사전을 참고해 반대로 변환하여 return 하도록 solution 메서드를 완성하라.</p>
-<table>
-<thead>
-<tr>
-<th>A</th>
-<th>B</th>
-<th>C</th>
-<th>D</th>
-<th>E</th>
-<th>F</th>
-<th>G</th>
-<th>H</th>
-<th>I</th>
-<th>J</th>
-<th>K</th>
-<th>L</th>
-<th>M</th>
-<th>N</th>
-<th>O</th>
-<th>P</th>
-<th>Q</th>
-<th>R</th>
-<th>S</th>
-<th>T</th>
-<th>U</th>
-<th>V</th>
-<th>W</th>
-<th>X</th>
-<th>Y</th>
-<th>Z</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Z</td>
-<td>Y</td>
-<td>X</td>
-<td>W</td>
-<td>V</td>
-<td>U</td>
-<td>T</td>
-<td>S</td>
-<td>R</td>
-<td>Q</td>
-<td>P</td>
-<td>O</td>
-<td>N</td>
-<td>M</td>
-<td>L</td>
-<td>K</td>
-<td>J</td>
-<td>I</td>
-<td>H</td>
-<td>G</td>
-<td>F</td>
-<td>E</td>
-<td>D</td>
-<td>C</td>
-<td>B</td>
-<td>A</td>
-</tr>
-</tbody></table>
-<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h2><ul>
-<li>word는 길이가 1 이상 1,000 이하인 문자열이다.</li>
-<li>알파벳 외의 문자는 변환하지 않는다.</li>
-<li>알파벳 대문자는 알파벳 대문자로, 알파벳 소문자는 알파벳 소문자로 변환한다.</li>
-</ul>
-<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h2><table>
-<thead>
-<tr>
-<th>word</th>
-<th>result</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>“I love you”</td>
-<td>“R olev blf”</td>
-</tr>
-</tbody></table>
-<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem4</span>(<span class="params">word</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> word !== <span class="string">&#x27;string&#x27;</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 문자열 타입이여야 합니다.&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!word.<span class="property">length</span> || word.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1 이상 1,000 이하의 문자열이여야 합니다.&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">ALPHABET_LENGTH</span> = <span class="number">26</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">ASCII_NUMBER_CODE_UPPER_A</span> = <span class="number">65</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">ASCII_NUMBER_CODE_UPPER__Z</span> = <span class="number">90</span> ;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">ASCII_NUMBER_CODE_LOWER_A</span> = <span class="number">97</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">ASCII_NUMBER_CODE_LOWER__Z</span> = <span class="number">122</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> splitWords = [...word];</span><br><span class="line">  <span class="keyword">const</span> uppers = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123;<span class="attr">length</span>:<span class="variable constant_">ALPHABET_LENGTH</span>&#125;, <span class="function">(<span class="params">_,i</span>) =&gt;</span> <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable constant_">ASCII_NUMBER_CODE_UPPER_A</span>+i));</span><br><span class="line">  <span class="keyword">const</span> lowers = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123;<span class="attr">length</span>:<span class="variable constant_">ALPHABET_LENGTH</span>&#125;, <span class="function">(<span class="params">_,i</span>) =&gt;</span> <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable constant_">ASCII_NUMBER_CODE_LOWER_A</span>+i));</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">changeOppositeStr</span> = str =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> codePosition = str.<span class="title function_">charCodeAt</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (codePosition &gt;= <span class="variable constant_">ASCII_NUMBER_CODE_UPPER_A</span> &amp;&amp; codePosition &lt;= <span class="variable constant_">ASCII_NUMBER_CODE_UPPER__Z</span></span><br><span class="line">      ? [...uppers].<span class="title function_">reverse</span>()[uppers.<span class="title function_">indexOf</span>(str)]</span><br><span class="line">      : codePosition &gt;= <span class="variable constant_">ASCII_NUMBER_CODE_LOWER_A</span> &amp;&amp; codePosition &lt;= <span class="variable constant_">ASCII_NUMBER_CODE_LOWER__Z</span> </span><br><span class="line">      ? [...lowers].<span class="title function_">reverse</span>()[lowers.<span class="title function_">indexOf</span>(str)]</span><br><span class="line">      : str);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> splitWords.<span class="title function_">map</span>(<span class="function"><span class="params">splitedWord</span> =&gt;</span> <span class="title function_">changeOppositeStr</span>(splitedWord)).<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ASCII 코드를 활용하여 A<del>Z, a</del>z 를 담은 배열을 생성하였다.</li>
-<li>map 메서드를 사용하여 각 요소를 반대편 문자열로 바꿔주었다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
-<li>리팩터링을 하기 전 코드는 ASCII 코드를 상수에 할당하지 않고 그대로 비즈니스 로직에 가져다가 사용하지 해당 숫자가 무엇을 의미하는지 파악하기 힘들어 상수에 할당하니 가독성이 높아졌다.</li>
-<li>changeOppositeStr() 함수 내부에서 reverse()[] 이 부분이 중복되어 함수로 추출하려 했지만, 짧은 코드에 너무 많은 함수가 오히려 더 가독성을 해친다고 판단하여 그대로 두었다.</li>
-<li>로직을 ASCII 코드 대신 정규표현식으로 구현하였다면 비즈니스 로직이 훨씬 더 간결해질 것 같기에 다음에 문자열 문제가 나온다면 정규표현식으로도 도전해봐야겠다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/04/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B8-%EC%B2%AD%EA%B0%9C%EA%B5%AC%EB%A6%AC-%EC%82%AC%EC%A0%84/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
