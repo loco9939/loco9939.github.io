@@ -325,6 +325,89 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"
+                            aria-label=": &lt;Suspense&gt; 컴포넌트는 무엇인가?"
+                        >
+                            &lt;Suspense&gt; 컴포넌트는 무엇인가?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-02T16:29:47+09:00">
+	
+		    2023/02/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="컴포넌트란"><a href="#컴포넌트란" class="headerlink" title=" 컴포넌트란?"></a><Suspense> 컴포넌트란?</h1><p>자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">SomeComponent</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="주의사항"><a href="#주의사항" class="headerlink" title="주의사항"></a>주의사항</h2><ul>
+<li>리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존하지 않는다. 컴포넌트가 로드되면 리액트는 중단된 트리를 처음부터 렌더링을 시도한다.</li>
+<li><Suspense> 컴포넌트는 컴포넌트 내부에서 startTransition이나 useDeferredValue로 인한 업데이트가 아닌 경우라면 fallback이 표시된다.</li>
+<li>컴포넌트가 다시 일시 중단되었기 때문에 이미 보여진 컨텐츠를 감출 필요가 있다면, layout effect를 비운다. 다시 컨텐츠를 보여줄 준비가 됐을 때, 리액트는 layout effect를 발생시킨다. 이는 컨텐츠가 숨겨진 동안 DOM layout을 측정하지 않도록 한다.</li>
+</ul>
+<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><p>컨텐츠가 로딩되는 동안에 fallback을 보여준다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Albums</span> <span class="keyword">from</span> <span class="string">&quot;./Albums.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">ArtistPage</span>(<span class="params">&#123; artist &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;artist.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">Loading</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Loading</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>🌀 Loading...<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="컨텐츠를-한번에-공개"><a href="#컨텐츠를-한번에-공개" class="headerlink" title="컨텐츠를 한번에 공개"></a>컨텐츠를 한번에 공개</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p><Suspense> 내부에 하나의 컴포넌트라도 일시중단 되더라도 <strong>모든 하위 컴포넌트가 대기했다가 한번에 공개된다.</strong></p>
+<h3 id="가장-가까운-의-fallback을-보여준다"><a href="#가장-가까운-의-fallback을-보여준다" class="headerlink" title="가장 가까운 의 fallback을 보여준다."></a>가장 가까운 <Suspense>의 fallback을 보여준다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Details</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Details</span>(<span class="params">&#123; artistId &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Biography</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>때문에 직접적인 자식이 아니더라도 Biography와 Albums와 가장 가까운 부모 <Suspense> 경계를 공유하기 때문에 함께 표시된다.</p>
+<h3 id="로드-될-때-중첩된-컨텐츠-표시한다"><a href="#로드-될-때-중첩된-컨텐츠-표시한다" class="headerlink" title="로드 될 때, 중첩된 컨텐츠 표시한다."></a>로드 될 때, 중첩된 컨텐츠 표시한다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">BigSpinner</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">AlbumsGlimmer</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>처음에 Biography가 로딩이 완료 되지 않았을 때, BigSpinner가 fallback으로 보여지고, 이후 Biography는 로딩이 완료되었기 때문에 보여지고, 아래 Albums이 로딩이 완료되지 않았다면 AlbumsGlimmer를 보여주고 있다가 로딩이 완료되어 Albums를 보여준다.</p>
+<p>핵심은 Biography가 Albums 로딩이 완료될 때까지 기다리지 않는 다는 것이다.</p>
+<h3 id="이미-공개된-컨텐츠가-숨겨지는-것을-방지하기"><a href="#이미-공개된-컨텐츠가-숨겨지는-것을-방지하기" class="headerlink" title="이미 공개된 컨텐츠가 숨겨지는 것을 방지하기"></a>이미 공개된 컨텐츠가 숨겨지는 것을 방지하기</h3><p><a target="_blank" rel="noopener" href="https://codesandbox.io/s/0lgig0?file=/App.js&utm_medium=sandpack">Code Example Link</a></p>
+<ul>
+<li><Suspense> 내부에 startTransition이 사용되었다면, <span style="color:red;">fallback이 보여지지 않는다.</span></li>
+<li>때문에 fallback의 BigSpinner에 의해 이전에 보여진 컨텐츠가 숨겨지는 것을 방지할 수 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/02/CS/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/"
                             aria-label=": Context API란 무엇이고 Redux와 어떤 차이가 있나요?"
                         >

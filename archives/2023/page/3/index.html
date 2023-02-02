@@ -325,6 +325,79 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
+                            aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
+                        >
+                            클로저는 무엇이고 언제, 어떻게 사용하나요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T13:25:25+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📚-클로저란-무엇인가요"><a href="#📚-클로저란-무엇인가요" class="headerlink" title="📚 클로저란 무엇인가요?"></a>📚 클로저란 무엇인가요?</h1><p>클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.</p>
+<h1 id="❓-클로저는-왜-사용-하나요"><a href="#❓-클로저는-왜-사용-하나요" class="headerlink" title="❓ 클로저는 왜 사용 하나요?"></a>❓ 클로저는 왜 사용 하나요?</h1><p>클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.</p>
+<p>C++과 같은 객체지향 프로그래밍 언어와 달리 <strong>자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.</strong></p>
+<p>때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.</p>
+<h1 id="❓-클로저는-언제-어떻게-사용하나요"><a href="#❓-클로저는-언제-어떻게-사용하나요" class="headerlink" title="❓ 클로저는 언제, 어떻게 사용하나요?"></a>❓ 클로저는 언제, 어떻게 사용하나요?</h1><p>클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.</p>
+<ol>
+<li>함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.</li>
+<li>외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="❗️-주의점"><a href="#❗️-주의점" class="headerlink" title="❗️ 주의점"></a>❗️ 주의점</h1><p>클로저는 외부함수의 실행 컨텍스트가 제거되어도 내부함수가 외부함수의 변수를 기억하고 있는데 이는 추후에 메모리 누수가 발생할 수 있다.</p>
+<p>예를 들어 리액트에서 useEffect 함수를 사용하여 렌더링 이후에 이벤트를 등록하였을 때, 이를 다시 렌더링이 되었을 때, 기존 이벤트를 클린업 해주지 않는 다면 같은 역할을 하는 이벤트가 중복등록이 되고 이는 성능상 문제를 일으킬 수 있으므로 이러한 점을 주의해야한다.</p>
+<h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
+<p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
+<p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                             aria-label=": 프로토타입이란 무엇인가요?"
                         >
