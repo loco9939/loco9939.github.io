@@ -325,6 +325,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 호이스팅에 대해 설명하라"
+                        >
+                            호이스팅에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T14:24:56+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
+<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
+<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
+<blockquote>
+<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
+</blockquote>
+<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
+<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                             aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
                         >
@@ -1031,85 +1109,6 @@
                         <p>
                             <a
                                 href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
-                            aria-label=": ⛱ useRef"
-                        >
-                            ⛱ useRef
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-22T19:27:24+09:00">
-	
-		    2022/11/22
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="🐶-useRef"><a href="#🐶-useRef" class="headerlink" title="🐶 useRef()"></a>🐶 useRef()</h1><p>리액트에서 ref는 주로 DOM 노드 참조 목적으로 사용된다. 컴포넌트 렌더링에 영향을 주지 않는 값 참조 목적으로 사용된다.</p>
-<p><code>useRef()</code>는 함수 컴포넌트 내부에서 특정 값을 지속적으로 참조할 때 사용한다. <code>useState()</code>와 달리 <code>useRef()</code>는 <strong>현재 값이 변경되어도 컴포넌트가 다시 렌더링되지 않아 애플리케이션 성능을 최적화 할 수 있다.</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useRef() 훅을 사용해 카운트 참조 생성</span></span><br><span class="line"><span class="keyword">const</span> countRef = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 카운트 참조의 현재 값이 변경되어도 컴포넌트는 다시 렌더링 되지 않음</span></span><br><span class="line">countRef.<span class="property">current</span> = countRef.<span class="property">current</span> + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>클래스는 자신의 인스턴스 멤버를 사용해 렌더링 상관없이 특정 값을 기억할 수 있는데 반해, 함수는 다시 렌더링 되면 매번 함수 몸체가 초기화 되므로 특정 값을 기억할 때 useRef()를 사용하면 유용하다.</p>
-</blockquote>
-<h2 id="🐥-useRef-사용목적"><a href="#🐥-useRef-사용목적" class="headerlink" title="🐥 useRef() 사용목적"></a>🐥 useRef() 사용목적</h2><h3 id="1-DOM-요소-접근-및-조작"><a href="#1-DOM-요소-접근-및-조작" class="headerlink" title="1. DOM 요소 접근 및 조작"></a>1. DOM 요소 접근 및 조작</h3><p>리액트 render() 단계에서는 DOM이 그려지기 전 단계이므로 <red>DOM에 직접 접근할 수 없다.</red></p>
-<p>하지만 useRef()를 사용하여 컴포넌트가 <strong>mount된 시점 이후 DOM 요소에 접근하여 조작</strong>할 수 있도록 도와준다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">TextInputWithFocusButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> inputEl = <span class="title function_">useRef</span>(<span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onButtonClick</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// `current` points to the mounted text input element</span></span><br><span class="line">    inputEl.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;inputEl&#125;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onButtonClick&#125;</span>&gt;</span>Focus the input<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>아직 DOM이 그려지기 전이라 DOM 요소에 접근하여 focus()를 활성화 시킬 수 없지만, useRef()를 사용하여 클래스 컴포넌트 생명주기를 고려하여 DOM 요소에 접근할 수 있도록 도와준다.</li>
-</ul>
-<h3 id="2-함수-컴포넌트-내부에서-특정-값을-기억"><a href="#2-함수-컴포넌트-내부에서-특정-값을-기억" class="headerlink" title="2. 함수 컴포넌트 내부에서 특정 값을 기억"></a>2. 함수 컴포넌트 내부에서 특정 값을 기억</h3><p>함수 컴포넌트 내부에서 특정 값을 기억하면서 값을 변경해도 컴포넌트 렌더링에 영향을 주지 않아야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect, useRef, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> randomcolor <span class="keyword">from</span> <span class="string">&quot;randomcolor&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DoNotReRender</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> colorRef = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> [stateValue, setStateValue] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> [stateHex, setStateHex] = <span class="title function_">useState</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  <span class="keyword">const</span> [refHex, setRefHex] = <span class="title function_">useState</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setStateHex</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  &#125;, [stateValue]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setRefHex</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  &#125;, [colorRef]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">GridItem</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">css</span>=<span class="string">&#123;</span>`</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">background:</span> $&#123;<span class="attr">stateHex</span>&#125;;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        `&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>State<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ChangeColorButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-label</span>=<span class="string">&quot;state 컬러 변경&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setStateValue(stateValue + 1)&#125;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 됩니다.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">GridItem</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">GridItem</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">css</span>=<span class="string">&#123;</span>`</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">background:</span> $&#123;<span class="attr">refHex</span>&#125;;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        `&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">          colorRef.current += 10;</span></span><br><span class="line"><span class="language-xml">          console.log(`colorRef.current = $&#123;colorRef.current&#125;`);</span></span><br><span class="line"><span class="language-xml">        &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Ref<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ChangeColorButton</span> <span class="attr">aria-label</span>=<span class="string">&quot;ref 컬러 변경&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 될까요?<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">GridItem</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>useState()</code>의 <code>setStateValue()</code>메서드를 사용하여 값을 변경한 경우 재렌더링이 발생하지만, <code>useRef()</code>의 current 값을 갱신하면 재렌더링이 발생하지 않는다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

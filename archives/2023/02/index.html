@@ -325,6 +325,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/"
+                            aria-label=": useEffect로 이전 상태 기반하여 상태 업데이트 하기"
+                        >
+                            useEffect로 이전 상태 기반하여 상태 업데이트 하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-06T16:24:27+09:00">
+	
+		    2023/02/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useEffect란"><a href="#useEffect란" class="headerlink" title="useEffect란?"></a>useEffect란?</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(setup, dependencies?)</span><br></pre></td></tr></table></figure>
+
+<p>외부 시스템과 컴포넌트를 동기화 하는데 사용하는 React Hook이다. <strong>즉, 외부 시스템과 동기화하는 작업이 아니라면 useEffect를 사용하지 않는 것이 좋다.</strong></p>
+<h2 id="params"><a href="#params" class="headerlink" title="params"></a>params</h2><h3 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h3><p>Effect 로직 함수로, 선택적으로 cleanup 함수를 반환할 수 있다.</p>
+<ul>
+<li>컴포넌트가 처음 DOM에 추가 되었을 때, setup 함수가 실행된다.</li>
+<li>의존성이 변경되어 리렌더링이 발생한 이후, <span style='color:red;'>리액트는 이전 값으로 cleanup 함수 먼저 실행하고 새로운 값으로 setup 함수를 실행한다.</span></li>
+<li><strong>컴포넌트가 DOM에서 제거된 후, 리액트는 클린업 함수를 한 번 실행한다.</strong></li>
+</ul>
+<h3 id="dependencies"><a href="#dependencies" class="headerlink" title="dependencies?"></a>dependencies?</h3><p>setup 함수 코드 내부와 관련된 리액트 값들의 리스트이다. 리액트 값들은 컴포넌트 내부에서 선언된 props, state, 변수, 함수들을 의미한다.</p>
+<ul>
+<li>리액트는 이전 값과 dependencies를 Object.is() 메서드로 비교한다.</li>
+<li>만약 dependencies를 명확히 기재하지 않는다면, 컴포넌트 리렌더링이 발생할 때마다 Effect가 다시 실행된다.</li>
+</ul>
+<h2 id="이전-상태를-기반으로-useEffect로-상태-업데이트-하기"><a href="#이전-상태를-기반으로-useEffect로-상태-업데이트-하기" class="headerlink" title="이전 상태를 기반으로 useEffect로 상태 업데이트 하기"></a>이전 상태를 기반으로 useEffect로 상태 업데이트 하기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slider.js - 의존성 있는 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(index + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, [index]);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 slider 프로젝트를 제작하다가 나온 코드이다. setInterval을 Effect 로직에 사용하였는데, 의존성으로 indexrk 있어 index가 변경될 때마다 해당 Effect 로직이 cleanup되고 setup되고를 반복하게 된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slieder.js - 의존성 빈 배열인 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(<span class="function">(<span class="params">i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 바꿀 경우 코드는 동일하게 동작하지만, 이전 상태를 기반으로 상태를 업데이트할 때에는 이전 값을 직접 넣어주기보단 updater 함수를 콜백함수로 전달해줌으로서 의존성 데이터를 줄일 수 있다.</p>
+<p><strong>그 결과, 처음 컴포넌트가 렌더링되고 한번만 실행되기 때문에 불필요한 setup과 cleanup 과정을 줄일 수 있다.</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"
                             aria-label=": &lt;Suspense&gt; 컴포넌트는 무엇인가?"
                         >
@@ -434,7 +512,7 @@
             
                 <div class="postShorten-content">
                     <h1 id="Context-API란"><a href="#Context-API란" class="headerlink" title="Context API란?"></a>Context API란?</h1><div style="display:flex">
-    <img src="./context.png" width="200" height="300">
+    <img src="context.png" width="200" height="300">
     <p style="padding:0 1rem; line-height:1.5;">앱의 규모가 커지고 복잡해짐에 따라 부모 컴포넌트에서 중첩된 자식 컴포넌트에게 데이터나 데이터 변경함수를 전달해줄 때, 몇단계를 걸쳐서 전달해줌으로서 애플리케이션이 더욱 복잡해지는 문제가 발생하였다.<br />
     이를 해결하기 위해 context API가 등장하였고, 이로써 props를 단계별로 넘겨주지 않아도 데이터를 제공할 수 있게 되었다. 그 결과 <b>컴포넌트 트리로 묶인 컴포넌트 간 데이터 공유가 수월해졌다.</b> 
     </p>
@@ -447,7 +525,7 @@
 <p>단, Context API를 사용하게 되면 컴포넌트의 재사용이 어려워지므로 꼭 필요한 경우에만 사용한다.</p>
 </blockquote>
 <h1 id="Redux란"><a href="#Redux란" class="headerlink" title="Redux란?"></a>Redux란?</h1><p>Redux는 action이라는 이벤트를 사용하여 데이터를 관리할 수 있는 상태관리 라이브러리이다.</p>
-<img src="./redux.png" >
+<img src="redux.png" >
 
 <h2 id="리덕스의-3원칙"><a href="#리덕스의-3원칙" class="headerlink" title="리덕스의 3원칙"></a>리덕스의 3원칙</h2><ol>
 <li>단 하나의 store에서 모든 상태가 저장된다.</li>
