@@ -325,6 +325,164 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/13/Algorithm/boj/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
+                            aria-label=": boj-1932 정수 삼각형(JavaScript)"
+                        >
+                            boj-1932 정수 삼각형(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-13T19:06:41+09:00">
+	
+		    2023/02/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    7</span><br><span class="line">   3 8</span><br><span class="line">  8 1 0</span><br><span class="line"> 2 7 4 4</span><br><span class="line">4 5 2 6 5</span><br></pre></td></tr></table></figure>
+
+<p>위 그림은 크기가 5인 정수 삼각형의 한 모습이다.</p>
+<p>맨 위층 7부터 시작해서 아래에 있는 수 중 하나를 선택하여 아래층으로 내려올 때, 이제까지 선택된 수의 합이 최대가 되는 경로를 구하는 프로그램을 작성하라. 아래층에 있는 수는 현재 층에서 선택된 수의 대각선 왼쪽 또는 대각선 오른쪽에 있는 것 중에서만 선택할 수 있다.</p>
+<p>삼각형의 크기는 1 이상 500 이하이다. 삼각형을 이루고 있는 각 수는 모두 정수이며, 범위는 0 이상 9999 이하이다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 삼각형의 크기 n(1 ≤ n ≤ 500)이 주어지고, 둘째 줄부터 n+1번째 줄까지 정수 삼각형이 주어진다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 합이 최대가 되는 경로에 있는 수의 합을 출력한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">예제 입력 1</span><br><span class="line">5</span><br><span class="line">7</span><br><span class="line">3 8</span><br><span class="line">8 1 0</span><br><span class="line">2 7 4 4</span><br><span class="line">4 5 2 6 5</span><br><span class="line"></span><br><span class="line">예제 출력 1</span><br><span class="line">30</span><br></pre></td></tr></table></figure>
+
+<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><p>처음에는 탑 다운 방식으로 7을 선택하고 3과 8을 더한 수는 DP[2][0], DP[2][1]에 저장하는 방법으로 진행해보려고 하였다.</p>
+<p>그런데 횟수가 많아지고 DP[3][1]에서 DP[2][0]과 DP[2][1] 중 큰 값을 구해서 더해야하는데 만약 3이 아니라 10이라면 1과 10을 제외한 2~9를 반복문을 돌면서 그 중에 최댓값인 것과 더해서 DP 값을 구해야 하기에 이는 너무 복잡하여 다르게 생각해보려고 노력했지만 한 문제에 너무 많은 시간을 쏟는 것 같아 다른 사람의 해설을 참고하였다.</p>
+<p>위에서 부터 순서대로 7-3-8-7-5를 선택하여 총합 30이라는 숫자를 출력하였는데, 이는 반대로 생각해볼 수 있다.</p>
+<p>맨 아래에서부터 시작하여 4, 5, 2, 6, 5의 바로 위의 숫자에는 4개의 숫자가 있다. 즉, 5번째 줄의 숫자를 2개씩 짝지어서 비교하여 큰 값을 바로 위에 숫자와 더하여 누적하면서 위로 올라가다보면 최종적으로 맨 위에는 최댓값이 남게되는 방식이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> n = +input.<span class="title function_">shift</span>();</span><br><span class="line"><span class="keyword">const</span> triangle = input.<span class="title function_">map</span>(<span class="function">(<span class="params">floor</span>) =&gt;</span> floor.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">solution</span> = (<span class="params">n, triangle</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">2</span>) <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>] + <span class="title class_">Math</span>.<span class="title function_">max</span>(...triangle[<span class="number">1</span>]);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    triangle[i].<span class="title function_">forEach</span>(<span class="function">(<span class="params">v, idx, self</span>) =&gt;</span> &#123;</span><br><span class="line">      self[idx] = v + <span class="title class_">Math</span>.<span class="title function_">max</span>(triangle[i + <span class="number">1</span>][idx], triangle[i + <span class="number">1</span>][idx + <span class="number">1</span>]);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">solution</span>(n, triangle));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DP 배열을 만들지 않고 triangle 배열을 그대로 바꾸어 반환하였다.</li>
+</ul>
+<h3 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://tesseractjh.tistory.com/114">한걸음씩 블로그 </a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/13/Algorithm/boj/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                            aria-label=": boj-2156 포도주 시식(JavaScript)"
+                        >
+                            boj-2156 포도주 시식(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-13T16:30:46+09:00">
+	
+		    2023/02/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.</p>
+<p>포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.<br>연속으로 놓여 있는 3잔을 모두 마실 수는 없다.<br>효주는 될 수 있는 대로 많은 양의 포도주를 맛보기 위해서 어떤 포도주 잔을 선택해야 할지 고민하고 있다. 1부터 n까지의 번호가 붙어 있는 n개의 포도주 잔이 순서대로 테이블 위에 놓여 있고, 각 포도주 잔에 들어있는 포도주의 양이 주어졌을 때, 효주를 도와 가장 많은 양의 포도주를 마실 수 있도록 하는 프로그램을 작성하시오.</p>
+<p>예를 들어 6개의 포도주 잔이 있고, 각각의 잔에 순서대로 6, 10, 13, 9, 8, 1 만큼의 포도주가 들어 있을 때, 첫 번째, 두 번째, 네 번째, 다섯 번째 포도주 잔을 선택하면 총 포도주 양이 33으로 최대로 마실 수 있다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">예제 입력 1</span><br><span class="line">6</span><br><span class="line">6</span><br><span class="line">10</span><br><span class="line">13</span><br><span class="line">9</span><br><span class="line">8</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">예제 출력 1</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> n = input.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="number">0</span>);</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = input[<span class="number">0</span>];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>] = input[<span class="number">0</span>] + input[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[n]);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DP는 N이 0에서 부터 n까지로 마실 수 있는 최대 포도주 양을 담은 배열이다.</li>
+<li>만약 포도주가 1개라고 하면 1잔으로 마실 수 있는 포도주 최대 양을 DP[1]이라고 할 수 있고 그 값은 가장 첫번째 배열의 요소이다. (왜냐하면? 해당 배열에는 한개의 요소밖에 없으니깐)</li>
+<li>만약 포도주가 2개일 때, 2잔으로 마실 수 있는 포도주 최대 양은 DP[2]이고, 그 값은 가장 첫번째 배열과 두번째 배열의 요소의 합이다.</li>
+</ul>
+<p>하지만 여기서 DP[3]부터는 고려해줘야하는 부분이 생겨난다.</p>
+<p>1번잔, 2번잔, 3번잔이 있을 때, DP[3]으로 올 수 있는 경우의 수는 다음과 같다.</p>
+<ol>
+<li>1번과 2번을 마시는 경우 &#x3D;&gt; DP[2]와 같은 의미이다.</li>
+<li>1번과 3번을 마시는 경우 &#x3D;&gt; DP[1]+input[2]</li>
+<li>2번과 3번을 마시는 경우 &#x3D;&gt; 1번을 제외 하는 것이니 DP[0]+input[1]+input[2]</li>
+</ol>
+<p>위를 토대로 점화식을 세울 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/12/29/Algorithm/merge%20sort/"
                             aria-label=": merge sort"
                         >
@@ -1207,196 +1365,6 @@
                         <p>
                             <a
                                 href="/2022/11/04/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%91%8F%F0%9F%8F%BB-3-6-9-%EB%B0%95%EC%88%98-%ED%9A%9F%EC%88%98-%EC%84%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"
-                            aria-label=": boj-1157 단어공부"
-                        >
-                            boj-1157 단어공부
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-03T10:47:55+09:00">
-	
-		    2022/11/03
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-문제"><a href="#📌-문제" class="headerlink" title="📌 문제"></a>📌 문제</h1><p>알파벳 대소문자로 된 단어가 주어지면, 이 단어에서 가장 많이 사용된 알파벳이 무엇인지 알아내는 프로그램을 작성하시오. 단, 대문자와 소문자를 구분하지 않는다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 알파벳 대소문자로 이루어진 단어가 주어진다. 주어지는 단어의 길이는 1,000,000을 넘지 않는다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 이 단어에서 가장 많이 사용된 알파벳을 대문자로 출력한다. 단, 가장 많이 사용된 알파벳이 여러 개 존재하는 경우에는 ?를 출력한다.</p>
-<table>
-<thead>
-<tr>
-<th>입력</th>
-<th>출력</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Mississipi</td>
-<td>?</td>
-</tr>
-<tr>
-<td>zZa</td>
-<td>Z</td>
-</tr>
-<tr>
-<td>z</td>
-<td>Z</td>
-</tr>
-<tr>
-<td>baaa</td>
-<td>A</td>
-</tr>
-</tbody></table>
-<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> alphabets = [...<span class="keyword">new</span> <span class="title class_">Set</span>([...input.<span class="title function_">toLowerCase</span>()])];</span><br><span class="line"><span class="keyword">let</span> max = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> current = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">alphabets.<span class="title function_">forEach</span>(<span class="function">(<span class="params">alphabet,i</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(alphabet, <span class="string">&#x27;ig&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> count = input.<span class="title function_">match</span>(regExp).<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (max &lt; count) &#123;</span><br><span class="line">        max = count;</span><br><span class="line">        current = alphabet.<span class="title function_">toUpperCase</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (max === count &amp;&amp; alphabet.<span class="title function_">toUpperCase</span>() !== current) current = <span class="string">&#x27;?&#x27;</span>; </span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(current)</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>입력값의 알파벳을 소문자로 만들고 중복을 제거해주었다.</li>
-<li>해당 알파벳을 forEach 문으로 순회하면서 초기에 입력값으로 주어진 문자열을 정규표현식으로 확인한다.</li>
-<li>정규표현식에 매치되는 요소의 갯수가 최대값으로 갱신해주고 그 때의 알파벳을 대문자로 저장해둔다.</li>
-<li>만약 새로운 알파벳의 갯수가 최댓값과 같고 현재의 알파벳 대문자와 current에 할당된 알파벳이 같으면 current에 “?”를 할당한다.</li>
-</ol>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>문자열을 풀 때, 정규표현식을 사용하면 반복문을 줄이고 코드를 깔끔하게 하여 가독성을 키우는 연습을 하는데 도움이 될 것 같다.</p>
-<p>주어진 테스트 케이스를 다 만족했지만, 제출했을 때 오답이라고 나와서 당황했다. 어떻게 하면 내 제출이 만족 못시키는 케이스가 있을까하고 생각해보면서 여러가지 상황을 제시하면서 테스트 케이스를 찾아내었다.</p>
-<p>그 결과 처음 정규표현식을 생성할 때, alphabets 배열을 순회하면서가 아닌 초기 입력값의 순회한 요소를 넣어주었기 때문에 제대로 된 결과가 나오지 않는다는 것을 깨닫고 수정하였다.</p>
-<p>테스트 케이스를 어떻게 찾아내지라고 생각하면서 막막했었는데,</p>
-<ol>
-<li>주어진 문제에서 제한사항 중 내가 놓친 부분이 있는지를 확인한다.</li>
-<li>조건을 만족시키는 다양한 상황을 만들어본다.</li>
-</ol>
-<p>위 두가지를 실행해보다보니 찾게되어서 기뻤다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
-                            aria-label=": 우테코 프리코스 - 🐶 중복 문자 제거"
-                        >
-                            우테코 프리코스 - 🐶 중복 문자 제거
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-01T22:24:44+09:00">
-	
-		    2022/11/01
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>암호문을 좋아하는 괴짜 개발자 브라운이 이번에는 중복 문자를 이용한 새로운 암호를 만들었다. 예를 들어 “browoanoommnaon”이라는 암호문은 다음과 같은 순서로 해독할 수 있다.</p>
-<ol>
-<li>“browoanoommnaon”</li>
-<li>“browoannaon”</li>
-<li>“browoaaon”</li>
-<li>“browoon”</li>
-<li>“brown”</li>
-</ol>
-<p>임의의 문자열 cryptogram이 매개변수로 주어질 때, 연속하는 중복 문자들을 삭제한 결과를 return 하도록 solution 메서드를 완성하라.</p>
-<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a><strong>제한사항</strong></h2><ul>
-<li>cryptogram은 길이가 1 이상 1000 이하인 문자열이다.</li>
-<li>cryptogram은 알파벳 소문자로만 이루어져 있다.</li>
-</ul>
-<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a><strong>실행 결과 예시</strong></h2><h2 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem2</span>(<span class="params">cryptogram</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cryptogram !== cryptogram.<span class="title function_">toLowerCase</span>()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 소문자만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (!cryptogram.<span class="property">length</span> || cryptogram.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1자 이상 1000자 이하만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> strArr = [...cryptogram];</span><br><span class="line">  <span class="keyword">let</span> duplicatedStrPosition = [];</span><br><span class="line">  <span class="keyword">let</span> hasDuplicatedStr = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(hasDuplicatedStr) &#123;</span><br><span class="line">    strArr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_, i, init</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (init[i] === init[i+<span class="number">1</span>]) duplicatedStrPosition = [i, ...duplicatedStrPosition];</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    hasDuplicatedStr = !duplicatedStrPosition.<span class="property">length</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    duplicatedStrPosition = duplicatedStrPosition.<span class="title function_">filter</span>(<span class="function"><span class="params">elem</span> =&gt;</span> &#123;</span><br><span class="line">      strArr = [...strArr.<span class="title function_">slice</span>(<span class="number">0</span>, elem), ...strArr.<span class="title function_">slice</span>(elem + <span class="number">2</span>)];</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strArr.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>strArr로 문자열을 배열로 관리</li>
-<li>strArr 배열이 더 이상 중복이 없을 때 까지 반복해야하고, 문자열의 순회하며 중복을 확인해야 하므로 시간 복잡도 $n^2$</li>
-<li>Spread문법으로 원본 배열의 변형을 최소화하는 방향으로 배열을 관리</li>
-<li>for문 대신 배열 메서드 forEach문 사용</li>
-<li>원본 배열을 변형시키는 splice 메서드 대신 slice 메서드 사용</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
-<li>내가 코드를 처음 보는 사람의 입장으로 변수명부터 잘 이해할 수 있는지 고려하여 리팩터링을 하였다.</li>
-<li>처음에는 while 조건식을 단순히 true라고 하였는데, 의미를 부여하여 코드의 가독성을 높이기 위해 변수에 할당해주었다.</li>
-<li>배열을 다루기 때문에 for문 대신 forEach문을 사용하였다.</li>
-<li>splice 메서드 같이 원본을 변형시키는 메서드 대신 spread 문법과 slice 메서드를 사용하였다.</li>
-<li>리팩터링 전에는 duplicatedStrPosition 배열을 직접 빈 배열로 초기화해주었지만, 리팩터링을 하면서 filter 메서드를 사용하여 좀 더 배열을 다루는 의미를 부여하였다.</li>
-</ul>
-<p>하나 걸리는 부분은 제한사항을 에러처리를 해주어야 하나 고민을 하였다. 사용자가 제한사항에 벗어나는 입력을 할 수도 있으므로 이에 대한 에러를 발생시켜주는 것이 사용성에 더 옳다고 생각하여 if 조건문을 통해 에러처리를 해주었습니다.</p>
-<p>에러처리에 대해서는 깊게 생각해보지 못했는데, 제한사항에 대해 한번 더 깊이 생각해보면서 에러처리의 필요성을 느낄 수 있었던 문제여서 즐거웠다.</p>
-<p>또한 stack 자료구조를 생각하면서 문제를 해석하면 지금의 코드보다 훨씬 더 간결하고 가독성있는 코드를 구현할 수 있다는 것을 오늘 코드리뷰를 통해 깨닫게 되었다. stack으로 구현해보는 것은 다음 시간에 해보도록 하자.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
