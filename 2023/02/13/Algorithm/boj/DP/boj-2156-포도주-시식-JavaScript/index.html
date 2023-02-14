@@ -17,19 +17,18 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.\n포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.연속으로 놓여 있는 3잔을 모두 마실 수는 없다.효주는 될 수 있는 대로 많은 양의 포도주를 맛보기 위해서 어떤 포도주 잔을 선택해야 할지 고민하고 있다. 1부터 n까지의 번호가 붙어 있는 n개의 포도주 잔이 순서대로 테이블 위에 놓여 있고, 각 포도주 잔에 들어있는 포도주의 양이 주어졌을 때, 효주를 도와 가장 많은 양의 포도주를 마실 수 있도록 하는 프로그램을 작성하시오.\n예를 들어 6개의 포도주 잔이 있고, 각각의 잔에 순서대로 6, 10, 13, 9, 8, 1 만큼의 포도주가 들어 있을 때, 첫 번째, 두 번째, 네 번째, 다섯 번째 포도주 잔을 선택하면 총 포도주 양이 33으로 최대로 마실 수 있다.\n입력첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.\n출력첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.\n1234567891011예제 입력 1661013981예제 출력 133\n\n내 코드12345678910111213141516171819202122const input = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;)  .map(Number);const n = input.shift();const DP = Array.from(&#123; length: n + 1 &#125;, () =&gt; 0);DP[0] = 0;DP[1] = input[0];DP[2] = input[0] + input[1];for (let i = 3; i &lt;= n; i++) &#123;  DP[i] = Math.max(    DP[i - 1],    DP[i - 2] + input[i - 1],    DP[i - 3] + input[i - 1] + input[i - 2]  );&#125;console.log(DP[n]);\n\n\nDP는 N이 0에서 부터 n까지로 마실 수 있는 최대 포도주 양을 담은 배열이다.\n만약 포도주가 1개라고 하면 1잔으로 마실 수 있는 포도주 최대 양을 DP[1]이라고 할 수 있고 그 값은 가장 첫번째 배열의 요소이다. (왜냐하면? 해당 배열에는 한개의 요소밖에 없으니깐)\n만약 포도주가 2개일 때, 2잔으로 마실 수 있는 포도주 최대 양은 DP[2]이고, 그 값은 가장 첫번째 배열과 두번째 배열의 요소의 합이다.\n\n하지만 여기서 DP[3]부터는 고려해줘야하는 부분이 생겨난다.\n1번잔, 2번잔, 3번잔이 있을 때, DP[3]으로 올 수 있는 경우의 수는 다음과 같다.\n\n1번과 2번을 마시는 경우 &#x3D;&gt; DP[2]와 같은 의미이다.\n1번과 3번을 마시는 경우 &#x3D;&gt; DP[1]+input[2]\n2번과 3번을 마시는 경우 &#x3D;&gt; 1번을 제외 하는 것이니 DP[0]+input[1]+input[2]\n\n위를 토대로 점화식을 세울 수 있다.\n12345DP[i] = Math.max(  DP[i - 1],  DP[i - 2] + input[i - 1],  DP[i - 3] + input[i - 1] + input[i - 2]);\n","dateCreated":"2023-02-13T16:30:46+09:00","dateModified":"2023-02-13T16:44:12+09:00","datePublished":"2023-02-13T16:30:46+09:00","description":"","headline":"boj-2156 포도주 시식(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.\n포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.연속으로 놓여 있는 3잔을 모두 마실 수는 없다.효주는 될 수 있는 대로 많은 양의 포도주를 맛보기 위해서 어떤 포도주 잔을 선택해야 할지 고민하고 있다. 1부터 n까지의 번호가 붙어 있는 n개의 포도주 잔이 순서대로 테이블 위에 놓여 있고, 각 포도주 잔에 들어있는 포도주의 양이 주어졌을 때, 효주를 도와 가장 많은 양의 포도주를 마실 수 있도록 하는 프로그램을 작성하시오.\n예를 들어 6개의 포도주 잔이 있고, 각각의 잔에 순서대로 6, 10, 13, 9, 8, 1 만큼의 포도주가 들어 있을 때, 첫 번째, 두 번째, 네 번째, 다섯 번째 포도주 잔을 선택하면 총 포도주 양이 33으로 최대로 마실 수 있다.\n입력첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.\n출력첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.\n1234567891011예제 입력 1661013981예제 출력 133\n\n내 코드12345678910111213141516171819202122const input = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;)  .map(Number);const n = input.shift();const DP = Array.from(&#123; length: n + 1 &#125;, () =&gt; 0);DP[0] = 0;DP[1] = input[0];DP[2] = input[0] + input[1];for (let i = 3; i &lt;= n; i++) &#123;  DP[i] = Math.max(    DP[i - 1],    DP[i - 2] + input[i - 1],    DP[i - 3] + input[i - 1] + input[i - 2]  );&#125;console.log(DP[n]);\n\n\nDP는 N이 0에서 부터 n까지로 마실 수 있는 최대 포도주 양을 담은 배열이다.\n만약 포도주가 1개라고 하면 1잔으로 마실 수 있는 포도주 최대 양을 DP[1]이라고 할 수 있고 그 값은 가장 첫번째 배열의 요소이다. (왜냐하면? 해당 배열에는 한개의 요소밖에 없으니깐)\n만약 포도주가 2개일 때, 2잔으로 마실 수 있는 포도주 최대 양은 DP[2]이고, 그 값은 가장 첫번째 배열과 두번째 배열의 요소의 합이다.\n\n하지만 여기서 DP[3]부터는 고려해줘야하는 부분이 생겨난다.\n1번잔, 2번잔, 3번잔이 있을 때, DP[3]으로 올 수 있는 경우의 수는 다음과 같다.\n\n1번과 2번을 마시는 경우 &#x3D;&gt; DP[2]와 같은 의미이다.\n1번과 3번을 마시는 경우 &#x3D;&gt; DP[1]+input[2]\n2번과 3번을 마시는 경우 &#x3D;&gt; 1번을 제외 하는 것이니 DP[0]+input[1]+input[2]\n\n위를 토대로 점화식을 세울 수 있다.\n12345DP[i] = Math.max(  DP[i - 1],  DP[i - 2] + input[i - 1],  DP[i - 3] + input[i - 1] + input[i - 2]);\n","dateCreated":"2023-02-13T16:30:46+09:00","dateModified":"2023-02-14T22:34:24+09:00","datePublished":"2023-02-13T16:30:46+09:00","description":"","headline":"boj-2156 포도주 시식(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다. 포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.연속으로 놓여 있는 3잔을 모두 마실 수는">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-2156 포도주 시식(JavaScript)">
-<meta property="og:url" content="https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/index.html">
+<meta property="og:url" content="https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
 <meta property="og:description" content="문제효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다. 포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.연속으로 놓여 있는 3잔을 모두 마실 수는">
 <meta property="og:locale" content="ko_KR">
 <meta property="article:published_time" content="2023-02-13T07:30:46.000Z">
-<meta property="article:modified_time" content="2023-02-13T07:44:12.839Z">
+<meta property="article:modified_time" content="2023-02-14T13:34:24.184Z">
 <meta property="article:author" content="loco9939">
-<meta property="article:tag" content="loco9939">
-<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="DP">
 <meta name="twitter:card" content="summary">
     
     
@@ -339,7 +338,7 @@
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
 
 
     
@@ -382,6 +381,13 @@
     </div>
     <div id="post-footer" class="post-footer main-content-wrap">
         
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/DP/" rel="tag">DP</a>
+
+            </div>
+        
         
             <div class="post-actions-wrap">
     <nav>
@@ -391,7 +397,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/02/13/Algorithm/boj/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
+                    href="/2023/02/13/Algorithm/boj/DP/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
                     data-tooltip="boj-1932 정수 삼각형(JavaScript)"
                     aria-label="이전: boj-1932 정수 삼각형(JavaScript)"
                 >
@@ -432,7 +438,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -445,7 +451,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -458,7 +464,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -506,7 +512,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/02/13/Algorithm/boj/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
+                    href="/2023/02/13/Algorithm/boj/DP/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
                     data-tooltip="boj-1932 정수 삼각형(JavaScript)"
                     aria-label="이전: boj-1932 정수 삼각형(JavaScript)"
                 >
@@ -547,7 +553,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -560,7 +566,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -573,7 +579,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -607,7 +613,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -620,7 +626,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -633,7 +639,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
