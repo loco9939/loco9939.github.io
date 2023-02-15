@@ -325,6 +325,194 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
+                            aria-label=": this가 어떻게 작동하나요?"
+                        >
+                            this가 어떻게 작동하나요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-03T14:06:06+09:00">
+	
+		    2023/01/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="this는-무엇인가"><a href="#this는-무엇인가" class="headerlink" title="this는 무엇인가?"></a>this는 무엇인가?</h1><p>this는 자바스크립트 언어에서 매우 추상적인 부분 중에 하나이다. 그래도 한마디로 단정짓는다면, <strong>this는 자기 자신을 나타내기 위한 키워드이다.</strong></p>
+<p>좀 더 자세히 말하면 <strong>자신이 속한 객체나 자신이 생성할 객체를 가리키는 자기 참조 변수이다.</strong></p>
+<ul>
+<li>this는 자바스크립트 엔진에 의해 암묵적으로 생성된다.</li>
+</ul>
+<p>함수를 호출하면 arguments 객체와 this가 암묵적으로 함수 내부에 전달된다. arguments 객체를 함수 내부에서 지역변수처럼 사용할 수 있듯이 this도 마찬가지이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// this로 자신이 속한 객체 참조</span></span><br><span class="line"><span class="keyword">const</span> test = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="title function_">getValue</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">value</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(test.<span class="title function_">getValue</span>()); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 자신이 생성할 객체 참조</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Circle</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+<p style="color:red;">this에 바인딩될 값은 함수 호출 방식에 의해 동적으로 결정되는 특징이 있다.</p> 
+그러므로 this를 어떻게 호출하느냐에 따라 this 값이 달라지게 된다.
+
+<h1 id="this의-작동원리-in-JavaScript"><a href="#this의-작동원리-in-JavaScript" class="headerlink" title="this의 작동원리 in JavaScript"></a>this의 작동원리 in JavaScript</h1><h2 id="1-일반-함수로-호출"><a href="#1-일반-함수로-호출" class="headerlink" title="1. 일반 함수로 호출"></a>1. 일반 함수로 호출</h2><p>일반 함수로 호출할 경우 해당 함수 내부의 this는 전역 객체에 바인딩된다.</p>
+<p>이 때, 중첩함수, 콜백함수가 일반함수로 호출되는 경우에도 마찬가지이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 100</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수도 일반 함수로 호출되면 중첩 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="title function_">bar</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 콜백함수가 일반함수로 호출되는 경우</span></span><br><span class="line">  <span class="title function_">boo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="comment">// 콜백 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-new-키워드-사용하여-생성자-함수로-호출"><a href="#2-new-키워드-사용하여-생성자-함수로-호출" class="headerlink" title="2. new 키워드 사용하여 생성자 함수로 호출"></a>2. new 키워드 사용하여 생성자 함수로 호출</h2><p>new 키워드로 함수를 호출할 경우 자바스크립트는 해당 함수를 생성자 함수로 판단하고 암시적으로 다음 행동을 한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="comment">// 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩된다.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. this에 바인딩되어 있는 인스턴스를 초기화</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3. 완성된 인스턴스가 바인딩된 this가 암묵적으로 반환된다.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 인스턴스 생성. Circle 생성자 함수는 암묵적으로 this를 반환한다.</span></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>새로운 객체를 생성하고 this를 바인딩한다.</li>
+<li>this에 바인딩 되어 있는 객체를 초기화한다.</li>
+<li>해당 함수는 return 하는 값이 없다면 this가 암묵적으로 반환된다.</li>
+</ol>
+<p>생성자 함수는 this가 바인딩된 객체를 암묵적으로 반환하기 때문에, 생성자 함수로 호출 시 생성자 함수 내부의 this는 생성자 함수가 미래에 생성할 객체에 바인딩된다.</p>
+<blockquote>
+<p>new 키워드를 사용한 함수 내부에서 return을 명시적으로 해준다는 것은 this를 암묵적으로 반환하는 생성자 함수 행동을 훼손하므로 이는 안티 패턴이다.</p>
+</blockquote>
+<h2 id="3-메서드로-호출"><a href="#3-메서드로-호출" class="headerlink" title="3. 메서드로 호출"></a>3. 메서드로 호출</h2><p>메서드란, 객체의 프로퍼티 값이 함수인 경우를 해당 함수를 메서드라고 부른다.</p>
+<p>메서드로 호출될 경우 메서드 내부의 this는 <span style="color:red;">해당 메서드가 속한 객체가 아닌 메서드를 호출한 객체에 바인딩된다.</span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 메서드 내부의 this는 메서드를 호출한 객체에 바인딩된다.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> people = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="title function_">getName</span>()); <span class="comment">// Lee</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(people.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
+
+<p><code>getName()</code>이라는 메서드가 person 객체 내부에 있으니 메서드로 호출 시 this 바인딩이 메서드를 포함하는 객체인 person에 될 것이라 생각하는 것은 잘못된 생각이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> anotherPerson = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// getName 메서드를 anotherPerson 객체의 메서드로 할당</span></span><br><span class="line">anotherPerson.<span class="property">getName</span> = person.<span class="property">getName</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// getName 메서드를 호출한 객체는 anotherPerson이다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(anotherPerson.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위와 같이 getName 메서드를 <code>anotherPerson</code> 객체의 메서드로 할당한 경우, getName 메서드 내부의 this는 자신을 호출한 객체에 바인딩 되기 때문에 <code>anotherPerson.name</code>을 참조하게 된다.</li>
+</ul>
+<h2 id="4-apply-call-bind-함수에-의한-간접-호출"><a href="#4-apply-call-bind-함수에-의한-간접-호출" class="headerlink" title="4. apply,call,bind 함수에 의한 간접 호출"></a>4. apply,call,bind 함수에 의한 간접 호출</h2><p>이 경우 함수 내부의 this는 인수로 전달된 객체에 바인딩된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getThisBinding</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 사용할 객체</span></span><br><span class="line"><span class="keyword">const</span> thisArg = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getThisBinding</span>()); <span class="comment">// window</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">apply</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">call</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// bind 메서드는 첫 번째 인수로 전달한 thisArg로 this 바인딩이 교체된</span></span><br><span class="line"><span class="comment">// getThisBinding 함수를 새롭게 생성해 반환한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)); <span class="comment">// getThisBinding</span></span><br><span class="line"><span class="comment">// bind 메서드는 함수를 호출하지는 않으므로 명시적으로 호출해야 한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)()); <span class="comment">// &#123;a: 1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>call, apply의 반환값은 호출한 함수의 반환값이다.</li>
+<li>bind는 함수를 호출하지 않고 인수로 전달받은 객체로 this 바인딩이 교체된 함수를 새롭게 생성하여 반환한다.</li>
+</ul>
+<p>과거에는 this를 불일치 문제를 bind 함수를 사용하여 해결하였다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(callback, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// ② Hi! my name is .</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>일반 함수로 호출된 콜백 함수 내부의 this.name은 브라우저 환경에서 window.name과 같다.</li>
+<li>브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 ‘’이다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(callback.<span class="title function_">bind</span>(<span class="variable language_">this</span>), <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// ② Hi! my name is Lee.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-화살표-함수로-호출"><a href="#5-화살표-함수로-호출" class="headerlink" title="5. 화살표 함수로 호출"></a>5. 화살표 함수로 호출</h2><p>화살표 함수로 호출할 경우 위의 규칙을 모두 무시하고 화살표 함수가 생성된 시점에서 상위 스코프의 this에 바인딩된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>; <span class="comment">// Window</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="title function_">far</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">arrow</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> anotherObj = &#123;</span><br><span class="line">  <span class="title function_">baz</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="function">() =&gt;</span> <span class="variable language_">this</span>)();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">far</span>(); <span class="comment">// Window</span></span><br><span class="line">anotherObj.<span class="title function_">baz</span>(); <span class="comment">// anotherObj</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/this/thisExample.png" alt="this 화살표함수 예시"></p>
+<ul>
+<li>arrow 함수는 생성된 시점에서 상위 스코프의 this는 전역객체(Window)이다.</li>
+<li>anotherObj 객체의 baz 메서드 내부의 this는 자신을 호출한 객체에 바인딩된다. 그러므로 화살표 함수 내부의 this는 자신이 생성된 시점에서 상위 스코프인 baz의 this와 일치한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"
+                            aria-label=": AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기"
+                        >
+                            AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-02T23:02:32+09:00">
+	
+		    2023/01/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Emotion-Styled-Component-Cascading-문제"><a href="#Emotion-Styled-Component-Cascading-문제" class="headerlink" title="Emotion Styled Component Cascading 문제"></a>Emotion Styled Component Cascading 문제</h1><p>Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>styled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.</p>
+<p><img src="/../../../images/TRST/emotionStyled/emotionStyled.png" alt="emotion styled component"></p>
+<h1 id="TypeScript-오류-사용량-덮어씜"><a href="#TypeScript-오류-사용량-덮어씜" class="headerlink" title="TypeScript 오류 - 사용량 덮어씜"></a>TypeScript 오류 - 사용량 덮어씜</h1><p><img src="/../../../images/TRST/emotionStyled/tsduplicated.png" alt="ts덮어씜"></p>
+<p>props를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Component</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  className?: <span class="built_in">string</span>;</span><br><span class="line">  children?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">React</span>.<span class="property">ComponentPropsWithRef</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TabPanelProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  dataIndex?: <span class="title class_">TabsContextValue</span>[<span class="string">&quot;selected&quot;</span>];</span><br><span class="line">&#125; &amp; <span class="title class_">Component</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.</li>
+<li>styled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/"
                             aria-label=": 이벤트 위임이란 무엇이고 왜 사용하는가?"
                         >
@@ -896,174 +1084,6 @@
                             계속 읽기
                         </a>
                         
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
-                            aria-label=": 🐒 useEffect"
-                        >
-                            🐒 useEffect
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-21T19:40:39+09:00">
-	
-		    2022/11/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-useEffect"><a href="#📌-useEffect" class="headerlink" title="📌 useEffect"></a>📌 useEffect</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(effectCallback);</span><br></pre></td></tr></table></figure>
-
-<p>함수 컴포넌트에서 발생 가능한 side-effect(부수효과)를 관리하기 위해 사용한다.</p>
-<ul>
-<li>비동기 통신 요청 및 응답</li>
-<li>DOM 조작</li>
-<li>구독&#x2F;취소 등</li>
-</ul>
-<p>리액트가 할 수 없는 작업을 할 때, <code>useEffect()</code>를 사용한다.</p>
-<h2 id="🌈-React-Hook-실행-흐름"><a href="#🌈-React-Hook-실행-흐름" class="headerlink" title="🌈 React Hook 실행 흐름"></a>🌈 React Hook 실행 흐름</h2><p><img src="/../../../images/useEffect/useFetch.png" alt="Hook 실행 흐름"></p>
-<p>리액트 Hook의 실행흐름은 위 사진과 같다.</p>
-<p>함수 컴포넌트에서 클래스 컴포넌트의 생명주기를 구현하기 위해 <code>useEffect()</code>가 <code>componentDidMount()</code>, <code>componentDidUpdate()</code>, <code>componentWillUnmount()</code> 메서드가 발생되는 주기를 대체할 수 있어야한다.</p>
-<blockquote>
-<p>useEffect()가 이들을 100% 대체할 순 없지만 문제없을 정도로 흉내내어 사용하고 있다.</p>
-</blockquote>
-<h2 id="🐥-이펙트-조건-처리"><a href="#🐥-이펙트-조건-처리" class="headerlink" title="🐥 이펙트 조건 처리"></a>🐥 이펙트 조건 처리</h2><h3 id="1-componentDidMount-대체-방법"><a href="#1-componentDidMount-대체-방법" class="headerlink" title="1. componentDidMount() 대체 방법"></a>1. <code>componentDidMount()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// componentDidMount</span></span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>useEffect 2번째 인자로 빈 배열을 주게되면 컴포넌트가 처음 mount 되는 때에 한번만 호출된다.</li>
-</ul>
-<h3 id="2-componentDidUpdate-대체-방법"><a href="#2-componentDidUpdate-대체-방법" class="headerlink" title="2. componentDidUpdate() 대체 방법"></a>2. <code>componentDidUpdate()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(</span><br><span class="line">	<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="comment">// componentDidMount</span></span><br><span class="line">		<span class="comment">// componentDidUpdate</span></span><br><span class="line">	&#125;.</span><br><span class="line">	[...dependencies]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>useEffect 2번째 인자로 빈 배열 대신 관리할 상태가 추가되면 해당 상태가 변경될 때에만 이펙트 함수가 실행된다. 즉, mount될 때는 1번 실행되고, update 될 때 마다 실행된다.</li>
-</ul>
-<h3 id="3-componentWillUnmount-대체-방법"><a href="#3-componentWillUnmount-대체-방법" class="headerlink" title="3. componentWillUnmount() 대체 방법"></a>3. <code>componentWillUnmount()</code> 대체 방법</h3><p>이벤트 구독&#x2F;취소처럼 컴포넌트가 제거될 때 실행되어야 하는 함수의 경우 다음과 같이 사용한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Tester</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> clearId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">count</span>(), <span class="number">500</span>);</span><br><span class="line">    <span class="comment">// 정리 함수(cleanup)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">clearInterval</span>(clearId);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>cleanUp</code> 함수는 메모리 누수 방지를 위해 UI에서 컴포넌트를 제거하기 직전에 수행된다.</li>
-<li><strong>Effect 함수가 실행될 때마다 cleanUp 함수가 먼저 실행되어 정리한다.</strong></li>
-</ul>
-<p>이는 <code>componentWillUnmount()</code>처럼 동작하는 것 같지만, 리액트 팀은 클래스 컴포넌트 생명주기대로 로직을 구현했을 때, 대규모 프로젝트에서 버그를 많이 발견하였다.</p>
-<p>그리하여 리액트 팀에서는 구독취소 후 다시 구독하는 과정을 통해 이를 구현하였다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleStatusChange</span>(<span class="params">status</span>) &#123;</span><br><span class="line">    <span class="title function_">setIsOnline</span>(status.<span class="property">isOnline</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">ChatAPI</span>.<span class="title function_">subscribeToFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">ChatAPI</span>.<span class="title function_">unsubscribeFromFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.<span class="property">friend</span>.<span class="property">id</span>]); <span class="comment">// props.friend.id가 바뀔 때만 재구독합니다.</span></span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
-                            aria-label=": 💭 useState"
-                        >
-                            💭 useState
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-21T19:40:24+09:00">
-	
-		    2022/11/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
-
-<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
-<ul>
-<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
-</ul>
-<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
                     
                 </div>
             

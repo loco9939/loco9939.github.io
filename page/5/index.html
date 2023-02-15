@@ -316,6 +316,174 @@
                 <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
+                            aria-label=": 🐒 useEffect"
+                        >
+                            🐒 useEffect
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:39+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useEffect"><a href="#📌-useEffect" class="headerlink" title="📌 useEffect"></a>📌 useEffect</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(effectCallback);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 발생 가능한 side-effect(부수효과)를 관리하기 위해 사용한다.</p>
+<ul>
+<li>비동기 통신 요청 및 응답</li>
+<li>DOM 조작</li>
+<li>구독&#x2F;취소 등</li>
+</ul>
+<p>리액트가 할 수 없는 작업을 할 때, <code>useEffect()</code>를 사용한다.</p>
+<h2 id="🌈-React-Hook-실행-흐름"><a href="#🌈-React-Hook-실행-흐름" class="headerlink" title="🌈 React Hook 실행 흐름"></a>🌈 React Hook 실행 흐름</h2><p><img src="/../../../images/useEffect/useFetch.png" alt="Hook 실행 흐름"></p>
+<p>리액트 Hook의 실행흐름은 위 사진과 같다.</p>
+<p>함수 컴포넌트에서 클래스 컴포넌트의 생명주기를 구현하기 위해 <code>useEffect()</code>가 <code>componentDidMount()</code>, <code>componentDidUpdate()</code>, <code>componentWillUnmount()</code> 메서드가 발생되는 주기를 대체할 수 있어야한다.</p>
+<blockquote>
+<p>useEffect()가 이들을 100% 대체할 순 없지만 문제없을 정도로 흉내내어 사용하고 있다.</p>
+</blockquote>
+<h2 id="🐥-이펙트-조건-처리"><a href="#🐥-이펙트-조건-처리" class="headerlink" title="🐥 이펙트 조건 처리"></a>🐥 이펙트 조건 처리</h2><h3 id="1-componentDidMount-대체-방법"><a href="#1-componentDidMount-대체-방법" class="headerlink" title="1. componentDidMount() 대체 방법"></a>1. <code>componentDidMount()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// componentDidMount</span></span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열을 주게되면 컴포넌트가 처음 mount 되는 때에 한번만 호출된다.</li>
+</ul>
+<h3 id="2-componentDidUpdate-대체-방법"><a href="#2-componentDidUpdate-대체-방법" class="headerlink" title="2. componentDidUpdate() 대체 방법"></a>2. <code>componentDidUpdate()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(</span><br><span class="line">	<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="comment">// componentDidMount</span></span><br><span class="line">		<span class="comment">// componentDidUpdate</span></span><br><span class="line">	&#125;.</span><br><span class="line">	[...dependencies]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열 대신 관리할 상태가 추가되면 해당 상태가 변경될 때에만 이펙트 함수가 실행된다. 즉, mount될 때는 1번 실행되고, update 될 때 마다 실행된다.</li>
+</ul>
+<h3 id="3-componentWillUnmount-대체-방법"><a href="#3-componentWillUnmount-대체-방법" class="headerlink" title="3. componentWillUnmount() 대체 방법"></a>3. <code>componentWillUnmount()</code> 대체 방법</h3><p>이벤트 구독&#x2F;취소처럼 컴포넌트가 제거될 때 실행되어야 하는 함수의 경우 다음과 같이 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Tester</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> clearId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">count</span>(), <span class="number">500</span>);</span><br><span class="line">    <span class="comment">// 정리 함수(cleanup)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">clearInterval</span>(clearId);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>cleanUp</code> 함수는 메모리 누수 방지를 위해 UI에서 컴포넌트를 제거하기 직전에 수행된다.</li>
+<li><strong>Effect 함수가 실행될 때마다 cleanUp 함수가 먼저 실행되어 정리한다.</strong></li>
+</ul>
+<p>이는 <code>componentWillUnmount()</code>처럼 동작하는 것 같지만, 리액트 팀은 클래스 컴포넌트 생명주기대로 로직을 구현했을 때, 대규모 프로젝트에서 버그를 많이 발견하였다.</p>
+<p>그리하여 리액트 팀에서는 구독취소 후 다시 구독하는 과정을 통해 이를 구현하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleStatusChange</span>(<span class="params">status</span>) &#123;</span><br><span class="line">    <span class="title function_">setIsOnline</span>(status.<span class="property">isOnline</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">ChatAPI</span>.<span class="title function_">subscribeToFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">ChatAPI</span>.<span class="title function_">unsubscribeFromFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.<span class="property">friend</span>.<span class="property">id</span>]); <span class="comment">// props.friend.id가 바뀔 때만 재구독합니다.</span></span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                            aria-label=": 💭 useState"
+                        >
+                            💭 useState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:24+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
+<ul>
+<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
+</ul>
+<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -1047,202 +1215,6 @@
                         <p>
                             <a
                                 href="/2022/11/14/React/%EC%9E%AC%EC%82%AC%EC%9A%A9-%EB%A7%8E%EC%9D%B4-%EB%90%98%EB%8A%94-Loading-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
-                            aria-label=": Portal(포털)"
-                        >
-                            Portal(포털)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-14T19:38:01+09:00">
-	
-		    2022/11/14
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-Portal이란"><a href="#📌-Portal이란" class="headerlink" title="📌 Portal이란?"></a>📌 Portal이란?</h1><p>포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 <red>root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.</red></p>
-<blockquote>
-<p>포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.</p>
-</blockquote>
-<h2 id="🔨-사용방법"><a href="#🔨-사용방법" class="headerlink" title="🔨 사용방법"></a>🔨 사용방법</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(child, container);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>child는 렌더링할 수 있는 자식</li>
-<li>container는 DOM 요소이다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">children</span>,</span><br><span class="line">        domNode</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.</li>
-<li><strong>domNode는 DOM 내부의 어디에 있던지 간에 상관없다.</strong></li>
-</ul>
-<blockquote>
-<p>시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, <red>키보드 포커스 관리와 접근성을 고려해줘야한다.</red></p>
-</blockquote>
-<h2 id="🌈-다이얼로그-예시"><a href="#🌈-다이얼로그-예시" class="headerlink" title="🌈 다이얼로그 예시"></a>🌈 다이얼로그 예시</h2><h3 id="다이얼로그-특징"><a href="#다이얼로그-특징" class="headerlink" title="다이얼로그 특징"></a>다이얼로그 특징</h3><ol>
-<li>다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.</li>
-<li>다이얼로그 바깥으로 초점이동되면 안된다.</li>
-<li>dialog 역할(role)을 부여해야한다.</li>
-<li>모달 기능일 경우 <code>aria-modal=true</code> 이여야한다.</li>
-<li>다이얼로그 제목은 <code>aria-label</code>, <code>aria-labelledby</code>로 설정한다.</li>
-</ol>
-<h3 id="1-부모-컴포넌트"><a href="#1-부모-컴포넌트" class="headerlink" title="1. 부모 컴포넌트"></a>1. 부모 컴포넌트</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoDialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #opennerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">show</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleShowDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleHideDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.box&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#opennerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.openDialogButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-haspopup</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;this.handleShowDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          모달열기</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;this.state.show &amp;&amp; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">modal</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClose</span>=<span class="string">&#123;this.handleHideDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">openner</span>=<span class="string">&#123;this.#opennerRef.current&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">h3</span>&gt;</span>불금 다이얼로그<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">ul</span>&gt;</span>...<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">Dialog</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.</li>
-</ul>
-<h3 id="2-모달-컴포넌트-자식"><a href="#2-모달-컴포넌트-자식" class="headerlink" title="2. 모달 컴포넌트(자식)"></a>2. 모달 컴포넌트(자식)</h3><p>root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 <strong>public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// public/index.html</span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;dialogZone&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">boyd</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dialog.jsx</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">documentElement</span>: htmlElement &#125; = <span class="variable language_">document</span>;</span><br><span class="line"><span class="keyword">const</span> reactDomContainer = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;root&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #containerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  handleClose = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">onClose</span>?.();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">openner</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; modal = <span class="literal">false</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">createPortal</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">article</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#containerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&#123;-1&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-modal</span>=<span class="string">&#123;modal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;this.props.children&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog.Footer</span> <span class="attr">onClose</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;modal &amp;&amp; <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.dim&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/&gt;</span></span>,</span><br><span class="line">      <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dialogZone&quot;</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.</li>
-<li>컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.</li>
-<li><code>createPortal()</code>에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.</li>
-<li>모달이 켜져있을 때, <code>Dialog.footer</code> 자식 요소에게 onClose를 props로 전달하였다.</li>
-</ul>
-<h3 id="3-자식-컴포넌트-접근성-고려"><a href="#3-자식-컴포넌트-접근성-고려" class="headerlink" title="3. 자식 컴포넌트 접근성 고려"></a>3. 자식 컴포넌트 접근성 고려</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">#tabbableElements = [];</span><br><span class="line"></span><br><span class="line">  #<span class="title function_">bindEscKeyEvents</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handler</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;escape&quot;</span>)) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;pressed esc key&quot;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">handleClose</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// cleanup function</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  #unbindEscKeyEvents = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#containerRef.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">    <span class="variable language_">this</span>.#tabbableElements = <span class="title function_">getTabbableElements</span>(<span class="variable language_">this</span>.#containerRef.<span class="property">current</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">settingKeyboardTrap</span>();</span><br><span class="line"></span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;hidden&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents = <span class="variable language_">this</span>.#<span class="title function_">bindEscKeyEvents</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;visible&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents?.();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">settingKeyboardTrap</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> tabbles = <span class="variable language_">this</span>.#tabbableElements;</span><br><span class="line">    <span class="keyword">const</span> firstElement = tabbles[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">const</span> lastElement = tabbles[tabbles.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    firstElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        lastElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    lastElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        firstElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>key 이벤트를 등록해주고 제거해줄 때, <red>클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치</red>시켜주면 편하다.<ul>
-<li><red>keydown 이벤트</red>를 사용해야지만 <code>e.preventDefault()</code>로 <strong>기본동작을 막을 수 있다.</strong></li>
-</ul>
-</li>
-<li>모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.</li>
-<li><code>htmlElement.style.overflowY = &quot;hidden&quot;</code>로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.</li>
-<li>모달이 켜져있으면 <strong>root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.</strong></li>
-<li>컴포넌트가 소멸되기 직전에 <red>등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자.</red> (고려하지 않는다면 성능에 문제가 생길 것이다.)</li>
-</ul>
-<h3 id="4-모달-slot-구분"><a href="#4-모달-slot-구분" class="headerlink" title="4. 모달 slot 구분"></a>4. 모달 slot 구분</h3><p>어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.</p>
-<p><strong>합성(composition)을 사용하여</strong> <red>컴포넌트 간에 코드를 재사용하도록 하자.</red></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span> = <span class="keyword">function</span> <span class="title function_">DialogHeader</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&#123;styles.header&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">header</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>React 포털로 연 다이얼로그(with 모달)<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Body</span> = <span class="keyword">function</span> <span class="title function_">DialogBody</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.body&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Footer</span> = <span class="keyword">function</span> <span class="title function_">DialogFooter</span>(<span class="params">&#123; children, onClose &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">footer</span> <span class="attr">className</span>=<span class="string">&#123;styles.footer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&#123;styles.closeButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;onClose&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        모달닫기</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
-                            aria-label=": DOM 컨트롤(ref)"
-                        >
-                            DOM 컨트롤(ref)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-12T16:59:38+09:00">
-	
-		    2022/11/12
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🕹-리액트-DOM-컨트롤"><a href="#🕹-리액트-DOM-컨트롤" class="headerlink" title="🕹 리액트 DOM 컨트롤"></a>🕹 리액트 DOM 컨트롤</h1><p>리액트 앱은 대부분 리액트에 의해 컨트롤되지만 <strong>예외인 상황이 있다.</strong> 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 <strong>리액트가 할 수 없는 일이다.</strong></p>
-<p>이러한 일을 <red>리액트 사이드 이펙트</red>라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.</p>
-<p>사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.</p>
-<ul>
-<li>ref(참조 설정)<ul>
-<li><strong>값이 변경되어도 리액트가 재렌더링하지 않는다.</strong></li>
-</ul>
-</li>
-<li>callback ref(ref 속성에 연결된 함수)</li>
-<li>React.createRef(참조 객체 생성)</li>
-<li>React.forwardRef(참조 객체 전달)<ul>
-<li>범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.</li>
-<li>외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.</li>
-<li>domRef를 통해서 전달할 수도 있다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="💭-예시"><a href="#💭-예시" class="headerlink" title="💭 예시"></a>💭 예시</h2><p>컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">TiltCard</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="comment">// DOM 요소 참조를 목적으로 Ref를 생성합니다.</span></span><br><span class="line">  tiltRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>); <span class="comment">// &#123; current:null &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버</span></span><br><span class="line">  #cardDomElement = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 최초 마운트 시점 이후 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement = <span class="variable language_">this</span>.<span class="property">tiltRef</span>.<span class="property">current</span>;</span><br><span class="line">    <span class="title class_">VanillaTilt</span>.<span class="title function_">init</span>(<span class="variable language_">this</span>.#cardDomElement);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">addEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 마운트 해제 직전에 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="property">vanillaTilt</span>.<span class="title function_">destroy</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독 해지</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">removeEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; children &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="comment">// 생성된 Ref를 참조하도록 설정합니다.</span></span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.tiltRef&#125;</span> <span class="attr">className</span>=<span class="string">&quot;tiltCard&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>tiltRef에 <strong>DOM 요소를 저장하기 위해 ref를 생성하였다.</strong></li>
-<li>tiltRef DOM 요소 얻기 위해 <strong>“current” 프로퍼티</strong>에 접근하였다.</li>
-<li>tiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

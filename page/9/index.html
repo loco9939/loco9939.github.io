@@ -324,6 +324,157 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/31/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94%20%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%A6%96%20%ED%8F%AC%EB%B9%84%EC%99%80%20%ED%81%AC%EB%A1%B1/"
+                            aria-label=": 우테코 프리코스-🦖 포비와 크롱"
+                        >
+                            우테코 프리코스-🦖 포비와 크롱
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-31T18:49:29+09:00">
+	
+		    2022/10/31
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-문제"><a href="#📌-문제" class="headerlink" title="📌 문제"></a>📌 문제</h1><p>포비와 크롱이 페이지 번호가 1부터 시작되는 400 페이지의 책을 주웠다. 책을 살펴보니 왼쪽 페이지는 홀수, 오른쪽 페이지는 짝수 번호이고 모든 페이지에는 번호가 적혀있었다. 책이 마음에 든 포비와 크롱은 페이지 번호 게임을 통해 게임에서 이긴 사람이 책을 갖기로 한다. 페이지 번호 게임의 규칙은 아래와 같다.</p>
+<ol>
+<li>책을 임의로 펼친다.</li>
+<li>왼쪽 페이지 번호의 각 자리 숫자를 모두 더하거나, 모두 곱해 가장 큰 수를 구한다.</li>
+<li>오른쪽 페이지 번호의 각 자리 숫자를 모두 더하거나, 모두 곱해 가장 큰 수를 구한다.</li>
+<li>2~3 과정에서 가장 큰 수를 본인의 점수로 한다.</li>
+<li>점수를 비교해 가장 높은 사람이 게임의 승자가 된다.</li>
+<li>시작 면이나 마지막 면이 나오도록 책을 펼치지 않는다.</li>
+<li>포비와 크롱이 펼친 페이지가 들어있는 배열 pobi와 crong이 주어질 때, 포비가 이긴다면 1, 크롱이 이긴다면 2, 무승부는 0, 예외사항은 -1로 return 하도록 solution 메서드를 완성하라.</li>
+</ol>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h2><ul>
+<li>pobi와 crong의 길이는 2이다.</li>
+<li>pobi와 crong에는 [왼쪽 페이지 번호, 오른쪽 페이지 번호]가 순서대로 들어있다.</li>
+</ul>
+<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h2><p>pobi crong result<br>[97, 98] [197, 198] 0<br>[131, 132] [211, 212] 1<br>[99, 102] [211, 212] -1</p>
+<h2 id="나의-해설"><a href="#나의-해설" class="headerlink" title="나의 해설"></a>나의 해설</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem1</span>(<span class="params">pobi, crong</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [pobiLeft, pobiRight] = pobi;</span><br><span class="line">  <span class="keyword">const</span> [crongLeft, crongRight] = crong;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (pobiRight - pobiLeft !== <span class="number">1</span> || crongRight - crongLeft !== <span class="number">1</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">sum</span> = (<span class="params">str</span>) =&gt;</span><br><span class="line">    str</span><br><span class="line">      .<span class="title function_">split</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line">      .<span class="title function_">map</span>(<span class="function">(<span class="params">v</span>) =&gt;</span> +v)</span><br><span class="line">      .<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> acc + cur, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params">str</span>) =&gt;</span><br><span class="line">    str</span><br><span class="line">      .<span class="title function_">split</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line">      .<span class="title function_">map</span>(<span class="function">(<span class="params">v</span>) =&gt;</span> +v)</span><br><span class="line">      .<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> acc * cur, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getMax</span> = (<span class="params">left, right</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> leftMax = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="title function_">sum</span>(<span class="title class_">String</span>(left)), <span class="title function_">multiply</span>(<span class="title class_">String</span>(left)));</span><br><span class="line">    <span class="keyword">const</span> rightMax = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="title function_">sum</span>(<span class="title class_">String</span>(right)), <span class="title function_">multiply</span>(<span class="title class_">String</span>(right)));</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">max</span>(leftMax, rightMax);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> pobiMax = <span class="title function_">getMax</span>(pobiLeft, pobiRight);</span><br><span class="line">  <span class="keyword">const</span> crongMax = <span class="title function_">getMax</span>(crongLeft, crongRight);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> pobiMax &gt; crongMax ? <span class="number">1</span> : pobiMax &lt; crongMax ? <span class="number">2</span> : <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>우선 자주 사용될 것 같은 left 페이지 수와 right 페이지 수를 배열 구조분해 할당으로 변수에 할당해주었다.</p>
+</li>
+<li><p>이후 예외가 등장했을 때, 빠르게 결과를 내기 위해 바로 예외 처리를 해주었다.</p>
+</li>
+<li><p>각 페이지의 자릿수의 합과 곱을 구하는 함수를 생성해주었다.</p>
+</li>
+<li><p>left와 right의 결과값 중 높은 값을 구하는 함수를 생성하였다.</p>
+</li>
+<li><p>pobi의 최댓값과 crong의 최댓값을 비교하여 결과를 반환하였다.</p>
+</li>
+</ol>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>우아한 테크코스 프리코스 첫 문제를 받아보고 내가 이 문제를 푼 방법을 나열하며 정리해보았다. 논리의 흐름을 정리하니 다음번에 비슷한 문제가 나오면 더 빠른 시간 내에 풀고 다양한 시도를 해볼 수 있을 것 같다.</p>
+<p>앞으로 4주간 프리코스가 진행될텐데 합격하든 불합격하든 나의 성장을 위해 모든 문제에 대한 풀이를 작성해보도록 할 것이다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/31/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94%20%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%A6%96%20%ED%8F%AC%EB%B9%84%EC%99%80%20%ED%81%AC%EB%A1%B1/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/"
+                            aria-label=": 22년 10월 29일 하루일기"
+                        >
+                            22년 10월 29일 하루일기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-29T20:03:52+09:00">
+	
+		    2022/10/29
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Diary/">Diary</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>CPU가 너무 바쁘게 돌아가길래 원인을 해결하고자 구글 검색을 해보았다.</p>
+<p>icloud가 문제라고 로그아웃하고 다시 로그인 해보라는 해결책을 찾아냈다.</p>
+<p>icloud를 로그아웃했다. icloud 문서가 사라졌다.</p>
+<p>나의 개발 폴더가 날라갔다.</p>
+<p>다시 복구하느라 시간을 많이 소모했다.</p>
+<h1 id="🏓-오늘의-교훈"><a href="#🏓-오늘의-교훈" class="headerlink" title="🏓 오늘의 교훈"></a>🏓 오늘의 교훈</h1><p>백업을 잘 해두자…</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/29/Settings/homebrew/"
                             aria-label=": homebrew"
                         >
@@ -1075,168 +1226,6 @@
                         <p>
                             <a
                                 href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"
-                            aria-label=": 라우터 구현"
-                        >
-                            라우터 구현
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-17T22:29:58+09:00">
-	
-		    2022/10/17
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-회원가입-로직-구현"><a href="#1-회원가입-로직-구현" class="headerlink" title="1. 회원가입 로직 구현"></a>1. 회원가입 로직 구현</h1><p>회원가입 페이지의 input값과 유효성 검사에 따라 에러메세지를 보여줘야 하므로 이를 상태로 관리해줘야한다.</p>
-<p>상태 변경함수와 상태를 props로 전달해준다. 유효성 검사 로직을 true, false 값을 구현하는데 헷갈렸다.</p>
-<h2 id="Lodash-구현-실패…"><a href="#Lodash-구현-실패…" class="headerlink" title="Lodash 구현 실패…"></a>Lodash 구현 실패…</h2><p>페어 프로그래밍을 할 때는 lodash 잘 썼는데, server랑 연동을 하니 왜 lodash 안써지냐 ?</p>
-<p>내일 해결하자.</p>
-<h1 id="2-라우터-구현"><a href="#2-라우터-구현" class="headerlink" title="2. 라우터 구현"></a>2. 라우터 구현</h1><p>라우터 구현을 며칠째 쓰는지 모르겠다…</p>
-<p>라우터를 제대로 이해해야만 했다…</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">isSigned</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.<span class="title function_">get</span>(<span class="string">&quot;/auth&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> data.<span class="property">success</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/&quot;</span>, <span class="attr">component</span>: <span class="title class_">Home</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/rank&quot;</span>, <span class="attr">component</span>: <span class="title class_">Rank</span>, <span class="attr">guard</span>: isSigned, <span class="attr">redirectTo</span>: <span class="title class_">Signin</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/signin&quot;</span>, <span class="attr">component</span>: <span class="title class_">Signin</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/signup&quot;</span>, <span class="attr">component</span>: <span class="title class_">Signup</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/matching&quot;</span>, <span class="attr">component</span>: <span class="title class_">MatchingCards</span> &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">App</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Components</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="title function_">router</span>(<span class="params">path = <span class="variable language_">window</span>.location.pathname</span>) &#123;</span><br><span class="line">    <span class="comment">// header 에서 클릭이벤트로 href 를 받아서 path에 담는다.</span></span><br><span class="line">    <span class="keyword">const</span> route = routes.<span class="title function_">find</span>(<span class="function"><span class="params">route</span> =&gt;</span> route.<span class="property">path</span> === path);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// change url path</span></span><br><span class="line">    (<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">      !route.<span class="property">guard</span> || (<span class="keyword">await</span> route.<span class="title function_">guard</span>())</span><br><span class="line">        ? <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="title class_">Page</span>: route.<span class="property">component</span> &#125;)</span><br><span class="line">        : <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="title class_">Page</span>: route.<span class="property">redirectTo</span> &#125;);</span><br><span class="line">    &#125;)();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>“pjax 방식으로 라우터를 구현하기 위해서 서버와 도움이 필요하다”라는 말이 이제는 이해가 된다. ajax 방식은 url이 변경되지 않아 seo에 문제가 있어서 이를 해결하기 위해서 pushState를 통해 history API를 구현해준다.</p>
-</li>
-<li><p>그리고 router 함수는 path를 받아서 해당 path의 컴포넌트를 가지는 route를 찾아서 현재 페이지로 렌더링해준다.</p>
-</li>
-<li><p>이 때, routes 배열안의 어떤 라우터는 접근 권한이 필요한 라우터가 있는데, 이들한테는 guard라는 프로퍼티가 존재한다. 그러므로 router 함수에서도 guard라는 프로퍼티가 있을 때, 또 guard 프로퍼티의 값이 true, false냐에 따라 컴포넌트를 다르게 보여줘야하는 로직을 짜야한다.</p>
-</li>
-</ul>
-<p>이 개념이 CSR(Client Side Rendering)이다. 서버에서는 다음과 같이 코드를 구현해주었다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">auth</span> = (<span class="params">req, res, next</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> accessToken = req.<span class="property">headers</span>.<span class="property">authorization</span> || req.<span class="property">cookies</span>.<span class="property">accessToken</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> decoded = jwt.<span class="title function_">verify</span>(accessToken, process.<span class="property">env</span>.<span class="property">JWT_SECRET_KEY</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`😀 사용자 인증 성공`</span>, decoded);</span><br><span class="line">    <span class="title function_">next</span>();</span><br><span class="line">  &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;😱 사용자 인증 실패..&quot;</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(accessToken);</span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">redirect</span>(<span class="string">&quot;/signin&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">isSigned</span> = (<span class="params">req, res</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> accessToken = req.<span class="property">headers</span>.<span class="property">authorization</span> || req.<span class="property">cookies</span>.<span class="property">accessToken</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> decoded = jwt.<span class="title function_">verify</span>(accessToken, process.<span class="property">env</span>.<span class="property">JWT_SECRET_KEY</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`😀 사용자 인증 성공`</span>, decoded);</span><br><span class="line">    res.<span class="title function_">send</span>(&#123; <span class="attr">success</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;😱 사용자 인증 실패..&quot;</span>);</span><br><span class="line">    res.<span class="title function_">send</span>(&#123; <span class="attr">success</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// auth route</span></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;/signin&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;./public/index.html&quot;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;/auth&quot;</span>, isSigned);</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;*&quot;</span>, auth, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// auth 미들웨어</span></span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;./public/index.html&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>서버에서는 모든 경로에서 get 요청이 들어오면 auth 함수의 내부의 로직을 기준으로 사용자가 JWT 토큰이 있는지 유무를 판단하여 결과를 반환한다. 이 결과에 따라 rootContainer를 응답으로 보내주고 클라이언트는 이를 받아서 조건에 맞게<strong>미리 구현해둔 router 함수</strong>로 화면에 렌더링을 해준다.</p>
-</li>
-<li><p>그리고 서버에서 또 다른 함수로 JWT 토큰 유무에 따라 성공, 실패 결과를 전달해줘야하므로 auth 와 별개인 isSignin() 함수를 만들어줬다.</p>
-</li>
-</ul>
-<blockquote>
-<p>우리는 이 부분에서 auth 라는 함수 하나로만 해결하려고 하다 보니 res.send로 오류를 보내면 &#x2F;rank URL로 직접 요청시 오류 페이지가 보이게 되고 redirect 를 해주자니 오류가 안보내져서 클라이언트에서 router 함수 로직을 구현할 수 없는 딜레마를 겪었다.</p>
-</blockquote>
-<p>그 결과 클라이언트의 isSigned 비동기 함수가 axios로 get 요청을 보내서 data(boolean)를 반환해준 값을 guard 프로퍼티에 등록해주었다.</p>
-<p>이를 사용해 router 함수에서 로직을 구현해주었다.</p>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘은 월요일이라서 그런지 머리도 잘 안돌아가고 주말에 푹 쉬어서 죄책감이 약간 들어서 자존감도 떨어지는 하루였다.</p>
-<p>그래도 늘 이런 생각을 하면 달라지는 것은 없다. 이런 생각을 할 시간에 좀 더 연구하고 공부하는 게 나의 미래에 더 도움이 된다.</p>
-<p>이제 미니 프로젝트 마감이 이번주 금요일로 다가왔으니 앞으로 며칠만 더 힘내서 열심히 공부하고 배운것을 꼼꼼하게 정리하도록 해야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%95%A8%EC%88%98%EC%99%80%20pushState,%20%EB%9E%AD%EC%BB%A4%20%EB%B3%B4%EC%97%AC%EC%A3%BC%EA%B8%B0/"
-                            aria-label=": 라우터 함수와 pushState, 랭커 보여주기"
-                        >
-                            라우터 함수와 pushState, 랭커 보여주기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-17T22:29:58+09:00">
-	
-		    2022/10/17
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-router-함수와-pushState-메서드"><a href="#1-router-함수와-pushState-메서드" class="headerlink" title="1. router 함수와 pushState 메서드"></a>1. router 함수와 pushState 메서드</h1><p>router 함수가 route의 guard 프로퍼티를 통해 로그인한 사용자가 아니라면 &#x2F;rank 경로로 이동시 &#x2F;signin 경로로 이동하도록 구현을 해주었다.</p>
-<p>이 때 발생한 문제가 화면 렌더링은 signin 컴포넌트로 변경되었지만 라우터는 이상하게 &#x2F; Home 컴포넌트가 그려지는 것이다.</p>
-<p>문제가 어디서 발생하는지 찾아보니, 클릭 이벤트 발생할 때, router 함수가 호출되는데 이 때 상태로 관리하는 Page가 Home에서 변경되지 않는 문제였다.</p>
-<p><strong>왜 이 경우에서만 변경되지 않는지에 대해서는 아직 파악하지 못했지만, 리팩터링 시간을 가져서 파악해보도록 해야겠다.</strong></p>
-<h1 id="2-서버에-랭크-데이터를-보내고-랭커들을-랭크-페이지에-보여주자"><a href="#2-서버에-랭크-데이터를-보내고-랭커들을-랭크-페이지에-보여주자" class="headerlink" title="2. 서버에 랭크 데이터를 보내고 랭커들을 랭크 페이지에 보여주자"></a>2. 서버에 랭크 데이터를 보내고 랭커들을 랭크 페이지에 보여주자</h1><p>유저점수를 게시판에 보여주기 위해서 게임이 종료되었을 때, &#x2F;matching 경로로 post 요청을 보내서 record를 서버에 보내준다.</p>
-<p>서버에서는 mongodb와 연결되어 있어 database에서 해당 유저의 이전 기록과 비교하여 더 빠른 기록으로 갱신해준다.</p>
-<p>또한 rank 페이지를 누르거나 URL로 직접 요청할 때마다 데이터를 가져와서 보여줘야 하므로 router 함수 내부에서 &#x2F;ranker 경로로 get 요청을 보내서 데이터를 가져와야한다.</p>
-<blockquote>
-<p>isSignin 함수에서 &#x2F;auth 경로로 get 요청해서 guard 프로퍼티에 불리언 값을 저장한 것 처럼 &#x2F;rank 경로가 아닌 &#x2F;ranker 경로로 get 요청을 해야한다.</p>
-</blockquote>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;*&quot;</span>, auth, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;public/index.html&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>만약 &#x2F;rank 경로로 get 요청을 보내면, 위 단계와 겹치지 때문에 다른 경로로 설정을 해줘야 한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%95%A8%EC%88%98%EC%99%80%20pushState,%20%EB%9E%AD%EC%BB%A4%20%EB%B3%B4%EC%97%AC%EC%A3%BC%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
