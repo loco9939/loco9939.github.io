@@ -324,6 +324,421 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/"
+                            aria-label=": 모듈 내보내기(import,export)"
+                        >
+                            모듈 내보내기(import,export)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-02T10:05:15+09:00">
+	
+		    2022/11/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번 리액트 수업시간 때, 모듈 파일을 내보내고 불러오는 과정에서 확실히 이해하지 못한 것 같아 이 글을 작성하게 되었습니다.</p>
+<h1 id="📌-모듈이란"><a href="#📌-모듈이란" class="headerlink" title="📌 모듈이란?"></a>📌 모듈이란?</h1><p><bold>모듈이란, 개발을 하면서 애플리케이션이 방대해짐에 따라 파일을 분리해야할 경우가 발생한다. 이 때 분리된 파일을 모듈이라고 한다.</bold></p>
+<p>시간이 지나 모듈이 웹 표준에 등재되면서 브라우저와 Node.js 환경에서 모듈을 사용할 수 있게 되었다.</p>
+<h2 id="모듈-특징"><a href="#모듈-특징" class="headerlink" title="모듈 특징"></a>모듈 특징</h2><ul>
+<li>모듈파일을 사용하기 위해서는 import 해온 script 파일에 type 속성이 module로 설정되어 있어야한다.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span> <span class="attr">src</span>=<span class="string">&quot;index.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모듈 스코프를 가진다.</li>
+<li>Strict mode</li>
+<li>지연 실행된다(defer) -&gt; 스크립트의 상대적인 순서가 유지될 수 있는 이유</li>
+<li><red>확장자를 꼭 적어줘야한다.</red></li>
+</ul>
+<p>모듈은 단독적으로 사용하는 경우는 드물고 주로 <red>웹팩(Webpack)</red>이라는 번들러를 사용하여 모듈을 한번에 묶어 서버에 올리는 방식을 사용한다.</p>
+<p>웹팩에 대해서는 새로운 게시물에서 다뤄보도록 하고 이제 모듈을 불러오고 내보내는 방법에 대해 알아보자.</p>
+<h2 id="CommonJS-vs-ES6-방식"><a href="#CommonJS-vs-ES6-방식" class="headerlink" title="CommonJS vs ES6 방식"></a>CommonJS vs ES6 방식</h2><h3 id="1-CommonJS"><a href="#1-CommonJS" class="headerlink" title="1. CommonJS"></a>1. CommonJS</h3><ul>
+<li>require : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> sayHi = <span class="built_in">require</span>(<span class="string">&quot;./sayHi.js&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>exports : 내보내기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = foo;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-ES6-방식"><a href="#2-ES6-방식" class="headerlink" title="2. ES6 방식"></a>2. ES6 방식</h3><ul>
+<li>import : 가져오기 위한 키워드</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> foo <span class="keyword">from</span> <span class="string">&quot;./sayHi.js&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sayHi.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">foo</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;sayHi~!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> foo;</span><br></pre></td></tr></table></figure>
+
+<p>둘의 차이에 대해 알아두고 앞으로는 ES6 문법을 사용할 것이니 이에 대해서 자세히 알아보자.</p>
+<h2 id="export"><a href="#export" class="headerlink" title="export"></a>export</h2><p>모듈을 내보내는 방식은 다양하다.</p>
+<ol>
+<li>선언부에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">&quot;loco&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>단, 함수나 클래스를 내보내기할 경우에는 <red>; (세미콜론)을 붙이지 않아야 한다.</red></li>
+</ul>
+<ol start="2">
+<li>선언부와 떨어진 곳에서 내보내기</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> name;</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러개를 내보내고 싶다면 객체로 감싸서 내보내기 해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// say.js</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayHi</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sayBye</span> = (<span class="params">name</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Bye~ <span class="subst">$&#123;name&#125;</span>!`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; sayHi, sayBye &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="import"><a href="#import" class="headerlink" title="import"></a>import</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi, sayBye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">sayHi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">sayBye</span>(<span class="string">&quot;selly&quot;</span>); <span class="comment">// Bye~ selly!</span></span><br></pre></td></tr></table></figure>
+
+<p>export 할 때, 객체형태로 감싸서 내보내기를 하였으면 불러올 때도 객체형태로 감싸 이름 그대로 가져와야한다.</p>
+<p>하지만 가져와야할 함수나 변수가 100만개라면? 일일히 언제 써주기가 힘드니 이럴 경우 <bold>* (에스터리스트)를 사용하여 모두 가져오기하여 객체처럼 사용할 수 있다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> greeting <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line">greeting.<span class="title function_">sayHi</span>(<span class="string">&quot;Yong&quot;</span>); <span class="comment">// Hi~ Yong!</span></span><br><span class="line">greeting.<span class="title function_">sayBye</span>(<span class="string">&quot;Jin&quot;</span>); <span class="comment">// Bye~ Jin!</span></span><br></pre></td></tr></table></figure>
+
+<p>하지만 이런 경우는 드물고, 대게 어떤 대상을 가져오는지를 구체적으로 하는 것 명시하는 것이 좋다.</p>
+<p>왜냐하면 웹팩을 사용하면 로딩속도를 높이기 위해 최적화를 하게되는데 이 경우 사용하지 않는 리소스는 삭제되기 때문이다.</p>
+<h3 id="import-as"><a href="#import-as" class="headerlink" title="import as"></a>import as</h3><p>as를 사용하여 이름을 바꿔서 가져올 수 있다. export 에서도 가능하지만 주로 import 에서만 사용하는 것이 명시적이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; sayHi <span class="keyword">as</span> hi, sayBye <span class="keyword">as</span> bye &#125; <span class="keyword">from</span> <span class="string">&quot;./say.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">hi</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Hi~ John!</span></span><br><span class="line"><span class="title function_">bye</span>(<span class="string">&quot;John&quot;</span>); <span class="comment">// Bye~ John!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="export-default"><a href="#export-default" class="headerlink" title="export default"></a>export default</h2><p>모듈은 크게 2가지 종류로 나뉘게 된다.</p>
+<ol>
+<li>위 처럼 say라는 함수들이 다수있는 라이브러리 형태의 모듈</li>
+<li>개체 하나만 선언된 모듈</li>
+</ol>
+<p>유틸 함수들을 내보내는 경우가 아니라면 주로 2번의 경우를 선호한다.</p>
+<p>해당 모듈에 개체가 1개만 있다는 것을 명시적으로 구분하기 위해 <bold>export default 키워드를 사용한다.</bold></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> validation <span class="keyword">from</span> <span class="string">&quot;./validation.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isValid = <span class="title function_">validation</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>export default로 내보내기한 경우에 가져오기할 때는 <bold>중괄호{}가 필요없고 원하는 이름으로 가져올 수 있다.</bold></li>
+<li>또한, 개체 한개만 내보낸 것을 가져오기 때문에 <bold>export default로 내보낼 때는 식별자나 이름없이 내보낼 수 있다.</bold></li>
+</ul>
+<h1 id="🔥-22-11-09-추가"><a href="#🔥-22-11-09-추가" class="headerlink" title="🔥 [22.11.09 추가]"></a>🔥 [22.11.09 추가]</h1><h2 id="❗️-component-폴더의-index-js-모아서-다시-내보내기"><a href="#❗️-component-폴더의-index-js-모아서-다시-내보내기" class="headerlink" title="❗️ component 폴더의 index.js 모아서 다시 내보내기"></a>❗️ component 폴더의 index.js 모아서 다시 내보내기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// components/ToggleButton/ToggleButton.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// components/index.js</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Demo&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./ToggleButton&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./A11yHidden&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Banner&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// app/App.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&quot;components&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ToggleButton</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ToggleButton 컴포넌트를 이름 내보내기 해주고 있다.</li>
+<li>위와 같이 components 폴더의 index.js파일에 여러 컴포넌트를 다시 내보내기로 보내줄 때, <strong>만약 ToggleButton 컴포넌트를 기본 내보내기를 해주었다면</strong> 아래처럼 index.js에서 다시내보내기 해줄 때, {}로 감싸고 default로 받은 객체를 이름으로 설정해주고 내보내줘야한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./ToggleButton&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>왜냐하면, <strong>ToggleButton 이외의 다른 컴포넌트들도 default로 내보냈기 때문에 구분을 하기 위해서</strong> 다시 내보내기 할 때, 이름을 설정해줘야한다.</p>
+<p>이러한 불편함 때문에 이름 내보내기를 사용한다.</p>
+<h2 id="❗️-화살표-함수로-내보내기시-주의사항"><a href="#❗️-화살표-함수로-내보내기시-주의사항" class="headerlink" title="❗️ 화살표 함수로 내보내기시 주의사항"></a>❗️ 화살표 함수로 내보내기시 주의사항</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123; onText, offText, on, onToggle, activeClass &#125;) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>...<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위와 같이 화살표 함수로 한줄로 작성하여 익명함수로 내보내고 App.jsx에서 이름을 정하여 받아서 사용하더라도 브라우저 환경에서 컴포넌트 구조를 확인하면 컴포넌트 이름이 <red><strong>Annonymous</strong>라고 뜬다.</red></li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>수업시간에 모듈을 기본 내보내기, 이름 내보내기를 사용하면서 둘의 차이가 무엇인지? 그리고 CommonJS와 ES6에서 모듈을 불러오고 내보내는 방식의 차이에 대해 확실히 알고 가는 시간이여서 한층 성장하였다고 느낀다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/02/Javascript/%EB%AA%A8%EB%93%88-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-import-export/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
+                            aria-label=": 우테코 프리코스 - 🐶 중복 문자 제거"
+                        >
+                            우테코 프리코스 - 🐶 중복 문자 제거
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-01T22:24:44+09:00">
+	
+		    2022/11/01
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>암호문을 좋아하는 괴짜 개발자 브라운이 이번에는 중복 문자를 이용한 새로운 암호를 만들었다. 예를 들어 “browoanoommnaon”이라는 암호문은 다음과 같은 순서로 해독할 수 있다.</p>
+<ol>
+<li>“browoanoommnaon”</li>
+<li>“browoannaon”</li>
+<li>“browoaaon”</li>
+<li>“browoon”</li>
+<li>“brown”</li>
+</ol>
+<p>임의의 문자열 cryptogram이 매개변수로 주어질 때, 연속하는 중복 문자들을 삭제한 결과를 return 하도록 solution 메서드를 완성하라.</p>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a><strong>제한사항</strong></h2><ul>
+<li>cryptogram은 길이가 1 이상 1000 이하인 문자열이다.</li>
+<li>cryptogram은 알파벳 소문자로만 이루어져 있다.</li>
+</ul>
+<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a><strong>실행 결과 예시</strong></h2><h2 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem2</span>(<span class="params">cryptogram</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cryptogram !== cryptogram.<span class="title function_">toLowerCase</span>()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 소문자만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (!cryptogram.<span class="property">length</span> || cryptogram.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1자 이상 1000자 이하만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> strArr = [...cryptogram];</span><br><span class="line">  <span class="keyword">let</span> duplicatedStrPosition = [];</span><br><span class="line">  <span class="keyword">let</span> hasDuplicatedStr = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(hasDuplicatedStr) &#123;</span><br><span class="line">    strArr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_, i, init</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (init[i] === init[i+<span class="number">1</span>]) duplicatedStrPosition = [i, ...duplicatedStrPosition];</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    hasDuplicatedStr = !duplicatedStrPosition.<span class="property">length</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    duplicatedStrPosition = duplicatedStrPosition.<span class="title function_">filter</span>(<span class="function"><span class="params">elem</span> =&gt;</span> &#123;</span><br><span class="line">      strArr = [...strArr.<span class="title function_">slice</span>(<span class="number">0</span>, elem), ...strArr.<span class="title function_">slice</span>(elem + <span class="number">2</span>)];</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strArr.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>strArr로 문자열을 배열로 관리</li>
+<li>strArr 배열이 더 이상 중복이 없을 때 까지 반복해야하고, 문자열의 순회하며 중복을 확인해야 하므로 시간 복잡도 $n^2$</li>
+<li>Spread문법으로 원본 배열의 변형을 최소화하는 방향으로 배열을 관리</li>
+<li>for문 대신 배열 메서드 forEach문 사용</li>
+<li>원본 배열을 변형시키는 splice 메서드 대신 slice 메서드 사용</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
+<li>내가 코드를 처음 보는 사람의 입장으로 변수명부터 잘 이해할 수 있는지 고려하여 리팩터링을 하였다.</li>
+<li>처음에는 while 조건식을 단순히 true라고 하였는데, 의미를 부여하여 코드의 가독성을 높이기 위해 변수에 할당해주었다.</li>
+<li>배열을 다루기 때문에 for문 대신 forEach문을 사용하였다.</li>
+<li>splice 메서드 같이 원본을 변형시키는 메서드 대신 spread 문법과 slice 메서드를 사용하였다.</li>
+<li>리팩터링 전에는 duplicatedStrPosition 배열을 직접 빈 배열로 초기화해주었지만, 리팩터링을 하면서 filter 메서드를 사용하여 좀 더 배열을 다루는 의미를 부여하였다.</li>
+</ul>
+<p>하나 걸리는 부분은 제한사항을 에러처리를 해주어야 하나 고민을 하였다. 사용자가 제한사항에 벗어나는 입력을 할 수도 있으므로 이에 대한 에러를 발생시켜주는 것이 사용성에 더 옳다고 생각하여 if 조건문을 통해 에러처리를 해주었습니다.</p>
+<p>에러처리에 대해서는 깊게 생각해보지 못했는데, 제한사항에 대해 한번 더 깊이 생각해보면서 에러처리의 필요성을 느낄 수 있었던 문제여서 즐거웠다.</p>
+<p>또한 stack 자료구조를 생각하면서 문제를 해석하면 지금의 코드보다 훨씬 더 간결하고 가독성있는 코드를 구현할 수 있다는 것을 오늘 코드리뷰를 통해 깨닫게 되었다. stack으로 구현해보는 것은 다음 시간에 해보도록 하자.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/"
+                            aria-label=": React(리액트)는 어떻게 작동하는가?"
+                        >
+                            React(리액트)는 어떻게 작동하는가?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-31T19:13:18+09:00">
+	
+		    2022/10/31
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <style>
+  bold {
+    font-weight:700;
+    font-size:1rem;
+  }
+  
+  red {
+    color:red;
+    font-size:1rem
+  }
+</style>
+
+<h1 id="📌-React란"><a href="#📌-React란" class="headerlink" title="📌 React란?"></a>📌 React란?</h1><p>화면에 렌더링되는 UI를 컴포넌트 단위로 쪼개 사용할 수 있는 Javascript 라이브러리리 혹은 프레임워크이다.<br>라이브러리인가? 프레임워크인가?는 크게 중요하지 않다. 우리가 중점적으로 생각해야할 부분은 리액트는 <red>Progressive(점진적)</red>이라는 것이다.</p>
+<h2 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h2><ol>
+<li><p>리액트는 점진적이므로 애플리케이션을 모두 리액트로 구성할 필요가 없다.</p>
+</li>
+<li><p>리액트는 Javascript 중점 라이브러리이다. 그러므로 자바스크립트를 잘하면 재밌을 것이다.</p>
+</li>
+<li><p>리액트는 별도의 설치가 필요없이 컴포넌트를 즉시 사용해볼 수 있다.</p>
+</li>
+<li><p>선언형 프로그래밍으로 명령형 프로그래밍보다 코드를 이해하기가 쉽다.</p>
+</li>
+<li><p>리액트를 배우면 웹, 리액트 네이티브를 배우면 모바일 등 한가지를 배워 확장성이 넓다.</p>
+</li>
+</ol>
+<h2 id="시작하기-전"><a href="#시작하기-전" class="headerlink" title="시작하기 전"></a>시작하기 전</h2><h3 id="1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다"><a href="#1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다" class="headerlink" title="1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다."></a>1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CDN</span></span><br><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react@17/umd/react.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>만약 버전을 변경하고 싶다면 @version을 써준다.</p>
+</li>
+<li><p>만약 IE를 고려 해야한다면 17 버전을 사용하고 그렇지 않다면 18 버전 사용하자.</p>
+</li>
+</ul>
+<h3 id="2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다"><a href="#2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다" class="headerlink" title="2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다."></a>2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react-dom@17/umd/react-dom.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>React API와 버젼을 일치시켜 줘야한다.</li>
+</ul>
+<p><strong>💡 React v17의 render()와 v18의 createRoot() 차이</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 17</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(app,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>),</span><br><span class="line">    <span class="function">() =&gt;</span> &#123;<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;rendered!&#x27;</span>)&#125;</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>렌더링할 React 요소인 app을 인자로 전달하고 이를 렌더링할 container인 root container를 render()에 전달한다.</li>
+</ul>
+<p>리액트 버전 18부터 render() 대신 createRoot()를 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">createRoot</span>(container[, options])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 18</span></span><br><span class="line"><span class="keyword">const</span> root = <span class="title function_">createRoot</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>; <span class="comment">// JSX</span></span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(element);</span><br></pre></td></tr></table></figure>
+
+<p>문서의 RealDOM 요소 노드인 container를 React Root로 만들어 반환하고, React Root를 render() 메서드를 사용하여 React 요소를 RealDOM에 렌더링한다.</p>
+<h2 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h2><h3 id="1-React-요소-노드와-Real-DOM-요소-노드-차이"><a href="#1-React-요소-노드와-Real-DOM-요소-노드-차이" class="headerlink" title="1. React 요소 노드와 Real DOM 요소 노드 차이"></a>1. React 요소 노드와 Real DOM 요소 노드 차이</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Real</span></span><br><span class="line"><span class="keyword">const</span> headlineNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;h1&#x27;</span>);</span><br><span class="line">headlineNode.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;headline&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">setAttribute</span>(<span class="string">&#x27;land&#x27;</span>,<span class="string">&#x27;en&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">insertAdjacentHTML</span>(<span class="string">&#x27;beforeend&#x27;</span>, <span class="string">`Add &lt;strong&gt;React&lt;/strong&gt; to a Website`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// React</span></span><br><span class="line"><span class="keyword">const</span> headlineVnode = <span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">  <span class="string">&#x27;h1&#x27;</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    className : <span class="string">&#x27;headline&#x27;</span>,</span><br><span class="line">    <span class="attr">lang</span>: <span class="string">&#x27;en&#x27;</span></span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="string">&#x27;Add &#x27;</span>,</span><br><span class="line">  <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;strong&#x27;</span>, <span class="literal">null</span>, <span class="string">&#x27;React&#x27;</span>),</span><br><span class="line">  <span class="string">&#x27;to a Website&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/React.createElement/React.createElement.png" alt="React.createElement"></p>
+<ul>
+<li><p>RealDOM 요소 노드는 브라우저가 렌더링하면서 생성한 것이고 이와 달리 React 요소 노드는 Object(객체)로 그 형태가 다르게 생겼다.</p>
+</li>
+<li><p>위 사진을 보면 props라는 객체에 children, className, lang 등이 담겨있는 것을 알 수 있다. props에 대해서는 이후에 알아보자.</p>
+</li>
+</ul>
+<p><strong>❗️ StrictMode 오류 해결</strong></p>
+<p>ECMAScript에서 ‘use strict’ 사용하여 문법적 오류를 미리 알려주었듯이 React에서도 이러한 오류를 미리 알려준다.</p>
+<p>이에 대한 경고를 해결하기 위해서는 StrictMode 컴포넌트를 사용해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">    <span class="title class_">React</span>.<span class="property">StrictMode</span>,</span><br><span class="line">    <span class="literal">null</span>,</span><br><span class="line">    <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="title class_">App</span>, &#123; <span class="attr">children</span>: [headline, reactLogo] &#125;)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<p>사용법은 간단하다. 생성하려는 React 요소를 React.StrictMode의 자식 요소로 전달해주면 된다.</p>
+<h3 id="2-React-Component-vs-React-Element"><a href="#2-React-Component-vs-React-Element" class="headerlink" title="2. React Component vs React Element"></a>2. React Component vs React Element</h3><p>자바스크립트에서는 재사용을 위해 함수를 사용하고 리액트에서는 재사용을 위해 컴포넌트를 사용한다. 컴포넌트 생성 방법은 함수를 생성하듯이 생성할 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SvgPath</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;path&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">d</span>: props.<span class="property">d</span>,</span><br><span class="line">        <span class="attr">fill</span>: <span class="string">&#x27;currentColor&#x27;</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = props =&gt; <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    &#123; <span class="attr">className</span>: <span class="string">&#x27;App&#x27;</span> &#125;,</span><br><span class="line">    ...props.<span class="property">children</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>리액트 컴포넌트는 매개변수로 props를 받는다.</p>
+</li>
+<li><p>props 객체를 통해 다른 컴포넌트에게 본인의 HTML attributes, 자바스크립트 값(객체, 배열, 함수 등)을 전달해줄 수 있다.</p>
+</li>
+<li><p>함수선언식, 함수표현식 둘 다 가능하다.</p>
+</li>
+</ul>
+<p>하지만 createElement()를 사용하여 컴포넌트를 생성하는 것은 매우 번거로운 일이다. 그 대안으로 생겨난 것이 바로 JSX이다.</p>
+<h2 id="JSX란"><a href="#JSX란" class="headerlink" title="JSX란?"></a>JSX란?</h2><p>JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        안녕하세요~! &#123;name&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// rendered</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>안녕하세요~! loco<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>자동 세미콜론 삽입이 되는 것을 방지하기 위해 <strong>괄호로 감싸는 것을 추천한다.</strong></p>
+<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ol>
+<li><p>선언형, HTML과 비슷한 구조, {}를 사용한 데이터 바인딩이 편리하다.</p>
+</li>
+<li><p>브라우저엔진에 의해 해석되지 못하므로 babel이 컴파일을 해줘야만 한다.</p>
+</li>
+<li><p>HTML 보단 JS에 가까우므로 camelCase 명명규칙을 따른다.</p>
+</li>
+<li><p>JSX는 렌더링하기 전에 이스케이프하므로 애플리케이션에서 명시적으로 작성되지 않는 내용은 script에 주입되지 않아 XSS 공격으로부터 안전하다.</p>
+</li>
+</ol>
+<p><strong>❗️ React에서 babel 추가 설정</strong></p>
+<p><img src="/../../images/React.babel/React.babel.png" alt="React바벨추가설정"></p>
+<ol>
+<li><p>이전에 React를 사용하기 전에 설정해두었던 babel 사양에서는 React를 컴파일 해줄 수 없다.</p>
+</li>
+<li><p>컴포넌트를 모듈 파일로 구분할 때에 babel은 input으로 지정된 파일만 컴파일 해주고 input 파일에서 import한 파일까지 컴파일해주지 않는다.</p>
+</li>
+</ol>
+<p>위 2가지 문제 해결을 위해서는 <strong>플러그인을 설치 해줘야한다.</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D @babel/preset-react</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">comments</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">presets</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&#x27;@babel/preset-env&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">modules</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">loose</span>: <span class="literal">true</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&#x27;@babel/preset-react&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>설치가 끝났다면 babel.config.js 파일에 해당 플러그인을 사용할 것이라고 등록을 해줘야 정상 동작한다.</p>
+</li>
+<li><p>옵션값이 있을 경우 []로 감싸서 넣어주고 그렇지 않은 경우 문자열로만 추가한다.</p>
+</li>
+</ul>
+<h2 id="JSX로-컴포넌트-생성하기"><a href="#JSX로-컴포넌트-생성하기" class="headerlink" title="JSX로 컴포넌트 생성하기"></a>JSX로 컴포넌트 생성하기</h2><p>이제 JSX를 사용할 준비가 끝났으니 JSX를 사용하여 컴포넌트를 생성해보자.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">HeadLine</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;headline&quot;</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        Add <span class="tag">&lt;<span class="name">strong</span>&gt;</span>React<span class="tag">&lt;/<span class="name">strong</span>&gt;</span> to a Website</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">HeadLine</span>&gt;</span><span class="tag">&lt;/<span class="name">HeadLine</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;react-root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ReactDOMRoot</span> = <span class="title class_">ReactDOM</span>.<span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOMRoot</span>.<span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>React.createElement()를 사용하여 React Element를 생성하여 컴포넌트를 생성하는 방법보다 훨씬 편리하다는 것을 알 수 있다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>리액트 수업을 듣고 배운것을 차근차근 익혀가면서 정리해보았다. props에 대한 개념도 확실히 잡히고, JSX를 왜 쓰게 되었는지, 안쓰면 무엇인 문제점이고 불편한지를 깨달을 수 있는 시간이여서 좋았다.</p>
+<p>공식문서를 읽어볼 때도 영어로 된 것을 자동번역하여 읽지 않고 원문을 보면서 읽으니 시간이 조금 더디지만 그렇기 때문에 기억에 더 오래 남을 것이라고 생각하여 영어로 읽는 연습을 하고있다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/31/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94%20%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%A6%96%20%ED%8F%AC%EB%B9%84%EC%99%80%20%ED%81%AC%EB%A1%B1/"
                             aria-label=": 우테코 프리코스-🦖 포비와 크롱"
                         >
@@ -969,263 +1384,6 @@
                         <p>
                             <a
                                 href="/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/20/Project/holymoly/holymoly%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/"
-                            aria-label=": holymoly 프로젝트 회고"
-                        >
-                            holymoly 프로젝트 회고
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-20T21:13:54+09:00">
-	
-		    2022/10/20
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="프로젝트를-마치며…"><a href="#프로젝트를-마치며…" class="headerlink" title="프로젝트를 마치며…"></a>프로젝트를 마치며…</h1><ul>
-<li><p>기획을 할 때, 기술적으로 어떻게 풀어나갈지 기술기획을 꼼꼼히 하지 못한 것이 아쉬움</p>
-</li>
-<li><p>이 때, 기술기획이 제대로 안이루어져서 CBD 라이브러리를 사용하면서 앞으로 겪게될 문제를 개발 과정에 파악하게 되어서 난감하였다. ex) 지역 상태 관리 어려운 점…</p>
-</li>
-<li><p>노션으로 일정관리와 문서화를 템플릿을 적극 활용하여 일관성있게 해야겠다.</p>
-</li>
-<li><p>라우터가 App에 종속되어 있는 것이 아니라 render 함수처럼 따로 분리되도록 하고 싶었는데, 그러기 위해서구조를 대폭 수정해야하여 시간적 어려움이 있어 아쉬웠다.</p>
-</li>
-<li><p>매번 새로운 지식을 얻어감에 즐거움을 느꼈다. 공식문서 읽는 것은 아직 어렵지만, 예제를 따라해보고 이해한 후 공식문서 읽으면 잘 읽히는 것을 알게되었다.</p>
-</li>
-<li><p>이전 프로젝트 때 했던 실수를 어느정도 개선해나가며 진행할 수 있어서 좋았다. ex) this 바인딩</p>
-</li>
-<li><p>해결책을 생각해낼 때 과연 이게 진짜 해결책인지, 회피인지 한번 더 생각해보는 안목이 생겼다.</p>
-</li>
-<li><p>어렵고 막히는 부분이 있을 때 팀원에게 물어보면서 같이 해결해나갈 수 있어 든든하고 즐거웠다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/20/Project/holymoly/holymoly%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/"
-                            aria-label=": Software Development Life Cycle (SDLC)와 협업 모델"
-                        >
-                            Software Development Life Cycle (SDLC)와 협업 모델
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-18T22:38:09+09:00">
-	
-		    2022/10/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-Software-Development-Life-Cycle-SDLC"><a href="#1-Software-Development-Life-Cycle-SDLC" class="headerlink" title="1. Software Development Life Cycle (SDLC)"></a>1. Software Development Life Cycle (SDLC)</h1><p>소프트웨어 개발의 전체적인 라이프 사이클을 이해하여 개발 과정에서 발생하는 일을 정략적으로 관리하자.</p>
-<p><strong>해야할 일</strong></p>
-<ol>
-<li><p>요구사항 분석</p>
-</li>
-<li><p>설계</p>
-</li>
-<li><p>구현</p>
-</li>
-<li><p>테스트</p>
-</li>
-<li><p>유지보수</p>
-</li>
-</ol>
-<p>위 과정을 진행하기 위한 대표적인 모델은 다음과 같다.</p>
-<h2 id="1-1-Waterfall"><a href="#1-1-Waterfall" class="headerlink" title="1.1. Waterfall"></a>1.1. Waterfall</h2><p>SDLC 일련의 단계를 모든 팀원들이 참여한다. 심각한 문제라면 다시 이전단계로 돌아가야하겠지만, 작은 문제라면 일단 다음 단계로 넘어간다.(작은 문제를 지금 고친다 하더라도 사이드 이펙트 발생까지 생각하기 어렵다.)</p>
-<p><strong>장점</strong></p>
-<ul>
-<li><p>팀을 관리하기가 편하여 대규모 팀에 적합</p>
-</li>
-<li><p>어떤 단계가 마무리되면 결과가 뚜렷함</p>
-</li>
-</ul>
-<h2 id="1-2-Agile"><a href="#1-2-Agile" class="headerlink" title="1.2. Agile"></a>1.2. Agile</h2><p>작은 기능들의 성공을 반복시켜서 프로젝트 완성, 너무 많은 플랜을 지양하고 요구사항에 맞는 코드를 작성한다.</p>
-<p><strong>커뮤니케이션 중요(daily scrum, 코드리뷰, 회고)</strong></p>
-<h2 id="Daily-scrum"><a href="#Daily-scrum" class="headerlink" title="Daily scrum"></a>Daily scrum</h2><p>매일 15분간 회의를 진행하여 본인이 진행할 기능, 수정사항에 대해 우선순위를 부여하고 순서대로 진행한다.</p>
-<ul>
-<li>Product Backlog: 제품 전체의 요구사항</li>
-<li>Sprint Backlog : 프로덕트 기능 하나하나에 대해서 적어 놓음</li>
-</ul>
-<h2 id="Sprint"><a href="#Sprint" class="headerlink" title="Sprint"></a>Sprint</h2><p>Sprint는 2주 단위로 진행을 한다. 첫날에 planning meeting을 진행하여 2주간 일정을 세세하게 세운다.</p>
-<p>ex) 10월 25일 HTML설계, 10월 26일 컴포넌트 구조 설계 …</p>
-<h2 id="회고"><a href="#회고" class="headerlink" title="회고"></a>회고</h2><p>2주간의 Sprint가 끝나면 회고를 진행한다.</p>
-<ul>
-<li>3L 전략(Liked, Learned, Lacked)</li>
-</ul>
-<h2 id="Sprint-전-준비사항"><a href="#Sprint-전-준비사항" class="headerlink" title="Sprint 전 준비사항"></a>Sprint 전 준비사항</h2><ol>
-<li>UseCase 작성하기</li>
-</ol>
-<p>UseCase는 flowchart와 다르니 flowchart화 되고 있다면 재고해봐야한다.</p>
-<p>UseCase는 사용자가 어떤 행동을 할 수 있는지를 나열하고 이들간의 관계를 연결한 구조로 작성한다.</p>
-<blockquote>
-<p>flowchart가 아니므로 순서를 따를 필요가 없다.</p>
-</blockquote>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>점점 막히는 부분도 많아지고 이전에 제대로 구조를 설계하지 않고 회피하고 구현에만 집중하다보니 리팩터링을 어떻게 시작해야할지 막막하다…</p>
-<p>프로젝트 막바지에 다가오니 의욕도 떨어지는 것 같다. 재충전이 필요하다.</p>
-<p>그래도 이틀남았으니 내일 하루는 리팩터링에 시간을 쏟고 목요일은 배포와 회고, 발표준비를 하면 프로젝트를 잘 마무리 할 수 있을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
-                            aria-label=": 라우터 파일 구분 시도"
-                        >
-                            라우터 파일 구분 시도
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-18T22:38:09+09:00">
-	
-		    2022/10/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-라우터-파일-구분을-해주자"><a href="#1-라우터-파일-구분을-해주자" class="headerlink" title="1. 라우터 파일 구분을 해주자."></a>1. 라우터 파일 구분을 해주자.</h1><h2 id="왜-라우터를-모듈로-빼서-관리를-해줘야-하는가"><a href="#왜-라우터를-모듈로-빼서-관리를-해줘야-하는가" class="headerlink" title="왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?"></a>왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?</h2><p>App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가?</p>
-<p>라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고, path에 맞는 컴포넌트를 반환해주는 역할을 한다.</p>
-<p><strong>이 역할을 하는 라우터를 App 컴포넌트의 프로퍼티 메서드로 종속 시키는 것이 맞는가?</strong></p>
-<p>내 생각에는 데이터가 바뀔 때 화면 렌더링에 영향을 주는 데이터를 상태로 관리 해야하므로, path가 바뀔 때, 컴포넌트가 바뀌니 path든 component든 상태로 가져야 한다.</p>
-<p><strong>즉, App도 컴포넌트이므로 그려지는데 필요한 정보를 담고 있기만 하면 된다.</strong></p>
-<ul>
-<li>라우터에서 렌더링을 호출하면 App의 domStr이 새로 그려지게되는데 이때, Page 또는 Path를 확인하여 컴포넌트를 그려줘야한다.</li>
-<li>그런데 라우터함수가 렌더만 해주는데 상태를 변경해주지 않고 어떻게 그려주지?<br>⇒ 라우터 함수가 Page를 반환하고 그 페이지를 App의 domStr에서 받아서 그려주기로 해보자.<ul>
-<li>위의 것이 될까? App에서 처음 호출될 때는 return 값으로 Page를 넘겨줄 수 있겠지</li>
-<li>하지만 이벤트 발생하거나 서버에 요청으로 라우터 변경되었을 때, router가 호출되는데, 그 때는 반환만 해주고 렌더링을 해주고 있지 않아서 변경되지 않을 것이다.</li>
-<li>그렇다고 router에 렌더링을 넣어준다고 하면 App의 domStr을 호출하여 새로 그려줄텐데… 무엇을 기준으로 그려주는 것인가? router에서 받은 path를 기준으로 그 path에 맞는 컴포넌트로 그려주는데 이것을 App에서 어떻게 알 수 있나?</li>
-</ul>
-</li>
-</ul>
-<p><strong>결론</strong></p>
-<p>이를 해결하기 위해서는 기존의 App 컴포넌트에서 setState로 render를 시켜주는 구조를 바꾸고 App에서 render를 해주고 router에서도 render를 해주는 구조로 바꿔줘야한다.</p>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘은 라우터를 파일로 분리하려는 시도와 리팩터링을 하면서 공부를 했다.</p>
-<p>내일은 GCP로 배포하는 법을 공부해서 배포를 해보려고 한다.</p>
-<p>내일 배포와 발표준비를 마치면 이제 자바스크립트 수업도 모두 끝이난다. 2달 반 정도의 시간이 참 빨리도 지나간 것 같다.</p>
-<p>역시 자바스크립트가 동료들과 페어로 하는 수업이 많아서 더 재밌게 느껴진 것 같다.</p>
-<p>앞으로 다가올 리액트 수업 때도 열심히 듣기 위해 만반의 준비를 해야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

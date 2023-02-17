@@ -325,6 +325,345 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                            aria-label=": REST API란 무엇인가요?"
+                        >
+                            REST API란 무엇인가요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-18T14:30:25+09:00">
+	
+		    2023/01/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="REST-API란-무엇인가요"><a href="#REST-API란-무엇인가요" class="headerlink" title="REST API란 무엇인가요?"></a>REST API란 무엇인가요?</h1><p>자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다.</p>
+<p>즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.</p>
+<h2 id="REST-API의-구성"><a href="#REST-API의-구성" class="headerlink" title="REST API의 구성"></a>REST API의 구성</h2><ul>
+<li>자원 : 모든 자원에는 고유한 ID가 존재하고 ID는 &#x2F;store&#x2F;:store_ID와 같은 HTTP URI이다.</li>
+<li>행위 : 자원에 대한 행위 (HTTP 요청 메서드)</li>
+<li>표현 : 자원에 대한 행위의 구체적 내용 (페이로드, JSON)</li>
+</ul>
+<h2 id="REST-API-설계-규칙"><a href="#REST-API-설계-규칙" class="headerlink" title="REST API 설계 규칙"></a>REST API 설계 규칙</h2><h3 id="1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다"><a href="#1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다" class="headerlink" title="1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다."></a>1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /getTodos/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/show/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span>/</span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다"><a href="#2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다" class="headerlink" title="2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다."></a>2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다.</h3><table>
+<thead>
+<tr>
+<th>HTTP 요청 메서드</th>
+<th>종류</th>
+<th>목적</th>
+<th>페이로드</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>index&#x2F;retrieve</td>
+<td>모든&#x2F;특정 리소스 취득</td>
+<td>X</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>create</td>
+<td>리소스 생성</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>replace</td>
+<td>리소스 전체 교체</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>modify</td>
+<td>리소스 일부 수정</td>
+<td>O</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>delete</td>
+<td>모든&#x2F;특정 리소스 삭제</td>
+<td>X</td>
+</tr>
+</tbody></table>
+<ul>
+<li>리소스에 대한 행위는 HTTP 요청 메서드를 통해 표현하며 URI에 표현하지 않는다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="keyword">delete</span>/<span class="number">1</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">DELETE</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-슬래시-구분자-x2F-는-계층-관계를-표현"><a href="#3-슬래시-구분자-x2F-는-계층-관계를-표현" class="headerlink" title="3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현"></a>3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-불가피하게-긴-URI인-경우-하이픈-사용"><a href="#4-불가피하게-긴-URI인-경우-하이픈-사용" class="headerlink" title="4. 불가피하게 긴 URI인 경우 하이픈(-) 사용"></a>4. 불가피하게 긴 URI인 경우 하이픈(-) 사용</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/very-long-store</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>단 밑줄(_)은 포함하지 않는다.</p>
+</blockquote>
+<h3 id="5-파일-확장자는-URI에-포함하지-않는다"><a href="#5-파일-확장자는-URI에-포함하지-않는다" class="headerlink" title="5. 파일 확장자는 URI에 포함하지 않는다."></a>5. 파일 확장자는 URI에 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant/:1/logo.png</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /stores/restaurant/:<span class="number">1</span>/logo <span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="attr">HOST</span>: example.<span class="property">com</span> <span class="title class_">Accept</span>: image/png</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>대신 Accept header를 사용한다.</li>
+</ul>
+<h2 id="RESTful한-REST-API-설계하기"><a href="#RESTful한-REST-API-설계하기" class="headerlink" title="RESTful한 REST API 설계하기"></a>RESTful한 REST API 설계하기</h2><p>RESTful은 이해하기 쉽고 사용하기 쉬운 REST API를 만들고, 일관적인 컨벤션을 통해 API의 이해도를 높이는 것을 말한다.</p>
+<h3 id="REST-API-설계-예시"><a href="#REST-API-설계-예시" class="headerlink" title="REST API 설계 예시"></a>REST API 설계 예시</h3><table>
+<thead>
+<tr>
+<th>CRUD</th>
+<th>HTTP verbs</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource 목록 표시</td>
+<td>GET</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 하나 내용 표시</td>
+<td>GET</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 생성</td>
+<td>POST</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 수정</td>
+<td>PUT</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 삭제</td>
+<td>DELETE</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+</tbody></table>
+<h4 id="응답상태-코드"><a href="#응답상태-코드" class="headerlink" title="응답상태 코드"></a>응답상태 코드</h4><table>
+<thead>
+<tr>
+<th>상태코드</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1xx</td>
+<td>전송 프로토콜 수준의 정보 교환</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>클라이언트 요청 성공</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>클라이언트 요청 완료하기 위해 추가 행동 필요</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>클라이언트의 잘못된 요청</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>서버쪽 오류</td>
+</tr>
+</tbody></table>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/17/CS/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/"
+                            aria-label=": OOP에 대해 설명하세요"
+                        >
+                            OOP에 대해 설명하세요
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-17T17:40:29+09:00">
+	
+		    2023/01/17
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="OOP란-무엇인가요"><a href="#OOP란-무엇인가요" class="headerlink" title="OOP란 무엇인가요?"></a>OOP란 무엇인가요?</h1><p>OOP(Obeject-Oriented-Programming)는 객체지향 프로그래밍을 말한다.</p>
+<p>객체지향 프로그래밍이란, 실세계에 존재하고 우리가 인지하는 객체라는 대상을 추상화하여 프로그래밍에 접목 시킨 방식으로,</p>
+<p>프로그래밍 관점에서 데이터를 추상화할 때, <strong>상태와 행동을 가진 객체를 만들고 이 객체들간의 유기적인 상호작용</strong>을 통해 로직을 구성하는 프로그래밍 방식을 객체지향 프로그래밍이라 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">TV</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Samsung UHD Ultra&quot;</span>,</span><br><span class="line">  <span class="attr">price</span>: <span class="string">&quot;1,000,000원&quot;</span>,</span><br><span class="line">  <span class="attr">state</span>: <span class="string">&quot;off&quot;</span>,</span><br><span class="line">  <span class="attr">volume</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="title function_">turnOn</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = <span class="string">&quot;on&quot;</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">turnOff</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = <span class="string">&quot;off&quot;</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">volumeUp</span>(<span class="params">num = <span class="number">10</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">volume</span> += num;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">volumeDown</span>(<span class="params">num = <span class="number">10</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">volume</span> -= num;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>위는 TV라는 데이터를 상태와 행동으로 추상화한 객체로 표현한 것이다.</p>
+<h2 id="OOP의-특징은-무엇인가요"><a href="#OOP의-특징은-무엇인가요" class="headerlink" title="OOP의 특징은 무엇인가요?"></a>OOP의 특징은 무엇인가요?</h2><h3 id="1-캡슐화"><a href="#1-캡슐화" class="headerlink" title="1. 캡슐화"></a>1. 캡슐화</h3><p>캡슐화란 객체를 특정한 목적을 위해 변수 혹은 메서드 하나로 묶는 것을 말한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">getCount</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> count;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      count += <span class="number">1</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      count -= <span class="number">1</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>위 예시는 counter를 캡슐화한 예시이다. 이렇게 캡슐화를 하게되면 count라는 변수에 대해 참조하거나 변경하는 함수를 통해서만 간접적으로 접근이 가능하도록 하여 <span style='color:red;'>해당 데이터를 은닉하고 안전하게 보존하기 위해 사용한다.</span></p>
+<h3 id="2-추상화"><a href="#2-추상화" class="headerlink" title="2. 추상화"></a>2. 추상화</h3><p>우리는 앞서 TV라는 데이터를 추상화하였다. 하지만 추상화는 예시처럼 간단하지만은 않다. 추상적으로 큰 틀에 공통적인 요소나 필수적인 요소를 담는 것을 말한다.</p>
+<p>다시 TV의 예를 들어보겠다. 우리가 실생활의 모든 데이터(TV, 냉장고, 인덕션, 청소기 등)를 모두 개별적으로 만드는 것보단 이들의 공통적인 특성을 가진 큰 틀의 객체를 만들고 해당 객체의 상속을 받고 본인만의 특별한 기능을 추가하는 방법으로 객체를 생성해나가는 것이 <span style='color:red;'>중복을 줄이고 확장성의 장점을 살려</span> 추상화를 할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HomeAppliance</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name, price</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = <span class="string">&quot;off&quot;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">price</span> = price;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">turnOn</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = <span class="string">&quot;on&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">turnOff</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = <span class="string">&quot;off&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TV</span> = <span class="keyword">new</span> <span class="title class_">HomeAppliance</span>(<span class="string">&quot;Samsung UHD Smart TV&quot;</span>, <span class="number">1000000</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Refrigerator</span> = <span class="keyword">new</span> <span class="title class_">HomeAppliance</span>(<span class="string">&quot;Samsung BSpoke&quot;</span>, <span class="number">2000000</span>);</span><br><span class="line"><span class="keyword">const</span> vacuumCleaner = <span class="keyword">new</span> <span class="title class_">HomeAppliance</span>(<span class="string">&quot;Dyson&quot;</span>, <span class="number">800000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>위 예시처럼 가전제품이라는 데이터를 추상화하여 객체로 생성한 뒤, 해당 객체의 상속을 받아 공통적인 행동을 할 수 있는 객체를 생성하여 TV, 냉장고, 청소기 데이터를 추상화하였다.</p>
+<h3 id="3-상속-및-다형성"><a href="#3-상속-및-다형성" class="headerlink" title="3. 상속 및 다형성"></a>3. 상속 및 다형성</h3><p>다형성은 같은 동작이지만 다른 결과물을 반환하는 특징을 말한다.</p>
+<p>상속과 다형성을 통해 기능을 확장하거나 변경하는 것이 가능하다. 그렇게 되면 <span style='color:red;'>코드의 재사용 및 코드 길이 감소되고 유지보수가 용이해지는 장점이 있다.</span></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 숫자를 문자열로 바꾸는 경우</span></span><br><span class="line"><span class="keyword">const</span> number = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">const</span> string1 = number.<span class="title function_">toString</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 날짜를 문자열로 바꾸는 경우</span></span><br><span class="line"><span class="keyword">const</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line"><span class="keyword">const</span> string2 = date.<span class="title function_">toString</span>();</span><br></pre></td></tr></table></figure>
+
+<p>위 예시는 다형성의 예시이다. toString()이라는 메서드를 사용하여 타입에 따라 적절한 변환 방식을 정의해둠으로써 객체의 종류와 상관없는 추상도가 높은 변환 형식을 구현할 수 있다는 장점이 있다.</p>
+<p>이러한 다형성의 개념을 녹여내는 방법은 오버라이딩(Overriding), 오버로딩(Overloading) 두가지가 있다.</p>
+<h4 id="오버라이딩-Overriding"><a href="#오버라이딩-Overriding" class="headerlink" title="오버라이딩(Overriding)"></a>오버라이딩(Overriding)</h4><p>자식 클래스가 부모 클래스에게 상속받은 메서드를 특정 형태로 구현하는 것을 말한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name, legs</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">legs</span> = legs;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">move</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;move forward faster!!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">eat</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;eat food&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Animal</span> &#123;</span><br><span class="line">  <span class="title function_">move</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;move like a dog!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">bark</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Wal! Wal!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> animal = <span class="keyword">new</span> <span class="title class_">Animal</span>(<span class="string">&quot;eagle&quot;</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> dog = <span class="keyword">new</span> <span class="title class_">Dog</span>(<span class="string">&quot;seechu&quot;</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">dog.<span class="title function_">move</span>(); <span class="comment">// move like a dog!</span></span><br><span class="line">animal.<span class="title function_">move</span>(); <span class="comment">// move forward faster!!</span></span><br></pre></td></tr></table></figure>
+
+<p>위 예시에서 자식 클래스는 부모 클래스에게 상속받은 move 메서드를 새롭게 정의하였다. 그리고 자식 클래스의 인스턴스와 부모 클래스의 인스턴스에서 각각 move 메서드를 사용했을 때, 각자 클래스에 정의된 move 메서드가 동작하는 것을 알 수 있다.</p>
+<h4 id="오버로딩-Overloading"><a href="#오버로딩-Overloading" class="headerlink" title="오버로딩(Overloading)"></a>오버로딩(Overloading)</h4><p>하나의 클래스안에서 같은 이름의 메서드를 사용하지만 매개변수, Return Type 등의 특징에 따라 다른 용도로 사용되도록 구현하는 것을 말한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">name, legs</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">legs</span> = legs;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">move</span>(<span class="params">direction, distance</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!direction || !distance) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;move forward faster!!&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`move <span class="subst">$&#123;direction&#125;</span> for <span class="subst">$&#123;distance&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">eat</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;eat food&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> pig = <span class="keyword">new</span> <span class="title class_">Animal</span>(<span class="string">&quot;kong-e&quot;</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">pig.<span class="title function_">move</span>(); <span class="comment">// move forward faster!!</span></span><br><span class="line">pig.<span class="title function_">move</span>(<span class="string">&quot;right&quot;</span>, <span class="string">&quot;10m&quot;</span>); <span class="comment">// move right for 10m</span></span><br></pre></td></tr></table></figure>
+
+<p>위 예시는 자바스크립트에서 오버로딩을 구현한 예시이다. move라는 메서드를 사용할 때, 매개변수가 있고 없고에 따라 다르게 동작하도록 구현하였다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/17/CS/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/12/CS/SSR%EA%B3%BC-CSR%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/SSR%EA%B3%BC-CSR%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": SSR과 CSR에 대해 설명하라"
+                        >
+                            SSR과 CSR에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-12T22:12:40+09:00">
+	
+		    2023/01/12
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🐥-SSR과-CSR에-대해-설명하라"><a href="#🐥-SSR과-CSR에-대해-설명하라" class="headerlink" title="🐥 SSR과 CSR에 대해 설명하라"></a>🐥 SSR과 CSR에 대해 설명하라</h1><p>SSR은 서버 사이드 렌더링의 줄임말로, 클라이언트가 서버에 요청을 보낼 때 서버에서 HTML,JS 등을 렌더링하고 클라이언트에게 완성된 HTML 파일을 응답해주는 방식이다.</p>
+<p>CSR은 서버에 요청을 보내면 서버에서 HTML,JS 리소스 파일등을 받은 이후 브라우저에서 렌더링을 진행하는 것이다. 이후 클라이언트는 서버에게 데이터만 요청하면서 브라우저가 렌더링한 페이지에 서버의 응답으로 받은 데이터만 패칭해주면 된다.</p>
+<h2 id="😃-특징"><a href="#😃-특징" class="headerlink" title="😃 특징"></a>😃 특징</h2><h3 id="✈️-초기-로딩-속도"><a href="#✈️-초기-로딩-속도" class="headerlink" title="✈️ 초기 로딩 속도"></a>✈️ 초기 로딩 속도</h3><p>SSR은 클라이언트가 요청한 부분의 페이지만 렌더링해서 보내주면 되므로 초기 로딩 속도가 CSR에 비해서 빠른 반면, CSR은 HTML,JS, 모든 리소스를 한번에 로드하기 때문에 초기 로드 속도가 느리다.</p>
+<h3 id="❗️-서버-부하"><a href="#❗️-서버-부하" class="headerlink" title="❗️ 서버 부하"></a>❗️ 서버 부하</h3><p>SSR은 View가 바뀔 때마다 서버에 요청을 보내고 서버는 그 때마다 응답해줘야하므로 서버의 부하가 높고 UX 측면에서는 깜빡임 현상이 있는 단점이 있다. 반면, CSR은 데이터 요청이 있을 때만 서버에 요청을 하기 때문에 서버 부하가 적다.</p>
+<h3 id="📚-SEO"><a href="#📚-SEO" class="headerlink" title="📚 SEO"></a>📚 SEO</h3><p>SSR은 서버가 렌더링을 하고 완성된 페이지를 클라이언트에게 보내주는데, 그 안에는 SEO에 사용되는 meta 태그 등이 미리 정의 되어 있어 SEO 측면에서 유리하다. 반면 CSR은 초기에 비어있는 HTML 파일을 보내주고 JS를 다운로드하여 브라우저에서 렌더링이 완료되기 전까지는 빈 파일로 남아있기 때문에, SEO 측면에서 불리하다.</p>
+<h3 id="Next-js에서-SSR-CSR"><a href="#Next-js에서-SSR-CSR" class="headerlink" title="Next.js에서 SSR,CSR"></a>Next.js에서 SSR,CSR</h3><p>이번 과제에서 Next.js를 사용하면서 새롭게 배우게 된 사실을 정리해본다. Next.js는 기본적으로 SSR을 지원한다. SSR을 지원하는 방법으로는 2가지 방법이 있는데,</p>
+<p>첫번째, 클라이언트가 요청할 때마다 서버에서 렌더링을 해주는 진짜 SSR 방식</p>
+<p>두번째, 미리 렌더링을 끝내놓은 페이지를 클라이언트가 요청할 때마다 캐싱하여 보여주는 SSG 방식</p>
+<p>그리고 CSR까지 지원해준다.</p>
+<p>Next.js를 사용하다보니 SSR, CSR, SSG에 대한 이해가 더 잘되는 것 같아서 마무리로 적어보았다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/12/CS/SSR%EA%B3%BC-CSR%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/SSR%EA%B3%BC-CSR%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/11/CS/Next-js%EB%8A%94-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/Next-js%EB%8A%94-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                             aria-label=": Next.js는 왜 사용하나요?"
                         >
@@ -869,231 +1208,6 @@
                         <p>
                             <a
                                 href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 호이스팅에 대해 설명하라"
-                        >
-                            호이스팅에 대해 설명하라
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T14:24:56+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
-<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
-<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
-<blockquote>
-<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
-</blockquote>
-<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
-<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                            aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                        >
-                            클로저는 무엇이고 언제, 어떻게 사용하나요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T13:25:25+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📚-클로저란-무엇인가요"><a href="#📚-클로저란-무엇인가요" class="headerlink" title="📚 클로저란 무엇인가요?"></a>📚 클로저란 무엇인가요?</h1><p>클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.</p>
-<h1 id="❓-클로저는-왜-사용-하나요"><a href="#❓-클로저는-왜-사용-하나요" class="headerlink" title="❓ 클로저는 왜 사용 하나요?"></a>❓ 클로저는 왜 사용 하나요?</h1><p>클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.</p>
-<p>C++과 같은 객체지향 프로그래밍 언어와 달리 <strong>자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.</strong></p>
-<p>때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.</p>
-<h1 id="❓-클로저는-언제-어떻게-사용하나요"><a href="#❓-클로저는-언제-어떻게-사용하나요" class="headerlink" title="❓ 클로저는 언제, 어떻게 사용하나요?"></a>❓ 클로저는 언제, 어떻게 사용하나요?</h1><p>클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.</p>
-<ol>
-<li>함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.</li>
-<li>외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="❗️-주의점"><a href="#❗️-주의점" class="headerlink" title="❗️ 주의점"></a>❗️ 주의점</h1><p>클로저는 외부함수의 실행 컨텍스트가 제거되어도 내부함수가 외부함수의 변수를 기억하고 있는데 이는 추후에 메모리 누수가 발생할 수 있다.</p>
-<p>예를 들어 리액트에서 useEffect 함수를 사용하여 렌더링 이후에 이벤트를 등록하였을 때, 이를 다시 렌더링이 되었을 때, 기존 이벤트를 클린업 해주지 않는 다면 같은 역할을 하는 이벤트가 중복등록이 되고 이는 성능상 문제를 일으킬 수 있으므로 이러한 점을 주의해야한다.</p>
-<h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
-<p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
-<p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": 프로토타입이란 무엇인가요?"
-                        >
-                            프로토타입이란 무엇인가요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-04T14:05:09+09:00">
-	
-		    2023/01/04
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="프로토타입이란"><a href="#프로토타입이란" class="headerlink" title="프로토타입이란?"></a>프로토타입이란?</h1><p>자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.</p>
-<p>프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.</p>
-<h2 id="프로토타입을-왜-사용하나요"><a href="#프로토타입을-왜-사용하나요" class="headerlink" title="프로토타입을 왜 사용하나요?"></a>프로토타입을 왜 사용하나요?</h2><p>객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.</p>
-<h2 id="프로토타입이-어떻게-동작하나요"><a href="#프로토타입이-어떻게-동작하나요" class="headerlink" title="프로토타입이 어떻게 동작하나요?"></a>프로토타입이 어떻게 동작하나요?</h2><p>프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.</p>
-<p>__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.</p>
-<p><img src="/../../images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png" alt="prototype"></p>
-<ul>
-<li>생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능</li>
-<li>프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능</li>
-<li>생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능</li>
-</ul>
-<blockquote>
-<p>사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.</p>
-</blockquote>
-<h2 id="프로토타입-체인이란"><a href="#프로토타입-체인이란" class="headerlink" title="프로토타입 체인이란?"></a>프로토타입 체인이란?</h2><p>자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.</p>
-<p>이를 프로토타입 체인이라고 한다.</p>
-<p><img src="/../../images/prototype/prototypeChain.png" alt="프로토타입 체인"></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
