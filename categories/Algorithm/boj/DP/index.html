@@ -325,6 +325,101 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"
+                            aria-label=": boj-11055 가장 큰 증가 부분 수열(JavaScript)"
+                        >
+                            boj-11055 가장 큰 증가 부분 수열(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-18T23:06:38+09:00">
+	
+		    2023/02/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>수열 A가 주어졌을 때, 그 수열의 증가 부분 수열 중에서 합이 가장 큰 것을 구하는 프로그램을 작성하시오.</p>
+<p>예를 들어, 수열 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 인 경우에 합이 가장 큰 증가 부분 수열은 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 이고, 합은 113이다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
+<p>둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 수열 A의 합이 가장 큰 증가 부분 수열의 합을 출력한다.</p>
+<h3 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">1 100 2 50 60 3 5 6 7 8</span><br></pre></td></tr></table></figure>
+
+<h3 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">113</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">maxIncreasingSubArray</span>(<span class="params">A</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> n = A.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">DP</span> = [...A];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (A[i] &gt; A[j] &amp;&amp; <span class="variable constant_">DP</span>[i] &lt; <span class="variable constant_">DP</span>[j] + A[i]) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i] = <span class="variable constant_">DP</span>[j] + A[i];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">maxIncreasingSubArray</span>(A));</span><br></pre></td></tr></table></figure>
+
+<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><ol>
+<li><p>DP는 해당 인덱스까지 가장 긴 부분수열의 합을 나타낸다. 이를 계산하기 편하게 하기 위해 DP에 A 수열의 값을 spread 문법으로 복사해준다.</p>
+</li>
+<li><p>어짜피 DP[0]은 1로 확정이므로 i(인덱스)가 1부터 반복문을 순회한다.<br>이는 DP에 값을 저장하기 위한 반복문이다.</p>
+</li>
+<li><p>i 이전까지 수열 값과 A[i]값을 비교하여 A[i]가 A[j]보다 크고 DP[i] 값이 DP[j]+A[i] 보다 작으면 증가하는 부분 수열에 포함될 수 있다.</p>
+</li>
+</ol>
+<p>그렇기 때문에 해당 DP[i]값을 새로운 값으로 갱신해준다.</p>
+<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> A = [<span class="number">1</span>, <span class="number">100</span>, <span class="number">2</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-i-1-amp-amp-j-0-일-때"><a href="#1-i-1-amp-amp-j-0-일-때" class="headerlink" title="1. i = 1 &amp;&amp; j = 0 일 때"></a>1. <code>i = 1 &amp;&amp; j = 0</code> 일 때</h3><ul>
+<li>A[1] &#x3D; 100, A[0] &#x3D; 1이므로 A[i] &gt; A[j] 조건 만족한다</li>
+<li>DP[1] &lt; DP[0] + A[1] 만족하므로 DP[1] &#x3D; DP[0] + A[1]로 갱신</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span> = [<span class="number">1</span>, <span class="number">101</span>, <span class="number">2</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-i-x3D-2-이고"><a href="#2-i-x3D-2-이고" class="headerlink" title="2. i &#x3D; 2 이고"></a>2. i &#x3D; 2 이고</h3><h4 id="2-1-j-x3D-0-일-때"><a href="#2-1-j-x3D-0-일-때" class="headerlink" title="2.1. j &#x3D; 0 일 때"></a>2.1. j &#x3D; 0 일 때</h4><ul>
+<li>A[2]&#x3D;2, A[0] &#x3D; 1 이므로 A[i] &gt; A[j] 조건 만족한다.</li>
+<li>DP[2] &lt; DP[0] + A[2] 만족하므로 DP[2] &#x3D; DP[0] + A[2]로 갱신</li>
+</ul>
+<h4 id="2-2-j-x3D-1-일-때"><a href="#2-2-j-x3D-1-일-때" class="headerlink" title="2.2. j &#x3D; 1 일 때,"></a>2.2. j &#x3D; 1 일 때,</h4><ul>
+<li>A[2]&#x3D;2, A[1] &#x3D; 100 이므로 A[i] &gt; A[j] 조건 만족하지 못한다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span> = [<span class="number">1</span>, <span class="number">101</span>, <span class="number">3</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
+
+<p>즉, 0번째부터 해당 인덱스까지 수열의 두 수를 비교하고 DP에 저장된 값도 비교하여 둘다 만족하면 DP 값을 갱신하는 것이다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/"
                             aria-label=": boj-2225 합분해(JavaScript)"
                         >
