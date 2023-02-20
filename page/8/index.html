@@ -324,6 +324,123 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/07/React/React-Testing-Library/"
+                            aria-label=": React Testing Library"
+                        >
+                            React Testing Library
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-07T21:04:27+09:00">
+	
+		    2022/11/07
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-React-Testing-Library"><a href="#📌-React-Testing-Library" class="headerlink" title="📌 React Testing Library"></a>📌 React Testing Library</h1><p>리액트에서 TDD 방식의 개발을 하기 위해서 테스팅 라이브러리를 사용해보자.</p>
+<h2 id="🎯-목적"><a href="#🎯-목적" class="headerlink" title="🎯 목적"></a>🎯 목적</h2><h3 id="1-버그-캐치"><a href="#1-버그-캐치" class="headerlink" title="1. 버그 캐치"></a>1. 버그 캐치</h3><p>테스트를 통해 예상치 못한 여러가지 버그들을 사전에 확인하기 용이하다.</p>
+<h3 id="2-애플리케이션-신뢰도-향상"><a href="#2-애플리케이션-신뢰도-향상" class="headerlink" title="2. 애플리케이션 신뢰도 향상"></a>2. 애플리케이션 신뢰도 향상</h3><p>어떠한 근거로 이 애플리케이션이 제대로 동작하는지 근거를 뒷받침하고 이 근거에 대한 <strong>신뢰도를 높일 수 있다.</strong></p>
+<h3 id="3-질문-및-답변-시간-축소"><a href="#3-질문-및-답변-시간-축소" class="headerlink" title="3. 질문 및 답변 시간 축소"></a>3. 질문 및 답변 시간 축소</h3><p>누군가 어떤 컴포넌트가 어떻게 동작하는지 질문했을 때 그에대한 답변으로 이 테스트를 보여주기만 하면된다. 그럼으로 <strong>시간을 절약하고 유지보수성을 높일 수 있다.</strong></p>
+<h3 id="4-문서-역할"><a href="#4-문서-역할" class="headerlink" title="4. 문서 역할"></a>4. 문서 역할</h3><p>테스트라는 문서를 제공함으로서 2,3번의 장점을 가능하도록 한다.</p>
+<h2 id="💼-사용방법"><a href="#💼-사용방법" class="headerlink" title="💼 사용방법"></a>💼 사용방법</h2><p>우선 해당 라이브러리를 설치해준다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @testing-library/react</span><br><span class="line"></span><br><span class="line">npm install --save-dev @testing-library/dom</span><br><span class="line"></span><br><span class="line">npm install --save-dev @testing-library/user-event</span><br></pre></td></tr></table></figure>
+
+<p><strong>리액트 테스팅 라이브리러</strong>와 <strong>DOM 테스트 라이브러리, 사용자 행동 테스트 라이브러리</strong>를 설치하여 테스트 개발을 해보자.</p>
+<h3 id="🦖-Component-테스트"><a href="#🦖-Component-테스트" class="headerlink" title="🦖 Component 테스트"></a>🦖 Component 테스트</h3><h4 id="✏️-테스트-코드-작성하는-방법"><a href="#✏️-테스트-코드-작성하는-방법" class="headerlink" title="✏️ 테스트 코드 작성하는 방법"></a>✏️ 테스트 코드 작성하는 방법</h4><ol>
+<li><p>테스트가 필요한 컴포넌트 렌더링</p>
+</li>
+<li><p>컴포넌트의 요소 탐색</p>
+</li>
+<li><p>요소와의 상호작용</p>
+</li>
+<li><p>어설션 테스트 결과와 기대 값이 일치하는 지 확인</p>
+</li>
+</ol>
+<p>우선 컴포넌트를 생성해주자.</p>
+<h3 id="📌-Tip-컴포넌트-생성"><a href="#📌-Tip-컴포넌트-생성" class="headerlink" title="📌 Tip 컴포넌트 생성"></a><strong>📌 Tip 컴포넌트 생성</strong></h3><p>컴포넌트를 쉽게 생성하기 위해 <strong>yamoo9님이 제공해준 Tool</strong>을 사용해보도록하자.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx degit yamoo9/create-react-component create-react-component</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;scripts&quot;</span> <span class="punctuation">:</span></span><br><span class="line">    ...<span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node create-react-component create&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node create-react-component delete&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm run rc -- 컴포넌트_이름 // 컴포넌트 생성</span><br><span class="line">npm run rd -- 컴포넌트_이름 // 컴포넌트 제거</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ESLint 에서 테스팅 라이브러리를 사용하게되면 오류를 띄워주는데 이에 대한 Lint 경고를 꺼두자.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;eslintConfig&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span>...<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testing-library/no-debugging-utils&quot;</span><span class="punctuation">:</span> <span class="string">&quot;off&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h1 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h1><h2 id="1-컴포넌트가-렌더링-확인"><a href="#1-컴포넌트가-렌더링-확인" class="headerlink" title="1. 컴포넌트가 렌더링 확인"></a>1. 컴포넌트가 렌더링 확인</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.jsx</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;on ? onText : offText&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; render, screen &#125; <span class="keyword">from</span> <span class="string">&quot;@testing-library/react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./ToggleButton&quot;</span>;</span><br><span class="line"></span><br><span class="line">describe.<span class="title function_">only</span>(<span class="string">&quot;ToggleButton Test Start!&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;컴포넌트가 정상적으로 렌더링 되었습니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&quot;1&quot;</span> <span class="attr">offText</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> offTextElement = screen.<span class="title function_">getByText</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> onTextElement = screen.<span class="title function_">queryByText</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(offTextElement).<span class="title function_">toBeInTheDocument</span>();</span><br><span class="line">    <span class="title function_">expect</span>(onTextElement).<span class="property">not</span>.<span class="title function_">toBeInTheDocument</span>();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>getByText()</code> : 가상으로 그려진 문서에 존재하는 것만 가져올 수 있다. 만약 존재 하지 않는 다면 오류를 발생시킨다.</li>
+<li><code>queryByText()</code> : 존재하지 않으면 오류를 발생시키지 않고 <red>null 값으로 가져온다.</red></li>
+</ul>
+<h2 id="2-활성화-상태-여부에-따라-텍스트-표시"><a href="#2-활성화-상태-여부에-따라-텍스트-표시" class="headerlink" title="2. 활성화 상태 여부에 따라 텍스트 표시"></a>2. 활성화 상태 여부에 따라 텍스트 표시</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.jsx</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span>&gt;</span>&#123;on ? onText : offText&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.jsx</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&quot;ToggleButton 컴포넌트&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;활성 상태 여부에 따라 활성(ON)/비활성(OFF) 텍스트가 표시됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> onText = <span class="string">&quot;ON&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> offText = <span class="string">&quot;OFF&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&#123;onText&#125;</span> <span class="attr">offText</span>=<span class="string">&#123;offText&#125;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> elements = screen.<span class="title function_">queryAllByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> firstElement = elements[<span class="number">0</span>];</span><br><span class="line">    <span class="title function_">expect</span>(firstElement).<span class="title function_">toHaveTextContent</span>(offText);</span><br><span class="line"></span><br><span class="line">    screen.<span class="title function_">debug</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">cleanup</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&#123;onText&#125;</span> <span class="attr">offText</span>=<span class="string">&#123;offText&#125;</span> <span class="attr">on</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    elements = screen.<span class="title function_">queryAllByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    firstElement = elements[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    screen.<span class="title function_">debug</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(firstElement).<span class="title function_">toHaveTextContent</span>(onText);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>만약 on 일때의 text와 off일 때의 text를 찾고 싶다면 <strong><code>queryAllText()</code></strong> 를 사용해준다,</li>
+<li><strong><code>cleanup()</code>을 해줘야지만 firstElement를 확인할 때, 앞에 그려진 것을 지우고 새로 그려진 것을 비교해줄 수 있다.</strong></li>
+</ul>
+<h2 id="3-onToggle-속성-prop-에-연결된-함수-실행-확인-amp-활성-상태-컴포넌트는-ToggleButton-on-클래스-이름-포함-확인"><a href="#3-onToggle-속성-prop-에-연결된-함수-실행-확인-amp-활성-상태-컴포넌트는-ToggleButton-on-클래스-이름-포함-확인" class="headerlink" title="3. onToggle 속성(prop)에 연결된 함수 실행 확인 &amp; 활성 상태 컴포넌트는 ToggleButton--on 클래스 이름 포함 확인"></a>3. onToggle 속성(prop)에 연결된 함수 실행 확인 &amp; 활성 상태 컴포넌트는 <code>ToggleButton--on</code> 클래스 이름 포함 확인</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on, onToggle &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;</span>`<span class="attr">ToggleButton</span> $&#123;<span class="attr">on</span> ? &quot;<span class="attr">ToggleButton--on</span>&quot; <span class="attr">:</span> &quot;&quot;&#125;`<span class="attr">.trim</span>()&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onClick</span>=<span class="string">&#123;onToggle&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;on ? onText : offText&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.js</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&quot;ToggleButton 컴포넌트&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> expected = <span class="string">&quot;triggering toggle event&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> received = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">          received = expected;</span></span><br><span class="line"><span class="language-xml">        &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      /&gt;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(received).<span class="property">not</span>.<span class="title function_">toBe</span>(expected);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> element = screen.<span class="title function_">queryByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">    fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(received).<span class="title function_">toBe</span>(expected);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">test</span>(<span class="string">`활성 상태의 컴포넌트는 &#x27;ToggleButton--on&#x27; 클래스 이름을 포함한다.`</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> expected = <span class="string">&quot;ToggleButton--on&quot;</span>;</span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">on</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    <span class="title function_">expect</span>(element).<span class="title function_">toHaveClass</span>(expected);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>fireEvent()</code> : 이벤트를 발생시켜주는 메서드이다.</p>
+</li>
+<li><p><code>queryByRole()</code> : 해당 요소의 역할을 확인하는데 사용된다.</p>
+<p><strong>ex) button 태그에 type을 “button”으로 명시적으로 작성하였는지…</strong></p>
+</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>오늘 수업에서 상태를 가지지 않는 컴포넌트의 다양한 테스트 방법에 대해 실습을 진행하였다. 리액트를 TDD 방식으로 개발을 진행하게 된다면 앞서 말한 애플리케이션의 신뢰도 향상할 수 있고 테스트 문서를 생성하여 유지보수를 용이하게 할 수 있다는 생각이 들었다.</p>
+<p>아직 jest에 익숙하지 않아 낯설고 어렵지만, 우테코에서도 jest를 사용하고 있고 앞으로 자주 사용해보면서 테스트 주도 개발에 대해 몸을 익히도록 해야겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/07/React/React-Testing-Library/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/07/git/degit-%EC%9D%B4%EB%9E%80/"
                             aria-label=": degit 이란?"
                         >
@@ -1116,133 +1233,6 @@
                         <p>
                             <a
                                 href="/2022/11/04/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%91%8F%F0%9F%8F%BB-3-6-9-%EB%B0%95%EC%88%98-%ED%9A%9F%EC%88%98-%EC%84%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/03/git/%EC%98%AC%EB%B0%94%EB%A5%B8-%EB%A6%AC%EB%93%9C%EB%AF%B8-%EC%9E%91%EC%84%B1%EB%B2%95/"
-                            aria-label=": 올바른 리드미 작성법"
-                        >
-                            올바른 리드미 작성법
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-03T19:55:08+09:00">
-	
-		    2022/11/03
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-리드미란"><a href="#📌-리드미란" class="headerlink" title="📌 리드미란?"></a>📌 리드미란?</h1><p>리드미란, 다른 사람에게 나의 프로젝트가 얼마나 유용한지를 설명하기 위한 소개글이다.</p>
-<ul>
-<li>이 프로젝트를 가지고 무엇을 할 수 있는지?</li>
-<li>프로젝트를 어떻게 사용할 수 있는지?</li>
-</ul>
-<p>위 두가지를 목적으로 작성하는 것이 바로 리드미이다.</p>
-<h2 id="💡-좋은-리드미-작성법"><a href="#💡-좋은-리드미-작성법" class="headerlink" title="💡 좋은 리드미 작성법"></a>💡 좋은 리드미 작성법</h2><p>기본만 잘 따라도 좋은 리드미처럼 보일 수 있다.</p>
-<ol>
-<li>프로젝트가 하는 일</li>
-<li>프로젝트가 유용한 이유</li>
-<li>프로젝트 시작하는 방법</li>
-<li>프로젝트에 대한 도움을 받을 수 있는 곳</li>
-<li>프로젝트를 유지하고 기여하는 사람</li>
-</ol>
-<p>위 5가지가 github에서 언급하는 리드미 작성에 포함되어야 할 정보이다.</p>
-<h2 id="💼-오늘-할-일"><a href="#💼-오늘-할-일" class="headerlink" title="💼 오늘 할 일"></a>💼 오늘 할 일</h2><p>[x] 리드미 작성 기준에 맞게 리드미 작성하기</p>
-<p><img src="/../images/readme/bad.png" alt="bad-readme-case"></p>
-<p>위 예시는 내가 과제 제출을 위해 처음에 적었던 리드미이다. 이 리드미를 좋은 리드미 작성법에 맞게 개선해보자.</p>
-<h3 id="1-프로젝트가-하는-일"><a href="#1-프로젝트가-하는-일" class="headerlink" title="1. 프로젝트가 하는 일"></a>1. 프로젝트가 하는 일</h3><p>이 프로젝트는 사용자가 다양한 상태의 업로드 버튼 UI가 필요할 때, 재사용 가능한 컴포넌트를 제공하는 프로젝트이다.</p>
-<h3 id="2-프로젝트가-유용한-이유"><a href="#2-프로젝트가-유용한-이유" class="headerlink" title="2. 프로젝트가 유용한 이유"></a>2. 프로젝트가 유용한 이유</h3><ul>
-<li>재사용이 가능한 업로드 버튼 UI를 사용할 수 있습니다.</li>
-<li>기본 제공되는 버튼 UI가 훌륭합니다.</li>
-</ul>
-<h3 id="3-프로젝트-시작하는-방법"><a href="#3-프로젝트-시작하는-방법" class="headerlink" title="3. 프로젝트 시작하는 방법"></a>3. 프로젝트 시작하는 방법</h3><h4 id="UploadButton"><a href="#UploadButton" class="headerlink" title="UploadButton"></a>UploadButton</h4><p>기본적인 사용법은 다음과 같습니다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">UploadButton</span> type=<span class="string">&quot;idle&quot;</span>&gt;업로드&lt;/<span class="title class_">UploadButton</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="타입-설정"><a href="#타입-설정" class="headerlink" title="타입 설정"></a>타입 설정</h4><p>아래의 타입을 설정하면 다음과 같은 모양의 버튼 UI가 생성됩니다.</p>
-<table>
-<thead>
-<tr>
-<th>type</th>
-<th>shape</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>idle</td>
-<td><img src="https://user-images.githubusercontent.com/98298711/199712421-9706a07e-1ccf-4791-9676-d38bc62de782.png" alt="status=idle"></td>
-</tr>
-<tr>
-<td>pending</td>
-<td><img src="https://user-images.githubusercontent.com/98298711/199712569-b7c6ce4e-2ac3-49cf-b415-93c4e8c64135.png" alt="status=pending"></td>
-</tr>
-<tr>
-<td>resolved</td>
-<td><img src="https://user-images.githubusercontent.com/98298711/199712616-84632587-61aa-4bf3-9c0c-1b526a86211e.png" alt="status=resolved"></td>
-</tr>
-<tr>
-<td>rejected</td>
-<td><img src="https://user-images.githubusercontent.com/98298711/199712758-cc85ccce-2b65-4428-9b3d-964e1a5c2d59.png" alt="status=rejected"></td>
-</tr>
-<tr>
-<td>disabled</td>
-<td><img src="https://user-images.githubusercontent.com/98298711/199712796-8fd706b9-292f-483c-9fcf-e3980427cf74.png" alt="status=disabled"></td>
-</tr>
-</tbody></table>
-<h3 id="4-프로젝트에-대해-도움-받을-수-있는-곳"><a href="#4-프로젝트에-대해-도움-받을-수-있는-곳" class="headerlink" title="4. 프로젝트에 대해 도움 받을 수 있는 곳"></a>4. 프로젝트에 대해 도움 받을 수 있는 곳</h3><p>만약 프로젝트에 대해 도움이 필요하시다면 아래 이메일로 연락을 주세요!</p>
-<p><a href="mailto:&#107;&#108;&#106;&#57;&#x39;&#51;&#x39;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;">&#107;&#108;&#106;&#57;&#x39;&#51;&#x39;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a></p>
-<h3 id="5-프로젝트를-유지하고-기여하는-사람"><a href="#5-프로젝트를-유지하고-기여하는-사람" class="headerlink" title="5. 프로젝트를 유지하고 기여하는 사람"></a>5. 프로젝트를 유지하고 기여하는 사람</h3><table>
-<thead>
-<tr>
-<th><a target="_blank" rel="noopener" href="https://github.com/loco9939">https://github.com/loco9939</a></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="https://user-images.githubusercontent.com/98298711/199714598-ab7c50e3-9f03-48f8-b9bc-73edb5ba08d5.jpeg" alt="gitprofile" style="width:200px;"/></td>
-</tr>
-</tbody></table>
-<h2 id="⭐️-결과"><a href="#⭐️-결과" class="headerlink" title="⭐️ 결과"></a>⭐️ 결과</h2><p><a target="_blank" rel="noopener" href="https://github.com/loco9939/zero-base/tree/icon-upload-button/complete">https://github.com/loco9939/zero-base/tree/icon-upload-button/complete</a></p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>리드미란 처음 내 프로젝트를 다른 사람에게 알리는 첫 게시물이므로 사람들이 내 프로젝트를 어떻게 하면 편리하게 사용할 수 있을지, 또 사용하고 싶도록 만들지를 생각하면서 작성해야하는 것을 알게되었다.</p>
-<p>이것을 정말 쉽지 않다. 게다가 내 프로젝트에 대해서 정리하여 남에게 설명하는 연습이 잘 되어있지 않아서 낯설고 힘들었지만 아직은 처음이니깐 앞으로 프로젝트를 하게된다면 오늘 배운 점을 고려하면서 작성하도록 노력할 것이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/03/git/%EC%98%AC%EB%B0%94%EB%A5%B8-%EB%A6%AC%EB%93%9C%EB%AF%B8-%EC%9E%91%EC%84%B1%EB%B2%95/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
