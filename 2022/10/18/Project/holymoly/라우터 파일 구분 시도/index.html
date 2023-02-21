@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/10/18/project/holymoly/라우터 파일 구분 시도/"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>라우터 파일 구분 시도 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"1. 라우터 파일 구분을 해주자.왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가?\n라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고, path에 맞는 컴포넌트를 반환해주는 역할을 한다.\n이 역할을 하는 라우터를 App 컴포넌트의 프로퍼티 메서드로 종속 시키는 것이 맞는가?\n내 생각에는 데이터가 바뀔 때 화면 렌더링에 영향을 주는 데이터를 상태로 관리 해야하므로, path가 바뀔 때, 컴포넌트가 바뀌니 path든 component든 상태로 가져야 한다.\n즉, App도 컴포넌트이므로 그려지는데 필요한 정보를 담고 있기만 하면 된다.\n\n라우터에서 렌더링을 호출하면 App의 domStr이 새로 그려지게되는데 이때, Page 또는 Path를 확인하여 컴포넌트를 그려줘야한다.\n그런데 라우터함수가 렌더만 해주는데 상태를 변경해주지 않고 어떻게 그려주지?⇒ 라우터 함수가 Page를 반환하고 그 페이지를 App의 domStr에서 받아서 그려주기로 해보자.\n위의 것이 될까? App에서 처음 호출될 때는 return 값으로 Page를 넘겨줄 수 있겠지\n하지만 이벤트 발생하거나 서버에 요청으로 라우터 변경되었을 때, router가 호출되는데, 그 때는 반환만 해주고 렌더링을 해주고 있지 않아서 변경되지 않을 것이다.\n그렇다고 router에 렌더링을 넣어준다고 하면 App의 domStr을 호출하여 새로 그려줄텐데… 무엇을 기준으로 그려주는 것인가? router에서 받은 path를 기준으로 그 path에 맞는 컴포넌트로 그려주는데 이것을 App에서 어떻게 알 수 있나?\n\n\n\n결론\n이를 해결하기 위해서는 기존의 App 컴포넌트에서 setState로 render를 시켜주는 구조를 바꾸고 App에서 render를 해주고 router에서도 render를 해주는 구조로 바꿔줘야한다.\n소감오늘은 라우터를 파일로 분리하려는 시도와 리팩터링을 하면서 공부를 했다.\n내일은 GCP로 배포하는 법을 공부해서 배포를 해보려고 한다.\n내일 배포와 발표준비를 마치면 이제 자바스크립트 수업도 모두 끝이난다. 2달 반 정도의 시간이 참 빨리도 지나간 것 같다.\n역시 자바스크립트가 동료들과 페어로 하는 수업이 많아서 더 재밌게 느껴진 것 같다.\n앞으로 다가올 리액트 수업 때도 열심히 듣기 위해 만반의 준비를 해야겠다.\n","dateCreated":"2022-10-18T22:38:09+09:00","dateModified":"2022-11-18T17:20:51+09:00","datePublished":"2022-10-18T22:38:09+09:00","description":"","headline":"라우터 파일 구분 시도","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"}</script>
+    <meta name="description" content="1. 라우터 파일 구분을 해주자.왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가? 라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고,">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="라우터 파일 구분 시도">
+<meta property="og:url" content="https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="1. 라우터 파일 구분을 해주자.왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가? 라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고,">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-10-18T13:38:09.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:20:51.550Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            라우터 파일 구분 시도
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-10-18T22:38:09+09:00">
+	
+		    2022/10/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="1-라우터-파일-구분을-해주자"><a href="#1-라우터-파일-구분을-해주자" class="headerlink" title="1. 라우터 파일 구분을 해주자."></a>1. 라우터 파일 구분을 해주자.</h1><h2 id="왜-라우터를-모듈로-빼서-관리를-해줘야-하는가"><a href="#왜-라우터를-모듈로-빼서-관리를-해줘야-하는가" class="headerlink" title="왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?"></a>왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?</h2><p>App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가?</p>
+<p>라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고, path에 맞는 컴포넌트를 반환해주는 역할을 한다.</p>
+<p><strong>이 역할을 하는 라우터를 App 컴포넌트의 프로퍼티 메서드로 종속 시키는 것이 맞는가?</strong></p>
+<p>내 생각에는 데이터가 바뀔 때 화면 렌더링에 영향을 주는 데이터를 상태로 관리 해야하므로, path가 바뀔 때, 컴포넌트가 바뀌니 path든 component든 상태로 가져야 한다.</p>
+<p><strong>즉, App도 컴포넌트이므로 그려지는데 필요한 정보를 담고 있기만 하면 된다.</strong></p>
+<ul>
+<li>라우터에서 렌더링을 호출하면 App의 domStr이 새로 그려지게되는데 이때, Page 또는 Path를 확인하여 컴포넌트를 그려줘야한다.</li>
+<li>그런데 라우터함수가 렌더만 해주는데 상태를 변경해주지 않고 어떻게 그려주지?<br>⇒ 라우터 함수가 Page를 반환하고 그 페이지를 App의 domStr에서 받아서 그려주기로 해보자.<ul>
+<li>위의 것이 될까? App에서 처음 호출될 때는 return 값으로 Page를 넘겨줄 수 있겠지</li>
+<li>하지만 이벤트 발생하거나 서버에 요청으로 라우터 변경되었을 때, router가 호출되는데, 그 때는 반환만 해주고 렌더링을 해주고 있지 않아서 변경되지 않을 것이다.</li>
+<li>그렇다고 router에 렌더링을 넣어준다고 하면 App의 domStr을 호출하여 새로 그려줄텐데… 무엇을 기준으로 그려주는 것인가? router에서 받은 path를 기준으로 그 path에 맞는 컴포넌트로 그려주는데 이것을 App에서 어떻게 알 수 있나?</li>
+</ul>
+</li>
+</ul>
+<p><strong>결론</strong></p>
+<p>이를 해결하기 위해서는 기존의 App 컴포넌트에서 setState로 render를 시켜주는 구조를 바꾸고 App에서 render를 해주고 router에서도 render를 해주는 구조로 바꿔줘야한다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘은 라우터를 파일로 분리하려는 시도와 리팩터링을 하면서 공부를 했다.</p>
+<p>내일은 GCP로 배포하는 법을 공부해서 배포를 해보려고 한다.</p>
+<p>내일 배포와 발표준비를 마치면 이제 자바스크립트 수업도 모두 끝이난다. 2달 반 정도의 시간이 참 빨리도 지나간 것 같다.</p>
+<p>역시 자바스크립트가 동료들과 페어로 하는 수업이 많아서 더 재밌게 느껴진 것 같다.</p>
+<p>앞으로 다가올 리액트 수업 때도 열심히 듣기 위해 만반의 준비를 해야겠다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/"
+                    data-tooltip="Software Development Life Cycle (SDLC)와 협업 모델"
+                    aria-label="이전: Software Development Life Cycle (SDLC)와 협업 모델"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"
+                    data-tooltip="라우터 구현"
+                    aria-label="다음: 라우터 구현"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/"
+                    data-tooltip="Software Development Life Cycle (SDLC)와 협업 모델"
+                    aria-label="이전: Software Development Life Cycle (SDLC)와 협업 모델"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"
+                    data-tooltip="라우터 구현"
+                    aria-label="다음: 라우터 구현"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

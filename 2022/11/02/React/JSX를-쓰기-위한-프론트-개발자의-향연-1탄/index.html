@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/11/02/react/jsx를-쓰기-위한-프론트-개발자의-향연-1탄/"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>JSX를 쓰기 위한 프론트 개발자의 향연 1탄 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 JSX가 뭐길래?JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다.\n123456const name = &quot;loco&quot;;const element = &lt;h1&gt;안녕하세요~! &#123;name&#125;&lt;/h1&gt;;// rendered&lt;h1&gt;안녕하세요~! loco&lt;/h1&gt;;\n\n하지만 우리는 이렇게 편리한 JSX를 바로 사용할 수 없다. 왜냐하면 브라우저는 HTML, CSS, Javascript 파일만 읽을 수 있으므로 JSX 문법은 읽을 수 없다.\n하지만 이렇게 편리한데 사용하고 싶으니 babel이라는 컴파일러를 사용한다.\n🌈 babel이 뭐길래?Babel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.\n\n구문 변환\n대상 환경에 누락된 폴리필 기능\n소스 코드 변환\n\nbabel을 사용하면 최신 문법으로 작성한 코드를 원하는 브라우저 환경에 잘 동작하도록 알아서 코드를 변환한 새로운 파일을 생성해준다.\n또한, 애플리케이션이 방대해짐에 따라 한곳에서 파일을 관리하기가 어려워 모듈로써 파일을 구분하기 시작했다.\n그렇게 파일을 구분을 하긴 했는데 그 많은 파일을 선후 관계를 따져가면서 HTML 파일에 등록시키고 최적화 하는 작업은 매우 번거로운 작업이다.\n이러한 배경이 있기에 webpack이라는 모듈 번들러가 등장하였다.\n🌏 webpack이 뭐길래?앞서 설명했듯이 webpack은 모듈 번들러이다. 웹 브라우저 환경은 CBD, Module 프로그래밍에 적합하지 않다.\n왜냐하면 브라우저 호환성때문이다. 모던 브라우저가 모듈을 사용할 수 있긴 하지만 모든 브라우저에서 가능한 것은 아니다. 또한, 브라우저는 애플리케이션을 build하는 환경을 기본적으로 제공하지 않기에 애플리케이션을 build하기 위한 환경을 개발자가 직접 설정해줘야 한다.\n☄️ webpack을 사용하는 이유1. 모듈 번들링애플리케이션이 방대해짐에 따라 복잡성이 증가하여 코드가 혼란스러워지고 뒤섞이게 되어 개발이 어려워지는 문제가 발생하였다.\n이를 해결하기 위해 코드 베이스를 모듈로 관리하고 번들링 해줘야한다.\n2. 트리 쉐이킹(Tree Shaking)애플리케이션에서 사용되지 않는 코드는 최적화 과정을 통해 제거되어 꼭 필요한 코드만 번들에 포함되도록 한다.\n3. 코드 분할 (Code Spliting)번들링으로 한곳에 묶기는 하였는데 이게 또 너무 크다보니 로드시간이 길어지는 문제가 발생하였다. 이를 해결하기 위해 코드 분할을 하여 런타임 중에 나눠진 파일들을 동적으로 불러오도록 하였다.\n4. 코드 최적화와 소스맵(Source Map)주석, 공백, 긴 함수명 등을 모두 축소 또는 제거하여 파일의 크기를 크게 줄일 수 있다. 이렇게 최적화된 코드는 사람이 읽기 힘들기에 디버깅하기가 어렵다.\n이를 위해 코드를 추적하는 소스맵(Source Map)을 사용하여 버그를 추적하기가 용이하게 되었다.\n결과적으로 편리한 JSX를 사용하기 위해서는 babel이라는 컴파일러로 변환은 하여 브라우저가 읽을 수 있는 파일로 변환해주어야 하며, 브라우저는 애플리케이션을 build 해주는 환경을 기본 제공해주지 않고 수많은 모듈 파일들을 번들링해주는 도구로서 webpack을 사용한다.\n🏓 소감수업을 하면서 개발을 하기 위한 Tool이 왜 이렇게나 많은지, 하나를 배우는 데에도 시간이 오래걸려 쉽게 접근하지 못한 부분이었다.\n그동안 CRA(Create React App)이라는 명령어를 통해 리액트를 쉽게 사용할 수 있는데, 이는 기본적인 설정을 지원하고 프로젝트에 맞게 설정을 변경할 수가 없다. 그렇기 때문에 config 파일들의 설정이 필요하다는 것을 알게되었다.\n앞으로 더 훌륭한 개발자가 되기 위해서는 기본 설정에만 의존하지 않고 내가 진행하려는 목적에 맞는 세팅을 알아둘 필요가 있어 열심히 배워보려고한다.\n","dateCreated":"2022-11-02T18:42:35+09:00","dateModified":"2022-11-10T21:38:48+09:00","datePublished":"2022-11-02T18:42:35+09:00","description":"","headline":"JSX를 쓰기 위한 프론트 개발자의 향연 1탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"}</script>
+    <meta name="description" content="📌 JSX가 뭐길래?JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다. 123456const name &#x3D; &quot;loco&quot;;const element &#x3D; &lt;h1&gt;안녕하세요~! &amp;#123;name&amp;#125;&lt;&#x2F;h1&gt;;&#x2F;&#x2F; rendered&lt;h1&gt;안녕하세">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="JSX를 쓰기 위한 프론트 개발자의 향연 1탄">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 JSX가 뭐길래?JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다. 123456const name &#x3D; &quot;loco&quot;;const element &#x3D; &lt;h1&gt;안녕하세요~! &amp;#123;name&amp;#125;&lt;&#x2F;h1&gt;;&#x2F;&#x2F; rendered&lt;h1&gt;안녕하세">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-02T09:42:35.000Z">
+<meta property="article:modified_time" content="2022-11-10T12:38:48.287Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            JSX를 쓰기 위한 프론트 개발자의 향연 1탄
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-02T18:42:35+09:00">
+	
+		    2022/11/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-JSX가-뭐길래"><a href="#📌-JSX가-뭐길래" class="headerlink" title="📌 JSX가 뭐길래?"></a>📌 JSX가 뭐길래?</h1><p>JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&quot;loco&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>안녕하세요~! &#123;name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// rendered</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>안녕하세요~! loco<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>하지만 우리는 이렇게 편리한 JSX를 바로 <red>사용할 수 없다.</red> 왜냐하면 브라우저는 HTML, CSS, Javascript 파일만 읽을 수 있으므로 JSX 문법은 읽을 수 없다.</p>
+<p>하지만 이렇게 편리한데 사용하고 싶으니 <bold>babel이라는 컴파일러를 사용한다.</bold></p>
+<h1 id="🌈-babel이-뭐길래"><a href="#🌈-babel이-뭐길래" class="headerlink" title="🌈 babel이 뭐길래?"></a>🌈 babel이 뭐길래?</h1><p>Babel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.</p>
+<ul>
+<li>구문 변환</li>
+<li>대상 환경에 누락된 폴리필 기능</li>
+<li>소스 코드 변환</li>
+</ul>
+<p>babel을 사용하면 최신 문법으로 작성한 코드를 원하는 브라우저 환경에 잘 동작하도록 알아서 코드를 변환한 새로운 파일을 생성해준다.</p>
+<p>또한, 애플리케이션이 방대해짐에 따라 한곳에서 파일을 관리하기가 어려워 모듈로써 파일을 구분하기 시작했다.</p>
+<p>그렇게 파일을 구분을 하긴 했는데 그 많은 파일을 선후 관계를 따져가면서 HTML 파일에 등록시키고 최적화 하는 작업은 <red>매우 번거로운 작업이다.</red></p>
+<p>이러한 배경이 있기에 <bold>webpack이라는 모듈 번들러가 등장하였다.</bold></p>
+<h1 id="🌏-webpack이-뭐길래"><a href="#🌏-webpack이-뭐길래" class="headerlink" title="🌏 webpack이 뭐길래?"></a>🌏 webpack이 뭐길래?</h1><p>앞서 설명했듯이 webpack은 모듈 번들러이다. 웹 브라우저 환경은 CBD, Module 프로그래밍에 적합하지 않다.</p>
+<p>왜냐하면 브라우저 호환성때문이다. 모던 브라우저가 모듈을 사용할 수 있긴 하지만 <red>모든 브라우저에서 가능한 것은 아니다.</red> 또한, 브라우저는 애플리케이션을 <red>build하는 환경을 기본적으로 제공하지 않기에</red> 애플리케이션을 build하기 위한 환경을 개발자가 직접 설정해줘야 한다.</p>
+<h2 id="☄️-webpack을-사용하는-이유"><a href="#☄️-webpack을-사용하는-이유" class="headerlink" title="☄️ webpack을 사용하는 이유"></a>☄️ webpack을 사용하는 이유</h2><h3 id="1-모듈-번들링"><a href="#1-모듈-번들링" class="headerlink" title="1. 모듈 번들링"></a>1. 모듈 번들링</h3><p>애플리케이션이 방대해짐에 따라 복잡성이 증가하여 코드가 혼란스러워지고 뒤섞이게 되어 개발이 어려워지는 문제가 발생하였다.</p>
+<p>이를 해결하기 위해 코드 베이스를 모듈로 관리하고 번들링 해줘야한다.</p>
+<h3 id="2-트리-쉐이킹-Tree-Shaking"><a href="#2-트리-쉐이킹-Tree-Shaking" class="headerlink" title="2. 트리 쉐이킹(Tree Shaking)"></a>2. 트리 쉐이킹(Tree Shaking)</h3><p>애플리케이션에서 사용되지 않는 코드는 최적화 과정을 통해 제거되어 꼭 필요한 코드만 번들에 포함되도록 한다.</p>
+<h3 id="3-코드-분할-Code-Spliting"><a href="#3-코드-분할-Code-Spliting" class="headerlink" title="3. 코드 분할 (Code Spliting)"></a>3. 코드 분할 (Code Spliting)</h3><p>번들링으로 한곳에 묶기는 하였는데 이게 또 너무 크다보니 <red>로드시간이 길어지는 문제가 발생하였다.</red> 이를 해결하기 위해 코드 분할을 하여 런타임 중에 나눠진 파일들을 동적으로 불러오도록 하였다.</p>
+<h3 id="4-코드-최적화와-소스맵-Source-Map"><a href="#4-코드-최적화와-소스맵-Source-Map" class="headerlink" title="4. 코드 최적화와 소스맵(Source Map)"></a>4. 코드 최적화와 소스맵(Source Map)</h3><p>주석, 공백, 긴 함수명 등을 모두 축소 또는 제거하여 파일의 크기를 크게 줄일 수 있다. 이렇게 최적화된 코드는 사람이 읽기 힘들기에 디버깅하기가 어렵다.</p>
+<p>이를 위해 코드를 추적하는 <bold>소스맵(Source Map)을 사용하여 버그를 추적하기가 용이하게 되었다.</bold></p>
+<p>결과적으로 편리한 JSX를 사용하기 위해서는 babel이라는 컴파일러로 변환은 하여 브라우저가 읽을 수 있는 파일로 변환해주어야 하며, 브라우저는 애플리케이션을 build 해주는 환경을 기본 제공해주지 않고 수많은 모듈 파일들을 번들링해주는 도구로서 webpack을 사용한다.</p>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>수업을 하면서 개발을 하기 위한 Tool이 왜 이렇게나 많은지, 하나를 배우는 데에도 시간이 오래걸려 쉽게 접근하지 못한 부분이었다.</p>
+<p>그동안 CRA(Create React App)이라는 명령어를 통해 리액트를 쉽게 사용할 수 있는데, 이는 기본적인 설정을 지원하고 프로젝트에 맞게 설정을 변경할 수가 없다. 그렇기 때문에 config 파일들의 설정이 필요하다는 것을 알게되었다.</p>
+<p>앞으로 더 훌륭한 개발자가 되기 위해서는 기본 설정에만 의존하지 않고 내가 진행하려는 목적에 맞는 세팅을 알아둘 필요가 있어 열심히 배워보려고한다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"
+                    data-tooltip="boj-1157 단어공부"
+                    aria-label="이전: boj-1157 단어공부"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
+                    data-tooltip="React에서 Upload Button Component 만들기"
+                    aria-label="다음: React에서 Upload Button Component 만들기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"
+                    data-tooltip="boj-1157 단어공부"
+                    aria-label="이전: boj-1157 단어공부"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
+                    data-tooltip="React에서 Upload Button Component 만들기"
+                    aria-label="다음: React에서 Upload Button Component 만들기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/02/React/JSX%EB%A5%BC-%EC%93%B0%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%A0%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%96%A5%EC%97%B0-1%ED%83%84/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/11/21/react/hooks/✈️-리액트-hooks/"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>✈️ 리액트 Hooks - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Hooks리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.\n\n리액트 Hook을 사용하면 함수 컴포넌트 중심으로 개발이 가능하다.\n함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 재사용 할 수 있다.\n\n\n\n1. 래퍼지옥\n클래스 컴포넌트 만들 시 문제는 고차 컴포넌트를 사용하게 될 경우 래퍼 지옥(Hell)이 발생한다.\n2. 비대해진 컴포넌트\n래퍼 지옥을 만들지 않기 위해서는 하나의 컴포넌트에 담아서 사용해야하는데 이럴 경우 컴포넌트가 비대해지는 문제가 있다.\n그래서 리액트 팀은 기존 개발 방식을 유지하면서 새로운 API를 추가하는 방식으로 리액트 Hook을 개발하였다.\n함수 컴포넌트의 문제점이 내부에서 상태를 관리할 수 없다는 것이였는데 이를 Hook을 통해 해결하였고 API를 제공하여 훨씬 간결하게 클래스 컴포넌트처럼 사용할 수 있게 되었다.\n🥁 Hook 사용 규칙\n리액트 함수 컴포넌트, 커스텀 Hook 함수 안에서만 사용할 수 있다.\n\n일반 함수, 클래스 컴포넌트에서 Hook을 호출하면 안된다.\n\nHook은 문(statement) 또는 중첩된 함수 안에서 사용할 수 없다.\n\n컴포넌트, 커스텀 Hook 함수 최상위에서만 사용 가능하다.\n","dateCreated":"2022-11-21T19:26:59+09:00","dateModified":"2022-11-23T20:19:23+09:00","datePublished":"2022-11-21T19:26:59+09:00","description":"📌 Hooks리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.\n\n리액트 Hook을 사용하면 함수 컴포넌트 중심으로 개발이 가능하다.\n함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 재사용 할 수 있다.\n","headline":"✈️ 리액트 Hooks","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"}</script>
+    <meta name="description" content="📌 Hooks리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.  리액트 Hook을 사용하면 함수 컴포넌트 중심으로 개발이 가능하다. 함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 재사용 할 수 있다.">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="✈️ 리액트 Hooks">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 Hooks리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.  리액트 Hook을 사용하면 함수 컴포넌트 중심으로 개발이 가능하다. 함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 재사용 할 수 있다.">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-21T10:26:59.000Z">
+<meta property="article:modified_time" content="2022-11-23T11:19:23.157Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            ✈️ 리액트 Hooks
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-21T19:26:59+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-Hooks"><a href="#📌-Hooks" class="headerlink" title="📌 Hooks"></a>📌 Hooks</h1><p>리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.</p>
+<ul>
+<li>리액트 Hook을 사용하면 <strong>함수 컴포넌트 중심으로 개발</strong>이 가능하다.</li>
+<li>함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 <red>재사용</red> 할 수 있다.</li>
+</ul>
+<span id="more"></span>
+
+<p><strong>1. 래퍼지옥</strong></p>
+<p>클래스 컴포넌트 만들 시 문제는 고차 컴포넌트를 사용하게 될 경우 래퍼 지옥(Hell)이 발생한다.</p>
+<p><strong>2. 비대해진 컴포넌트</strong></p>
+<p>래퍼 지옥을 만들지 않기 위해서는 하나의 컴포넌트에 담아서 사용해야하는데 이럴 경우 컴포넌트가 비대해지는 문제가 있다.</p>
+<p>그래서 리액트 팀은 기존 개발 방식을 유지하면서 새로운 API를 추가하는 방식으로 리액트 Hook을 개발하였다.</p>
+<p>함수 컴포넌트의 문제점이 내부에서 상태를 관리할 수 없다는 것이였는데 이를 Hook을 통해 해결하였고 API를 제공하여 훨씬 간결하게 클래스 컴포넌트처럼 사용할 수 있게 되었다.</p>
+<h2 id="🥁-Hook-사용-규칙"><a href="#🥁-Hook-사용-규칙" class="headerlink" title="🥁 Hook 사용 규칙"></a>🥁 Hook 사용 규칙</h2><ol>
+<li>리액트 함수 컴포넌트, 커스텀 Hook 함수 안에서만 사용할 수 있다.</li>
+</ol>
+<p><strong>일반 함수, 클래스 컴포넌트에서 Hook을 호출하면 안된다.</strong></p>
+<ol start="2">
+<li>Hook은 문(statement) 또는 중첩된 함수 안에서 사용할 수 없다.</li>
+</ol>
+<p>컴포넌트, 커스텀 Hook 함수 최상위에서만 사용 가능하다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                    data-tooltip="💭 useState"
+                    aria-label="이전: 💭 useState"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    data-tooltip="🐥 타마스 러버덕 1일차"
+                    aria-label="다음: 🐥 타마스 러버덕 1일차"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                    data-tooltip="💭 useState"
+                    aria-label="이전: 💭 useState"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                    data-tooltip="🐥 타마스 러버덕 1일차"
+                    aria-label="다음: 🐥 타마스 러버덕 1일차"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

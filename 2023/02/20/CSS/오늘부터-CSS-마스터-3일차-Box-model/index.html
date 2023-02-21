@@ -1,0 +1,747 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/02/20/css/오늘부터-css-마스터-3일차-box-model/"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>&lt;오늘부터 CSS 마스터 3일차&gt; Box model - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"CSS Box model\nCSS Box model은 모든 HTML 요소를 감싸는 박스이다.\n\ncontent: 텍스트, 이미지가 나타날 박스\npadding: 컨텐츠 주변의 투명한 공간\nborder: padding과 content 사이의 테두리\nmargin: border 바깥의 투명한 공간\n\n123456div &#123;  width: 300px;  border: 15px solid green;  padding: 50px;  margin: 20px;&#125;\n\n❗️ 주의사항box model의 width, height를 설정하면, 이것은 content 부분의 width, height를 설정한 것이다.\n전체 사이즈를 계산하기 위해서는 padding, border, margin을 모두 더해줘야한다.\n123456div &#123;  width: 320px;  padding: 10px;  border: 5px solid gray;  margin: 0;&#125;\n\n요소의 총 width &#x3D; width + left padding + right padding + left border + right border + left margin + right margin\n요소의 총 height &#x3D; height + top padding + bottom padding + top border + bottom border + top margin + bottom margin\n 요소의 총 width는 350px이다.\n\nwidth와 heightwidth와 heigth로 올 수 있는 값은 다음과 같다.\n\nauto: 기본값으로, 브라우저가 width와 height를 계산한다.\nlength: px, cm 등등\n%: containing block의 퍼센트\ninitial: 기본값으로 설정\ninherit: 부모 값으로 부터 상속 받은 값\n\nmax와 minmax와 min은 length 값으로 설정할 수 있다.\nex) px, cm, containing block의 %\n12345div &#123;  max-width: 500px;  height: 100px;  background-color: powderblue;&#125;\n\n\n위 는 브라우저 width가 500px보다 작아지면 수평으로 스크롤이 생겨난다.\n스크롤을 해결하기 위해서는 max-width를 사용하면 가능하다.\n12345div &#123;  max-width: 500px;  height: 100px;  background-color: powderblue;&#125;\n\n\n\nmax-width와 width를 같은 요소에 사용할 때, width 속성이 max-width 속성보다 큰 경우 max-width 속성이 사용된다.\n\nbox-sizing만약, padding 값에 상관없이 width를 설정한 값을 content 그대로 사용하고 싶다면 box-sizing 속성을 설정한다.\n12345div &#123;  width: 300px;  padding: 25px;  box-sizing: border-box;&#125;\n\n위 코드는 padding 값이 어떻든 content의 width는 300px로 설정된다.\nmarginmargin으로 가로로 가운데 정렬margin을 사용하면 컨테이너 내부의 요소를 수평으로 가운데에 위치하도록 설정할 수 있다.\n12345div &#123;  width: 300px;  margin: auto;  border: 1px solid red;&#125;\n\nmargin collpase두개의 margin이 하나처럼 동작할 때가 있다.\n1234567h1 &#123;  margin: 0 0 50px 0;&#125;h2 &#123;  margin: 20px 0 0 0;&#125;\n\nh1의 bottom margin이 50px이고 h2의 top margin이 20px이다.\nh1 아래에 h2가 위치해 있을 때, 예상대로라면 h1과 h2 사이에는 70px이라고 예상되지만 margin-collpase 현상으로 인해 둘 중 큰 margin만 적용된다.\n\n이는 오직 top, bottom에서만 발생한다. left, right margin에서는 발생하지 않는다.\n\nbordermargin과 padding과 달리 border는 style과 width, color를 설정할 수 있다.\n또한 원하는 방향에 각각 스타일링을 해줄 수 있다.\n123p &#123;  border-left: 6px solid red;&#125;\n\n\n123p &#123;  border-bottom: 6px solid red;&#125;\n\n\n테두리 둥글게1234p &#123;  border: 2px solid red;  border-radius: 5px;&#125;\n\n\n","dateCreated":"2023-02-20T22:52:15+09:00","dateModified":"2023-02-21T14:40:04+09:00","datePublished":"2023-02-20T22:52:15+09:00","description":"","headline":"<오늘부터 CSS 마스터 3일차> Box model","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/","keywords":"CSS"}</script>
+    <meta name="description" content="CSS Box model CSS Box model은 모든 HTML 요소를 감싸는 박스이다.  content: 텍스트, 이미지가 나타날 박스 padding: 컨텐츠 주변의 투명한 공간 border: padding과 content 사이의 테두리 margin: border 바깥의 투명한 공간  123456div &amp;#123;  width: 300px;  borde">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="&lt;오늘부터 CSS 마스터 3일차&gt; Box model">
+<meta property="og:url" content="https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="CSS Box model CSS Box model은 모든 HTML 요소를 감싸는 박스이다.  content: 텍스트, 이미지가 나타날 박스 padding: 컨텐츠 주변의 투명한 공간 border: padding과 content 사이의 테두리 margin: border 바깥의 투명한 공간  123456div &amp;#123;  width: 300px;  borde">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/boxmodel.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/scrollwidth.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/maxwidth.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/borderleft.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/borderbottom.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/boxmodel/borderradius.png">
+<meta property="article:published_time" content="2023-02-20T13:52:15.000Z">
+<meta property="article:modified_time" content="2023-02-21T05:40:04.705Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="CSS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/CSS/boxmodel/boxmodel.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            &lt;오늘부터 CSS 마스터 3일차&gt; Box model
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-02-20T22:52:15+09:00">
+	
+		    2023/02/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CSS/">CSS</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="CSS-Box-model"><a href="#CSS-Box-model" class="headerlink" title="CSS Box model"></a>CSS Box model</h1><p><img src="/../../images/CSS/boxmodel/boxmodel.png"></p>
+<p>CSS Box model은 모든 HTML 요소를 감싸는 박스이다.</p>
+<ul>
+<li>content: 텍스트, 이미지가 나타날 박스</li>
+<li>padding: 컨텐츠 주변의 투명한 공간</li>
+<li>border: padding과 content 사이의 테두리</li>
+<li>margin: border 바깥의 투명한 공간</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">15px</span> solid green;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">50px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="❗️-주의사항"><a href="#❗️-주의사항" class="headerlink" title="❗️ 주의사항"></a>❗️ 주의사항</h3><p>box model의 width, height를 설정하면, 이것은 content 부분의 width, height를 설정한 것이다.</p>
+<p>전체 사이즈를 계산하기 위해서는 padding, border, margin을 모두 더해줘야한다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">320px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">5px</span> solid gray;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><span style="color:red;">요소의 총 width</span> &#x3D; width + left padding + right padding + left border + right border + left margin + right margin</p>
+<p><span style="color:red;">요소의 총 height</span> &#x3D; height + top padding + bottom padding + top border + bottom border + top margin + bottom margin</p>
+<div> 요소의 총 width는 350px이다.
+
+<h2 id="width와-height"><a href="#width와-height" class="headerlink" title="width와 height"></a>width와 height</h2><p>width와 heigth로 올 수 있는 값은 다음과 같다.</p>
+<ul>
+<li>auto: 기본값으로, 브라우저가 width와 height를 계산한다.</li>
+<li>length: px, cm 등등</li>
+<li>%: containing block의 퍼센트</li>
+<li>initial: 기본값으로 설정</li>
+<li>inherit: 부모 값으로 부터 상속 받은 값</li>
+</ul>
+<h3 id="max와-min"><a href="#max와-min" class="headerlink" title="max와 min"></a>max와 min</h3><p>max와 min은 length 값으로 설정할 수 있다.</p>
+<p><strong>ex) px, cm, containing block의 %</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: powderblue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/boxmodel/scrollwidth.png"></p>
+<p>위 <div>는 브라우저 width가 500px보다 작아지면 수평으로 스크롤이 생겨난다.</p>
+<p>스크롤을 해결하기 위해서는 max-width를 사용하면 가능하다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: powderblue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/boxmodel/maxwidth.png"></p>
+<blockquote>
+<p>max-width와 width를 같은 요소에 사용할 때, width 속성이 max-width 속성보다 큰 경우 max-width 속성이 사용된다.</p>
+</blockquote>
+<h2 id="box-sizing"><a href="#box-sizing" class="headerlink" title="box-sizing"></a>box-sizing</h2><p>만약, padding 값에 상관없이 width를 설정한 값을 content 그대로 사용하고 싶다면 box-sizing 속성을 설정한다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">25px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 padding 값이 어떻든 content의 width는 300px로 설정된다.</p>
+<h2 id="margin"><a href="#margin" class="headerlink" title="margin"></a>margin</h2><h3 id="margin으로-가로로-가운데-정렬"><a href="#margin으로-가로로-가운데-정렬" class="headerlink" title="margin으로 가로로 가운데 정렬"></a>margin으로 가로로 가운데 정렬</h3><p>margin을 사용하면 컨테이너 내부의 요소를 수평으로 가운데에 위치하도록 설정할 수 있다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="margin-collpase"><a href="#margin-collpase" class="headerlink" title="margin collpase"></a>margin collpase</h3><p>두개의 margin이 하나처럼 동작할 때가 있다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">50px</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h2</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20px</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>h1의 bottom margin이 50px이고 h2의 top margin이 20px이다.</p>
+<p>h1 아래에 h2가 위치해 있을 때, 예상대로라면 h1과 h2 사이에는 70px이라고 예상되지만 margin-collpase 현상으로 인해 둘 중 큰 margin만 적용된다.</p>
+<blockquote>
+<p>이는 오직 top, bottom에서만 발생한다. left, right margin에서는 발생하지 않는다.</p>
+</blockquote>
+<h2 id="border"><a href="#border" class="headerlink" title="border"></a>border</h2><p>margin과 padding과 달리 border는 style과 width, color를 설정할 수 있다.</p>
+<p>또한 원하는 방향에 각각 스타일링을 해줄 수 있다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">6px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/boxmodel/borderleft.png"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">6px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/boxmodel/borderbottom.png"></p>
+<h3 id="테두리-둥글게"><a href="#테두리-둥글게" class="headerlink" title="테두리 둥글게"></a>테두리 둥글게</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">2px</span> solid red;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/boxmodel/borderradius.png"></p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/CSS/" rel="tag">CSS</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/02/21/Algorithm/boj/DP/boj-11722-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EA%B0%90%EC%86%8C%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"
+                    data-tooltip="boj-11722 가장 긴 감소하는 부분 수열(JavaScript)"
+                    aria-label="이전: boj-11722 가장 긴 감소하는 부분 수열(JavaScript)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/02/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-2%EC%9D%BC%EC%B0%A8-CSS-background/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 2일차&gt; CSS background"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 2일차&gt; CSS background"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/02/21/Algorithm/boj/DP/boj-11722-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EA%B0%90%EC%86%8C%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"
+                    data-tooltip="boj-11722 가장 긴 감소하는 부분 수열(JavaScript)"
+                    aria-label="이전: boj-11722 가장 긴 감소하는 부분 수열(JavaScript)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/02/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-2%EC%9D%BC%EC%B0%A8-CSS-background/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 2일차&gt; CSS background"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 2일차&gt; CSS background"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

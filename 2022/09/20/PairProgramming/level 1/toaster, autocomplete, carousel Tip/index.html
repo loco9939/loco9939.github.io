@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/09/20/pairprogramming/level 1/toaster, autocomplete, carousel tip/"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>toaster, autocomplete, carousel Tip - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast = (messageType) =&gt; &#123;  const [type, title, message] = messageType;  const $newToast = document.createElement(&quot;div&quot;);  $newToast.style.bottom = &quot;0&quot;;  $newToast.classList.add(&quot;toast&quot;, type);  $newToast.innerHTML = `    &lt;h4 class=&quot;toast-title&quot;&gt;$&#123;title&#125; $&#123;    [...document.querySelectorAll(&quot;body .toast&quot;)].length  &#125;&lt;/h4&gt;    &lt;div class=&quot;toast-message&quot;&gt;      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;        &lt;use xlink:href=&quot;#$&#123;type&#125;&quot; /&gt;      &lt;/svg&gt;      &lt;p&gt;$&#123;message&#125;&lt;/p&gt;    &lt;/div&gt;    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`;  return $newToast;&#125;;\n\n\n배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.\n\n2. 함수를 사용하는 이유를 고민하자.123456789101112const addToast = (messageType) =&gt; &#123;  const $newToast = generateToast(messageType);  $body.appendChild($newToast);  lineUpToast();  setTimeout(() =&gt; &#123;    $newToast.remove();    lineUpToast();  &#125;, 3000);&#125;;\n\n\nsetTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.\n\nAutocomplete 리팩터링 중 느낀점1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수123456789101112131415161718192021let state = &#123;  countryCode: [],&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const init = () =&gt; &#123;  setState(&#123; countryCode &#125;);&#125;;document  .querySelector(&quot;.autocomplete-toggle-button&quot;)  .addEventListener(&quot;click&quot;, () =&gt; &#123;    $suggester.classList.toggle(&quot;hide&quot;);    $searchInput.focus();    autocomplete.init();  &#125;);\n\n\n이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.\n\n또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.\n\n\n2. 함수 역할의 분리123456789101112const findCountry = (inputValue) =&gt; &#123;  const regExp = new RegExp(inputValue, &quot;i&quot;);  const newCountryCode = countryCode    .filter(([, country]) =&gt; country.match(regExp))    .map(([code, country]) =&gt; [      code,      country.replace(regExp, `&lt;strong&gt;$&#123;country.match(regExp)&#125;&lt;/strong&gt;`),    ]);  setState(&#123; countryCode: newCountryCode &#125;);&#125;;\n\n\n이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.\n\n또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.\n\n\n\n([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.\n\n3. 함수의 가독성을 높이자.1234const selectCountry = (target) =&gt; &#123;  $toggleButtonSpan.innerHTML = target.firstElementChild.innerHTML;  $toggleButtonSpan.classList.add(&quot;country&quot;);&#125;;\n\n\nselectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.\n\nCarousel 리팩터링 중 느낀점1. state로 관리해야하는 데이터와 그렇지 않은 데이터1234567let state = &#123;  currentSlide: 1,&#125;;let isTransitioned = true;const DURATION = 500;const newImages = [images[images.length - 1], ...images, images[0]];\n\n\n이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.\n\nstate로 관리해야하는 데이터\n사용자의 액션에 의해서 변경되는 데이터\n\n실제 화면의 렌더링에 영향을 끼치는 데이터\n\n서버에 저장해야할 필요가 있는 데이터\n\n\n위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.\n그에 대한 근거는 다음 예시를 통해 알아보자.\n1234567const completeTransition = () =&gt; &#123;  setState(&#123; isTransitioned: true &#125;);&#125;;const completeTransition = () =&gt; &#123;  isTransitioned = true;&#125;;\n\n\n모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.\n\n즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.\n2. Model과 Controller 패턴의 사용123456789101112131415161718const carousel = () =&gt; &#123;  const carouselSlider = (() =&gt; &#123;      ...    return &#123;      init,      setStyle,      prev,      next,      completeTransition,    &#125;  &#125;)();  window.addEventListener(&#x27;DOMContentLoaded&#x27;, carouselSlider.init);&#125;carousel(document.querySelector(&#x27;.carousel&#x27;), [images...])\n\n\naddEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.\n\n3. DOMContentLoaded와 load 이벤트 핸들러123window.addEventListener(&quot;DOMContentLoaded&quot;, carouselSlider.init);window.addEventListener(&quot;load&quot;, carouselSlider.setStyle);\n\n\n이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.\n\n또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.\n\n\n","dateCreated":"2022-09-20T18:45:54+09:00","dateModified":"2022-11-18T17:19:03+09:00","datePublished":"2022-09-20T18:45:54+09:00","description":"","headline":"toaster, autocomplete, carousel Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"}</script>
+    <meta name="description" content="Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast &#x3D; (messageType) &#x3D;&gt; &amp;#123;  const [type, title, message] &#x3D; messageType;  const $newToast &#x3D; document.createEl">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="toaster, autocomplete, carousel Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast &#x3D; (messageType) &#x3D;&gt; &amp;#123;  const [type, title, message] &#x3D; messageType;  const $newToast &#x3D; document.createEl">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-20T09:45:54.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:19:03.550Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            toaster, autocomplete, carousel Tip
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-09-20T18:45:54+09:00">
+	
+		    2022/09/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="Toaster-리팩터링-중-느낀점"><a href="#Toaster-리팩터링-중-느낀점" class="headerlink" title="Toaster 리팩터링 중 느낀점"></a>Toaster 리팩터링 중 느낀점</h1><h2 id="1-함수의-인수는-3개를-넘지-말자"><a href="#1-함수의-인수는-3개를-넘지-말자" class="headerlink" title="1. 함수의 인수는 3개를 넘지 말자."></a>1. 함수의 인수는 3개를 넘지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">generateToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [type, title, message] = messageType;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">  $newToast.<span class="property">style</span>.<span class="property">bottom</span> = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">  $newToast.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;toast&quot;</span>, type);</span><br><span class="line"></span><br><span class="line">  $newToast.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;h4 class=&quot;toast-title&quot;&gt;<span class="subst">$&#123;title&#125;</span> <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    [...<span class="variable language_">document</span>.querySelectorAll(<span class="string">&quot;body .toast&quot;</span>)].length</span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>&lt;/h4&gt;</span></span><br><span class="line"><span class="string">    &lt;div class=&quot;toast-message&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;use xlink:href=&quot;#<span class="subst">$&#123;type&#125;</span>&quot; /&gt;</span></span><br><span class="line"><span class="string">      &lt;/svg&gt;</span></span><br><span class="line"><span class="string">      &lt;p&gt;<span class="subst">$&#123;message&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $newToast;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.</li>
+</ul>
+<h2 id="2-함수를-사용하는-이유를-고민하자"><a href="#2-함수를-사용하는-이유를-고민하자" class="headerlink" title="2. 함수를 사용하는 이유를 고민하자."></a>2. 함수를 사용하는 이유를 고민하자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">addToast</span> = (<span class="params">messageType</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> $newToast = <span class="title function_">generateToast</span>(messageType);</span><br><span class="line"></span><br><span class="line">  $body.<span class="title function_">appendChild</span>($newToast);</span><br><span class="line">  <span class="title function_">lineUpToast</span>();</span><br><span class="line"></span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $newToast.<span class="title function_">remove</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">lineUpToast</span>();</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>setTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.</li>
+</ul>
+<h1 id="Autocomplete-리팩터링-중-느낀점"><a href="#Autocomplete-리팩터링-중-느낀점" class="headerlink" title="Autocomplete 리팩터링 중 느낀점"></a>Autocomplete 리팩터링 중 느낀점</h1><h2 id="1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수"><a href="#1-setState-함수는-함수-내부의-데이터를-변경만-하는-함수" class="headerlink" title="1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수"></a>1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">countryCode</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">init</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; countryCode &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.autocomplete-toggle-button&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    $suggester.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">    $searchInput.<span class="title function_">focus</span>();</span><br><span class="line"></span><br><span class="line">    autocomplete.<span class="title function_">init</span>();</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.</p>
+</li>
+<li><p>또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.</p>
+</li>
+</ul>
+<h2 id="2-함수-역할의-분리"><a href="#2-함수-역할의-분리" class="headerlink" title="2. 함수 역할의 분리"></a>2. 함수 역할의 분리</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">findCountry</span> = (<span class="params">inputValue</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(inputValue, <span class="string">&quot;i&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newCountryCode = countryCode</span><br><span class="line">    .<span class="title function_">filter</span>(<span class="function">(<span class="params">[, country]</span>) =&gt;</span> country.<span class="title function_">match</span>(regExp))</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function">(<span class="params">[code, country]</span>) =&gt;</span> [</span><br><span class="line">      code,</span><br><span class="line">      country.<span class="title function_">replace</span>(regExp, <span class="string">`&lt;strong&gt;<span class="subst">$&#123;country.match(regExp)&#125;</span>&lt;/strong&gt;`</span>),</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">countryCode</span>: newCountryCode &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.</p>
+</li>
+<li><p>또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.</p>
+</li>
+</ul>
+<blockquote>
+<p>([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.</p>
+</blockquote>
+<h2 id="3-함수의-가독성을-높이자"><a href="#3-함수의-가독성을-높이자" class="headerlink" title="3. 함수의 가독성을 높이자."></a>3. 함수의 가독성을 높이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">selectCountry</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  $toggleButtonSpan.<span class="property">innerHTML</span> = target.<span class="property">firstElementChild</span>.<span class="property">innerHTML</span>;</span><br><span class="line">  $toggleButtonSpan.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;country&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>selectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.</li>
+</ul>
+<h1 id="Carousel-리팩터링-중-느낀점"><a href="#Carousel-리팩터링-중-느낀점" class="headerlink" title="Carousel 리팩터링 중 느낀점"></a>Carousel 리팩터링 중 느낀점</h1><h2 id="1-state로-관리해야하는-데이터와-그렇지-않은-데이터"><a href="#1-state로-관리해야하는-데이터와-그렇지-않은-데이터" class="headerlink" title="1. state로 관리해야하는 데이터와 그렇지 않은 데이터"></a>1. state로 관리해야하는 데이터와 그렇지 않은 데이터</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">currentSlide</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> isTransitioned = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DURATION</span> = <span class="number">500</span>;</span><br><span class="line"><span class="keyword">const</span> newImages = [images[images.<span class="property">length</span> - <span class="number">1</span>], ...images, images[<span class="number">0</span>]];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.</li>
+</ul>
+<h3 id="state로-관리해야하는-데이터"><a href="#state로-관리해야하는-데이터" class="headerlink" title="state로 관리해야하는 데이터"></a>state로 관리해야하는 데이터</h3><ol>
+<li><p>사용자의 액션에 의해서 변경되는 데이터</p>
+</li>
+<li><p>실제 화면의 렌더링에 영향을 끼치는 데이터</p>
+</li>
+<li><p>서버에 저장해야할 필요가 있는 데이터</p>
+</li>
+</ol>
+<p>위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.</p>
+<p>그에 대한 근거는 다음 예시를 통해 알아보자.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">isTransitioned</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">completeTransition</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  isTransitioned = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.</li>
+</ul>
+<p>즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.</p>
+<h2 id="2-Model과-Controller-패턴의-사용"><a href="#2-Model과-Controller-패턴의-사용" class="headerlink" title="2. Model과 Controller 패턴의 사용"></a>2. Model과 Controller 패턴의 사용</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">carousel</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> carouselSlider = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      init,</span><br><span class="line">      setStyle,</span><br><span class="line">      prev,</span><br><span class="line">      next,</span><br><span class="line">      completeTransition,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)();</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">carousel</span>(<span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.carousel&#x27;</span>), [images...])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>addEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.</li>
+</ul>
+<h2 id="3-DOMContentLoaded와-load-이벤트-핸들러"><a href="#3-DOMContentLoaded와-load-이벤트-핸들러" class="headerlink" title="3. DOMContentLoaded와 load 이벤트 핸들러"></a>3. DOMContentLoaded와 load 이벤트 핸들러</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, carouselSlider.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, carouselSlider.<span class="property">setStyle</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.</p>
+</li>
+<li><p>또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.</p>
+</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    data-tooltip="form validation Tip"
+                    aria-label="이전: form validation Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"
+                    data-tooltip="darkmode, modal, stopwatch Tip"
+                    aria-label="다음: darkmode, modal, stopwatch Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    data-tooltip="form validation Tip"
+                    aria-label="이전: form validation Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"
+                    data-tooltip="darkmode, modal, stopwatch Tip"
+                    aria-label="다음: darkmode, modal, stopwatch Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
