@@ -325,23 +325,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 3일차&gt; Box model"
+                            href="/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"
+                            aria-label=": boj-2745 진법 변환(JavaScript)"
                         >
-                            &lt;오늘부터 CSS 마스터 3일차&gt; Box model
+                            boj-2745 진법 변환(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-02-20T22:52:15+09:00">
+    <time datetime="2023-02-21T12:31:52+09:00">
 	
-		    2023/02/20
+		    2023/02/21
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/CSS/">CSS</a>
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
 
 
     
@@ -350,71 +350,28 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h1 id="CSS-Box-model"><a href="#CSS-Box-model" class="headerlink" title="CSS Box model"></a>CSS Box model</h1><p><img src="/../../images/css/boxmodel/boxmodel.png" alt="boxmodel"></p>
-<p>CSS Box model은 모든 HTML 요소를 감싸는 박스이다.</p>
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>B진법 수 N이 주어진다. 이 수를 10진법으로 바꿔 출력하는 프로그램을 작성하시오.</p>
+<p>10진법을 넘어가는 진법은 숫자로 표시할 수 없는 자리가 있다. 이런 경우에는 다음과 같이 알파벳 대문자를 사용한다.</p>
+<p>A: 10, B: 11, …, F: 15, …, Y: 34, Z: 35</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 N과 B가 주어진다. (2 ≤ B ≤ 36)</p>
+<p>B진법 수 N을 10진법으로 바꾸면, 항상 10억보다 작거나 같다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 B진법 수 N을 10진법으로 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZZZZZ 36</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">60466175</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> [N, B] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">ALPHABET_CODE</span> = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">UPPER_A_CODE</span> = <span class="number">65</span>;</span><br><span class="line"><span class="keyword">const</span> alphabets = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> alphabet = <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable constant_">UPPER_A_CODE</span> + i);</span><br><span class="line">  alphabets[alphabet] = <span class="variable constant_">ALPHABET_CODE</span> + i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> answer = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> pow = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (N.<span class="property">length</span> !== <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> newN = alphabets[N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>)]</span><br><span class="line">    ? +alphabets[N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>)]</span><br><span class="line">    : +N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">let</span> d = B ** pow;</span><br><span class="line">  answer = d * newN + answer;</span><br><span class="line">  N = N.<span class="title function_">slice</span>(<span class="number">0</span>, N.<span class="property">length</span> - <span class="number">1</span>);</span><br><span class="line">  index++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(answer);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>알파벳 객체를 만들고 이전 문제인 10진법을 36진법으로 바꾸는 로직을 역순으로 짜보았다.</li>
+<li>첫번째 자릿수부터 $36^0*(1의 자리수)$, $36^1*(10의 자리수)$… 이런식으로 10진법의 숫자로 변환할 수 있다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 또 다른 해답</span></span><br><span class="line"><span class="keyword">let</span> [N, B] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> answer = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> reversed = N.<span class="title function_">split</span>(<span class="string">&quot;&quot;</span>).<span class="title function_">reverse</span>();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; N.<span class="property">length</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (reversed[i] &gt;= <span class="string">&quot;A&quot;</span> &amp;&amp; reversed[i] &lt;= <span class="string">&quot;Z&quot;</span>) &#123;</span><br><span class="line">    reversed[i] = reversed[i].<span class="title function_">charCodeAt</span>(<span class="number">0</span>) - <span class="number">55</span>;</span><br><span class="line">    answer += reversed[i] * <span class="title class_">Math</span>.<span class="title function_">pow</span>(B, i);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    answer += reversed[i] * <span class="title class_">Math</span>.<span class="title function_">pow</span>(B, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(answer);</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>content: 텍스트, 이미지가 나타날 박스</li>
-<li>padding: 컨텐츠 주변의 투명한 공간</li>
-<li>border: padding과 content 사이의 테두리</li>
-<li>margin: border 바깥의 투명한 공간</li>
+<li>알파벳 코드를 굳이 만들지 않고 부등호를 사용하여 구하여 코드가 간결해졌다.</li>
+<li>지수를 계산할 때, Math.pow() 메서드를 사용하여 깔끔하다.</li>
 </ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">15px</span> solid green;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">50px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="❗️-주의사항"><a href="#❗️-주의사항" class="headerlink" title="❗️ 주의사항"></a>❗️ 주의사항</h3><p>box model의 width, height를 설정하면, 이것은 content 부분의 width, height를 설정한 것이다.</p>
-<p>전체 사이즈를 계산하기 위해서는 padding, border, margin을 모두 더해줘야한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">320px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">5px</span> solid gray;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><span style="color:red;">요소의 총 width</span> &#x3D; width + left padding + right padding + left border + right border + left margin + right margin</p>
-<p><span style="color:red;">요소의 총 height</span> &#x3D; height + top padding + bottom padding + top border + bottom border + top margin + bottom margin</p>
-<div> 요소의 총 width는 350px이다.
-
-<h2 id="width와-height"><a href="#width와-height" class="headerlink" title="width와 height"></a>width와 height</h2><p>width와 heigth로 올 수 있는 값은 다음과 같다.</p>
-<ul>
-<li>auto: 기본값으로, 브라우저가 width와 height를 계산한다.</li>
-<li>length: px, cm 등등</li>
-<li>%: containing block의 퍼센트</li>
-<li>initial: 기본값으로 설정</li>
-<li>inherit: 부모 값으로 부터 상속 받은 값</li>
-</ul>
-<h3 id="max와-min"><a href="#max와-min" class="headerlink" title="max와 min"></a>max와 min</h3><p>max와 min은 length 값으로 설정할 수 있다.</p>
-<p><strong>ex) px, cm, containing block의 %</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: powderblue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/css/boxmodel/scrollwidth.png" alt="scrollwidth"></p>
-<p>위 <div>는 브라우저 width가 500px보다 작아지면 수평으로 스크롤이 생겨난다.</p>
-<p>스크롤을 해결하기 위해서는 max-width를 사용하면 가능하다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: powderblue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/css/boxmodel/maxwidth.png" alt="scrollwidth"></p>
-<blockquote>
-<p>max-width와 width를 같은 요소에 사용할 때, width 속성이 max-width 속성보다 큰 경우 max-width 속성이 사용된다.</p>
-</blockquote>
-<h2 id="box-sizing"><a href="#box-sizing" class="headerlink" title="box-sizing"></a>box-sizing</h2><p>만약, padding 값에 상관없이 width를 설정한 값을 content 그대로 사용하고 싶다면 box-sizing 속성을 설정한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">25px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>위 코드는 padding 값이 어떻든 content의 width는 300px로 설정된다.</p>
-<h2 id="margin"><a href="#margin" class="headerlink" title="margin"></a>margin</h2><h3 id="margin으로-가로로-가운데-정렬"><a href="#margin으로-가로로-가운데-정렬" class="headerlink" title="margin으로 가로로 가운데 정렬"></a>margin으로 가로로 가운데 정렬</h3><p>margin을 사용하면 컨테이너 내부의 요소를 수평으로 가운데에 위치하도록 설정할 수 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="margin-collpase"><a href="#margin-collpase" class="headerlink" title="margin collpase"></a>margin collpase</h3><p>두개의 margin이 하나처럼 동작할 때가 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">50px</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h2</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20px</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>h1의 bottom margin이 50px이고 h2의 top margin이 20px이다.</p>
-<p>h1 아래에 h2가 위치해 있을 때, 예상대로라면 h1과 h2 사이에는 70px이라고 예상되지만 margin-collpase 현상으로 인해 둘 중 큰 margin만 적용된다.</p>
-<blockquote>
-<p>이는 오직 top, bottom에서만 발생한다. left, right margin에서는 발생하지 않는다.</p>
-</blockquote>
-<h2 id="border"><a href="#border" class="headerlink" title="border"></a>border</h2><p>margin과 padding과 달리 border는 style과 width, color를 설정할 수 있다.</p>
-<p>또한 원하는 방향에 각각 스타일링을 해줄 수 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">6px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/css/boxmodel/borderleft.png" alt="borderleft"></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">6px</span> solid red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/css/boxmodel/borderbottom.png" alt="borderleft"></p>
-<h3 id="테두리-둥글게"><a href="#테두리-둥글게" class="headerlink" title="테두리 둥글게"></a>테두리 둥글게</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">2px</span> solid red;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/css/boxmodel/borderradius.png" alt="borderradius"></p>
 
                     
                         
@@ -424,7 +381,7 @@
                     
                         <p>
                             <a
-                                href="/2023/02/20/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-3%EC%9D%BC%EC%B0%A8-Box-model/#post-footer"
+                                href="/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -447,208 +404,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/02/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-2%EC%9D%BC%EC%B0%A8-CSS-background/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 2일차&gt; CSS background"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-1463-1%EB%A1%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0-JavaScript/"
+                            aria-label=": boj-1463 1로 만들기(JavaScript)"
                         >
-                            &lt;오늘부터 CSS 마스터 2일차&gt; CSS background
+                            boj-1463 1로 만들기(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-02-18T23:45:08+09:00">
+    <time datetime="2023-02-21T12:30:11+09:00">
 	
-		    2023/02/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="CSS-background"><a href="#CSS-background" class="headerlink" title="CSS background"></a>CSS background</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">background-color</span></span><br><span class="line"><span class="attribute">background-image</span></span><br><span class="line"><span class="attribute">background-repeat</span></span><br><span class="line"><span class="attribute">background-attachment</span></span><br><span class="line"><span class="attribute">background-position</span></span><br><span class="line"><span class="attribute">background</span> (shorthand property)</span><br></pre></td></tr></table></figure>
-
-<h2 id="background-color"><a href="#background-color" class="headerlink" title="background-color"></a>background-color</h2><p>컬러는 다음 3가지 값만 가능하다.</p>
-<ol>
-<li>유효한 컬러이름 ex) ‘red’, ‘green’ …</li>
-<li>HEX 값 ex) ‘#ff0000’</li>
-<li>RGB 값 ex) ‘rgb(255,0,0)’</li>
-</ol>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">128</span>, <span class="number">0</span>, <span class="number">0.3</span>); <span class="comment">/* Green background with 30% opacity */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>opacity 속성을 줘서 배경을 흐리게 할 수 있다.</p>
-<blockquote>
-<p>❗️opacity 속성을 사용하게 될 경우 자식 요소까지 흐려지므로 가독성이 떨어질 수도 있다.</p>
-</blockquote>
-<h2 id="background-image"><a href="#background-image" class="headerlink" title="background-image"></a>background-image</h2><p>기본값으로 image는 반복되어서 전체 요소를 덮어준다.</p>
-<p><strong>신기한 것은 p 태그에도 해당 속성을 설정할 수 있다는 점이다.</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;paper.gif&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="repeat-position-속성"><a href="#repeat-position-속성" class="headerlink" title="repeat, position 속성"></a>repeat, position 속성</h2><p>image를 가로, 세로 반복되게 설정하는 속성이다.</p>
-<p>position은 요소내에서 image의 위치를 설정한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;img_tree.png&quot;</span>);</span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat;</span><br><span class="line">  <span class="attribute">background-position</span>: bottom;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/background/backPosition.png"></p>
-<p>해당 배경 이미지를 아래에 위치시킨다.</p>
-<h2 id="background-attachment"><a href="#background-attachment" class="headerlink" title="background-attachment"></a>background-attachment</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;img_tree.png&quot;</span>);</span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat;</span><br><span class="line">  <span class="attribute">background-position</span>: right top;</span><br><span class="line">  <span class="attribute">background-attachment</span>: fixed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>fixed</code>로 설정하면 position fixed 처럼 배경이미지가 스크롤 하여도 해당 위치에 고정되어 있다.</p>
-<p><code>scroll</code>로 설정하면 다른 페이지를 보려고 스크롤 할 때, 배경도 스크롤된다.</p>
-<h2 id="단축표현"><a href="#단축표현" class="headerlink" title="단축표현"></a>단축표현</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#ffffff</span> <span class="built_in">url</span>(<span class="string">&quot;img_tree.png&quot;</span>) no-repeat right top;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>한줄로 쓸 수 있는데, 순서는 다음과 같다.</p>
-<ul>
-<li>background-color</li>
-<li>background-image</li>
-<li>background-repeat</li>
-<li>background-attachment</li>
-<li>background-position</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-2%EC%9D%BC%EC%B0%A8-CSS-background/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/18/React/Netlify-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/"
-                            aria-label=": Netlify 배포하기(drag&amp;drop, git repo)"
-                        >
-                            Netlify 배포하기(drag&amp;drop, git repo)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-18T23:33:54+09:00">
-	
-		    2023/02/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="netlify-배포하기"><a href="#netlify-배포하기" class="headerlink" title="netlify 배포하기"></a>netlify 배포하기</h2><h3 id="🖱-1-드래그-앤-드랍으로-배포하기"><a href="#🖱-1-드래그-앤-드랍으로-배포하기" class="headerlink" title="🖱 1. 드래그 앤 드랍으로 배포하기"></a><strong>🖱 1. 드래그 앤 드랍으로 배포하기</strong></h3><ol>
-<li>npm run build 명령어를 실행하여 build 파일을 만든다.</li>
-<li>netlify 홈페이지에 가서 build 폴더를 드래그 드랍한다.</li>
-</ol>
-<p><img src="/../../images/netlify/netlify%EC%82%AC%EC%9D%B4%ED%8A%B8.png" alt="netlify사이트"></p>
-<p>배포 끝!</p>
-<p><a target="_blank" rel="noopener" href="https://react-cocktail-project-yiju.netlify.app/">🔗 Cocktail project site Link</a></p>
-<h3 id="❗️React-Router-사용하여-netlify-배포시-문제"><a href="#❗️React-Router-사용하여-netlify-배포시-문제" class="headerlink" title="❗️React Router 사용하여 netlify 배포시 문제"></a>❗️React Router 사용하여 netlify 배포시 문제</h3><p>React Router를 사용하여 netlify에 배포했을 때, <strong>root 경로이외의 직접적으로 경로에 접근할 때, Page Not Found가 뜨는 문제가 있다.</strong></p>
-<p>📌 문제 발생 원인!</p>
-<p>해당 문제는 React Router는 클라이언트 사이드에서 라우팅을 다루기때문에, root 페이지가 아닌 경로로 직접적으로 방문했을 경우, netliffy는 해당 경로를 어떻게 다룰지 알 수 없다.</p>
-<p>🙆🏻‍♂️ 어떻게 해결하는가?</p>
-<p>netlify에서 _redirects 파일을 제공한다. 여기에 netlify가 클라이언트 사이드에서 다루지 않는 URL을 어떻게 다룰 지에 대한 코드를 적어주면 된다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// _redirects 파일</span></span><br><span class="line"><span class="comment">/*    /index.html   200</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/netlify/%ED%8F%B4%EB%8D%94%EA%B5%AC%EC%A1%B0.png" alt="폴더구조"></p>
-<p>SPA 프레임워크를 사용하여 애플리케이션을 만들고 history pushstate를 사용하여 URL을 클린하게 사용하는 경우 위와 같이 파일을 생성하여 적어주면된다.</p>
-<p>이렇게 하면 어떤 URL로 브라우저 요청이 오던지 간에 404 대신 index.html을 제공한다.</p>
-<h3 id="2-github에서-CI-사용하여-배포하기"><a href="#2-github에서-CI-사용하여-배포하기" class="headerlink" title="2. github에서 CI 사용하여 배포하기"></a>2. github에서 CI 사용하여 배포하기</h3><p>이 방법을 사용하면 프로젝트 변경사항을 반영하여 배포하기 편리하다.</p>
-<ol>
-<li>깃헙 레포를 생성한다.</li>
-<li>이미 존재하는 파일을 깃헙 레포에 푸시한다.</li>
-</ol>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;initial commit&quot;</span></span><br><span class="line">git remote add origin <span class="attr">https</span>:<span class="comment">//github.com/loco9939/react-cocktail-project.git</span></span><br><span class="line">git branch -M main</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>netlify에 가서 “add new site” 버튼 클릭한 후 github으로 배포하기 하여 생성한 레포를 선택하고 배포한다.</li>
-</ol>
-<p><img src="/../../images/netlify/netlify%EC%82%AC%EC%9D%B4%ED%8A%B8.png" alt="netlify사이트"></p>
-<ol>
-<li>package.json에 가서 build 명령어를 수정해주자.</li>
-</ol>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="string">&quot;build&quot;</span>: <span class="string">&quot;CI= react-scripts build&quot;</span>,</span><br><span class="line">		...</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>보통 react-scripts build만 되어있을텐데 앞에 <code>CI=</code> 을 추가해주자.</p>
-<ol>
-<li>이후 해당 개발 파일을 수정한다음 깃헙에 push 하게 되면 netlify 가 알아서 배포를 해준다.</li>
-</ol>
-<p>body 태그의 배경 색깔을 변경해보았다.</p>
-<p><img src="/../../images/netlify/github%EC%97%B0%EA%B2%B0%ED%9B%84%EC%83%89%EA%B9%94%EB%B3%80%EA%B2%BD.png" alt="색깔변경후화면"></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/18/React/Netlify-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"
-                            aria-label=": boj-11055 가장 큰 증가 부분 수열(JavaScript)"
-                        >
-                            boj-11055 가장 큰 증가 부분 수열(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-18T23:06:38+09:00">
-	
-		    2023/02/18
+		    2023/02/21
     	
     </time>
     
@@ -663,163 +429,31 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>수열 A가 주어졌을 때, 그 수열의 증가 부분 수열 중에서 합이 가장 큰 것을 구하는 프로그램을 작성하시오.</p>
-<p>예를 들어, 수열 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 인 경우에 합이 가장 큰 증가 부분 수열은 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 이고, 합은 113이다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
-<p>둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 수열 A의 합이 가장 큰 증가 부분 수열의 합을 출력한다.</p>
-<h3 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">1 100 2 50 60 3 5 6 7 8</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">113</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">maxIncreasingSubArray</span>(<span class="params">A</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> n = A.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">DP</span> = [...A];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (A[i] &gt; A[j] &amp;&amp; <span class="variable constant_">DP</span>[i] &lt; <span class="variable constant_">DP</span>[j] + A[i]) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i] = <span class="variable constant_">DP</span>[j] + A[i];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">maxIncreasingSubArray</span>(A));</span><br></pre></td></tr></table></figure>
-
-<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><ol>
-<li><p>DP는 해당 인덱스까지 가장 긴 부분수열의 합을 나타낸다. 이를 계산하기 편하게 하기 위해 DP에 A 수열의 값을 spread 문법으로 복사해준다.</p>
-</li>
-<li><p>어짜피 DP[0]은 1로 확정이므로 i(인덱스)가 1부터 반복문을 순회한다.<br>이는 DP에 값을 저장하기 위한 반복문이다.</p>
-</li>
-<li><p>i 이전까지 수열 값과 A[i]값을 비교하여 A[i]가 A[j]보다 크고 DP[i] 값이 DP[j]+A[i] 보다 작으면 증가하는 부분 수열에 포함될 수 있다.</p>
-</li>
-</ol>
-<p>그렇기 때문에 해당 DP[i]값을 새로운 값으로 갱신해준다.</p>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> A = [<span class="number">1</span>, <span class="number">100</span>, <span class="number">2</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-i-1-amp-amp-j-0-일-때"><a href="#1-i-1-amp-amp-j-0-일-때" class="headerlink" title="1. i = 1 &amp;&amp; j = 0 일 때"></a>1. <code>i = 1 &amp;&amp; j = 0</code> 일 때</h3><ul>
-<li>A[1] &#x3D; 100, A[0] &#x3D; 1이므로 A[i] &gt; A[j] 조건 만족한다</li>
-<li>DP[1] &lt; DP[0] + A[1] 만족하므로 DP[1] &#x3D; DP[0] + A[1]로 갱신</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span> = [<span class="number">1</span>, <span class="number">101</span>, <span class="number">2</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-i-x3D-2-이고"><a href="#2-i-x3D-2-이고" class="headerlink" title="2. i &#x3D; 2 이고"></a>2. i &#x3D; 2 이고</h3><h4 id="2-1-j-x3D-0-일-때"><a href="#2-1-j-x3D-0-일-때" class="headerlink" title="2.1. j &#x3D; 0 일 때"></a>2.1. j &#x3D; 0 일 때</h4><ul>
-<li>A[2]&#x3D;2, A[0] &#x3D; 1 이므로 A[i] &gt; A[j] 조건 만족한다.</li>
-<li>DP[2] &lt; DP[0] + A[2] 만족하므로 DP[2] &#x3D; DP[0] + A[2]로 갱신</li>
-</ul>
-<h4 id="2-2-j-x3D-1-일-때"><a href="#2-2-j-x3D-1-일-때" class="headerlink" title="2.2. j &#x3D; 1 일 때,"></a>2.2. j &#x3D; 1 일 때,</h4><ul>
-<li>A[2]&#x3D;2, A[1] &#x3D; 100 이므로 A[i] &gt; A[j] 조건 만족하지 못한다.</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span> = [<span class="number">1</span>, <span class="number">101</span>, <span class="number">3</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];</span><br></pre></td></tr></table></figure>
-
-<p>즉, 0번째부터 해당 인덱스까지 수열의 두 수를 비교하고 DP에 저장된 값도 비교하여 둘다 만족하면 DP 값을 갱신하는 것이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/17/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-1%EC%9D%BC%EC%B0%A8-CSS-%EB%9E%80/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 1일차&gt; CSS 란?"
-                        >
-                            &lt;오늘부터 CSS 마스터 1일차&gt; CSS 란?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-17T22:47:28+09:00">
-	
-		    2023/02/17
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="공부-목표"><a href="#공부-목표" class="headerlink" title="공부 목표"></a>공부 목표</h1><p>&lt;오늘부터 CSS 마스터&gt; 챕터를 시작하게 된 이유는 평소 리액트로 상태관리에 대해서만 생각하다보니 CSS로 화면을 스타일링 하는 것이 쉽게 나오지 않게 되었다.</p>
-<p>그래서 이를 개선하고자 매일 CSS 공부를 한개씩 익혀가도록 목표를 세웠습니다!</p>
-<p>공부는 <a target="_blank" rel="noopener" href="https://www.w3schools.com/css/default.asp">W3Cschool</a>) 사이트를 참조하면서 공부를 하거나 Youtube 강의를 보고 배울 수 도 있으며, 간단한 웹 사이트 스타일링을 클론해보는 방향으로 진행할 것입니다.</p>
-<h1 id="CSS란"><a href="#CSS란" class="headerlink" title="CSS란?"></a>CSS란?</h1><ul>
-<li>CSS는 Cascading Style sheet를 의미한다.</li>
-</ul>
-<p>말 그대로 폭포처럼 떨어져 내리는 스타일시트이다.</p>
-<ul>
-<li>CSS는 HTML 요소가 화면에 어떻게 나타날지를 묘사한다.</li>
-</ul>
-<h2 id="CSS를-왜-사용하나요"><a href="#CSS를-왜-사용하나요" class="headerlink" title="CSS를 왜 사용하나요?"></a>CSS를 왜 사용하나요?</h2><p>CSS는 디자인, 레이아웃, 변화등을 포함한 웹 페이지의 스타일을 다른 기기와 화면 크기에 따라 정의하기 위해 사용한다.</p>
-<h2 id="CSS는-큰-문제를-해결한다"><a href="#CSS는-큰-문제를-해결한다" class="headerlink" title="CSS는 큰 문제를 해결한다!"></a>CSS는 큰 문제를 해결한다!</h2><p>HTML은 웹 페이지를 구성하기 위해 태그를 포함하도록 의도된 적이 없다!</p>
-<p><font>나 색상 속성이 HTML 3.2에 추가되었을 때, 모든 페이지에 글꼴과 색상을 추가하는 것은 매우 비용이 많이 드는 작업이 되었다.</p>
-<p>그래서 W3C가 CSS를 만들어 냈고 HTML 페이지에서 스타일 형식을 제거하였다.</p>
-<h2 id="CSS-문법"><a href="#CSS-문법" class="headerlink" title="CSS 문법"></a>CSS 문법</h2><p><img src="https://www.w3schools.com/css/img_selector.gif" alt="CSS 문법"></p>
-<h2 id="CSS-선택자"><a href="#CSS-선택자" class="headerlink" title="CSS 선택자"></a>CSS 선택자</h2><p>CSS 선택자는 스타일링하고 싶은 HTML 요소를 선택한다.</p>
-<p>총 5가지의 항목이 있다.</p>
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>정수 X에 사용할 수 있는 연산은 다음과 같이 세 가지 이다.</p>
 <ol>
-<li>간단한 선택자<ul>
-<li>name, id, class 기반으로 요소 선택하기</li>
-</ul>
-</li>
-<li>조합 선택자<ul>
-<li>둘 사이의 특정한 관계를 기반으로 요소 선택하기</li>
-</ul>
-</li>
-<li>Pseudo-class 선택자<ul>
-<li>특정 상태를 기반으로 요소 선택하기</li>
-</ul>
-</li>
-<li>Pseudo-element 선택자<ul>
-<li>요소의 일부분을 스타일링하고 선택하기</li>
-</ul>
-</li>
-<li>Attribute 선택자<ul>
-<li>attribute나 attribute 값을 기반으로 요소 선택하기</li>
-</ul>
-</li>
+<li>X가 3으로 나누어 떨어지면, 3으로 나눈다.</li>
+<li>X가 2로 나누어 떨어지면, 2로 나눈다.</li>
+<li>1을 뺀다.</li>
 </ol>
-<h3 id="center-class를-포함한-p태그-선택자"><a href="#center-class를-포함한-p태그-선택자" class="headerlink" title="center class를 포함한 p태그 선택자"></a>center class를 포함한 p태그 선택자</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>정수 N이 주어졌을 때, 위와 같은 연산 세 개를 적절히 사용해서 1을 만들려고 한다. 연산을 사용하는 횟수의 최솟값을 출력하시오.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 1보다 크거나 같고, 106보다 작거나 같은 정수 N이 주어진다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 연산을 하는 횟수의 최솟값을 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>❗️ p태그와 .center 사이에 <span style="color:red;">띄어쓰기가 있으면 안된다!</span></p>
-<h3 id="전체-선택자"><a href="#전체-선택자" class="headerlink" title="* 전체 선택자"></a>* 전체 선택자</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">color</span>: blue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="Group-선택자"><a href="#Group-선택자" class="headerlink" title="Group 선택자"></a>Group 선택자</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 같은 스타일이라면 쉼표로 구분하여 한줄로 작성 가능 */</span></span><br><span class="line"><span class="selector-tag">h1</span>,</span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="CSS-추가하는-방법-3가지"><a href="#CSS-추가하는-방법-3가지" class="headerlink" title="CSS 추가하는 방법 3가지"></a>CSS 추가하는 방법 3가지</h2><ol>
-<li>외부 CSS</li>
-<li>내부 CSS</li>
-<li>inline CSS</li>
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> availables = [<span class="variable constant_">DP</span>[i - <span class="number">1</span>]];</span><br><span class="line">  <span class="keyword">if</span> (i % <span class="number">2</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    availables.<span class="title function_">push</span>(<span class="variable constant_">DP</span>[<span class="title class_">Math</span>.<span class="title function_">floor</span>(i / <span class="number">2</span>)]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (i % <span class="number">3</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    availables.<span class="title function_">push</span>(<span class="variable constant_">DP</span>[<span class="title class_">Math</span>.<span class="title function_">floor</span>(i / <span class="number">3</span>)]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="number">1</span> + <span class="title class_">Math</span>.<span class="title function_">min</span>(...availables);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input]);</span><br></pre></td></tr></table></figure>
+
+<p>DP는 작은 문제부터 해결하여 이를 저장하여 큰 문제를 해결하는 프로그래밍 방식이다.</p>
+<ol>
+<li>자연수 2부터 N까지 수가 주어진 3가지 연산으로 1을 만들 수 있는 최소한의 연산 횟수를 담은 배열 DP를 생성한다.</li>
+<li>예를 들어 숫자 2는 1을 만들 수 있는 연산횟수가 1회이므로 DP[2] &#x3D; 1 이다. 그렇다면 DP[6]는 어떻게 알 수 있는가? 바로 숫자 6을 3가지 연산을 수행한 결과값(5,2,3)을 DP 배열에서 찾고 1을 더해주면 된다. DP[6] &#x3D; 1 + (DP[2], DP[3], DP[5] 중 최솟값)</li>
 </ol>
-<h3 id="다중-CSS-우선순위"><a href="#다중-CSS-우선순위" class="headerlink" title="다중 CSS 우선순위"></a>다중 CSS 우선순위</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-tag">h1</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">color</span>: orange;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>만약 <code>mystyle.css</code>에서 h1을 blue로 하였더라도 CSS는 가장 나중에 읽은 CSS를 적용하기 때문에 h1의 color는 orange가 될 것이다.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-tag">h1</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">color</span>: orange;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>만약 <code>mystyle.css</code>가 더 아래에 있어서 나중에 읽힌다면 h1은 <code>mystyle.css</code>에서 정의한 스타일로 적용될 것이다.</p>
-<h4 id="Cascading-우선순위"><a href="#Cascading-우선순위" class="headerlink" title="Cascading 우선순위"></a>Cascading 우선순위</h4><ol>
-<li>inline style</li>
-<li><head> 태그에 있는 외부 CSS와 내부 CSS</li>
-<li>브라우저 기본</li>
-</ol>
+<p>나는 중간에 2로 나눴을 때와 3으로 나눴을 때를 else if로 하는 바람에 2로 나눠지면 3으로는 못나누도록 코드를 짜서 계속 틀렸다고 나왔었다.</p>
 
                     
                         
@@ -829,7 +463,7 @@
                     
                         <p>
                             <a
-                                href="/2023/02/17/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-1%EC%9D%BC%EC%B0%A8-CSS-%EB%9E%80/#post-footer"
+                                href="/2023/02/21/Algorithm/boj/DP/boj-1463-1%EB%A1%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -852,17 +486,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/"
-                            aria-label=": boj-2225 합분해(JavaScript)"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-11726-2xn-%ED%83%80%EC%9D%BC%EB%A7%81-JavaScript/"
+                            aria-label=": boj-11726 2xn 타일링(JavaScript)"
                         >
-                            boj-2225 합분해(JavaScript)
+                            boj-11726 2xn 타일링(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-02-17T22:37:31+09:00">
+    <time datetime="2023-02-21T12:27:43+09:00">
 	
-		    2023/02/17
+		    2023/02/21
     	
     </time>
     
@@ -877,38 +511,29 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수를 구하는 프로그램을 작성하시오.</p>
-<p>덧셈의 순서가 바뀐 경우는 다른 경우로 센다(1+2와 2+1은 서로 다른 경우). 또한 한 개의 수를 여러 번 쓸 수도 있다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 두 정수 N(1 ≤ N ≤ 200), K(1 ≤ K ≤ 200)가 주어진다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 답을 1,000,000,000으로 나눈 나머지를 출력한다.</p>
-<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">20 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>2×n 크기의 직사각형을 1×2, 2×1 타일로 채우는 방법의 수를 구하는 프로그램을 작성하시오.</p>
+<p>아래 그림은 2×5 크기의 직사각형을 채운 한 가지 방법의 예이다.</p>
+<p><img src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/11726/1.png" alt="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/11726/1.png"></p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 n이 주어진다. (1 ≤ n ≤ 1,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 2×n 크기의 직사각형을 채우는 방법의 수를 10,007로 나눈 나머지를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">21</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6 4</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">9</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">84</span><br></pre></td></tr></table></figure>
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">55</span><br></pre></td></tr></table></figure>
 
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, K] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (i === <span class="number">1</span>) <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: K + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(K + <span class="number">1</span>).<span class="title function_">fill</span>(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= K; j++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i][j] = (<span class="variable constant_">DP</span>[i - <span class="number">1</span>][j] + <span class="variable constant_">DP</span>[i][j - <span class="number">1</span>]) % <span class="number">1000000000</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[N][K - <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = (<span class="variable constant_">DP</span>[i - <span class="number">1</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>]) % <span class="number">10007</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input]);</span><br></pre></td></tr></table></figure>
 
+<p>패턴을 찾아보려고 노력했지만 결국 못찾고 다른 사람 코드를 보았다.. DP는 작은 문제에서 나온 결과물을 가지고 큰 문제를 해결하는 문제이다. 즉, 작은 문제의 결과물을 큰 문제에 결과물에 대입할 수 있는 안목이 필요하다.</p>
+<p>위 문제는 2x1 타일을 가장 왼쪽에 세로로 배치했을 때, 2x1 타일을 가장 왼쪽에 가로로 2줄 배치했을 때 경우의 수로 나뉜다.</p>
+<p>n &#x3D; 1인 경우는 1가지이고, n &#x3D; 2인 경우 2가지를 그림으로 그려본다.</p>
+<p><img src="/../../../../images/boj/11726/Frame%201.png" alt="Frame 1.png"></p>
 <ul>
-<li>✏️ N &#x3D; 1인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.<ul>
-<li>❗️ 1개의 수로 1을 만들 수 있는 경우의 수는 1가지이다.</li>
-<li>2개의 수로 1을 만들 수 있는 경우의 수는 0+1, 1+0으로 2가지이다.</li>
-<li>3개의 수로 1을 만들 수 있는 경우의 수는 0+0+1, 0+1+0, 1+0+0으로 3가지이다…</li>
+<li>즉, 왼쪽에 세로로 2x1을 배치했을 때 경우의 수는 n-1 경우의 수와 같고, 왼쪽에 가로로 2줄 배치했을 때경우의 수는 n-2의 경우의 수와 같다.</li>
+<li>따라서 DP[n] &#x3D; DP[n-1] + DP[n-2]가 성립한다.</li>
 </ul>
-</li>
-<li>N &#x3D; 2인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.<ul>
-<li>❗️ 1개의 수로 2를 만들 수 있는 경우의 수는 1가지이다.</li>
-<li>2개의 수로 2를 만들 수 있는 경우의 수는 1+1, 2+0, 0+2로 3가지이다.</li>
-<li>3개의 수로 2를 만들 수 있는 경우의 수는 1+1+0, 1+0+1, 0+1+1, 2+0+0, 0+2+0, 0+0+2로 6가지이다…</li>
-</ul>
-</li>
-</ul>
-<p>❗️의 조건을 가지고 DP[N][k] 2차원 배열에서, DP[N][1] &#x3D; 1인 것을 알 수 있다.</p>
-<p>✏️의 조건을 가지고 DP[1][k] &#x3D; K 인 것을 알 수 있다.</p>
-<p><img src="/../../../../images/boj/2225/Frame.png" alt="Frame.png"></p>
-<p>위와 같은 점화식을 발견하였고 그에 알맞은 식을 만들었다.</p>
 
                     
                         
@@ -918,7 +543,7 @@
                     
                         <p>
                             <a
-                                href="/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/#post-footer"
+                                href="/2023/02/21/Algorithm/boj/DP/boj-11726-2xn-%ED%83%80%EC%9D%BC%EB%A7%81-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -941,17 +566,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/02/17/Algorithm/boj/DP/boj-15988-1-2-3-%EB%8D%94%ED%95%98%EA%B8%B0-JavaScript/"
-                            aria-label=": boj-15988 1,2,3 더하기 3(JavaScript)"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/"
+                            aria-label=": boj-11052 카드 구매하기(JavaScript)"
                         >
-                            boj-15988 1,2,3 더하기 3(JavaScript)
+                            boj-11052 카드 구매하기(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-02-17T22:34:03+09:00">
+    <time datetime="2023-02-21T12:26:01+09:00">
 	
-		    2023/02/17
+		    2023/02/21
     	
     </time>
     
@@ -966,136 +591,376 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>정수 4를 1, 2, 3의 합으로 나타내는 방법은 총 7가지가 있다. 합을 나타낼 때는 수를 1개 이상 사용해야 한다.</p>
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>요즘 민규네 동네에서는 스타트링크에서 만든 PS카드를 모으는 것이 유행이다.</p>
+<p>PS카드는 PS(Problem Solving)분야에서 유명한 사람들의 아이디와 얼굴이 적혀있는 카드이다. 각각의 카드에는 등급을 나타내는 색이 칠해져 있고, 다음과 같이 8가지가 있다.</p>
 <ul>
-<li>1+1+1+1</li>
-<li>1+1+2</li>
+<li><strong>전설카드</strong></li>
+<li><strong>레드카드</strong></li>
+<li><strong>오렌지카드</strong></li>
+<li><strong>퍼플카드</strong></li>
+<li><strong>블루카드</strong></li>
+<li><strong>청록카드</strong></li>
+<li><strong>그린카드</strong></li>
+<li><strong>그레이카드</strong></li>
+</ul>
+<p>카드는 카드팩의 형태로만 구매할 수 있고, 카드팩의 종류는 카드 1개가 포함된 카드팩, 카드 2개가 포함된 카드팩, … 카드 N개가 포함된 카드팩과 같이 총 N가지가 존재한다.</p>
+<p>민규는 카드의 개수가 적은 팩이더라도 가격이 비싸면 높은 등급의 카드가 많이 들어있을 것이라는 미신을 믿고 있다. 따라서, 민규는 돈을 최대한 많이 지불해서 카드 N개 구매하려고 한다. 카드가 i개 포함된 카드팩의 가격은 Pi원이다.</p>
+<p>예를 들어, 카드팩이 총 4가지 종류가 있고, P1 &#x3D; 1, P2 &#x3D; 5, P3 &#x3D; 6, P4 &#x3D; 7인 경우에 민규가 카드 4개를 갖기 위해 지불해야 하는 금액의 최댓값은 10원이다. 2개 들어있는 카드팩을 2번 사면 된다.</p>
+<p>P1 &#x3D; 5, P2 &#x3D; 2, P3 &#x3D; 8, P4 &#x3D; 10인 경우에는 카드가 1개 들어있는 카드팩을 4번 사면 20원이고, 이 경우가 민규가 지불해야 하는 금액의 최댓값이다.</p>
+<p>마지막으로, P1 &#x3D; 3, P2 &#x3D; 5, P3 &#x3D; 15, P4 &#x3D; 16인 경우에는 3개 들어있는 카드팩과 1개 들어있는 카드팩을 구매해 18원을 지불하는 것이 최댓값이다.</p>
+<p>카드 팩의 가격이 주어졌을 때, N개의 카드를 구매하기 위해 민규가 지불해야 하는 금액의 최댓값을 구하는 프로그램을 작성하시오. N개보다 많은 개수의 카드를 산 다음, 나머지 카드를 버려서 N개를 만드는 것은 불가능하다. 즉, 구매한 카드팩에 포함되어 있는 카드 개수의 합은 N과 같아야 한다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 민규가 구매하려고 하는 카드의 개수 N이 주어진다. (1 ≤ N ≤ 1,000)</p>
+<p>둘째 줄에는 Pi가 P1부터 PN까지 순서대로 주어진다. (1 ≤ Pi ≤ 10,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 민규가 카드 N개를 갖기 위해 지불해야 하는 금액의 최댓값을 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line">1 5 6 7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">10 9 8 7 6</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">50</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">1 1 2 3 5 8 13 21 34 55</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">55</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-4"><a href="#예제-입력-4" class="headerlink" title="예제 입력 4"></a>예제 입력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">5 10 11 12 13 30 35 40 45 47</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-4"><a href="#예제-출력-4" class="headerlink" title="예제 출력 4"></a>예제 출력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">50</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-5"><a href="#예제-입력-5" class="headerlink" title="예제 입력 5"></a>예제 입력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line">5 2 8 10</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-5"><a href="#예제-출력-5" class="headerlink" title="예제 출력 5"></a>예제 출력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">20</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-6"><a href="#예제-입력-6" class="headerlink" title="예제 입력 6"></a>예제 입력 6</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line">3 5 15 16</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-6"><a href="#예제-출력-6" class="headerlink" title="예제 출력 6"></a>예제 출력 6</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">18</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="regexp">/\s/</span>);</span><br><span class="line"><span class="keyword">const</span> N = +input.<span class="title function_">shift</span>();</span><br><span class="line"><span class="keyword">const</span> prices = input.<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="keyword">new</span> <span class="title class_">Array</span>(N + <span class="number">1</span>).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= i; j++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[i - j] + prices[j - <span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[N]);</span><br></pre></td></tr></table></figure>
+
+<p>처음에는 반복문 1회만으로 가능할 것이라 생각하여 단일 반복문으로 패턴을 파악하였는데 테케만 통과하고 틀렸다고 나왔다.</p>
+<p>그래서 다른 사람 해설을 보고 이해하였다.</p>
+<p>ex) N &#x3D; 4</p>
+<ol>
+<li>i &#x3D; 1, DP[4]와 prices[4-1-1]+DP[1] 중 최대값 할당</li>
+<li>i &#x3D; 2, DP[4]와 prices[4-2-1]+DP[2] 중 최대값 할당</li>
+<li>i &#x3D; 3, DP[4]와 prices[4-3-1]+DP[3] 중 최대값 할당</li>
+</ol>
+<p>위 경우의 수를 반복해야하므로 이중 for문이 필요하다는 것을 알게되었다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-15990-1-2-3-%EB%8D%94%ED%95%98%EA%B8%B0-5-JavaScript/"
+                            aria-label=": boj-15990 1,2,3 더하기 5(JavaScript)"
+                        >
+                            boj-15990 1,2,3 더하기 5(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:24:28+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>정수 4를 1, 2, 3의 합으로 나타내는 방법은 총 3가지가 있다. 합을 나타낼 때는 수를 1개 이상 사용해야 한다. 단, 같은 수를 두 번 이상 연속해서 사용하면 안 된다.</p>
+<ul>
 <li>1+2+1</li>
-<li>2+1+1</li>
-<li>2+2</li>
 <li>1+3</li>
 <li>3+1</li>
 </ul>
 <p>정수 n이 주어졌을 때, n을 1, 2, 3의 합으로 나타내는 방법의 수를 구하는 프로그램을 작성하시오.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 테스트 케이스의 개수 T가 주어진다. 각 테스트 케이스는 한 줄로 이루어져 있고, 정수 n이 주어진다. n은 양수이며 1,000,000보다 작거나 같다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 테스트 케이스의 개수 T가 주어진다. 각 테스트 케이스는 한 줄로 이루어져 있고, 정수 n이 주어진다. n은 양수이며 100,000보다 작거나 같다.</p>
 <h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>각 테스트 케이스마다, n을 1, 2, 3의 합으로 나타내는 방법의 수를 1,000,000,009로 나눈 나머지를 출력한다.</p>
 <h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">4</span><br><span class="line">7</span><br><span class="line">10</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">7</span><br><span class="line">44</span><br><span class="line">274</span><br></pre></td></tr></table></figure>
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">9</span><br><span class="line">27</span><br></pre></td></tr></table></figure>
 
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> N = input.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">input.<span class="title function_">forEach</span>(<span class="function">(<span class="params">num</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= num; i++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i] = (<span class="variable constant_">DP</span>[i - <span class="number">3</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + <span class="variable constant_">DP</span>[i - <span class="number">1</span>]) % <span class="number">1000000009</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[num]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 시간 초과</span></span><br><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> T = +input.<span class="title function_">shift</span>();</span><br><span class="line"><span class="keyword">const</span> nums = input.<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> N = <span class="title class_">Math</span>.<span class="title function_">max</span>(...nums);</span><br><span class="line"></span><br><span class="line"><span class="comment">// DP[n][k] 는 n을 만들 때 끝의 자리수가 k로 끝나는 경우의 수를 나타낸다. (k = 1,2,3)</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">4</span>).<span class="title function_">fill</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">3</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">3</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">nums.<span class="title function_">forEach</span>(<span class="function">(<span class="params">num</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= num; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= <span class="number">3</span>; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (j === <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i][j] = (<span class="variable constant_">DP</span>[i - j][<span class="number">2</span>] + <span class="variable constant_">DP</span>[i - j][<span class="number">3</span>]) % <span class="number">1000000009</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i][j] = (<span class="variable constant_">DP</span>[i - j][<span class="number">1</span>] + <span class="variable constant_">DP</span>[i - j][<span class="number">3</span>]) % <span class="number">1000000009</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i][j] = (<span class="variable constant_">DP</span>[i - j][<span class="number">1</span>] + <span class="variable constant_">DP</span>[i - j][<span class="number">2</span>]) % <span class="number">1000000009</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[num].<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> (acc + cur) % <span class="number">1000000009</span>, <span class="number">0</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>1을 1,2,3으로 만들 수 있는 경우의 수, 2를 1,2,3으로 만들 수 있는 경우의 수, 3을 1,2,3으로 만들 수 있는 경우의 수는 직접 구할 수 있어서 구하였다.</li>
-<li>4부터는 맨 마지막에 1,2,3이 오는 경우의 수를 나누어서 생각하였다.<ul>
-<li>맨 마지막에 1이 오는 경우 ⇒ 1+1+1+1, 1+2+1, 2+1+1, 3+1 ⇒ DP[4-1]</li>
-<li>맨 마지막에 2가 오는 경우 ⇒ 1+1+2, 2+2 ⇒ DP[4-2]</li>
-<li>맨 마지막에 3이 오는 경우 ⇒ 1+3 ⇒ DP[4-3]</li>
-</ul>
-</li>
-</ul>
-<p>하지만 위와 같은 방법으로 하게되면 n이 1,000,000이 주어졌을 때, 반복문은 n-3회 진행하므로 시간초과가 난다. <strong>심지어 테스트 케이스 수가 T개 주어지는 만큼 n-3회 반복해야 하므로 매우 오래걸릴 수도 있게된다.</strong></p>
-<p>즉, input 값 중에서 가장 큰 값으로 반복문 한번만 순회한 다음, 완성된 DP 배열에서 해당 값을 찾는 식으로 방법을 바꿨다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> N = input.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">solution</span>(<span class="params">n, arr</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (n &lt; <span class="number">4</span>) <span class="keyword">return</span> arr[n - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i] = (<span class="variable constant_">DP</span>[i - <span class="number">3</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + <span class="variable constant_">DP</span>[i - <span class="number">1</span>]) % <span class="number">1000000009</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>];</span><br><span class="line"><span class="title function_">solution</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(...input), <span class="variable constant_">DP</span>);</span><br><span class="line"></span><br><span class="line">input.<span class="title function_">forEach</span>(<span class="function">(<span class="params">num</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[num]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> T = +input.<span class="title function_">shift</span>();</span><br><span class="line"><span class="keyword">const</span> nums = input.<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> N = <span class="title class_">Math</span>.<span class="title function_">max</span>(...nums);</span><br><span class="line"></span><br><span class="line"><span class="comment">// DP[n][k] 는 n을 만들 때 끝의 자리수가 k로 끝나는 경우의 수를 나타낸다. (k = 1,2,3)</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">4</span>).<span class="title function_">fill</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>][<span class="number">3</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">2</span>] = <span class="number">1</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>][<span class="number">3</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">1</span>] = <span class="number">1</span>; <span class="comment">// 2+1</span></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">2</span>] = <span class="number">1</span>; <span class="comment">// 1+2</span></span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">3</span>][<span class="number">3</span>] = <span class="number">1</span>; <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= <span class="number">3</span>; j++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> k = <span class="number">1</span>; k &lt;= <span class="number">3</span>; k++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (j === k) <span class="keyword">continue</span>;</span><br><span class="line">      <span class="variable constant_">DP</span>[i][j] += <span class="variable constant_">DP</span>[i - j][k] % <span class="number">1000000009</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">nums.<span class="title function_">forEach</span>(<span class="function">(<span class="params">num</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[num].<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> (acc + cur) % <span class="number">1000000009</span>, <span class="number">0</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/17/Algorithm/boj/DP/boj-15988-1-2-3-%EB%8D%94%ED%95%98%EA%B8%B0-JavaScript/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/16/Algorithm/boj/DP/boj-1149-RGB-%EA%B1%B0%EB%A6%AC-JavaScript/"
-                            aria-label=": boj-1149 RGB 거리(JavaScript)"
-                        >
-                            boj-1149 RGB 거리(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-16T00:32:09+09:00">
-	
-		    2023/02/16
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>RGB거리에는 집이 N개 있다. 거리는 선분으로 나타낼 수 있고, 1번 집부터 N번 집이 순서대로 있다.</p>
-<p>집은 빨강, 초록, 파랑 중 하나의 색으로 칠해야 한다. 각각의 집을 빨강, 초록, 파랑으로 칠하는 비용이 주어졌을 때, 아래 규칙을 만족하면서 모든 집을 칠하는 비용의 최솟값을 구해보자.</p>
-<ul>
-<li>1번 집의 색은 2번 집의 색과 같지 않아야 한다.</li>
-<li>N번 집의 색은 N-1번 집의 색과 같지 않아야 한다.</li>
-<li>i(2 ≤ i ≤ N-1)번 집의 색은 i-1번, i+1번 집의 색과 같지 않아야 한다.</li>
-</ul>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 집의 수 N(2 ≤ N ≤ 1,000)이 주어진다. 둘째 줄부터 N개의 줄에는 각 집을 빨강, 초록, 파랑으로 칠하는 비용이 1번 집부터 한 줄에 하나씩 주어진다. 집을 칠하는 비용은 1,000보다 작거나 같은 자연수이다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 모든 집을 칠하는 비용의 최솟값을 출력한다.</p>
-<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">26 40 83</span><br><span class="line">49 60 57</span><br><span class="line">13 89 99</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">96</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">1 100 100</span><br><span class="line">100 1 100</span><br><span class="line">100 100 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">1 100 100</span><br><span class="line">100 100 100</span><br><span class="line">1 100 100</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">102</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-4"><a href="#예제-입력-4" class="headerlink" title="예제 입력 4"></a>예제 입력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">30 19 5</span><br><span class="line">64 77 64</span><br><span class="line">15 19 97</span><br><span class="line">4 71 57</span><br><span class="line">90 86 84</span><br><span class="line">93 32 91</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-4"><a href="#예제-출력-4" class="headerlink" title="예제 출력 4"></a>예제 출력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">208</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-5"><a href="#예제-입력-5" class="headerlink" title="예제 입력 5"></a>예제 입력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">8</span><br><span class="line">71 39 44</span><br><span class="line">32 83 55</span><br><span class="line">51 37 63</span><br><span class="line">89 29 100</span><br><span class="line">83 58 11</span><br><span class="line">65 13 15</span><br><span class="line">47 25 29</span><br><span class="line">60 66 19</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-5"><a href="#예제-출력-5" class="headerlink" title="예제 출력 5"></a>예제 출력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">253</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, ...arr] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> input = arr.<span class="title function_">map</span>(<span class="function">(<span class="params">houseCosts</span>) =&gt;</span> houseCosts.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">solution</span>(<span class="params">n, rgb</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">3</span>).<span class="title function_">fill</span>(<span class="number">0</span>));</span><br><span class="line">  <span class="variable constant_">DP</span>[<span class="number">1</span>] = rgb[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i][<span class="number">0</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">1</span>], <span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">2</span>]) + rgb[i - <span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    <span class="variable constant_">DP</span>[i][<span class="number">1</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">0</span>], <span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">2</span>]) + rgb[i - <span class="number">1</span>][<span class="number">1</span>];</span><br><span class="line">    <span class="variable constant_">DP</span>[i][<span class="number">2</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">1</span>], <span class="variable constant_">DP</span>[i - <span class="number">1</span>][<span class="number">0</span>]) + rgb[i - <span class="number">1</span>][<span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(...<span class="variable constant_">DP</span>[n]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">solution</span>(+N, input);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>처음에는 1번째 집이 R,G,B를 선택하는 경우의 수를 구하고 이를 이 중 가장 작은 것을 가지고 다음 집을 구한다고 생각했다. 생각은 했는데 이를 코드로 어떻게 짜야할지 생각을 못해서 경우의수를 일일히 적어보고 패턴을 찾아보려고 했다.</li>
-<li>하지만 못찾아서 다른 사람의 해설을 참고하였다. 문제가 복잡해보이지만 단순하게 생각하면 인접한 집끼리는 같은 색상을 가질 수 없다는 것이 전부이다.</li>
-</ul>
-<p>우선, DP 배열을 만들고 해당 DP[i][0]은 i번째 집을 Red로 색칠하는 비용을 저장한다.</p>
-<ul>
-<li>DP[1] &#x3D; input[0] 이 성립한다.</li>
-<li>이후 i &#x3D; 2 부터 반복문을 진행한다.<ol>
-<li>DP[2]가 R로 색칠될 경우의 비용을 저장한다. ⇒ DP[2]가 R 이기 위해서는 DP[1]에서 G, B로 색칠되어야만 가능하다. 즉 DP[1]에서 G, B를 칠하는 비용 중 최소값을 구하고 이에 input의 2번째 집에 해당하는 비용 중 R을 색칠하는 비용을 더해주면 DP[2][0] 즉, 2번째 집을 R로 칠할 때 최소 비용을 구할 수 있다.</li>
-<li>DP[2][1]은 이전 집에서 R, B 중 최소값에다가 input의 2번째 집에 해당하는 비용 중 G을 색칠하는 비용을 더해주면 DP[2][1]의 최솟값을 구할 수 있다.</li>
+<ol>
+<li>DP[n][k]는 n 을 만들 때, 끝의 자리수가 k로 끝나는 경우의 수를 나타낸다. (k &#x3D; 1,2,3)</li>
+<li>j가 1이면 k는 1이 아니여야만 가능하다. 왜냐하면 연속해서 올 수 없기 때문이다.</li>
+<li>DP 저장을 해줄 때에도 1000000009을 나눠주고 합한 것도 나눠줘야하는 이유를 모르겠다.</li>
 </ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-15990-1-2-3-%EB%8D%94%ED%95%98%EA%B8%B0-5-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-10844-%EC%89%AC%EC%9A%B4-%EA%B3%84%EB%8B%A8-%EC%88%98-JavaScript/"
+                            aria-label=": boj-10844 쉬운 계단 수(JavaScript)"
+                        >
+                            boj-10844 쉬운 계단 수(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:23:09+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>45656이란 수를 보자.</p>
+<p>이 수는 인접한 모든 자리의 차이가 1이다. 이런 수를 계단 수라고 한다.</p>
+<p>N이 주어질 때, 길이가 N인 계단 수가 총 몇 개 있는지 구해보자. 0으로 시작하는 수는 계단수가 아니다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 N이 주어진다. N은 1보다 크거나 같고, 100보다 작거나 같은 자연수이다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 정답을 1,000,000,000으로 나눈 나머지를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">9</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">17</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [</span><br><span class="line">  [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">  [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="variable constant_">DP</span>.<span class="property">length</span> !== input + <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>.<span class="title function_">push</span>([...<span class="title class_">Array</span>(<span class="number">10</span>)]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt;= <span class="number">9</span>; j++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i][j] = ((<span class="variable constant_">DP</span>[i - <span class="number">1</span>][j - <span class="number">1</span>] || <span class="number">0</span>) + (<span class="variable constant_">DP</span>[i - <span class="number">1</span>][j + <span class="number">1</span>] || <span class="number">0</span>)) % <span class="number">1000000000</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input].<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> (acc + cur) % <span class="number">1000000000</span>, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>DP[i][j]</code>의 값은 길이가 i인 수가 j(0~9)로 끝나는 모든 경우의 수이다.</li>
+<li>DP 배열을 하드코딩으로 직접 만들어줬다. 왜나하면 초기값 같은 경우는 직접 만드는 편이 더 로직이 간편하기 때문이다. 이후 input의 길이보다 1 더 큰 길이로 DP 배열에 추가하였다.<ul>
+<li>이렇게 하지 않으면 DP[input]의 값이 존재하지 않는 값이여서 값을 할당할 수가 없다.</li>
+</ul>
+</li>
+<li>주어진 테케에서 길이가 1인경우, 길이가 2인 경우의 패턴을 파악하였다.<ul>
+<li>예를 들어 <code>DP[2][1]</code>인 경우 길이가 2이고 1로 끝나는 경우의 수는 1 앞에 올 수 있는 수는 0,2이다. 이 값이 바로 <code>DP[1][0]</code>과 <code>DP[1][2]</code> 이다.</li>
+</ul>
+</li>
+<li>저번 문제에서도 그렇고 왜 10억을 값을 저장할 때 한번, 총합을 구할 때 두번 나눠주는지 이해가 안된다.</li>
+<li>주의할 점은 끝나는 수가 0인 경우는 이전 숫자로 1만 올 수 있고, 끝나는 숫자가 9인 경우는 이전 숫자로 8만 올 수 있는 것을 고려해준 것이 바로 <code>||</code> 논리 연산자 부분이다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-10844-%EC%89%AC%EC%9A%B4-%EA%B3%84%EB%8B%A8-%EC%88%98-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-2193-%EC%9D%B4%EC%B9%9C%EC%88%98-JavaScript/"
+                            aria-label=": boj-2193 이친수(JavaScript)"
+                        >
+                            boj-2193 이친수(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:21:59+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>0과 1로만 이루어진 수를 이진수라 한다. 이러한 이진수 중 특별한 성질을 갖는 것들이 있는데, 이들을 이친수(pinary number)라 한다. 이친수는 다음의 성질을 만족한다.</p>
+<ol>
+<li>이친수는 0으로 시작하지 않는다.</li>
+<li>이친수에서는 1이 두 번 연속으로 나타나지 않는다. 즉, 11을 부분 문자열로 갖지 않는다.</li>
+</ol>
+<p>예를 들면 1, 10, 100, 101, 1000, 1001 등이 이친수가 된다. 하지만 0010101이나 101101은 각각 1, 2번 규칙에 위배되므로 이친수가 아니다.</p>
+<p>N(1 ≤ N ≤ 90)이 주어졌을 때, N자리 이친수의 개수를 구하는 프로그램을 작성하시오.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 N이 주어진다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 N자리 이친수의 개수를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [<span class="title class_">BigInt</span>(<span class="number">0</span>), <span class="title class_">BigInt</span>(<span class="number">1</span>)];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + <span class="variable constant_">DP</span>[i - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input] + <span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>처음에는 길이가 i인 수가 0,1로 끝나는 수를 나타내기 위해 DP[i][0], DP[i][1]로 배열을 구성하였는데, 점화식을 알아내고 나니 <code>DP[i] = DP[i-2] + DP[i-1]</code>로 계산하기 위해 DP을 1차원 배열로 바꿨다.</li>
+<li>N이 90까지 가능하므로 이 경우 수가 매우 커져 number의 범위가 넘어가는 경우가 있을 수 있기 때문에 BigInt()로 값을 계산해줘야 한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-2193-%EC%9D%B4%EC%B9%9C%EC%88%98-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/"
+                            aria-label=": boj-11053 가장 긴 증가하는 부분수열(JavaScript)"
+                        >
+                            boj-11053 가장 긴 증가하는 부분수열(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:20:55+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>수열 A가 주어졌을 때, 가장 긴 증가하는 부분 수열을 구하는 프로그램을 작성하시오.</p>
+<p>예를 들어, 수열 A &#x3D; {10, 20, 10, 30, 20, 50} 인 경우에 가장 긴 증가하는 부분 수열은 A &#x3D; {<strong>10</strong>, <strong>20</strong>, 10, <strong>30</strong>, 20, <strong>50</strong>} 이고, 길이는 4이다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
+<p>둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 수열 A의 가장 긴 증가하는 부분 수열의 길이를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">10 20 10 30 20 50</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, a] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = a.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N &#125;, <span class="function">() =&gt;</span> <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (A[j] &lt; A[i]) &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[j] + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>처음 모두 자신의 길이를 자신을 포함하므로 1로 설정해준다.</li>
+<li>만약 i 번째 수가 i보다 작은 번째의 수보다 크다면 DP[i]는 이전 DP값에 1을 더해준 것과 기존 DP[i]값 중 큰 값을 저장해둔다.</li>
+<li>ex) <code>A = [10,20,10,30,20,50]</code>이고 DP[1]을 계산하면, <code>A[0] &lt; A[1]</code> 이므로 <code>DP[1] = DP[0] + 1</code>이다.<ul>
+<li>왜냐하면 DP는 자신의 길이를 나타내는 것인데 이전 수보다 크다는 것은 자기 자신을 수열로 포함시킬 수 있다는 뜻이므로 +1을 해주는 것이다. 또한, 자신 보다 작은 수의 DP가 여러개 일 수도 있으므로 반복문을 돌면서 이들 중 최댓값만 저장해주면 된다.</li>
+</ul>
 </li>
 </ul>
 
@@ -1107,7 +972,7 @@
                     
                         <p>
                             <a
-                                href="/2023/02/16/Algorithm/boj/DP/boj-1149-RGB-%EA%B1%B0%EB%A6%AC-JavaScript/#post-footer"
+                                href="/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -1130,17 +995,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/02/16/Algorithm/boj/DP/boj-1309-%EB%8F%99%EB%AC%BC%EC%9B%90-JavaScript/"
-                            aria-label=": boj-1309 동물원(JavaScript)"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-14002-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-4-JavaScript/"
+                            aria-label=": boj-14002 가장 긴 증가하는 부분수열 4(JavaScript)"
                         >
-                            boj-1309 동물원(JavaScript)
+                            boj-14002 가장 긴 증가하는 부분수열 4(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-02-16T00:29:20+09:00">
+    <time datetime="2023-02-21T12:19:01+09:00">
 	
-		    2023/02/16
+		    2023/02/21
     	
     </time>
     
@@ -1155,104 +1020,33 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>어떤 동물원에 가로로 두칸 세로로 N칸인 아래와 같은 우리가 있다.</p>
-<p><img src="https://www.acmicpc.net/upload/201004/dnfl.JPG" alt="https://www.acmicpc.net/upload/201004/dnfl.JPG"></p>
-<p>이 동물원에는 사자들이 살고 있는데 사자들을 우리에 가둘 때, 가로로도 세로로도 붙어 있게 배치할 수는 없다. 이 동물원 조련사는 사자들의 배치 문제 때문에 골머리를 앓고 있다.</p>
-<p>동물원 조련사의 머리가 아프지 않도록 우리가 2*N 배열에 사자를 배치하는 경우의 수가 몇 가지인지를 알아내는 프로그램을 작성해 주도록 하자. 사자를 한 마리도 배치하지 않는 경우도 하나의 경우의 수로 친다고 가정한다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 우리의 크기 N(1≤N≤100,000)이 주어진다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 사자를 배치하는 경우의 수를 9901로 나눈 나머지를 출력하여라.</p>
-<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>수열 A가 주어졌을 때, 가장 긴 증가하는 부분 수열을 구하는 프로그램을 작성하시오.</p>
+<p>예를 들어, 수열 A &#x3D; {10, 20, 10, 30, 20, 50} 인 경우에 가장 긴 증가하는 부분 수열은 A &#x3D; {<strong>10</strong>, <strong>20</strong>, 10, <strong>30</strong>, 20, <strong>50</strong>} 이고, 길이는 4이다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
+<p>둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 수열 A의 가장 긴 증가하는 부분 수열의 길이를 출력한다.</p>
+<p>둘째 줄에는 가장 긴 증가하는 부분 수열을 출력한다. 그러한 수열이 여러가지인 경우 아무거나 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">10 20 10 30 20 50</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">41</span><br></pre></td></tr></table></figure>
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line">10 20 30 50</span><br></pre></td></tr></table></figure>
 
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><p><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/92aaf16f-55a1-4e76-8e90-9178ef81c778/Group_2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45/20230215/us-west-2/s3/aws4_request&X-Amz-Date=20230215T153007Z&X-Amz-Expires=86400&X-Amz-Signature=a13b494f79663385377ccb5f19c9dfeeb3546d93ae8759b7801c12087576d3da&X-Amz-SignedHeaders=host&response-content-disposition=filename=%22Group%25202.png%22&x-id=GetObject" alt="해설사진"></p>
-<p>N &#x3D; 3 까지의 경우의 수를 적고나서 점화식을 생각해보았다. 처음에는 <code>DP[i] = 2*DP[i-1] + (2**(i-1) - 1)</code> 이라고 생각했는데 오답이였다.</p>
-<p>다시 점화식을 세웠다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span>[i] = <span class="number">2</span> * <span class="variable constant_">DP</span>[i - <span class="number">1</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>];</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [<span class="number">0</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">17</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = (<span class="number">2</span> * <span class="variable constant_">DP</span>[i - <span class="number">1</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>]) % <span class="number">9901</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input]);</span><br></pre></td></tr></table></figure>
-
-<p>위 처럼 직접 경우의 수를 다 계산할 수 있었지만, DP를 2차원 배열로 설정하고 첫번째 칸에 공백이 오는경우, 좌측에 사자 채우는 경우, 우측에 사자 채우는 경우를 나눠서 구해볼 수 도 있을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/16/Algorithm/boj/DP/boj-1309-%EB%8F%99%EB%AC%BC%EC%9B%90-JavaScript/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/14/Algorithm/boj/DP/boj-11057-%EC%98%A4%EB%A5%B4%EB%A7%89-%EC%88%98-JavaScript/"
-                            aria-label=": boj-11057 오르막 수(JavaScript)"
-                        >
-                            boj-11057 오르막 수(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-14T22:31:55+09:00">
-	
-		    2023/02/14
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>오르막 수는 수의 자리가 오름차순을 이루는 수를 말한다. 이때, 인접한 수가 같아도 오름차순으로 친다.</p>
-<p>예를 들어, 2234와 3678, 11119는 오르막 수이지만, 2232, 3676, 91111은 오르막 수가 아니다.</p>
-<p>수의 길이 N이 주어졌을 때, 오르막 수의 개수를 구하는 프로그램을 작성하시오. 수는 0으로 시작할 수 있다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 길이가 N인 오르막 수의 개수를 10,007로 나눈 나머지를 출력한다.</p>
-<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10</span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">55</span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">220</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> length = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Sum</span>(<span class="params">arr</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, cur</span>) =&gt;</span> acc + cur, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: length + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (i === <span class="number">1</span>) <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">10</span>).<span class="title function_">fill</span>(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (i === <span class="number">2</span>) <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: <span class="number">10</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> <span class="number">10</span> - i);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Array</span>(<span class="number">10</span>).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= length; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt;= <span class="number">9</span>; j++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> k = j; k &lt;= <span class="number">9</span>; k++) &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i][j] += <span class="variable constant_">DP</span>[i - <span class="number">1</span>][k] % <span class="number">10007</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Sum</span>(<span class="variable constant_">DP</span>[length]) % <span class="number">10007</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 나의 오답</span></span><br><span class="line"><span class="keyword">const</span> [N, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N &#125;, <span class="function">() =&gt;</span> <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (A[j] &lt; A[i]) &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[j] + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">LIS</span> = <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> LIS_Array = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> index = <span class="variable constant_">DP</span>.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">elem</span>) =&gt;</span> elem === i + <span class="number">1</span>);</span><br><span class="line">  LIS_Array.<span class="title function_">push</span>(A[index]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">LIS</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(LIS_Array.<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>));</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>길이가 i이고, j로 시작하는 수로 오름차순을 만들 수 있는 경우의 수를 DP 배열에 저장하였다.</li>
+<li>기존 LIS를 구하는 로직에서 DP에 해당하는 LIS뿐만 아니라 그 때의 배열까지 생성해주도록 하였다.</li>
+<li>처음 배열 길이만큼 반복문을 순회하면서 DP값에서 Index를 찾는다. 해당 index의 A 수열의 값을 넣어준다.</li>
+<li>왜 틀렸는지 이유를 모르겠어서 해설을 보게되었다.</li>
 </ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 점화식</span></span><br><span class="line"><span class="variable constant_">DP</span>[i][j] = <span class="variable constant_">DP</span>[i-<span class="number">1</span>]의 j~<span class="number">9</span>까지의 합</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N &#125;, <span class="function">() =&gt;</span> <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (A[j] &lt; A[i]) &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[j] + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable constant_">LIS</span> = <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>);</span><br><span class="line"><span class="keyword">let</span> LIS_Array = [];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = N - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable constant_">DP</span>[i] === <span class="variable constant_">LIS</span>) &#123;</span><br><span class="line">    LIS_Array = [A[i], ...LIS_Array];</span><br><span class="line">    <span class="variable constant_">LIS</span>--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(LIS_Array.<span class="property">length</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(LIS_Array.<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이전 내 코드는 findIndex 메서드로 제일 앞에서 부터 해당 인덱스를 찾아주도록 하였다. 하지만 이런 경우 반례가 생긴다. 왜냐하면 내가 처음에 DP의 초기값을 모두 1로 설정해두었기 때문에 LIS_Array의 배열의 데이터가 이상하게 들어올 수 있다</li>
+</ul>
+<h3 id="반례"><a href="#반례" class="headerlink" title="반례"></a>반례</h3><p>N &#x3D; 14, A &#x3D; [10, 12, 1, 3, 5, 6, 7, 10, 12, 2, 4, 7, 10, 12]</p>
+<ul>
+<li>findIndex로 앞에서부터 찾았을 경우: LIS_Array &#x3D; [10, 12, 5, 6, 7, 10, 12]</li>
+<li>반복문 역순으로 찾았을 경우: LIS_Array &#x3D; [1, 3, 5, 6, 7, 10, 12]</li>
+</ul>
 
                     
                         
@@ -1262,7 +1056,98 @@
                     
                         <p>
                             <a
-                                href="/2023/02/14/Algorithm/boj/DP/boj-11057-%EC%98%A4%EB%A5%B4%EB%A7%89-%EC%88%98-JavaScript/#post-footer"
+                                href="/2023/02/21/Algorithm/boj/DP/boj-14002-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-4-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-1912-%EC%97%B0%EC%86%8D%ED%95%A9-JavaScript/"
+                            aria-label=": boj-1912 연속합(JavaScript)"
+                        >
+                            boj-1912 연속합(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:17:26+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>n개의 정수로 이루어진 임의의 수열이 주어진다. 우리는 이 중 연속된 몇 개의 수를 선택해서 구할 수 있는 합 중 가장 큰 합을 구하려고 한다. 단, 수는 한 개 이상 선택해야 한다.</p>
+<p>예를 들어서 10, -4, 3, 1, 5, 6, -35, 12, 21, -1 이라는 수열이 주어졌다고 하자. 여기서 정답은 12+21인 33이 정답이 된다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 정수 n(1 ≤ n ≤ 100,000)이 주어지고 둘째 줄에는 n개의 정수로 이루어진 수열이 주어진다. 수는 -1,000보다 크거나 같고, 1,000보다 작거나 같은 정수이다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 답을 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">10 -4 3 1 5 6 -35 12 21 -1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">33</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">2 1 -4 3 4 -4 6 5 -5 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">14</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">-1 -2 -3 -4 -5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 나의 오답</span></span><br><span class="line"><span class="keyword">const</span> [n, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n &#125;, <span class="function">() =&gt;</span> <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (A[<span class="number">0</span>] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n &#125;, <span class="function">() =&gt;</span> A[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[i - <span class="number">1</span>] + A[i]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>처음엔 연속되었다고 하여서 2연속만 생각했었다. 하지만 2번째 예제에서는 연속된 숫자가 3, 4, -4, 6, 5 이렇게 구하여 총합이 14이다.</li>
+<li>0번째부터 i번째 까지 합을 저장하여 이전값과 비교하여 최댓값을 저장해준다.</li>
+<li>즉, 0<del>1, 0</del>2, 0<del>3, … 0</del>9번째의 합중 최대값만 DP[0]에 저장해준다. 이렇게 0번째부터 9번째 DP를 구하였다.</li>
+<li>그리고 첫번째가 음수의 경우는 DP를 초기값으로 모두 설정해주었다.</li>
+<li>하지만 시간 초과가 떴다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [n, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n &#125;, <span class="function">() =&gt;</span> A[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i - <span class="number">1</span>] + A[i], A[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DP는 초기 값으로 설정해준다.</li>
+</ul>
+<ol>
+<li>DP[0] &#x3D; A[0]</li>
+<li>DP[1]은 DP[0] + A[1] 과 A[1] 중에 최대값을 저장한다. 왜냐하면 A[1] 이전까지의 연속된 숫자들의 합이 양수라면 A[1] 보다 크지만 음수인 경우는 A[1]부터 시작하는 것이 크기 때문이다.</li>
+</ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-1912-%EC%97%B0%EC%86%8D%ED%95%A9-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -1291,7 +1176,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 1 of 2</li>
+        <li class="pagination-number">page 1 of 4</li>
     </ul>
 </div>
 
