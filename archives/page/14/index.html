@@ -327,6 +327,111 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
+                            aria-label=": newsViewer, CBD Library Tip"
+                        >
+                            newsViewer, CBD Library Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-28T22:09:23+09:00">
+	
+		    2022/09/28
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="8-news-viewer"><a href="#8-news-viewer" class="headerlink" title="8. news viewer"></a>8. news viewer</h1><ol>
+<li>전체적인 구조를 설명하면, Nav, NewsList는 컴포넌트로 관리하여 독립적인 요소로 관리하고 root 요소에 appendChild 해주었다.</li>
+<li>Nav 요소가 클릭되면 state 상태 데이터를 클릭한 요소의 id와 변경해준다. ⇒ Nav 요소는 상태를 변경 시키지만 리렌더링은 일어나지 않는다.</li>
+<li>state 상태 데이터가 변경이 일어나면 NewsList가 리렌더링이 발생한다.</li>
+</ol>
+<h2 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = <span class="keyword">new</span> <span class="title class_">Proxy</span>(</span><br><span class="line">  &#123; <span class="attr">category</span>: <span class="string">&quot;all&quot;</span> &#125;, <span class="comment">// state 객체에 key,value로 들어가게된다.</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">set</span>: <span class="function">(<span class="params">obj, key, value</span>) =&gt;</span> &#123;</span><br><span class="line">      obj[key] = value;</span><br><span class="line">      <span class="variable language_">window</span>.<span class="title function_">dispatchEvent</span>(</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">CustomEvent</span>(<span class="string">&quot;statechange&quot;</span>, &#123;</span><br><span class="line">          <span class="attr">detail</span>: obj,</span><br><span class="line">        &#125;)</span><br><span class="line">      );</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// setter 는 성공했음을 나타내기 위해 true를 반환해줘야 한다.</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">state[category] = <span class="string">&quot;business&quot;</span>; <span class="comment">// handler 객체의 setter 접근자 프로퍼티가 실행된다.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>프록시 객체를 생성하여 state(상태)가 변경, 할당이 발생하면 proxy의 handler에서 먼저 로직을 실행</li>
+<li>setter 접근자 프로퍼티가 실행된다는 의미는 state(상태)에 변경이 일어난 경우이므로 이 때, window에게 custom event의 이벤트 객체를 보낸다.</li>
+</ul>
+<h2 id="Observer-Intersection-Observer-API"><a href="#Observer-Intersection-Observer-API" class="headerlink" title="Observer(Intersection Observer API)"></a>Observer(Intersection Observer API)</h2><p>옵저버 패턴은 이벤트를 발생 시킨 객체(subject)에 옵저버나 리스너를 등록하여서 이들이 subject를 관찰하면서 구독 혹은 구독 취소 같은 행위를 할 수 있도록 하는 패턴을 말한다.</p>
+<ul>
+<li>상태가 변경되면 옵저버에게 notify() 메서드로 알림을 보낸다</li>
+<li>옵저버(handler)는 subject가 변경될 때, 호출할 함수들이다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(</span><br><span class="line">    <span class="function"><span class="params">entries</span> =&gt;</span> &#123;</span><br><span class="line">      entries.<span class="title function_">forEach</span>(<span class="function"><span class="params">entry</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (entry.<span class="property">isIntersecting</span>) &#123;</span><br><span class="line">          currentNews = [...currentNews, ...<span class="title function_">getCategoryData</span>(currentCategory)];</span><br><span class="line">          <span class="title function_">render</span>(currentNews);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">threshold</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  observer.<span class="title function_">observe</span>($newsList.<span class="title function_">querySelector</span>(<span class="string">&#x27;.scroll-observer&#x27;</span>));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>spinner(’.scroll-obeserver’)</code> 가 viewport에 지정한 임계점(threshold) 이상 나타났을 때, if문 안의 코드를 실행시킨다.</li>
+<li>entries forEach로 조건식 entry.isIntersecting이 true 이면 처음 스크롤을 내려서 보였을 때 실행하고 false면 다시 스크롤을 올렸을 때는 코드를 실행하지 말라는 의미이다. (양방향으로 일어나기 때문에 관리해줘야한다.)</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  observer.<span class="title function_">subscribe</span>(render);</span><br><span class="line">  intersectionObserver = <span class="title function_">createObserver</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">render</span>();</span><br><span class="line">  intersectionObserver.<span class="title function_">observe</span>($container.<span class="title function_">querySelector</span>(<span class="string">&quot;.scroll-observer&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>observe() 메서드를 사용하여 옵저버 타겟을 설정할 수 있다.<ul>
+<li>이 코드는 DOMContentLoaded 이벤트가 발생했을 때, 한번만 발생하면 된다. 리팩터링 이전 코드는 render 할 때마다 spinner 요소를 재생성하여 위 메서드를 사용하여 target으로 지정하기 위해서 꼭 render 함수 내부에 있어야 했는데, 이는 불필요한 함수 호출과 리렌더링이므로 이를 해결하기 위해 렌더링이 불필요한 템플릿들은 App.js에서 $container innerHTML로 미리 할당해준다.</li>
+<li>위와 같이 await로 렌더가 될 때 까지 기다렸다가 <code>‘.scroll-observer’</code> 요소가 생성된게 보장이 되면 옵저버 타겟을 등록한다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">addNews</span> = (<span class="params">category, nextNews</span>) =&gt; &#123;</span><br><span class="line">  news = &#123;</span><br><span class="line">    ...news,</span><br><span class="line">    [category]: &#123;</span><br><span class="line">      ...news[category],</span><br><span class="line">      <span class="attr">articles</span>: [...news[category].<span class="property">articles</span>, ...nextNews],</span><br><span class="line">      <span class="attr">page</span>: news[category].<span class="property">page</span> + <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기존에 있던 news 객체에 새로운 news 객체를 스프레드 문법으로 추가해줘야하는데, 추가해줄 때, <strong>기존의 값을 스프레드 문법으로 풀어준 뒤 새로운 객체를 추가해줘야지 아니면 새로운 값만 할당된다.</strong></li>
+</ul>
+<h1 id="9-CBD"><a href="#9-CBD" class="headerlink" title="9. CBD"></a>9. CBD</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">$container</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$container</span> = $container;</span><br><span class="line">    observer.<span class="title function_">subscribe</span>(<span class="variable language_">this</span>.<span class="property">render</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>this.render는 handler 내부에 있는 함수이름으로 호출하면 이는 일반함수로 호출되므로 this가 전역객체에 바인딩된다. 그래서 this가 불일치하는 현상이 발생한다. 이 때 bind 메서드를 사용하여 Component로 this를 바인딩한 새로운 함수를 전달해주므로 this를 일치시켜준다.</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>객체의 깊이가 길어지고 대괄호 표기법과 마침표 표기법 사용시점을 확실히 알지 못한다.</li>
+<li>구조분해 해줄 수 있는 것들은 구조분해 해줘서 간단하게 작성하자.</li>
+<li>클래스 new 연산자로 생성했을 때, 인스턴스의 구조가 어떤지 모른다. + super()</li>
+<li>8번 옵저버 패턴 구조 설명을 제대로 못한다.</li>
+<li>$container를 잘못이해하고있다. 클래스 구조에서 받은 $container 매개변수를 컴포넌트로 단위로 구성할 것이다. InnerHTML과 혼동하고 있다. 컴포넌트로 사용할 컨테이너를 매개변수로 받는다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/27/PairProgramming/level%202/sidebar,%20tictactoe,%20acordion%20Tip/"
                             aria-label=": sidebar, tictactoe, acordion Tip"
                         >
@@ -1323,152 +1428,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"
-                            aria-label=": modal, stopwatch, tab, toaster, autocomplete Tip"
-                        >
-                            modal, stopwatch, tab, toaster, autocomplete Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-14T18:57:44+09:00">
-	
-		    2022/09/14
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="modal-창-구현-중-느낀점"><a href="#modal-창-구현-중-느낀점" class="headerlink" title="modal 창 구현 중 느낀점"></a>modal 창 구현 중 느낀점</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;modal-container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;modal&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>희준이주화이팅<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/&quot;</span> <span class="attr">class</span>=<span class="string">&quot;popup-form&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">class</span>=<span class="string">&quot;popup-input&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-ok&quot;</span>&gt;</span>OK<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-cancel is-close&quot;</span>&gt;</span>Cancel<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;popup-close&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;bx bx-x is-close&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $modal = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $modalContainer = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-button&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      $modal.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;is-open&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">      $modalContainer.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;background-gray&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>body 태그 안에 modal div 박스 하나만 만드는 것이 아닌 다음과 같이 modal container로 감싸주는 것이 편하다.</li>
-</ul>
-<blockquote>
-<p>그렇지 않으면 modal 배경색을 입히기가 까다로워진다.</p>
-</blockquote>
-<h1 id="stopwatch-구현-중-느낀점"><a href="#stopwatch-구현-중-느낀점" class="headerlink" title="stopwatch 구현 중 느낀점"></a>stopwatch 구현 중 느낀점</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> timeId;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">updateTime</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> startTime = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line"></span><br><span class="line">  timeId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="title class_">Date</span>.<span class="title function_">now</span>() - startTime);</span><br><span class="line">    <span class="keyword">const</span> milliseconds = <span class="title class_">Math</span>.<span class="title function_">floor</span>(date.<span class="title function_">getMilliseconds</span>() / <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">const</span> seconds = date.<span class="title function_">getSeconds</span>();</span><br><span class="line">    <span class="keyword">const</span> minutes = date.<span class="title function_">getMinutes</span>();</span><br><span class="line"></span><br><span class="line">    $display.<span class="property">textContent</span> = <span class="string">`<span class="subst">$&#123;minutes &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;minutes&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;minutes&#125;</span>`</span>&#125;</span>:<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      seconds &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;seconds&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;seconds&#125;</span>`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span>:<span class="subst">$&#123;milliseconds &lt; <span class="number">10</span> ? <span class="string">`0<span class="subst">$&#123;milliseconds&#125;</span>`</span> : <span class="string">`<span class="subst">$&#123;milliseconds&#125;</span>`</span>&#125;</span>`</span>;</span><br><span class="line">  &#125;, <span class="number">10</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>시간을 수정하는 로직을 함수로 구분하여 역할을 나눠보려 하였다.</li>
-</ul>
-<blockquote>
-<p>Model, Controller, View 생각하면서 리팩토링 해보자.</p>
-</blockquote>
-<h1 id="Tab-구현-중-느낀점"><a href="#Tab-구현-중-느낀점" class="headerlink" title="Tab 구현 중 느낀점"></a>Tab 구현 중 느낀점</h1><h2 id="1-비동기-코드로-전달받은-데이터-다루기"><a href="#1-비동기-코드로-전달받은-데이터-다루기" class="headerlink" title="1. 비동기 코드로 전달받은 데이터 다루기"></a>1. 비동기 코드로 전달받은 데이터 다루기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">  <span class="attr">datas</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">fetchTabsData</span>().<span class="title function_">then</span>(<span class="function">(<span class="params">tabDatas</span>) =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">datas</span> = tabDatas;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>fetchTabsData() 함수가 프로미스르 반환하는데, 프로미스 콜백함수가 1초 뒤에 데이터를 resolve 인자로 전달해준다. 그러므로 비동기로 받아온 데이터를 state로 관리해주도록 하였다.</li>
-</ul>
-<h2 id="2-CSS-사용자-정의-변수-변경-또는-값-취득하기"><a href="#2-CSS-사용자-정의-변수-변경-또는-값-취득하기" class="headerlink" title="2. CSS 사용자 정의 변수 변경 또는 값 취득하기"></a>2. CSS 사용자 정의 변수 변경 또는 값 취득하기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $tabs = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.tabs&quot;</span>);</span><br><span class="line"></span><br><span class="line">$tabs.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--tabs-length&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Js를 사용하여 CSS에서 설정한 사용자 정의 변수를 가져올 수도 있고 위처럼 직접 값을 설정해줄 수도 있다.</li>
-</ul>
-<h2 id="3-비동기로-데이터를-가져오니-화면에서-데이터를-렌더링-해주기-전에-대기시간을-주자"><a href="#3-비동기로-데이터를-가져오니-화면에서-데이터를-렌더링-해주기-전에-대기시간을-주자" class="headerlink" title="3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자"></a>3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; datas &#125; = state;</span><br><span class="line"></span><br><span class="line">  $tabs.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--tabs-length&quot;</span>, datas.<span class="property">length</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.spinner&quot;</span>).<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;none&quot;</span>;</span><br><span class="line"></span><br><span class="line">  $tabs.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;nav&gt;</span></span><br><span class="line"><span class="string">  <span class="subst">$&#123;datas</span></span></span><br><span class="line"><span class="subst"><span class="string">    .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">      (data, index) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">        <span class="string">`&lt;div class=&quot;tab&quot; data-index=&quot;<span class="subst">$&#123;index&#125;</span>&quot;&gt;<span class="subst">$&#123;data.title&#125;</span>&lt;/div&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    )</span></span></span><br><span class="line"><span class="subst"><span class="string">    .join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">  &lt;span class=&quot;glider&quot;&gt;&lt;/span&gt;</span></span><br><span class="line"><span class="string">  &lt;/nav&gt;</span></span><br><span class="line"><span class="string">  <span class="subst">$&#123;datas</span></span></span><br><span class="line"><span class="subst"><span class="string">    .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">      (data, index) =&gt; <span class="string">`&lt;div class=&quot;tab-content <span class="subst">$&#123;index === <span class="number">0</span> ? <span class="string">&quot;active&quot;</span> : <span class="string">&quot;&quot;</span>&#125;</span>&quot;&gt;</span></span></span></span><br><span class="line"><span class="string"><span class="subst"><span class="string">      <span class="subst">$&#123;data.content&#125;</span></span></span></span></span><br><span class="line"><span class="string"><span class="subst"><span class="string">    &lt;/div&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">    )</span></span></span><br><span class="line"><span class="subst"><span class="string">    .join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 코드는 리팩토링을 하면서 조금더 역할을 나눠서 수정해봐야겠다.</li>
-</ul>
-<h2 id="4-template-literal로-연산을-하려면-다음과-같이-해야한다"><a href="#4-template-literal로-연산을-하려면-다음과-같이-해야한다" class="headerlink" title="4. template literal로 연산을 하려면 다음과 같이 해야한다."></a>4. template literal로 연산을 하려면 다음과 같이 해야한다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$tabs.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.tab&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.glider&quot;</span>).<span class="property">style</span>.<span class="property">transform</span> =</span><br><span class="line">    <span class="string">&quot;translateX(&quot;</span> + e.<span class="property">target</span>.<span class="property">dataset</span>.<span class="property">index</span> * <span class="number">200</span> + <span class="string">&quot;px)&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.glider&quot;</span>).<span class="property">style</span>.<span class="property">transform</span> = <span class="string">`translateX(<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    e.target.dataset.index * <span class="number">200</span></span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>px)`</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>처음에 연산결과를 ${}안에 넣지 않고 <code>document.querySelector(&#39;.glider&#39;).style.transform = $&#123;e.target.dataset.index&#125; 200 px</code> 이런식으로 했는데 이렇게 하면 안되고 위처럼 해야한다.</li>
-</ul>
-<h1 id="Toaster-구현-중-느낀점"><a href="#Toaster-구현-중-느낀점" class="headerlink" title="Toaster 구현 중 느낀점"></a>Toaster 구현 중 느낀점</h1><h2 id="1-toastBox-재사용을-위해-함수로-만들었다"><a href="#1-toastBox-재사용을-위해-함수로-만들었다" class="headerlink" title="1. toastBox 재사용을 위해 함수로 만들었다."></a>1. toastBox 재사용을 위해 함수로 만들었다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">newToastBox</span> = (<span class="params">type, title, Message</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> $div = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $div.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;toast&quot;</span>, type);</span><br><span class="line">  $div.<span class="property">innerHTML</span> = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;h4 class=&quot;toast-title&quot;&gt;<span class="subst">$&#123;title&#125;</span> <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">    [...<span class="variable language_">document</span>.querySelectorAll(<span class="string">&quot;body .toast&quot;</span>)].length</span></span></span><br><span class="line"><span class="subst"><span class="string">  &#125;</span>&lt;/h4&gt;</span></span><br><span class="line"><span class="string">  &lt;div class=&quot;toast-message&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;use xlink:href=&quot;#<span class="subst">$&#123;type&#125;</span>&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;/svg&gt;</span></span><br><span class="line"><span class="string">    &lt;p&gt;<span class="subst">$&#123;Message&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">  &lt;/div&gt;</span></span><br><span class="line"><span class="string">  &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`</span>;</span><br><span class="line"></span><br><span class="line">  $div.<span class="property">style</span>.<span class="property">bottom</span> = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> $div;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ToastBox 를 재사용하기 위해 함수를 사용하는 것을 적절했으나, 함수가 너무 많은 역할을 하고 있다. 렌더링부터 div 생성과 반환을 함께 하고 있어 리팩토링이 필요하다.</li>
-</ul>
-<h2 id="2-render-함수는-화면에-rendering-해주는-역할을-한다"><a href="#2-render-함수는-화면에-rendering-해주는-역할을-한다" class="headerlink" title="2. render 함수는 화면에 rendering 해주는 역할을 한다."></a>2. render 함수는 화면에 rendering 해주는 역할을 한다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  [...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;body .toast&quot;</span>)].<span class="title function_">forEach</span>(<span class="function">(<span class="params">toast, index</span>) =&gt;</span> &#123;</span><br><span class="line">    toast.<span class="property">style</span>.<span class="property">bottom</span> =</span><br><span class="line">      ([...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;body .toast&quot;</span>)].<span class="property">length</span> - index - <span class="number">1</span>) * <span class="number">100</span> +</span><br><span class="line">      <span class="string">&quot;px&quot;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 render 함수는 토스트 요소에 bottom style 값을 할당해주는 역할을 하고 있으므로, 리팩토링이 필요하다.</li>
-</ul>
-<h1 id="Autocomplete-구현-중-느낀점"><a href="#Autocomplete-구현-중-느낀점" class="headerlink" title="Autocomplete 구현 중 느낀점"></a>Autocomplete 구현 중 느낀점</h1><h2 id="1-e-target-matches-vs-e-target-closest"><a href="#1-e-target-matches-vs-e-target-closest" class="headerlink" title="1. e.target.matches() vs e.target.closest()"></a>1. e.target.matches() vs e.target.closest()</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;body&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">closest</span>(<span class="string">&quot;.autocomplete&quot;</span>)) &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.autocomplete-suggester&quot;</span>).<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;hide&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>해당 요소 바깥쪽을 클릭하였을 때 .autocomplete-suggester에 hide 클래스를 추가해주는 로직이다.</p>
-</li>
-<li><p>e.target.closest(‘.autocomplete’)는 이벤트 발생한 요소의 상위 요소를 찾아가면서 인자로 넘겨준 요소를 찾고 반환한다.<br>만약 없다면 null 값을 반환한다.</p>
-</li>
-<li><p>하지만, e.target.matches(‘.autocomplete’)는 이벤트 발생한 요소가 인자로 넘겨준 요소를 가지고 있는지 판단하여 불리언값을 반환한다.</p>
-</li>
-</ul>
-<blockquote>
-<p>matches()의 경우 이벤트 전파를 캐치하기가 어려우므로 상황에 따라 적절하게 사용하자.</p>
-</blockquote>
-<ol start="2">
-<li>방향키로 포커스 이동시 스크롤 이상하게 내려오는 현상</li>
-</ol>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$suggestList.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">key</span> === <span class="string">&quot;ArrowDown&quot;</span>) &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line">    e.<span class="property">target</span>.<span class="property">nextElementSibling</span> === <span class="literal">null</span></span><br><span class="line">      ? $suggestList.<span class="property">firstElementChild</span>.<span class="title function_">focus</span>()</span><br><span class="line">      : e.<span class="property">target</span>.<span class="property">nextElementSibling</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">key</span> === <span class="string">&quot;ArrowUp&quot;</span>) &#123;</span><br><span class="line">    e.<span class="title function_">preventDefault</span>();</span><br><span class="line">    e.<span class="property">target</span>.<span class="property">previousElementSibling</span> === <span class="literal">null</span> <span class="comment">// prettier-ignore</span></span><br><span class="line">      ? $suggestList.<span class="property">lastElementChild</span>.<span class="title function_">focus</span>()</span><br><span class="line">      : e.<span class="property">target</span>.<span class="property">previousElementSibling</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>방향키로 포커스 이동시 한번 이동할 때 마다 스크롤도 같이 내려와서 어색하게 동작하는 것을 방지하지 위해 방향키 값이 “ArrowDown”, “ArrowUp” 일 때만 <code>e.preventDefault();</code> 를 해주었다.</p>
-</li>
-<li><p>focus() 메서드를 사용하여 선택 요소에 포커스를 선택해주었다.</p>
-</li>
-</ul>
-<h2 id="3-lodash로-debounce-구현-제대로-하기"><a href="#3-lodash로-debounce-구현-제대로-하기" class="headerlink" title="3. lodash로 debounce 구현 제대로 하기"></a>3. lodash로 debounce 구현 제대로 하기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$searchInput.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;keyup&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setState</span>(&#123; <span class="attr">inputValue</span>: $searchInput.<span class="property">value</span> &#125;);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>위와 같이 “keyup” 이벤트 발생 시 lodash debounce 메서드를 이벤트 핸들러로 등록해줘야한다.</p>
-</li>
-<li><p>또한, debounce의 콜백함수에 실행할 코드를 입력해줄 때, setState함수가 인수를 받는다면 위와같이 써줘야한다.</p>
-</li>
-</ul>
-<blockquote>
-<p>단, 인수를 받지 않는다면 _.debounce(setState,500) 이런식으로 사용할 수 있다.</p>
-</blockquote>
-<h2 id="4-사용자가-입력한-값과-countryCode를-state로-관리하였다"><a href="#4-사용자가-입력한-값과-countryCode를-state로-관리하였다" class="headerlink" title="4. 사용자가 입력한 값과 countryCode를 state로 관리하였다."></a>4. 사용자가 입력한 값과 countryCode를 state로 관리하였다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">inputValue</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="attr">countryCode</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="keyword">const</span> regExp = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">`<span class="subst">$&#123;state.inputValue&#125;</span>`</span>, <span class="string">&quot;i&quot;</span>);</span><br><span class="line">  state.<span class="property">countryCode</span> = countryCode.<span class="title function_">filter</span>(<span class="function">(<span class="params">country</span>) =&gt;</span> country[<span class="number">1</span>].<span class="title function_">match</span>(regExp));</span><br><span class="line">  state.<span class="property">countryCode</span> = state.<span class="property">countryCode</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">country</span>) =&gt;</span> [</span><br><span class="line">    country[<span class="number">0</span>],</span><br><span class="line">    country[<span class="number">1</span>].<span class="title function_">replace</span>(regExp, <span class="string">`&lt;strong&gt;<span class="subst">$&#123;country[<span class="number">1</span>].match(regExp)&#125;</span>&lt;/strong&gt;`</span>),</span><br><span class="line">  ]);</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>사용자가 입력한 값을 state로 관리하여 그 값과 countryCode의 1번째 요소인 나라이름과 일치하는 부분을 찾아 strong 태그로 감싼 값으로 바꿔주었다.</p>
-</li>
-<li><p>strong 태그 대신 b 태그를 사용하면 안된다.</p>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1495,7 +1454,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 14 of 17</li>
+        <li class="pagination-number">page 14 of 18</li>
     </ul>
 </div>
 

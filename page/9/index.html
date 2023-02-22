@@ -326,6 +326,87 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
+                            aria-label=": 🐍 setState"
+                        >
+                            🐍 setState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-10T20:16:29+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-setState"><a href="#📌-setState" class="headerlink" title="📌 setState"></a>📌 setState</h1><p><code>setState()</code> 메서드는 컴포넌트의 state 객체에 대한 업데이트를 실행합니다. state가 변경되면, 컴포넌트는 리렌더링됩니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setState</span>(updater[, callback])</span><br></pre></td></tr></table></figure>
+
+<p>updater에 컴포넌트의 state 변경사항을 인자로 넘겨주고 React에게 해당 컴포넌트를 재렌더링해야한다고 요청을 보내는 메서드이다.</p>
+<ul>
+<li><code>setState()</code> 호출은 비동기적으로 이뤄진다.</li>
+<li>성능 향상을 위해 <red>즉각적으로 재렌더링을 발생시키지 않는다.</red><ul>
+<li>여러 변경 사항을 일괄적으로 갱신하거나 나중에 미룰 수 있다. 때문에 <code>setState()</code> 호출하자마자 <code>this.state</code>에 접근하는 것은 문제가 될 수 있다.</li>
+<li>대신 <code>componentDidUpdate()</code> 또는 <code>setState(updater, callback)</code>처럼 2번째 인자로 콜백함수를 전달하는 방법을 사용한다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(</span><br><span class="line">  &#123; <span class="attr">message</span>: <span class="string">&quot;상태 변경&quot;</span> &#125;,</span><br><span class="line">  <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback: &quot;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>) <span class="comment">// &#x27;상태 변경&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>); <span class="comment">// &#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>아직 렌더링이 발생하지 않았기 때문에 <code>this.state.message</code>의 값이 갱신되지 않았다.</li>
+</ul>
+<h1 id="🎒-2022-11-12-추가"><a href="#🎒-2022-11-12-추가" class="headerlink" title="🎒 2022.11.12 추가"></a>🎒 2022.11.12 추가</h1><h2 id="setState-첫번째-인수로-콜백함수-올-때"><a href="#setState-첫번째-인수로-콜백함수-올-때" class="headerlink" title="setState() 첫번째 인수로 콜백함수 올 때"></a><code>setState()</code> 첫번째 인수로 콜백함수 올 때</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">BinaryCalcurator</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">buttonStates</span>: <span class="title class_">Array</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">numberOfButtons</span>).<span class="title function_">fill</span>(<span class="literal">false</span>),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleToggleButtonContent = <span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function">(<span class="params">&#123; buttonStates &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">buttonStates</span>: buttonStates.<span class="title function_">map</span>(<span class="function">(<span class="params">buttonState, idx</span>) =&gt;</span></span><br><span class="line">        idx === index ? !buttonState : buttonState</span><br><span class="line">      ),</span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>콜백함수는 이전 상태를 받아서 상태 변경을 요청한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/10/CS/%F0%9F%8D%AA-Cookie/"
                             aria-label=": 🍪 Cookie"
                         >
@@ -1296,98 +1377,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
-                            aria-label=": 우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기"
-                        >
-                            우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-05T19:32:57+09:00">
-	
-		    2022/11/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h2><p>우아한테크코스에서는 교육생(이하 크루) 간 소통 시 닉네임을 사용한다. 간혹 비슷한 닉네임을 정하는 경우가 있는데, 이러할 경우 소통할 때 혼란을 불러일으킬 수 있다.</p>
-<p>혼란을 막기 위해 크루들의 닉네임 중 <strong>같은 글자가 연속적으로 포함</strong> 될 경우 해당 닉네임 사용을 제한하려 한다. 이를 위해 같은 글자가 연속적으로 포함되는 닉네임을 신청한 크루들에게 알려주는 시스템을 만들려고 한다.</p>
-<p>신청받은 닉네임 중 <strong>같은 글자가 연속적으로 포함</strong> 되는 닉네임을 작성한 지원자의 이메일 목록을 return 하도록 solution 메서드를 완성하라.</p>
-<h3 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h3><ul>
-<li>두 글자 이상의 문자가 연속적으로 순서에 맞추어 포함되어 있는 경우 중복으로 간주한다.</li>
-<li>크루는 1명 이상 10,000명 이하이다.</li>
-<li>이메일은 이메일 형식에 부합하며, 전체 길이는 11자 이상 20자 미만이다.</li>
-<li>신청할 수 있는 이메일은 <code>email.com</code> 도메인으로만 제한한다.</li>
-<li>닉네임은 한글만 가능하고 전체 길이는 1자 이상 20자 미만이다.</li>
-<li>result는 이메일에 해당하는 부분의 문자열을 오름차순으로 정렬하고 중복은 제거한다.</li>
-</ul>
-<h3 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h3><table>
-<thead>
-<tr>
-<th>forms</th>
-<th>result</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>[ [“<a href="mailto:&#x6a;&#109;&#64;&#x65;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;">&#x6a;&#109;&#64;&#x65;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“, “제이엠”], [“<a href="mailto:&#106;&#97;&#x73;&#111;&#110;&#x40;&#x65;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#109;">&#106;&#97;&#x73;&#111;&#110;&#x40;&#x65;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#109;</a>“, “제이슨”], [“<a href="mailto:&#119;&#x6f;&#110;&#x69;&#101;&#101;&#64;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;">&#119;&#x6f;&#110;&#x69;&#101;&#101;&#64;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;</a>“, “워니”], [“<a href="mailto:&#109;&#106;&#64;&#x65;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#109;">&#109;&#106;&#64;&#x65;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#109;</a>“, “엠제이”], [“<a href="mailto:&#110;&#x6f;&#119;&#109;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;">&#110;&#x6f;&#119;&#109;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;</a>“, “이제엠”] ]</td>
-<td>[“<a href="mailto:&#106;&#97;&#x73;&#111;&#x6e;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;">&#106;&#97;&#x73;&#111;&#x6e;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a>“, “<a href="mailto:&#106;&#x6d;&#x40;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;">&#106;&#x6d;&#x40;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a>“, “<a href="mailto:&#109;&#x6a;&#64;&#101;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#109;">&#109;&#x6a;&#64;&#101;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#109;</a>“]</td>
-</tr>
-</tbody></table>
-<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getPartialStr</span> = (<span class="params">str</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> res = [];</span><br><span class="line">  <span class="keyword">let</span> limit = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">while</span> (limit &lt;= str.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> output = [];</span><br><span class="line">    <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> seperated = [...str].<span class="title function_">slice</span>(index, index + limit).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">      index += <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">if</span> (limit &gt; seperated.<span class="property">length</span>) <span class="keyword">break</span>;</span><br><span class="line">      output.<span class="title function_">push</span>(seperated);</span><br><span class="line">    &#125;</span><br><span class="line">    limit += <span class="number">1</span>;</span><br><span class="line">    res.<span class="title function_">push</span>(...output);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getDuplicatedUser</span> = (<span class="params">arr</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> position = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">const</span> res = [];</span><br><span class="line">  <span class="keyword">while</span> (index !== arr.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([...arr[index], ...arr[position]]);</span><br><span class="line">    <span class="keyword">if</span> (set.<span class="property">size</span> !== arr[index].<span class="property">length</span> + arr[position].<span class="property">length</span>) &#123;</span><br><span class="line">      res.<span class="title function_">push</span>(...arr[index].<span class="title function_">slice</span>(-<span class="number">1</span>), ...arr[position].<span class="title function_">slice</span>(-<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    position += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (position === arr.<span class="property">length</span>) &#123;</span><br><span class="line">      index += <span class="number">1</span>;</span><br><span class="line">      position = index + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> [...<span class="keyword">new</span> <span class="title class_">Set</span>(res)];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">problem6</span>(<span class="params">forms</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!forms.<span class="property">length</span> || forms.<span class="property">length</span> &gt; <span class="number">10000</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&quot;크루는 1명 이상 10,000명 이하이여야 합니다.&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> users = &#123;&#125;;</span><br><span class="line">  forms.<span class="title function_">forEach</span>(<span class="function">(<span class="params">form</span>) =&gt;</span> &#123;</span><br><span class="line">    users[form[<span class="number">1</span>]] = form[<span class="number">0</span>];</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> nicknames = forms.<span class="title function_">map</span>(<span class="function">(<span class="params">nickname</span>) =&gt;</span> nickname[<span class="number">1</span>]);</span><br><span class="line">  <span class="keyword">const</span> partialStrs = nicknames.<span class="title function_">map</span>(<span class="function">(<span class="params">nickname</span>) =&gt;</span> <span class="title function_">getPartialStr</span>(nickname));</span><br><span class="line">  <span class="keyword">const</span> selectedUsers = <span class="title function_">getDuplicatedUser</span>(partialStrs);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> selectedUsers.<span class="title function_">map</span>(<span class="function">(<span class="params">selectedUser</span>) =&gt;</span> users[selectedUser]).<span class="title function_">sort</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>닉네임의 첫번째 글자부터 2글자 이상으로 만들 수 있는 모든 부분 문자열을 구하였다.</li>
-<li>각 닉네임의 부분 문자열 배열을 비교하여 중복요소가 하나라도 있으면 중복 문자 포함 유저 배열에 등록하였다.</li>
-<li>해당 유저의 이메일을 오름차순으로 정렬한 배열을 반환하였다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>우선 이 문제를 풀면서 가장 큰 성장을 이뤄냈다고 자축하고 싶었다. 왜냐하면 이와 비슷한 부분 문자열 문제를 못풀어서 스트레스를 받았던 적이 있는데 이번 기회에 나름의 방법(?)을 찾아서 구현에 성공하여 기분이 좋았다.</p>
-<ul>
-<li>2글자 이상으로 만들 수 있는 부분 문자열을 모두 구했기 때문에 코드가 매우 복잡해졌다. 하지만 2글자 부분 문자열만 구하여 서로 비교하여도 충분히 문제가 없을 상황이기 때문에 이 부분이 좀 아쉬웠다.</li>
-<li>while 문을 사용할 경우와 for 문을 사용할 경우가 애매했었는데, 이번에 코드리뷰를 진행하면서 while 문은 특정 조건이 변경되는 상황이라면 사용하도록 하고 for 문은 일정 횟수를 반복해야 하는 상황에서 사용하도록 한다는 것을 알게 되어 상황에 맞게 적절히 사용할 수 있을 것 같다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1414,7 +1403,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 9 of 17</li>
+        <li class="pagination-number">page 9 of 18</li>
     </ul>
 </div>
 

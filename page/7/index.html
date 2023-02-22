@@ -326,6 +326,93 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                            aria-label=": 🏰 useCallback과 useMemo"
+                        >
+                            🏰 useCallback과 useMemo
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-22T19:46:22+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useCallback과-useMemo-사용-이유"><a href="#📌-useCallback과-useMemo-사용-이유" class="headerlink" title="📌 useCallback과 useMemo 사용 이유"></a>📌 useCallback과 useMemo 사용 이유</h1><p>함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 <strong>하위 컴포넌트에게 전달한다.</strong></p>
+<p>이 때 상위 컴포넌트가 다시 실행되면 <red>이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.</red></p>
+<!-- more -->
+
+<h2 id="🐸-useCallback"><a href="#🐸-useCallback" class="headerlink" title="🐸 useCallback"></a>🐸 useCallback</h2><p><code>useCallback()</code>은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, <strong>기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">	<span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 1</span></span><br><span class="line">	<span class="keyword">const</span> handleIncrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(<span class="function">(<span class="params">count</span>) =&gt;</span> count + step);</span><br><span class="line">		&#125;, [step]);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2</span></span><br><span class="line">	<span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(count - step);</span><br><span class="line">		&#125;, [count, step]);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기억해야할 데이터 타입이 함수인 경우 사용한다.</li>
+<li>useEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.</li>
+<li>1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. <red>기억되어있는 정보를 가지고 값을 변경하는 것이다.</red></li>
+<li>2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. <red>기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.</red></li>
+</ul>
+<h2 id="🐍-useMemo"><a href="#🐍-useMemo" class="headerlink" title="🐍 useMemo"></a>🐍 useMemo</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useCallback</span>(fn, deps) === <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> fn, deps);</span><br></pre></td></tr></table></figure>
+
+<p>useMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useMemo(() =&gt; fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleIncrement = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="function">() =&gt;</span> <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + step),</span><br><span class="line">    [step]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useCallback(fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - step);</span><br><span class="line">  &#125;, [step]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// memoized Components</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DecButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleDecrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">IncButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleIncrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;DecButton&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;IncButton&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useMemo()는 해당 컴포넌트를 기억한다.</li>
+<li>종속성 배열 <code>[count, onDecrement, onIncrement, restProps]</code>이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.</li>
+<li><code>setCount()</code>를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?</p>
+<aside>
+
+<p>📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.</p>
+</aside>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
                             aria-label=": ⛱ useRef"
                         >
@@ -938,91 +1025,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"
-                            aria-label=": allWAIs-Link 회고(22.11.16)"
-                        >
-                            allWAIs-Link 회고(22.11.16)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-16T21:47:24+09:00">
-	
-		    2022/11/16
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-미션"><a href="#📌-미션" class="headerlink" title="📌 미션"></a>📌 미션</h1><ul>
-<li><input checked="" disabled="" type="checkbox"> Link 역할로써 span태그, img태그 확인</li>
-<li><input checked="" disabled="" type="checkbox"> tabindex&#x3D;”0”를 포함</li>
-<li><input checked="" disabled="" type="checkbox"> img태그는 alt 속성으로 접근 가능한 이름 정의</li>
-</ul>
-<h1 id="🐒-문제"><a href="#🐒-문제" class="headerlink" title="🐒 문제"></a>🐒 문제</h1><h2 id="🤿-컴포넌트-props-“as”를-img로-주면-img-태그로-렌더링-해주기"><a href="#🤿-컴포넌트-props-“as”를-img로-주면-img-태그로-렌더링-해주기" class="headerlink" title="🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기"></a>🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;styled-components&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; goToLink &#125; <span class="keyword">from</span> <span class="string">&quot;../../utils&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Link</span>(<span class="params">&#123; <span class="keyword">as</span> = ComponentName, href, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">StyledLink</span> = <span class="title function_">styled</span>(<span class="string">`<span class="subst">$&#123;<span class="keyword">as</span>&#125;</span>`</span>)<span class="string">`</span></span><br><span class="line"><span class="string">       ... styles</span></span><br><span class="line"><span class="string">     `</span>;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">StyledLink</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">        onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">StyledLink</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Link</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>Link 컴포넌트 안에다가 styled-component를 생성하고 as props를 전달해주었다.</p>
-</li>
-<li><p>위와 같이 할 경우, as props에 img 태그가 들어오게 된다면 <red>컴포넌트 명명 규칙에 어긋난다고 나온다.</red></p>
-<p><strong>이를 해결하기 위해 조건부 렌더링을 해주었다.</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;styled-components&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; goToLink &#125; <span class="keyword">from</span> <span class="string">&quot;../../utils&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Link</span>(<span class="params">&#123; <span class="keyword">as</span> = ComponentName, href, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">StyledLink</span> = <span class="title function_">styled</span>(<span class="string">`<span class="subst">$&#123;<span class="keyword">as</span>&#125;</span>`</span>)<span class="string">`</span></span><br><span class="line"><span class="string">    ... styles</span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;as === &quot;img&quot; ? (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          src=&quot;./gitprofile.jpeg&quot;</span></span><br><span class="line"><span class="language-xml">          alt=&quot;W3C Website&quot;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">      ) : (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">StyledLink</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">        &gt;</span></span><br><span class="line"><span class="language-xml">          &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">StyledLink</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      )&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Link</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="🐥-img가-업로드-되지-않는-문제"><a href="#🐥-img가-업로드-되지-않는-문제" class="headerlink" title="🐥 img가 업로드 되지 않는 문제"></a>🐥 img가 업로드 되지 않는 문제</h2><ul>
-<li><input checked="" disabled="" type="checkbox"> img 업로드 문제 해결</li>
-</ul>
-<p>문제의 원인은 npm 명령어로 webpack server만 실행시켰는데, webpack <code>config.js</code> 파일에 <code>static</code> 속성값을 <code>[build]</code>로 주었기 때문에 정적 이미지 파일을 불러오기 위해서는 <code>build</code> 폴더에서 <code>assets</code>을 찾는다.</p>
-<p>그러므로 <code>npm run build</code> 명령어로 build 폴더를 생성한 후 그 안에다가 img를 넣어주고 경로를 설정해주어 해결하였다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Link</span></span><br><span class="line">  <span class="keyword">as</span>=<span class="string">&quot;img&quot;</span></span><br><span class="line">  alt=<span class="string">&quot;test이미지&quot;</span></span><br><span class="line">  src=<span class="string">&quot;./assets/img/gitprofile.jpeg&quot;</span></span><br><span class="line">  href=<span class="string">&quot;https://www.w3.org/WAI/ARIA/apg/example-index/link/link.html&quot;</span></span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="🐥-aria-label-속성-있을-때-조건부로-css-추가-삭제"><a href="#🐥-aria-label-속성-있을-때-조건부로-css-추가-삭제" class="headerlink" title="🐥 aria-label 속성 있을 때, 조건부로 css 추가 (삭제)"></a>🐥 <code>aria-label</code> 속성 있을 때, 조건부로 css 추가 <red>(삭제)</red></h2><p>이 속성을 삭제한 이유는 span 태그를 사용하여 Link 컴포넌트를 구현하였을 때, <code>role=&quot;link&quot;</code>로 해주었기 때문에 <code>aria-label</code> 속성을 굳이 해주지 않아도 되므로 삭제하였다.</p>
-</li>
-</ul>
-<h1 id="🏓-회고"><a href="#🏓-회고" class="headerlink" title="🏓 회고"></a>🏓 회고</h1><ul>
-<li>styled-component를 사용하면서 어떻게 props를 받아서 App에서 렌더링 시켜야할지 헷갈렸었는데 직접 해보니 이해가 잘되었다.</li>
-<li>수업 시간에 배웠던 조건부 렌더링을 실제로 사용하면서 익히니 더욱 이해가 잘되었다. 역시 무언가를 만들어보면서 배우는 것이 힘들지만 더 도움되는 것 같다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1049,7 +1051,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 7 of 17</li>
+        <li class="pagination-number">page 7 of 18</li>
     </ul>
 </div>
 
