@@ -326,6 +326,640 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
+                            aria-label=": Portal(포털)"
+                        >
+                            Portal(포털)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-14T19:38:01+09:00">
+	
+		    2022/11/14
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-Portal이란"><a href="#📌-Portal이란" class="headerlink" title="📌 Portal이란?"></a>📌 Portal이란?</h1><p>포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 <red>root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.</red></p>
+<blockquote>
+<p>포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.</p>
+</blockquote>
+<h2 id="🔨-사용방법"><a href="#🔨-사용방법" class="headerlink" title="🔨 사용방법"></a>🔨 사용방법</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(child, container);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>child는 렌더링할 수 있는 자식</li>
+<li>container는 DOM 요소이다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">ReactDOM</span>.<span class="title function_">createPortal</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">children</span>,</span><br><span class="line">        domNode</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.</li>
+<li><strong>domNode는 DOM 내부의 어디에 있던지 간에 상관없다.</strong></li>
+</ul>
+<blockquote>
+<p>시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, <red>키보드 포커스 관리와 접근성을 고려해줘야한다.</red></p>
+</blockquote>
+<h2 id="🌈-다이얼로그-예시"><a href="#🌈-다이얼로그-예시" class="headerlink" title="🌈 다이얼로그 예시"></a>🌈 다이얼로그 예시</h2><h3 id="다이얼로그-특징"><a href="#다이얼로그-특징" class="headerlink" title="다이얼로그 특징"></a>다이얼로그 특징</h3><ol>
+<li>다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.</li>
+<li>다이얼로그 바깥으로 초점이동되면 안된다.</li>
+<li>dialog 역할(role)을 부여해야한다.</li>
+<li>모달 기능일 경우 <code>aria-modal=true</code> 이여야한다.</li>
+<li>다이얼로그 제목은 <code>aria-label</code>, <code>aria-labelledby</code>로 설정한다.</li>
+</ol>
+<h3 id="1-부모-컴포넌트"><a href="#1-부모-컴포넌트" class="headerlink" title="1. 부모 컴포넌트"></a>1. 부모 컴포넌트</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoDialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #opennerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">show</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleShowDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleHideDialog = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">show</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.box&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#opennerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.openDialogButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-haspopup</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;this.handleShowDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          모달열기</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;this.state.show &amp;&amp; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">modal</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClose</span>=<span class="string">&#123;this.handleHideDialog&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">openner</span>=<span class="string">&#123;this.#opennerRef.current&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">h3</span>&gt;</span>불금 다이얼로그<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">ul</span>&gt;</span>...<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Dialog.Body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">Dialog</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.</li>
+</ul>
+<h3 id="2-모달-컴포넌트-자식"><a href="#2-모달-컴포넌트-자식" class="headerlink" title="2. 모달 컴포넌트(자식)"></a>2. 모달 컴포넌트(자식)</h3><p>root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 <strong>public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// public/index.html</span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;dialogZone&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">boyd</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dialog.jsx</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">documentElement</span>: htmlElement &#125; = <span class="variable language_">document</span>;</span><br><span class="line"><span class="keyword">const</span> reactDomContainer = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;root&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  #containerRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  handleClose = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">onClose</span>?.();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">openner</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; modal = <span class="literal">false</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">createPortal</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">article</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">ref</span>=<span class="string">&#123;this.#containerRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&#123;-1&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-modal</span>=<span class="string">&#123;modal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;this.props.children&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Dialog.Footer</span> <span class="attr">onClose</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;modal &amp;&amp; <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.dim&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClose&#125;</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/&gt;</span></span>,</span><br><span class="line">      <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dialogZone&quot;</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.</li>
+<li>컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.</li>
+<li><code>createPortal()</code>에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.</li>
+<li>모달이 켜져있을 때, <code>Dialog.footer</code> 자식 요소에게 onClose를 props로 전달하였다.</li>
+</ul>
+<h3 id="3-자식-컴포넌트-접근성-고려"><a href="#3-자식-컴포넌트-접근성-고려" class="headerlink" title="3. 자식 컴포넌트 접근성 고려"></a>3. 자식 컴포넌트 접근성 고려</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dialog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">#tabbableElements = [];</span><br><span class="line"></span><br><span class="line">  #<span class="title function_">bindEscKeyEvents</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handler</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;escape&quot;</span>)) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;pressed esc key&quot;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">handleClose</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// cleanup function</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handler);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  #unbindEscKeyEvents = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#containerRef.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">    <span class="variable language_">this</span>.#tabbableElements = <span class="title function_">getTabbableElements</span>(<span class="variable language_">this</span>.#containerRef.<span class="property">current</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">settingKeyboardTrap</span>();</span><br><span class="line"></span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;hidden&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents = <span class="variable language_">this</span>.#<span class="title function_">bindEscKeyEvents</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    htmlElement.<span class="property">style</span>.<span class="property">overflowY</span> = <span class="string">&quot;visible&quot;</span>;</span><br><span class="line">    reactDomContainer.<span class="title function_">setAttribute</span>(<span class="string">&quot;aria-hidden&quot;</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.#unbindEscKeyEvents?.();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">settingKeyboardTrap</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> tabbles = <span class="variable language_">this</span>.#tabbableElements;</span><br><span class="line">    <span class="keyword">const</span> firstElement = tabbles[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">const</span> lastElement = tabbles[tabbles.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    firstElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        lastElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    lastElement.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!e.<span class="property">shiftKey</span> &amp;&amp; e.<span class="property">key</span>.<span class="title function_">toLowerCase</span>().<span class="title function_">includes</span>(<span class="string">&quot;tab&quot;</span>)) &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        firstElement.<span class="title function_">focus</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>key 이벤트를 등록해주고 제거해줄 때, <red>클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치</red>시켜주면 편하다.<ul>
+<li><red>keydown 이벤트</red>를 사용해야지만 <code>e.preventDefault()</code>로 <strong>기본동작을 막을 수 있다.</strong></li>
+</ul>
+</li>
+<li>모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.</li>
+<li><code>htmlElement.style.overflowY = &quot;hidden&quot;</code>로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.</li>
+<li>모달이 켜져있으면 <strong>root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.</strong></li>
+<li>컴포넌트가 소멸되기 직전에 <red>등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자.</red> (고려하지 않는다면 성능에 문제가 생길 것이다.)</li>
+</ul>
+<h3 id="4-모달-slot-구분"><a href="#4-모달-slot-구분" class="headerlink" title="4. 모달 slot 구분"></a>4. 모달 slot 구분</h3><p>어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.</p>
+<p><strong>합성(composition)을 사용하여</strong> <red>컴포넌트 간에 코드를 재사용하도록 하자.</red></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span> = <span class="keyword">function</span> <span class="title function_">DialogHeader</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&#123;styles.header&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">header</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Header</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>React 포털로 연 다이얼로그(with 모달)<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Body</span> = <span class="keyword">function</span> <span class="title function_">DialogBody</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.body&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Dialog</span>.<span class="property">Footer</span> = <span class="keyword">function</span> <span class="title function_">DialogFooter</span>(<span class="params">&#123; children, onClose &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">footer</span> <span class="attr">className</span>=<span class="string">&#123;styles.footer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&#123;styles.closeButton&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;onClose&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        모달닫기</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
+                            aria-label=": DOM 컨트롤(ref)"
+                        >
+                            DOM 컨트롤(ref)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-12T16:59:38+09:00">
+	
+		    2022/11/12
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🕹-리액트-DOM-컨트롤"><a href="#🕹-리액트-DOM-컨트롤" class="headerlink" title="🕹 리액트 DOM 컨트롤"></a>🕹 리액트 DOM 컨트롤</h1><p>리액트 앱은 대부분 리액트에 의해 컨트롤되지만 <strong>예외인 상황이 있다.</strong> 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 <strong>리액트가 할 수 없는 일이다.</strong></p>
+<p>이러한 일을 <red>리액트 사이드 이펙트</red>라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.</p>
+<p>사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.</p>
+<ul>
+<li>ref(참조 설정)<ul>
+<li><strong>값이 변경되어도 리액트가 재렌더링하지 않는다.</strong></li>
+</ul>
+</li>
+<li>callback ref(ref 속성에 연결된 함수)</li>
+<li>React.createRef(참조 객체 생성)</li>
+<li>React.forwardRef(참조 객체 전달)<ul>
+<li>범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.</li>
+<li>외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.</li>
+<li>domRef를 통해서 전달할 수도 있다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="💭-예시"><a href="#💭-예시" class="headerlink" title="💭 예시"></a>💭 예시</h2><p>컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">TiltCard</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="comment">// DOM 요소 참조를 목적으로 Ref를 생성합니다.</span></span><br><span class="line">  tiltRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>); <span class="comment">// &#123; current:null &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버</span></span><br><span class="line">  #cardDomElement = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 최초 마운트 시점 이후 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement = <span class="variable language_">this</span>.<span class="property">tiltRef</span>.<span class="property">current</span>;</span><br><span class="line">    <span class="title class_">VanillaTilt</span>.<span class="title function_">init</span>(<span class="variable language_">this</span>.#cardDomElement);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">addEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 마운트 해제 직전에 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="property">vanillaTilt</span>.<span class="title function_">destroy</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독 해지</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">removeEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; children &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="comment">// 생성된 Ref를 참조하도록 설정합니다.</span></span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.tiltRef&#125;</span> <span class="attr">className</span>=<span class="string">&quot;tiltCard&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>tiltRef에 <strong>DOM 요소를 저장하기 위해 ref를 생성하였다.</strong></li>
+<li>tiltRef DOM 요소 얻기 위해 <strong>“current” 프로퍼티</strong>에 접근하였다.</li>
+<li>tiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/11/CS/%F0%9F%A5%81-CORS/"
+                            aria-label=": 🥁 CORS"
+                        >
+                            🥁 CORS
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-11T21:00:28+09:00">
+	
+		    2022/11/11
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-CORS란"><a href="#📌-CORS란" class="headerlink" title="📌 CORS란?"></a>📌 CORS란?</h1><p>교차 출처 리소스 공유(Cross-Origin Resource Sharing)는 추가 HTTP Header를 사용하여 한 출처에서 실행 중인 애플리케이션이 다른 출처의 선택한 자원에 접근할 수 있는 권한을 부여하도록 <red>브라우저에게 알려준다.</red></p>
+<p><strong>웹 애플리케이션은 리소스가 자신의 출처(도메인, 프로토콜, 포트)와 다를 때, 교차 출처 HTTP 요청을 실행한다.</strong></p>
+<p>ex) <code>https://domain-a.com</code>의 프론트 엔드 JavaScript 코드가 XMLHttpRequest를 사용하여 <code>https://domain-b.com/data.json</code>을 요청하는 경우 보안 상의 이유로 <red>브라우저는 HTTP 요청을 제한한다.</red></p>
+<ul>
+<li>CORS 체제는 브라우저와 서버 간의 안전한 교차 출처 요청 및 데이터 전송을 지원한다.</li>
+<li>CORS 표준에 맞춘다는 것은 서버에서도 새로운 요청과 응답 Header를 처리해야한다.</li>
+</ul>
+<h2 id="🤿-DeepDive"><a href="#🤿-DeepDive" class="headerlink" title="🤿 DeepDive"></a>🤿 DeepDive</h2><p>CORS 표준은 웹 브라우저에서 허용된 출처를 서버에서 새로운 HTTP Header에 추가함으로써 동작한다.</p>
+<h3 id="📮-Simple-Request"><a href="#📮-Simple-Request" class="headerlink" title="📮 Simple Request"></a>📮 Simple Request</h3><p>HTTP 요청 메서드가 GET, POST 일 때 사용한다.</p>
+<ol>
+<li><p>다른 출처끼리 요청을 보낼 때, 요청에 Origin이라는 Header를 추가한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://loco9939.com:5000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Origin은 요청하는 쪽의 Scheme, 도메인, 포트가 담겨있다.</strong></li>
+<li>scheme : https</li>
+<li>도메인 : loco9939.com</li>
+<li>포트 : :5000</li>
+</ul>
+</li>
+<li><p>요청 받은 서버는 응답 Header에 지정된 ACAO(Access Control Allow Origin) 정보를 실어서 보낸다.</p>
+</li>
+<li><p>브라우저가 ACAO 정보가 담긴 응답과 요청의 Origin을 비교하여 동일하면 허락한다.</p>
+</li>
+</ol>
+<h3 id="✈️-Preflight"><a href="#✈️-Preflight" class="headerlink" title="✈️ Preflight"></a>✈️ Preflight</h3><p>브라우저가 사전요청을 먼저 보낸 후 서버의 응답을 보고 안전한지 확인한 후 본 요청을 보내는 방식이다. 본 요청은 Simple Request 방식과 동일하다.</p>
+<h2 id="🌈-CORS-오류-해결-방법"><a href="#🌈-CORS-오류-해결-방법" class="headerlink" title="🌈 CORS 오류 해결 방법"></a>🌈 CORS 오류 해결 방법</h2><h3 id="🔨-서버-측"><a href="#🔨-서버-측" class="headerlink" title="🔨 서버 측"></a>🔨 서버 측</h3><ul>
+<li>ACAO(Access Control Allow Origin) 설정하기<ul>
+<li>구체적인 출처 명시하기</li>
+<li>Credentials: <strong>include 옵션 사용한 경우 * 사용한 경우 CORS 에러발생</strong></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PORT</span> = process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = http.<span class="title function_">createServer</span>(<span class="keyword">function</span> (<span class="params">request, response</span>) &#123;</span><br><span class="line">  <span class="comment">// Setting up Headers</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-origin&quot;</span>, <span class="string">&quot;*&quot;</span>); <span class="comment">// 모든 출처(orogin)을 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(</span><br><span class="line">    <span class="string">&quot;Access-Control-Allow-Methods&quot;</span>,</span><br><span class="line">    <span class="string">&quot;GET, POST, OPTIONS, PUT, PATCH, DELETE&quot;</span></span><br><span class="line">  ); <span class="comment">// 모든 HTTP 메서드 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>, <span class="string">&quot;true&quot;</span>); <span class="comment">// 클라이언트와 서버 간에 쿠키 주고받기 허용</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  response.<span class="title function_">writeHead</span>(<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;text/plain&quot;</span> &#125;);</span><br><span class="line">  response.<span class="title function_">end</span>(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">httpServer.<span class="title function_">listen</span>(<span class="variable constant_">PORT</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Server is running at port 3000...&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Access-Control-Allow-origin 헤더 값으로 * 을 사용하면 모든 Origin에서 오는 요청을 허용한다는 의미이므로 당장은 편할 수 있겠지만, 바꿔서 생각하면 정체도 모르는 이상한 출처에서 오는 요청까지 모두 허용하기 때문에 보안은 더 허술해진다. 그러니 가급적이면 귀찮더라도 다음과 같이 출처를 직접 명시해주도록 하자.</p>
+</blockquote>
+<h3 id="👑-클라이언트-측"><a href="#👑-클라이언트-측" class="headerlink" title="👑 클라이언트 측"></a>👑 클라이언트 측</h3><ul>
+<li>Proxy 설정<ul>
+<li>브라우저 요청을 Proxy에서 설정한 주소로 우회하여 전송하는 방법</li>
+<li>라이브러리 사용한다</li>
+<li>개발단계에서만 사용하고 <red>Production 환경에서는 Proxy 처리가 되지 않는다.</red></li>
+</ul>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/11/CS/%F0%9F%A5%81-CORS/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/"
+                            aria-label=": ⛳️ MVC, MVP, MVVM 패턴"
+                        >
+                            ⛳️ MVC, MVP, MVVM 패턴
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-10T20:59:49+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-디자인-패턴이란"><a href="#📌-디자인-패턴이란" class="headerlink" title="📌 디자인 패턴이란?"></a>📌 디자인 패턴이란?</h1><p>디자인 패턴은 애플리케이션내에서 각자 역할에 맞는 코드끼리 분리하여 유지보수성을 높이고 탄탄한 구조를 가진 애플리케이션을 설계할 수 있다.</p>
+<h2 id="✏️-디자인-패턴-장점"><a href="#✏️-디자인-패턴-장점" class="headerlink" title="✏️ 디자인 패턴 장점"></a>✏️ 디자인 패턴 장점</h2><ol>
+<li>검증된 해결책</li>
+</ol>
+<p>디자인 패턴은 소프트웨어 개발의 문제를 해결하는 확실한 접근 방식을 제공한다.</p>
+<ol start="2">
+<li>쉬운 재사용</li>
+</ol>
+<p>일반적으로 필요에 따라 조정가능하며 즉시 사용가능한 솔루션을 반영한다.</p>
+<p><red>다만, 디자인 패턴이 모든 문제의 해결책은 아니다.</red> 패턴의 역할은 솔루션 체계를 제공하고 이를 지원하는 역할을 한다.</p>
+<p>이외의 사소한 문제를 예방할 수 있고 반복을 피하여 파일 크기를 줄일 수 있으며, 개발자간의 소통을 원할하게 하는 장점이 있다.</p>
+<h2 id="🛤-MVC-패턴"><a href="#🛤-MVC-패턴" class="headerlink" title="🛤 MVC 패턴"></a>🛤 MVC 패턴</h2><p>Model + View + Controller를 합친 용어이다.</p>
+<p><img src="/../../images/design/mvc.png" alt="mvc"></p>
+<ul>
+<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
+<li>View : 사용자에게 보여지는 UI</li>
+<li>Controller : 사용자의 입력을 받고 처리하는 부분</li>
+</ul>
+<h3 id="동작"><a href="#동작" class="headerlink" title="동작"></a>동작</h3><ol>
+<li>사용자 액션이 들어오면 컨트롤러가 액션 확인하고 모델을 업데이트한다.</li>
+<li>컨트롤러는 모델을 나타낼 뷰를 선택한다.</li>
+<li>뷰는 모델을 이용하여 화면에 나타낸다.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">참고 - MVC에서 View가 업데이트 되는 방법</span><br><span class="line">- 뷰가 모델을 이용하여 직접 업데이트</span><br><span class="line">- 모델이 뷰에게 알림을 주어 업데이트</span><br><span class="line">- 뷰가 Polling으로 모델의 변경을 주기적으로 감지하여 업데이트</span><br></pre></td></tr></table></figure>
+
+<p><code>polling이란?</code></p>
+<p>하나의 장치가 충돌 회피 또는 동기화를 목적으로 다른 장치의 상태를 주기적으로 검사하여 일정 조건을 만족할 때, 송수신 자료를 처리하는 방식</p>
+<hr>
+<h3 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h3><ul>
+<li>컨트롤러는 여러 개의 뷰를 선택할 수 있는 1:n 구조</li>
+<li>보편적이며 단순하다.</li>
+<li>뷰와 모델 사이의 의존성이 높다. (bad~👎)</li>
+</ul>
+<h2 id="🏸-MVP-패턴"><a href="#🏸-MVP-패턴" class="headerlink" title="🏸 MVP 패턴"></a>🏸 MVP 패턴</h2><p>Model + View + Presenter를 합친 용어이다.</p>
+<p><img src="/../../images/design/mvp.png" alt="mvp"></p>
+<ul>
+<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
+<li>View : 사용자에게 보여지는 UI</li>
+<li>Presenter : 뷰에서 요청한 정보로 모델을 가공하여 뷰에게 전달해주는 부분(<strong>View, Model을 붙여주는 접착제역할</strong>)</li>
+</ul>
+<h3 id="동작-1"><a href="#동작-1" class="headerlink" title="동작"></a>동작</h3><ol>
+<li>사용자 액션은 뷰를 통해 들어온다.</li>
+<li>뷰는 프레젠터에게 데이터를 요청한다.</li>
+<li>프레젠터는 모델에게 데이터 요청한다.</li>
+<li>모델은 프레젠터에게 요청받은 데이터를 응답한다.</li>
+<li>프레젠터는 뷰에게 데이터를 응답한다.</li>
+<li>뷰가 응답받은 데이터를 화면에 나타낸다.</li>
+</ol>
+<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ul>
+<li>프레젠터는 뷰와 모델의 인스턴스를 가지고 있어 둘을 연결하는 접착제 역할</li>
+<li>프레젠터와 뷰는 1:1</li>
+<li>뷰와 모델간의 의존성이 없다. (Good~👍)</li>
+<li>하지만 뷰와 프레젠터의 의존성 높다.</li>
+</ul>
+<h2 id="👑-MVVM-패턴"><a href="#👑-MVVM-패턴" class="headerlink" title="👑 MVVM 패턴"></a>👑 MVVM 패턴</h2><p>Model + View + View Model을 합친 용어이다.</p>
+<p><img src="/../../images/design/mvvm.png" alt="mvvm"></p>
+<ul>
+<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
+<li>View : 사용자에게 보여지는 UI</li>
+<li>View Model : 뷰를 표현하기 위해 만든 뷰를 위한 모델</li>
+</ul>
+<h3 id="동작-2"><a href="#동작-2" class="headerlink" title="동작"></a>동작</h3><ol>
+<li>사용자 액션이 뷰를 통해 들어온다.</li>
+<li>뷰에 액션이 들어오면 Command 패턴으로 뷰 모델에 액션을 전달한다.</li>
+<li>뷰 모델은 모델에게 데이터를 요청한다.</li>
+<li>모델은 뷰 모델에게 요청받은 데이터를 응답한다.</li>
+<li>뷰 모델은 응답받은 데이터를 가공하여 저장한다.</li>
+<li>뷰는 뷰 모델과 데이터 바인딩하여 화면에 나타낸다.</li>
+</ol>
+<h3 id="특징-2"><a href="#특징-2" class="headerlink" title="특징"></a>특징</h3><ul>
+<li>Command 패턴과 데이터 바인딩 두가지 패턴을 사용(<strong>뷰와 뷰 모델 사이의 의존성 제거</strong>)</li>
+<li>뷰 모델과 뷰는 1:n</li>
+<li>뷰와 모델사이의 의존성도 없으므로 각 부분은 독립적으로 모듈화하여 개발할 수 있다.</li>
+<li>뷰 모델 설계가 어렵다.</li>
+</ul>
+<p><code>Command패턴이란?</code></p>
+<p>요청을 객체 형태로 캡슐화하여 사용자가 보낸 요청을 나중에 사용할 수 있도록 메서드명, 매개변수 등 요청에 필요한 정보를 저장,로깅, 취소하는 패턴이다.</p>
+<hr>
+<p>참고</p>
+<p><a target="_blank" rel="noopener" href="https://beomy.tistory.com/43">[디자인패턴]MVC,MVP,MVVM 패턴 비교</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/"
+                            aria-label=": 🎡 Flux 패턴"
+                        >
+                            🎡 Flux 패턴
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-10T20:29:55+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-Flux-패턴"><a href="#📌-Flux-패턴" class="headerlink" title="📌 Flux 패턴"></a>📌 Flux 패턴</h1><p>페이스북이 전통적인 MVC 디자인 패턴이 복잡한 애플리케이션에서 적합하지 않다고 판단하여 새로운 디자인 패턴을 소개한 것이 바로 <red>단방향 데이터 흐름을 갖는 Flux 패턴이다.</red></p>
+<h2 id="🔥-문제점"><a href="#🔥-문제점" class="headerlink" title="🔥 문제점"></a>🔥 문제점</h2><p><img src="/../../images/flux/complicated%20MVC.png" alt="Complicated MVC"></p>
+<p>애플리케이션 규모가 커짐에 따라 <red>양방향 데이터 흐름</red>을 그림처럼 복잡한 구조를 가지게 된다.</p>
+<p>사용자와 상호작용하는 여러 View가 연결된 여러 Model을 업데이트하고 Model 또한 연결된 View를 업데이트하는 매우 복잡한 상황이 발생하기에 <strong>데이터 흐름을 예측하기란 매우 어려워진다.</strong></p>
+<blockquote>
+<p>사실 위 그림은 전통적인 MVC 패턴이고 Apple의 MVC 패턴은 사진처럼 Model과 View의 양방향 데이터 흐름이 발생하지 않는다. <red>문제는 양방향 데이터 흐름이다.</red></p>
+</blockquote>
+<p><img src="/../../images/flux/appleMVC.png" alt="AppleMVC"></p>
+<h2 id="🦖-Flux-아키텍처"><a href="#🦖-Flux-아키텍처" class="headerlink" title="🦖 Flux 아키텍처"></a>🦖 Flux 아키텍처</h2><p><img src="/../../images/flux/flux.png" alt="flux"></p>
+<p>Flux 패턴은 앱의 단방향 데이터 흐름을 촉진하는 시스템 아키텍처를 말한다.</p>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p><strong>사용자의 요청을 정의한 객체</strong>를 말한다.</p>
+<ul>
+<li>사용자 요청 타입(Type)과 데이터(Payload)를 가진다.</li>
+<li>액션 크리에이터(Action Creator) 함수를 사용하여 디스패처로 전달한다.</li>
+</ul>
+<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p>디스패처는 중앙 데이터 흐름 관리한다. 스토어에 등록된 액션 타입마다 콜백되는 함수가 존재한다.</p>
+<ul>
+<li>사용자 액션으로부터 받은 액션 타입에 맞는 콜백함수를 실행한다.</li>
+<li><strong>스토어 데이터 변경은 디스패처를 통해서만 가능하다.</strong></li>
+</ul>
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>스토어는 상태(Model)를 관리하는 저장소이며 상태를 변경할 수 있는 콜백을 가진다. 각 액션을 처리하는 콜백함수는 디스패처에 등록된다.</p>
+<ul>
+<li>상태와 상태를 변경하는 함수를 가진다.</li>
+<li>디스패처에 등록된 콜백함수가 실행되면 스토어의 상태가 변경되며 View에 데이터가 변경되었음을 알린다.(옵저버 패턴 활용)</li>
+</ul>
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>뷰는 사용자와 상호작용하는 컴포넌트이다. 스토어에서 상태가 변경되었다는 알림이 오면 뷰는 리렌더링이 발생한다.</p>
+<ul>
+<li>사용자는 View를 조작할 수 있고 상태 변경을 요청하는 액션을 생성할 수 있다.</li>
+<li>생성된 액션은 디스패처에게 전달되고 디스패처는 해당 액션에 연결된 콜백을 실행하여 스토어의 상태를 변경한다.</li>
+<li>상태가 변경되었음을 뷰에게 알리고 뷰는 리렌더링이 발생한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                            aria-label=": LifeCycle(라이프사이클)"
+                        >
+                            LifeCycle(라이프사이클)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-10T20:23:28+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-LifeCycle이란"><a href="#📌-LifeCycle이란" class="headerlink" title="📌 LifeCycle이란?"></a>📌 LifeCycle이란?</h1><p>라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. <strong>컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다.</strong></p>
+<h2 id="👑-LifeCycle-필요성"><a href="#👑-LifeCycle-필요성" class="headerlink" title="👑 LifeCycle 필요성"></a>👑 LifeCycle 필요성</h2><p>라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 <red>Side Effect(사이드이펙트)를 처리</red>하기 위함이다.</p>
+<p>대표적인 사이드 이펙트는 다음과 같다.</p>
+<ol>
+<li>네트워크 통신 (비동기 통신 요청 및 응답)</li>
+<li>DOM 컨트롤 (RealDOM 접근 및 조작)</li>
+<li>구독&#x2F;취소 (이벤트 핸들링 등)</li>
+<li>오류 감지 (ErrorBoundary 컴포넌트 등)</li>
+</ol>
+<h2 id="✏️-대표적인-LifeCycle-메서드"><a href="#✏️-대표적인-LifeCycle-메서드" class="headerlink" title="✏️ 대표적인 LifeCycle 메서드"></a>✏️ 대표적인 LifeCycle 메서드</h2><ul>
+<li><code>constructor()</code><ul>
+<li>마운트 되기 전에 실행된다.</li>
+</ul>
+</li>
+<li><code>render()</code><ul>
+<li>컴포넌트 렌더링 시점에 호출</li>
+</ul>
+</li>
+<li><code>componentDidMount()</code><ul>
+<li>DOM에 마운트 된 이후 실행된다.</li>
+</ul>
+</li>
+<li><code>componentDidUpdate()</code><ul>
+<li>최초 렌더링 시 실행 ❌</li>
+<li>업데이트 이후 실행</li>
+</ul>
+</li>
+<li><code>componentWillunmount()</code><ul>
+<li>컴포넌트 소멸하기 직전에 실행</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../images/lifecycle/lifecycle.png" alt="LifeCycle"></p>
+<h2 id="🌈-Render-단계"><a href="#🌈-Render-단계" class="headerlink" title="🌈 Render 단계"></a>🌈 Render 단계</h2><ul>
+<li>render 단계는 virtualDOM을 조작하는 단계이다.<ul>
+<li>성능 최적화를 위한 행동은 render 이전에 해줘야한다.</li>
+<li>render가 끝났다고 해서 실제DOM에 바로 반영되는 것이 아니다.</li>
+</ul>
+</li>
+<li>리액트 업데이트가 되는 경우는 다음 3가지 상황이다.<ol>
+<li><strong>새로운 props가 전달되었을 때,</strong></li>
+<li><strong>해당 컴포넌트의 state가 변경되었을 때,</strong></li>
+<li><strong>강제로 변경시켰을 때만 업데이트가 발생한다.</strong></li>
+</ol>
+</li>
+</ul>
+<h2 id="🔨-Commit-단계"><a href="#🔨-Commit-단계" class="headerlink" title="🔨 Commit 단계"></a>🔨 Commit 단계</h2><p>commit 단계는 RealDOM이므로 명령형이 가능하다.</p>
+<ul>
+<li>DOM을 사용하여 <strong>componentDidMount, DidUpdate, WillUnmount 에서 명령형 코드 작성이 가능하다.</strong></li>
+<li>사이드 이펙트 관련 함수는 여기서 수행해야한다.<aside>
+📌 사이드 이펙트가 나쁜 의미로 부작용이 아니라 리액트가 하는 일이 아닌 부가적인 일을 의미한다.
+</aside></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
                             aria-label=": 🐍 setState"
                         >
@@ -820,550 +1454,6 @@
                         <p>
                             <a
                                 href="/2022/11/09/CS/HTTP%EC%9D%98-%EC%97%AD%EC%82%AC%EC%99%80-HTTPS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
-                            aria-label=": stateless 컴포넌트와 stateful 컴포넌트"
-                        >
-                            stateless 컴포넌트와 stateful 컴포넌트
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-09T10:57:01+09:00">
-	
-		    2022/11/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🛤-Class-Component-vs-Function-Component"><a href="#🛤-Class-Component-vs-Function-Component" class="headerlink" title="🛤 Class Component vs Function Component"></a>🛤 Class Component vs Function Component</h1><p>과거의 리액트는 상태를 가지는 컴포넌트는 클래스형으로, 상태를 가지지 않는 컴포넌트는 함수형으로 작성하였다. <strong>왜 그랬을까?</strong></p>
-<p><img src="/../images/stateless/class&function.png" alt="class&amp;function-components"></p>
-<p>Container 컴포넌트는 상태를 가지는데, 함수형 컴포넌트로 생성하게 되면 <red>함수 호출하여 컴포넌트를 생성할 때 마다 상태가 초기화된</red> 값을 가지기 때문에 Container 컴포넌트는 클래스형으로만 작성하였다.</p>
-<ul>
-<li>this를 사용하기 때문에 <strong>클래스형 컴포넌트가 생성방식이 더 복잡하다.</strong></li>
-<li>클래스형 컴포넌트에는 <code>render()</code> 메서드가 꼭 있어야 한다.</li>
-<li>클래스형 컴포넌트에서 이벤트 등록 시 this 바인딩을 꼭 해줘야만 한다.</li>
-</ul>
-<h1 id="📌-stateless-컴포넌트"><a href="#📌-stateless-컴포넌트" class="headerlink" title="📌 stateless 컴포넌트"></a>📌 stateless 컴포넌트</h1><p>stateless 컴포넌트는 말 그대로 상태를 가지지 않는 컴포넌트이다. 이러한 컴포넌트를 stateless 컴포넌트 또는 presentational(프레젠테이셔널) 컴포넌트라고 한다.</p>
-<h2 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h2><ul>
-<li><red>시각적 표현에 중점</red>을 둔 컴포넌트</li>
-<li>시각적 표현을 목적으로 하니 복잡한 비즈니스 로직 필요없다</li>
-<li><red>상태를 가질 필요가 없고</red> 외부에서 전달 받은 데이터를 화면에 그려준다.</li>
-</ul>
-<h2 id="✏️-stateless-컴포넌트는-함수형으로-작성한다"><a href="#✏️-stateless-컴포넌트는-함수형으로-작성한다" class="headerlink" title="✏️ stateless 컴포넌트는 함수형으로 작성한다?"></a>✏️ stateless 컴포넌트는 함수형으로 작성한다?</h2><p>표현을 목적으로 하는 컴포넌트는 복잡한 비즈니스 로직이 필요없고 이를 클래스로 작성할 경우 Babel 컴파일러가 클래스를 컴파일 해줄 때 함수형 컴포넌트일 때 보다 훨씬 더 많은 코드로 컴파일 해주기 때문에 <strong>stateless 컴포넌트를 클래스형으로 작성하는 것은 낭비이다.</strong></p>
-<h1 id="📌-stateful-컴포넌트"><a href="#📌-stateful-컴포넌트" class="headerlink" title="📌 stateful 컴포넌트"></a>📌 stateful 컴포넌트</h1><p>상태를 가지는 컴포넌트를 stateful 컴포넌트 또는 Container(컨테이너) 컴포넌트라고 한다.</p>
-<h2 id="목적-1"><a href="#목적-1" class="headerlink" title="목적"></a>목적</h2><ul>
-<li>비즈니스 로직을 가지고 있다.</li>
-<li><red>state(상태)</red>를 가진다.</li>
-<li>Presentational 컴포넌트에게 Props를 전달하여 UI 렌더링 하도록 한다.</li>
-<li>화면을 그리는 최소한의 스타일 정보를 가진다.</li>
-</ul>
-<h2 id="❓-stateful-컴포넌트는-함수형으로-작성하지-않는다"><a href="#❓-stateful-컴포넌트는-함수형으로-작성하지-않는다" class="headerlink" title="❓ stateful 컴포넌트는 함수형으로 작성하지 않는다?"></a>❓ stateful 컴포넌트는 <red>함수형으로 작성하지 않는다?</red></h2><p>하지만, <strong>React Hook</strong>의 등장으로 함수형 컴포넌트로도 Container 컴포넌트의 역할이 가능해졌다.</p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>클래스형 컴포넌트와 함수형 컴포넌트에 차이에 대해 알게되었다.</p>
-<p>프로젝트를 시작하게 될 때, 컴포넌트를 생성할텐데 이 때, 이 컴포넌트가 상태를 가지는 컴포넌트인지 상태를 갖지 않는 컴포넌트인지 구분을 짓고 컴포넌트를 생성해야겠다.</p>
-<p>오늘날 리액트에서 React Hook이 등장하게 되면서 클래스형으로만 작성되던 stateful Component가 어떻게 함수형 컴포넌트로 바뀌게 되었는지를 배우게 되면 리액트에 대한 이해가 한층 더 깊어질 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"
-                            aria-label=": Mock Fn(모의함수) 테스트 (React DOM Test)"
-                        >
-                            Mock Fn(모의함수) 테스트 (React DOM Test)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-08T21:17:48+09:00">
-	
-		    2022/11/08
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-Mock-Fn-모의함수-란"><a href="#📌-Mock-Fn-모의함수-란" class="headerlink" title="📌 Mock Fn(모의함수)란?"></a>📌 Mock Fn(모의함수)란?</h1><p>테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> expected = <span class="string">&quot;triggering toggle event&quot;</span>;</span><br><span class="line">  <span class="keyword">let</span> received = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        received = expected;</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;</span></span><br><span class="line"><span class="language-xml">    /&gt;</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="property">not</span>.<span class="title function_">toBe</span>(expected);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">queryByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(received).<span class="title function_">toBe</span>(expected);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.</li>
-</ul>
-<p>테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.</p>
-<p><strong>이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.</strong></p>
-<p>그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mock Fn</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> mockFn = jest.<span class="title function_">fn</span>();</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onToggle</span>=<span class="string">&#123;mockFn&#125;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">  fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(mockFn).<span class="title function_">toHaveBeenCalled</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="✏️-React-VirtualDOM-Test"><a href="#✏️-React-VirtualDOM-Test" class="headerlink" title="✏️ React VirtualDOM Test"></a>✏️ React VirtualDOM Test</h2><p>리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 <strong>RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">A11yHidden</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;span&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>RealDOM에서 <code>querySelector()</code>로 요소를 가져오는 것처럼 VirtualDOM에서는 <code>screen</code>으로 요소를 가져올 수 있다.</li>
-<li>해당 요소를 가져오기 위해서 <code>data-testId</code> 값을 사용하였다.</li>
-</ul>
-<h3 id="❗️-localName-vs-nodeName-차이"><a href="#❗️-localName-vs-nodeName-차이" class="headerlink" title="❗️ localName vs nodeName 차이"></a>❗️ localName vs nodeName 차이</h3><ul>
-<li>localName : 소문자를 반환</li>
-<li>nodeName : 대문자를 반환</li>
-</ul>
-<h3 id="defaultProps-사용하기"><a href="#defaultProps-사용하기" class="headerlink" title="defaultProps 사용하기"></a>defaultProps 사용하기</h3><p>리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.</p>
-<blockquote>
-<p>직접 파라미터에 <code>App(&#123; as: ComponentName = &#39;div&#39; &#125;)</code> 이런식으로 주는 것을 안티패턴으로 본다.</p>
-</blockquote>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&quot;./A11yHidden.module.css&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">A11yHidden</span>(<span class="params">&#123; <span class="keyword">as</span>: ComponentName, ...restProps &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ComponentName</span> <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span> &#123;<span class="attr">...restProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">ComponentName</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A11yHidden.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>as 라는 props를 받으면 해당하는 <strong>ComponentName으로</strong> 태그를 감싸서 컴포넌트를 생성한다.</li>
-</ul>
-<blockquote>
-<p>component는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.</p>
-</blockquote>
-<h3 id="getByRole-vs-getByTestId"><a href="#getByRole-vs-getByTestId" class="headerlink" title="getByRole vs getByTestId"></a>getByRole vs getByTestId</h3><p>기본적으로 <code>div, span</code> 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.</p>
-<p>그에 대한 대안으로 테스트용 <code>data-testId=&quot;tester&quot;</code> 값을 주고 <code>getByTestId()</code>를 사용하여 요소를 가져올 수 있다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// div 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> <span class="attr">as</span>=<span class="string">&quot;div&quot;</span> <span class="attr">data-testid</span>=<span class="string">&quot;tester&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByTestId</span>(<span class="string">&quot;tester&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// figure 요소 가져올 경우</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">  <span class="title function_">expect</span>(element.<span class="property">localName</span>).<span class="title function_">toBe</span>(<span class="string">&quot;figure&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>figure, img</code> 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 <code>getByRole()</code>를 이용하여 가져올 수 있다.</p>
-</blockquote>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.</p>
-<p>이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 <strong>storyBook도</strong> 사용해봐야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/08/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%E2%9A%BE%EF%B8%8F-%EC%88%AB%EC%9E%90-%EC%95%BC%EA%B5%AC-%EA%B2%8C%EC%9E%84/"
-                            aria-label=": 우테코 프리코스 - ⚾️ 숫자 야구 게임"
-                        >
-                            우테코 프리코스 - ⚾️ 숫자 야구 게임
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-08T21:05:23+09:00">
-	
-		    2022/11/08
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-문제-및-요구사항"><a href="#📌-문제-및-요구사항" class="headerlink" title="📌 문제 및 요구사항"></a>📌 문제 및 요구사항</h1><p><a href="url:https://github.com/loco9939/javascript-baseball">숫자 야구 게임 바로가기</a></p>
-<h2 id="✏️-회고"><a href="#✏️-회고" class="headerlink" title="✏️ 회고"></a>✏️ 회고</h2><h3 id="❗️-클래스-필드를-사용할-것인가-constructor-안에서-정의할-것인가"><a href="#❗️-클래스-필드를-사용할-것인가-constructor-안에서-정의할-것인가" class="headerlink" title="❗️ 클래스 필드를 사용할 것인가? constructor() 안에서 정의할 것인가?"></a>❗️ 클래스 필드를 사용할 것인가? constructor() 안에서 정의할 것인가?</h3><ul>
-<li>App이라는 클래스는 야구게임 App이다. 야구 게임의 룰을 변경하지 않는 이상 인스턴스를 생성할 때마다 초기화할 값이 없다. 그러므로 <red>초기화 하지 않는 프로퍼티 값들은 클래스 필드에 정의</red>해두었다.</li>
-</ul>
-<h3 id="❗️-요구사항-제대로-읽기"><a href="#❗️-요구사항-제대로-읽기" class="headerlink" title="❗️ 요구사항 제대로 읽기"></a>❗️ 요구사항 제대로 읽기</h3><ul>
-<li><strong>요구사항 제대로 읽지 않아서</strong> 라이브러리 사용하여 랜덤값 구하면 되는데, 랜덤값 구하는 로직 직접 짜서 다시 처음부터 시작하게되었다.</li>
-<li>또 제대로 안읽어서 특정 메서드 사용하여 구하라했는데 라이브러리에서 제공하는 다른 메서드로 구현하여 다시 작성했다…</li>
-</ul>
-<h3 id="❗️jest를-통한-테스트-케이스는-어떻게-확인할-수-있는지-알게되었다"><a href="#❗️jest를-통한-테스트-케이스는-어떻게-확인할-수-있는지-알게되었다" class="headerlink" title="❗️jest를 통한 테스트 케이스는 어떻게 확인할 수 있는지 알게되었다."></a>❗️jest를 통한 테스트 케이스는 어떻게 확인할 수 있는지 알게되었다.</h3><ul>
-<li>주어진 라이브러리를 활용하여 1번은 테스트 하는 것을 알 수 있었다. 그런데 2번째 값을 얻기 위해서 내가 해주어야 하는 것이 무엇인지 모르겠다.</li>
-</ul>
-<p>내가 직접 <strong>예상되는 값을 생각하여 테스트에 입력값만 적어주고</strong> 소스코드에서는 <red>해당 입력값이 넘어왔다가 가정하고 그에 대한 처리</red>를 해주면 되는 것이라는 것을 알게되었다.</p>
-<h3 id="❗️랜덤값-받은-것을-프로퍼티로-저장해두자"><a href="#❗️랜덤값-받은-것을-프로퍼티로-저장해두자" class="headerlink" title="❗️랜덤값 받은 것을 프로퍼티로 저장해두자"></a>❗️랜덤값 받은 것을 프로퍼티로 저장해두자</h3><p>함수형 프로그래밍을 하면서 함수를 호출하고 반환된 값을 다른 함수에게 전달하는 방식으로 랜덤값과 입력값을 비교하고 결과를 반환하는 방식으로 하였는데, 이 방법보다는 App 이라는 클래스가 랜덤값과 입력값을 가져 <strong>한곳에서 이 데이터를 가져다가 사용하는 것이 적절하다고 판단</strong>하여 위와 같이 프로퍼티로 저장해두었다.</p>
-<h3 id="❗️형변환-확인하기"><a href="#❗️형변환-확인하기" class="headerlink" title="❗️형변환 확인하기"></a>❗️형변환 확인하기</h3><p>테스트 케이스를 작성할 때, <strong>answers 배열의 요소를 문자열로 넣어준 것을 제대로 확인하지 않아</strong> 왜 자꾸 문제가 발생하는지 제대로 파악하기 어려웠다. 아마도 Jest를 사용한 디버깅이 익숙하지 않은 탓이었다. 때문에 여기서 의외로 많은 시간을 보냈다. 단위 테스트를 자주 하면서 Jest 디버깅에도 익숙해지도록 노력해야겠다.</p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>저번주에 이어 2주차에 접어들게 되었다. 학원이 끝나고 혹은 주말에 틈틈히 문제를 풀었는데도 익숙하지 않는 Jest 테스트 방법 때문에 해결방법도 모른체로 <strong>삽질(?)</strong> 을 많이했던 한주였다.</p>
-<p>그래도 주변에 물어도보고 검색도 하면서 구현까지는 어찌저찌 완성하였다.</p>
-<p>하지만 리팩터링에 시간을 많이 쏟지 못한 것이 아쉬웠다. 우테코 문제 푸는 것도 중요하지만 당장 리액트 수업도 복습해야하고, CS 공부도 해야하고 알고리즘 문제도 풀어야하고 해야할 일이 너무 많다.</p>
-<p>하지만 꾸준히 계획을 세워서 해나갈 것이니 언젠간 좋은 날이 올 것이라고 믿는다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/08/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%E2%9A%BE%EF%B8%8F-%EC%88%AB%EC%9E%90-%EC%95%BC%EA%B5%AC-%EA%B2%8C%EC%9E%84/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/07/React/React-Testing-Library/"
-                            aria-label=": React Testing Library"
-                        >
-                            React Testing Library
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-07T21:04:27+09:00">
-	
-		    2022/11/07
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-React-Testing-Library"><a href="#📌-React-Testing-Library" class="headerlink" title="📌 React Testing Library"></a>📌 React Testing Library</h1><p>리액트에서 TDD 방식의 개발을 하기 위해서 테스팅 라이브러리를 사용해보자.</p>
-<h2 id="🎯-목적"><a href="#🎯-목적" class="headerlink" title="🎯 목적"></a>🎯 목적</h2><h3 id="1-버그-캐치"><a href="#1-버그-캐치" class="headerlink" title="1. 버그 캐치"></a>1. 버그 캐치</h3><p>테스트를 통해 예상치 못한 여러가지 버그들을 사전에 확인하기 용이하다.</p>
-<h3 id="2-애플리케이션-신뢰도-향상"><a href="#2-애플리케이션-신뢰도-향상" class="headerlink" title="2. 애플리케이션 신뢰도 향상"></a>2. 애플리케이션 신뢰도 향상</h3><p>어떠한 근거로 이 애플리케이션이 제대로 동작하는지 근거를 뒷받침하고 이 근거에 대한 <strong>신뢰도를 높일 수 있다.</strong></p>
-<h3 id="3-질문-및-답변-시간-축소"><a href="#3-질문-및-답변-시간-축소" class="headerlink" title="3. 질문 및 답변 시간 축소"></a>3. 질문 및 답변 시간 축소</h3><p>누군가 어떤 컴포넌트가 어떻게 동작하는지 질문했을 때 그에대한 답변으로 이 테스트를 보여주기만 하면된다. 그럼으로 <strong>시간을 절약하고 유지보수성을 높일 수 있다.</strong></p>
-<h3 id="4-문서-역할"><a href="#4-문서-역할" class="headerlink" title="4. 문서 역할"></a>4. 문서 역할</h3><p>테스트라는 문서를 제공함으로서 2,3번의 장점을 가능하도록 한다.</p>
-<h2 id="💼-사용방법"><a href="#💼-사용방법" class="headerlink" title="💼 사용방법"></a>💼 사용방법</h2><p>우선 해당 라이브러리를 설치해준다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @testing-library/react</span><br><span class="line"></span><br><span class="line">npm install --save-dev @testing-library/dom</span><br><span class="line"></span><br><span class="line">npm install --save-dev @testing-library/user-event</span><br></pre></td></tr></table></figure>
-
-<p><strong>리액트 테스팅 라이브리러</strong>와 <strong>DOM 테스트 라이브러리, 사용자 행동 테스트 라이브러리</strong>를 설치하여 테스트 개발을 해보자.</p>
-<h3 id="🦖-Component-테스트"><a href="#🦖-Component-테스트" class="headerlink" title="🦖 Component 테스트"></a>🦖 Component 테스트</h3><h4 id="✏️-테스트-코드-작성하는-방법"><a href="#✏️-테스트-코드-작성하는-방법" class="headerlink" title="✏️ 테스트 코드 작성하는 방법"></a>✏️ 테스트 코드 작성하는 방법</h4><ol>
-<li><p>테스트가 필요한 컴포넌트 렌더링</p>
-</li>
-<li><p>컴포넌트의 요소 탐색</p>
-</li>
-<li><p>요소와의 상호작용</p>
-</li>
-<li><p>어설션 테스트 결과와 기대 값이 일치하는 지 확인</p>
-</li>
-</ol>
-<p>우선 컴포넌트를 생성해주자.</p>
-<h3 id="📌-Tip-컴포넌트-생성"><a href="#📌-Tip-컴포넌트-생성" class="headerlink" title="📌 Tip 컴포넌트 생성"></a><strong>📌 Tip 컴포넌트 생성</strong></h3><p>컴포넌트를 쉽게 생성하기 위해 <strong>yamoo9님이 제공해준 Tool</strong>을 사용해보도록하자.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx degit yamoo9/create-react-component create-react-component</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;scripts&quot;</span> <span class="punctuation">:</span></span><br><span class="line">    ...<span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node create-react-component create&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node create-react-component delete&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm run rc -- 컴포넌트_이름 // 컴포넌트 생성</span><br><span class="line">npm run rd -- 컴포넌트_이름 // 컴포넌트 제거</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ESLint 에서 테스팅 라이브러리를 사용하게되면 오류를 띄워주는데 이에 대한 Lint 경고를 꺼두자.</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;eslintConfig&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span>...<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testing-library/no-debugging-utils&quot;</span><span class="punctuation">:</span> <span class="string">&quot;off&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-</blockquote>
-<h1 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h1><h2 id="1-컴포넌트가-렌더링-확인"><a href="#1-컴포넌트가-렌더링-확인" class="headerlink" title="1. 컴포넌트가 렌더링 확인"></a>1. 컴포넌트가 렌더링 확인</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.jsx</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;on ? onText : offText&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; render, screen &#125; <span class="keyword">from</span> <span class="string">&quot;@testing-library/react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ToggleButton</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./ToggleButton&quot;</span>;</span><br><span class="line"></span><br><span class="line">describe.<span class="title function_">only</span>(<span class="string">&quot;ToggleButton Test Start!&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;컴포넌트가 정상적으로 렌더링 되었습니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&quot;1&quot;</span> <span class="attr">offText</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> offTextElement = screen.<span class="title function_">getByText</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> onTextElement = screen.<span class="title function_">queryByText</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(offTextElement).<span class="title function_">toBeInTheDocument</span>();</span><br><span class="line">    <span class="title function_">expect</span>(onTextElement).<span class="property">not</span>.<span class="title function_">toBeInTheDocument</span>();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>getByText()</code> : 가상으로 그려진 문서에 존재하는 것만 가져올 수 있다. 만약 존재 하지 않는 다면 오류를 발생시킨다.</li>
-<li><code>queryByText()</code> : 존재하지 않으면 오류를 발생시키지 않고 <red>null 값으로 가져온다.</red></li>
-</ul>
-<h2 id="2-활성화-상태-여부에-따라-텍스트-표시"><a href="#2-활성화-상태-여부에-따라-텍스트-표시" class="headerlink" title="2. 활성화 상태 여부에 따라 텍스트 표시"></a>2. 활성화 상태 여부에 따라 텍스트 표시</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.jsx</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span>&gt;</span>&#123;on ? onText : offText&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.jsx</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&quot;ToggleButton 컴포넌트&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;활성 상태 여부에 따라 활성(ON)/비활성(OFF) 텍스트가 표시됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> onText = <span class="string">&quot;ON&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> offText = <span class="string">&quot;OFF&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&#123;onText&#125;</span> <span class="attr">offText</span>=<span class="string">&#123;offText&#125;</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> elements = screen.<span class="title function_">queryAllByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> firstElement = elements[<span class="number">0</span>];</span><br><span class="line">    <span class="title function_">expect</span>(firstElement).<span class="title function_">toHaveTextContent</span>(offText);</span><br><span class="line"></span><br><span class="line">    screen.<span class="title function_">debug</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">cleanup</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">onText</span>=<span class="string">&#123;onText&#125;</span> <span class="attr">offText</span>=<span class="string">&#123;offText&#125;</span> <span class="attr">on</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    elements = screen.<span class="title function_">queryAllByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    firstElement = elements[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    screen.<span class="title function_">debug</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(firstElement).<span class="title function_">toHaveTextContent</span>(onText);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>만약 on 일때의 text와 off일 때의 text를 찾고 싶다면 <strong><code>queryAllText()</code></strong> 를 사용해준다,</li>
-<li><strong><code>cleanup()</code>을 해줘야지만 firstElement를 확인할 때, 앞에 그려진 것을 지우고 새로 그려진 것을 비교해줄 수 있다.</strong></li>
-</ul>
-<h2 id="3-onToggle-속성-prop-에-연결된-함수-실행-확인-amp-활성-상태-컴포넌트는-ToggleButton-on-클래스-이름-포함-확인"><a href="#3-onToggle-속성-prop-에-연결된-함수-실행-확인-amp-활성-상태-컴포넌트는-ToggleButton-on-클래스-이름-포함-확인" class="headerlink" title="3. onToggle 속성(prop)에 연결된 함수 실행 확인 &amp; 활성 상태 컴포넌트는 ToggleButton--on 클래스 이름 포함 확인"></a>3. onToggle 속성(prop)에 연결된 함수 실행 확인 &amp; 활성 상태 컴포넌트는 <code>ToggleButton--on</code> 클래스 이름 포함 확인</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ToggleButton</span>(<span class="params">&#123; onText, offText, on, onToggle &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;</span>`<span class="attr">ToggleButton</span> $&#123;<span class="attr">on</span> ? &quot;<span class="attr">ToggleButton--on</span>&quot; <span class="attr">:</span> &quot;&quot;&#125;`<span class="attr">.trim</span>()&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onClick</span>=<span class="string">&#123;onToggle&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;on ? onText : offText&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToggleButton.test.js</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&quot;ToggleButton 컴포넌트&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> expected = <span class="string">&quot;triggering toggle event&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> received = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">          received = expected;</span></span><br><span class="line"><span class="language-xml">        &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      /&gt;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(received).<span class="property">not</span>.<span class="title function_">toBe</span>(expected);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> element = screen.<span class="title function_">queryByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line"></span><br><span class="line">    fireEvent.<span class="title function_">click</span>(element); <span class="comment">// click button element</span></span><br><span class="line"></span><br><span class="line">    <span class="title function_">expect</span>(received).<span class="title function_">toBe</span>(expected);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">test</span>(<span class="string">`활성 상태의 컴포넌트는 &#x27;ToggleButton--on&#x27; 클래스 이름을 포함한다.`</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> expected = <span class="string">&quot;ToggleButton--on&quot;</span>;</span><br><span class="line">    <span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">ToggleButton</span> <span class="attr">on</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> element = screen.<span class="title function_">getByRole</span>(<span class="string">&quot;button&quot;</span>);</span><br><span class="line">    <span class="title function_">expect</span>(element).<span class="title function_">toHaveClass</span>(expected);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>fireEvent()</code> : 이벤트를 발생시켜주는 메서드이다.</p>
-</li>
-<li><p><code>queryByRole()</code> : 해당 요소의 역할을 확인하는데 사용된다.</p>
-<p><strong>ex) button 태그에 type을 “button”으로 명시적으로 작성하였는지…</strong></p>
-</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>오늘 수업에서 상태를 가지지 않는 컴포넌트의 다양한 테스트 방법에 대해 실습을 진행하였다. 리액트를 TDD 방식으로 개발을 진행하게 된다면 앞서 말한 애플리케이션의 신뢰도 향상할 수 있고 테스트 문서를 생성하여 유지보수를 용이하게 할 수 있다는 생각이 들었다.</p>
-<p>아직 jest에 익숙하지 않아 낯설고 어렵지만, 우테코에서도 jest를 사용하고 있고 앞으로 자주 사용해보면서 테스트 주도 개발에 대해 몸을 익히도록 해야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/07/React/React-Testing-Library/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/07/git/degit-%EC%9D%B4%EB%9E%80/"
-                            aria-label=": degit 이란?"
-                        >
-                            degit 이란?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-07T20:39:21+09:00">
-	
-		    2022/11/07
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-degit-이란"><a href="#📌-degit-이란" class="headerlink" title="📌 degit 이란?"></a>📌 degit 이란?</h1><p>degit은 git 저장소의 복사본을 만드는 명령어이다.</p>
-<h2 id="git-clone-vs-degit"><a href="#git-clone-vs-degit" class="headerlink" title="git clone vs degit"></a>git clone vs degit</h2><p>git clone의 경우 .git 파일까지 같이 가져오므로 <strong>파일 용량이 크고 복제하려는 대상이 git으로 관리되고 있다는 내용을 굳이 가져올 필요가 없는데 .git 파일을 가져온 다는 점은 불편하다.</strong></p>
-<p>degit은 .git 파일을 다운로드 하지 않아 <red>git clone 보다 훨씬 빠르다는 장점이 있다.</red></p>
-<p>즉, degit으로 복제를 할 경우 버젼관리 없는 새로운 프로젝트를 다운 받을 때 용이하다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx degit [프로젝트 url] [로컬 디렉토리명]</span><br></pre></td></tr></table></figure>
-
-<p>위와 같이 npx 명령어로 degit을 설치하지 않고 사용할 수 있다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/07/git/degit-%EC%9D%B4%EB%9E%80/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"
-                            aria-label=": 우테코-프리코스-😎 추천 친구 점수 정렬"
-                        >
-                            우테코-프리코스-😎 추천 친구 점수 정렬
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-05T19:36:33+09:00">
-	
-		    2022/11/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h2><p>레벨 2의 팀 프로젝트 미션으로 SNS(Social Networking Service)를 만들고자 하는 팀이 있다. 팀에 속한 크루 중 평소 알고리즘에 관심이 많은 미스터코는 친구 추천 알고리즘을 구현하고자 아래와 같은 규칙을 세웠다.</p>
-<ul>
-<li>사용자와 함께 아는 친구의 수 &#x3D; 10점</li>
-<li>사용자의 타임 라인에 방문한 횟수 &#x3D; 1점</li>
-</ul>
-<p>사용자 아이디 user와 친구 관계를 담은 이차원 배열 friends, 사용자 타임 라인 방문 기록 visitors가 매개변수로 주어질 때, 미스터코의 친구 추천 규칙에 따라 점수가 가장 높은 순으로 정렬하여 최대 5명을 return 하도록 solution 메서드를 완성하라. 이때 추천 점수가 0점인 경우 추천하지 않으며, 추천 점수가 같은 경우는 이름순으로 정렬한다.</p>
-<h3 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h3><ul>
-<li>user는 길이가 1 이상 30 이하인 문자열이다.</li>
-<li>friends는 길이가 1 이상 10,000 이하인 배열이다.</li>
-<li>friends의 각 원소는 길이가 2인 배열로 [아이디 A, 아이디 B] 순으로 들어있다.<ul>
-<li>A와 B는 친구라는 의미이다.</li>
-<li>아이디는 길이가 1 이상 30 이하인 문자열이다.</li>
-</ul>
-</li>
-<li>visitors는 길이가 0 이상 10,000 이하인 배열이다.</li>
-<li>사용자 아이디는 알파벳 소문자로만 이루어져 있다.</li>
-<li>동일한 친구 관계가 중복해서 주어지지 않는다.</li>
-<li>추천할 친구가 없는 경우는 주어지지 않는다.</li>
-</ul>
-<h3 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h3><table>
-<thead>
-<tr>
-<th>user</th>
-<th>friends</th>
-<th>visitors</th>
-<th>result</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>“mrko”</td>
-<td>[ [“donut”, “andole”], [“donut”, “jun”], [“donut”, “mrko”], [“shakevan”, “andole”], [“shakevan”, “jun”], [“shakevan”, “mrko”] ]</td>
-<td>[“bedi”, “bedi”, “donut”, “bedi”, “shakevan”]</td>
-<td>[“andole”, “jun”, “bedi”]</td>
-</tr>
-</tbody></table>
-<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem7</span>(<span class="params">user, friends, visitors</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    <span class="keyword">typeof</span> user !== <span class="string">&quot;string&quot;</span> ||</span><br><span class="line">    !<span class="title class_">Array</span>.<span class="title function_">isArray</span>(friends) ||</span><br><span class="line">    !<span class="title class_">Array</span>.<span class="title function_">isArray</span>(visitors)</span><br><span class="line">  )</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">      <span class="string">&quot;user는 문자열, friends는 배열, visitors는 배열이여야 합니다.&quot;</span></span><br><span class="line">    );</span><br><span class="line">  <span class="keyword">if</span> (!user.<span class="property">length</span> || user.<span class="property">length</span> &gt; <span class="number">30</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&quot;user는 길이가 1 이상 30 이하인 문자열이여야 합니다.&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!friends.<span class="property">length</span> || friends.<span class="property">length</span> &gt; <span class="number">10000</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(</span><br><span class="line">      <span class="string">&quot;friends는 길이가 1 이상 10,000 이하인 배열이여야 합니다.&quot;</span></span><br><span class="line">    );</span><br><span class="line">  <span class="keyword">if</span> (visitors.<span class="property">length</span> &lt; <span class="number">0</span> || visitors.<span class="property">length</span> &gt; <span class="number">10000</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(</span><br><span class="line">      <span class="string">&quot;visitors는 길이가 0 이상 10,000 이하인 배열이여야 합니다.&quot;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 유저의 친구들</span></span><br><span class="line">  <span class="keyword">let</span> userFriends = [];</span><br><span class="line">  friends.<span class="title function_">forEach</span>(<span class="function">(<span class="params">friend</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (friend.<span class="title function_">includes</span>(user)) userFriends = [...userFriends, ...friend];</span><br><span class="line">  &#125;);</span><br><span class="line">  userFriends = userFriends.<span class="title function_">filter</span>(<span class="function">(<span class="params">friend</span>) =&gt;</span> friend !== user);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 유저 친구의 친구들 =&gt; 알 수도 있는 친구들</span></span><br><span class="line">  <span class="keyword">let</span> mayKnowUsers = [];</span><br><span class="line">  friends.<span class="title function_">forEach</span>(<span class="function">(<span class="params">friend</span>) =&gt;</span> &#123;</span><br><span class="line">    userFriends.<span class="title function_">forEach</span>(<span class="function">(<span class="params">userFriend</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (friend.<span class="title function_">includes</span>(userFriend))</span><br><span class="line">        mayKnowUsers = [...mayKnowUsers, ...friend];</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  mayKnowUsers = mayKnowUsers.<span class="title function_">filter</span>(<span class="function">(<span class="params">mayKnowUser</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mayKnowUser !== user &amp;&amp; !userFriends.<span class="title function_">includes</span>(mayKnowUser);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 유저 점수 계산</span></span><br><span class="line">  <span class="keyword">const</span> userCount = &#123;&#125;;</span><br><span class="line">  mayKnowUsers.<span class="title function_">forEach</span>(<span class="function">(<span class="params">mayKnowUser</span>) =&gt;</span> &#123;</span><br><span class="line">    userCount[mayKnowUser] = (userCount[mayKnowUser] ?? <span class="number">0</span>) + <span class="number">10</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  visitors.<span class="title function_">forEach</span>(<span class="function">(<span class="params">visitor</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (visitor === user || userFriends.<span class="title function_">includes</span>(visitor)) <span class="keyword">return</span>;</span><br><span class="line">    userCount[visitor] = (userCount[visitor] ?? <span class="number">0</span>) + <span class="number">1</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 점수 기준 내림차순 정렬</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">sortFunc</span> = (<span class="params">userA, userB</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> numA = userCount[userA];</span><br><span class="line">    <span class="keyword">const</span> numB = userCount[userB];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (numA - numB &gt; <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (numA - numB &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> userA &lt; userB ? -<span class="number">1</span> : userA === userB ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> userId = <span class="title class_">Object</span>.<span class="title function_">keys</span>(userCount);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> userId.<span class="title function_">sort</span>(<span class="function">(<span class="params">userA, userB</span>) =&gt;</span> <span class="title function_">sortFunc</span>(userA, userB)).<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>유저의 친구들을 구하였다.</li>
-<li>유저의 친구들의 친구들을 구하였다. ⇒ 10점을 매기기 위해</li>
-<li>방문객과 유저의 친구의 친구들을 순회하면서 점수를 매겼다.</li>
-<li>점수를 기준으로 내림차순 정렬과 동일 점수일 때 알파벳 순으로 정렬을 해주었다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>이 문제는 처음에 한국말을 이해하기 어려워서 오랫동안 고전했던 문제이다. 친구에게 문제를 차근히 설명해보면서 요구사항에 대해 파악할 수 있었다.</p>
-<ul>
-<li>시간이 부족하여 6번문제와 7번문제는 리팩터링을 많이 못한 것이 아쉬웠다.</li>
-<li>이전까지 sort() 메서드는 단순히 오름차순, 내림차순 정렬에만 사용되는 것이라고 생각했는데, 이번 기회에 sort() 메서드는 두개의 인자를 받아서 -1, 0, 1 값을 return 하는 것을 기준으로 배열의 index를 직접 변경하는 메서드이라는 것을 제대로 알게되었다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
