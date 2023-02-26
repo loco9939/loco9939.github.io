@@ -326,6 +326,91 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"
+                            aria-label=": allWAIs-Link 회고(22.11.16)"
+                        >
+                            allWAIs-Link 회고(22.11.16)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-16T21:47:24+09:00">
+	
+		    2022/11/16
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-미션"><a href="#📌-미션" class="headerlink" title="📌 미션"></a>📌 미션</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> Link 역할로써 span태그, img태그 확인</li>
+<li><input checked="" disabled="" type="checkbox"> tabindex&#x3D;”0”를 포함</li>
+<li><input checked="" disabled="" type="checkbox"> img태그는 alt 속성으로 접근 가능한 이름 정의</li>
+</ul>
+<h1 id="🐒-문제"><a href="#🐒-문제" class="headerlink" title="🐒 문제"></a>🐒 문제</h1><h2 id="🤿-컴포넌트-props-“as”를-img로-주면-img-태그로-렌더링-해주기"><a href="#🤿-컴포넌트-props-“as”를-img로-주면-img-태그로-렌더링-해주기" class="headerlink" title="🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기"></a>🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;styled-components&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; goToLink &#125; <span class="keyword">from</span> <span class="string">&quot;../../utils&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Link</span>(<span class="params">&#123; <span class="keyword">as</span> = ComponentName, href, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">StyledLink</span> = <span class="title function_">styled</span>(<span class="string">`<span class="subst">$&#123;<span class="keyword">as</span>&#125;</span>`</span>)<span class="string">`</span></span><br><span class="line"><span class="string">       ... styles</span></span><br><span class="line"><span class="string">     `</span>;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">StyledLink</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">        onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">StyledLink</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Link</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Link 컴포넌트 안에다가 styled-component를 생성하고 as props를 전달해주었다.</p>
+</li>
+<li><p>위와 같이 할 경우, as props에 img 태그가 들어오게 된다면 <red>컴포넌트 명명 규칙에 어긋난다고 나온다.</red></p>
+<p><strong>이를 해결하기 위해 조건부 렌더링을 해주었다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;styled-components&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; goToLink &#125; <span class="keyword">from</span> <span class="string">&quot;../../utils&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Link</span>(<span class="params">&#123; <span class="keyword">as</span> = ComponentName, href, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">StyledLink</span> = <span class="title function_">styled</span>(<span class="string">`<span class="subst">$&#123;<span class="keyword">as</span>&#125;</span>`</span>)<span class="string">`</span></span><br><span class="line"><span class="string">    ... styles</span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;as === &quot;img&quot; ? (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          src=&quot;./gitprofile.jpeg&quot;</span></span><br><span class="line"><span class="language-xml">          alt=&quot;W3C Website&quot;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">      ) : (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">StyledLink</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">role</span>=<span class="string">&quot;link&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;</span></span><br><span class="line"><span class="language-xml">        &gt;</span></span><br><span class="line"><span class="language-xml">          &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">StyledLink</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      )&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Link</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">as</span>: <span class="string">&quot;span&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="🐥-img가-업로드-되지-않는-문제"><a href="#🐥-img가-업로드-되지-않는-문제" class="headerlink" title="🐥 img가 업로드 되지 않는 문제"></a>🐥 img가 업로드 되지 않는 문제</h2><ul>
+<li><input checked="" disabled="" type="checkbox"> img 업로드 문제 해결</li>
+</ul>
+<p>문제의 원인은 npm 명령어로 webpack server만 실행시켰는데, webpack <code>config.js</code> 파일에 <code>static</code> 속성값을 <code>[build]</code>로 주었기 때문에 정적 이미지 파일을 불러오기 위해서는 <code>build</code> 폴더에서 <code>assets</code>을 찾는다.</p>
+<p>그러므로 <code>npm run build</code> 명령어로 build 폴더를 생성한 후 그 안에다가 img를 넣어주고 경로를 설정해주어 해결하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Link</span></span><br><span class="line">  <span class="keyword">as</span>=<span class="string">&quot;img&quot;</span></span><br><span class="line">  alt=<span class="string">&quot;test이미지&quot;</span></span><br><span class="line">  src=<span class="string">&quot;./assets/img/gitprofile.jpeg&quot;</span></span><br><span class="line">  href=<span class="string">&quot;https://www.w3.org/WAI/ARIA/apg/example-index/link/link.html&quot;</span></span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="🐥-aria-label-속성-있을-때-조건부로-css-추가-삭제"><a href="#🐥-aria-label-속성-있을-때-조건부로-css-추가-삭제" class="headerlink" title="🐥 aria-label 속성 있을 때, 조건부로 css 추가 (삭제)"></a>🐥 <code>aria-label</code> 속성 있을 때, 조건부로 css 추가 <red>(삭제)</red></h2><p>이 속성을 삭제한 이유는 span 태그를 사용하여 Link 컴포넌트를 구현하였을 때, <code>role=&quot;link&quot;</code>로 해주었기 때문에 <code>aria-label</code> 속성을 굳이 해주지 않아도 되므로 삭제하였다.</p>
+</li>
+</ul>
+<h1 id="🏓-회고"><a href="#🏓-회고" class="headerlink" title="🏓 회고"></a>🏓 회고</h1><ul>
+<li>styled-component를 사용하면서 어떻게 props를 받아서 App에서 렌더링 시켜야할지 헷갈렸었는데 직접 해보니 이해가 잘되었다.</li>
+<li>수업 시간에 배웠던 조건부 렌더링을 실제로 사용하면서 익히니 더욱 이해가 잘되었다. 역시 무언가를 만들어보면서 배우는 것이 힘들지만 더 도움되는 것 같다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/15/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%8E%B1-%EB%A1%9C%EB%98%90/"
                             aria-label=": 우테코-프리코스 🎱 로또"
                         >
@@ -1352,87 +1437,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
-                            aria-label=": 🐍 setState"
-                        >
-                            🐍 setState
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:16:29+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-setState"><a href="#📌-setState" class="headerlink" title="📌 setState"></a>📌 setState</h1><p><code>setState()</code> 메서드는 컴포넌트의 state 객체에 대한 업데이트를 실행합니다. state가 변경되면, 컴포넌트는 리렌더링됩니다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setState</span>(updater[, callback])</span><br></pre></td></tr></table></figure>
-
-<p>updater에 컴포넌트의 state 변경사항을 인자로 넘겨주고 React에게 해당 컴포넌트를 재렌더링해야한다고 요청을 보내는 메서드이다.</p>
-<ul>
-<li><code>setState()</code> 호출은 비동기적으로 이뤄진다.</li>
-<li>성능 향상을 위해 <red>즉각적으로 재렌더링을 발생시키지 않는다.</red><ul>
-<li>여러 변경 사항을 일괄적으로 갱신하거나 나중에 미룰 수 있다. 때문에 <code>setState()</code> 호출하자마자 <code>this.state</code>에 접근하는 것은 문제가 될 수 있다.</li>
-<li>대신 <code>componentDidUpdate()</code> 또는 <code>setState(updater, callback)</code>처럼 2번째 인자로 콜백함수를 전달하는 방법을 사용한다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(</span><br><span class="line">  &#123; <span class="attr">message</span>: <span class="string">&quot;상태 변경&quot;</span> &#125;,</span><br><span class="line">  <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback: &quot;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>) <span class="comment">// &#x27;상태 변경&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>); <span class="comment">// &#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>아직 렌더링이 발생하지 않았기 때문에 <code>this.state.message</code>의 값이 갱신되지 않았다.</li>
-</ul>
-<h1 id="🎒-2022-11-12-추가"><a href="#🎒-2022-11-12-추가" class="headerlink" title="🎒 2022.11.12 추가"></a>🎒 2022.11.12 추가</h1><h2 id="setState-첫번째-인수로-콜백함수-올-때"><a href="#setState-첫번째-인수로-콜백함수-올-때" class="headerlink" title="setState() 첫번째 인수로 콜백함수 올 때"></a><code>setState()</code> 첫번째 인수로 콜백함수 올 때</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">BinaryCalcurator</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">buttonStates</span>: <span class="title class_">Array</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">numberOfButtons</span>).<span class="title function_">fill</span>(<span class="literal">false</span>),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleToggleButtonContent = <span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function">(<span class="params">&#123; buttonStates &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">buttonStates</span>: buttonStates.<span class="title function_">map</span>(<span class="function">(<span class="params">buttonState, idx</span>) =&gt;</span></span><br><span class="line">        idx === index ? !buttonState : buttonState</span><br><span class="line">      ),</span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>콜백함수는 이전 상태를 받아서 상태 변경을 요청한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1459,7 +1463,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 9 of 18</li>
+        <li class="pagination-number">page 9 of 19</li>
     </ul>
 </div>
 

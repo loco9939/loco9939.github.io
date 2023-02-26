@@ -326,6 +326,92 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 브라우저 렌더링 과정에 대해 설명하라"
+                        >
+                            브라우저 렌더링 과정에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T15:10:40+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
+<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
+<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html이다.</p>
+<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다.</p>
+<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
+<ol>
+<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
+<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
+<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
+</ol>
+<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
+<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
+<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
+<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
+<ul>
+<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
+<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
+<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
+</ul>
+<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
+<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
+<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
+<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
+<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
+<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 DOM 생성을 재개한다.</p>
+<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
+<blockquote>
+<p>리플로우가 발생하면 성능을 저하시키므로 리플로우가 발생하는 메서드 사용을 최소화 하여야 한다. 일단 가독성 위주로 코딩을 하되 성능 측정하여 렌더링에 2초 이상 걸린다면 리팩터링을 하여 성능을 개선해야한다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
                             aria-label=": 호이스팅에 대해 설명하라"
                         >
@@ -1036,93 +1122,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
-                            aria-label=": 🏰 useCallback과 useMemo"
-                        >
-                            🏰 useCallback과 useMemo
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-22T19:46:22+09:00">
-	
-		    2022/11/22
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-useCallback과-useMemo-사용-이유"><a href="#📌-useCallback과-useMemo-사용-이유" class="headerlink" title="📌 useCallback과 useMemo 사용 이유"></a>📌 useCallback과 useMemo 사용 이유</h1><p>함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 <strong>하위 컴포넌트에게 전달한다.</strong></p>
-<p>이 때 상위 컴포넌트가 다시 실행되면 <red>이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.</red></p>
-<!-- more -->
-
-<h2 id="🐸-useCallback"><a href="#🐸-useCallback" class="headerlink" title="🐸 useCallback"></a>🐸 useCallback</h2><p><code>useCallback()</code>은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, <strong>기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">	<span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 1</span></span><br><span class="line">	<span class="keyword">const</span> handleIncrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(<span class="function">(<span class="params">count</span>) =&gt;</span> count + step);</span><br><span class="line">		&#125;, [step]);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2</span></span><br><span class="line">	<span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(count - step);</span><br><span class="line">		&#125;, [count, step]);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>기억해야할 데이터 타입이 함수인 경우 사용한다.</li>
-<li>useEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.</li>
-<li>1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. <red>기억되어있는 정보를 가지고 값을 변경하는 것이다.</red></li>
-<li>2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. <red>기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.</red></li>
-</ul>
-<h2 id="🐍-useMemo"><a href="#🐍-useMemo" class="headerlink" title="🐍 useMemo"></a>🐍 useMemo</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useCallback</span>(fn, deps) === <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> fn, deps);</span><br></pre></td></tr></table></figure>
-
-<p>useMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useMemo(() =&gt; fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleIncrement = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="function">() =&gt;</span> <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + step),</span><br><span class="line">    [step]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useCallback(fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - step);</span><br><span class="line">  &#125;, [step]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// memoized Components</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DecButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleDecrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">IncButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleIncrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;DecButton&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;IncButton&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>useMemo()는 해당 컴포넌트를 기억한다.</li>
-<li>종속성 배열 <code>[count, onDecrement, onIncrement, restProps]</code>이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.</li>
-<li><code>setCount()</code>를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?</p>
-<aside>
-
-<p>📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.</p>
-</aside>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1149,7 +1148,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 7 of 18</li>
+        <li class="pagination-number">page 7 of 19</li>
     </ul>
 </div>
 
