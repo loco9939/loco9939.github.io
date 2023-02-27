@@ -327,6 +327,94 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/08/18/Javascript/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A9%E1%86%A8/"
+                            aria-label=": 상속"
+                        >
+                            상속
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-08-18T19:35:34+09:00">
+	
+		    2022/08/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>자바스크립트에서 상속을 구현하기 위해 프로토타입을 기반으로 구현한다고 이전시간에 배워보았다.</p>
+<p>그럼 상속을 구현하는 방법이 과연 이 방법뿐일까? 한번 알아보자.</p>
+<h1 id="직접상속"><a href="#직접상속" class="headerlink" title="직접상속"></a>직접상속</h1><h2 id="Object-create에-의한-직접-상속-정적메서드"><a href="#Object-create에-의한-직접-상속-정적메서드" class="headerlink" title="Object.create에 의한 직접 상속 (정적메서드)"></a>Object.create에 의한 직접 상속 (정적메서드)</h2><p>Object.create 메서드는 명시적으로 프로토타입을 지정하여 새로운 객체를 생성한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="title function_">create</span>(생성할 객체의 프로토타입, 생성할 객체의 프로퍼티키와 프로퍼티 디스크립터 객체로 이뤄진 객체)</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">create</span>(prototype[, propertiesObject])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 프로토타입이 null인 객체를 생성한다. 생성된 객체는 프로토타입 체인의 종점에 위치한다.</span></span><br><span class="line"><span class="comment">// obj → null</span></span><br><span class="line"><span class="keyword">let</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"><span class="comment">// Object.prototype을 상속받지 못한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="title function_">toString</span>()); <span class="comment">// TypeError: obj.toString is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// obj → Object.prototype → null</span></span><br><span class="line"><span class="comment">// obj = &#123; x: 1 &#125;;와 동일하다.</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>, &#123;</span><br><span class="line">  <span class="attr">x</span>: &#123; <span class="attr">value</span>: <span class="number">1</span>, <span class="attr">writable</span>: <span class="literal">true</span>, <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">configurable</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 위 코드는 다음과 동일하다.</span></span><br><span class="line"><span class="comment">// obj = Object.create(Object.prototype);</span></span><br><span class="line"><span class="comment">// obj.x = 1;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">x</span>); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 빈객체만 생성하는 것이 아니다.</span></span><br><span class="line"><span class="keyword">const</span> obj1 = <span class="title class_">Object</span>.<span class="title function_">create</span>(obj, &#123;</span><br><span class="line">  <span class="attr">x</span>: &#123; <span class="attr">value</span>: <span class="number">10</span> &#125;,</span><br><span class="line">  <span class="attr">y</span>: &#123; <span class="attr">value</span>: <span class="number">20</span>, <span class="attr">writable</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj1); <span class="comment">// &#123;x: 10, y: 20&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myProto = &#123; <span class="attr">x</span>: <span class="number">10</span> &#125;;</span><br><span class="line"><span class="comment">// 객체리터럴로 생성된 객체를 직접 상속받는다.</span></span><br><span class="line"><span class="comment">// obj → myProto → Object.prototype → null</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(myProto);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">x</span>); <span class="comment">// 10</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === myProto); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// obj → Person.prototype → Object.prototype → null</span></span><br><span class="line"><span class="comment">// obj = new Person(&#x27;Lee&#x27;)와 동일하다.</span></span><br><span class="line">obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;Lee&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">name</span>); <span class="comment">// Lee</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>Object.create 메서드의 첫번째 인수로 전달한 객체를 프로토타입으로 하는 프로토타입 체인에 속하는 객체를 생성한다. 즉, 객체를 생성하면서 직접적인 상속을 구현하는 것이다.</p>
+<ul>
+<li>new 연산자 없이 객체 생성 가능</li>
+<li>프로토타입을 지정하면서 객체 생성 가능</li>
+<li>객체 리터럴로 생성된 객체도 상속받을 수 있다.</li>
+</ul>
+<p>Object.prototype의 빌트인 메서드를 직접 호출하는 것은 위험하다. 그 이유는 Object.create 메서드를 사용하여 <span style="color:red">프로토타입 체인 종점에 위치하는 객체</span>를 생성할 수도 있기 때문이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 프로토타입이 null인 객체, 즉 프로토타입 체인의 종점에 위치하는 객체를 생성한다.</span></span><br><span class="line"><span class="keyword">const</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>);</span><br><span class="line">obj.<span class="property">a</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(obj) === <span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// obj는 Object.prototype의 빌트인 메서드를 사용할 수 없다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="title function_">hasOwnProperty</span>(<span class="string">&quot;a&quot;</span>)); <span class="comment">// TypeError: obj.hasOwnProperty is not a function</span></span><br></pre></td></tr></table></figure>
+
+<p>그러므로 Object.prototype의 빌트인 메서드는 call,apply 등을 통해 간접적으로 호출하는 것을 권장한다.</p>
+<p>하지만 위 방법은 너무 길다…</p>
+<p><span style="font-size:1.2rem">그래서 새로나온 문법을 사용하자</span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="title function_">hasOwn</span>(obj, property);</span><br></pre></td></tr></table></figure>
+
+<p>위 방법을 사용하여 같은 기능을 구현할 수 있다.</p>
+<h1 id="정적-프로퍼티-x2F-메소드"><a href="#정적-프로퍼티-x2F-메소드" class="headerlink" title="정적 프로퍼티&#x2F;메소드"></a>정적 프로퍼티&#x2F;메소드</h1><p>생성자 함수로 <span style="color:red">인스턴스를 생성하지 않아도</span> 참조,호출할 수 있는 프로퍼티, 메소드를 말한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 생성자 함수</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 프로토타입 메서드</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHello</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! My name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 프로퍼티</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property">staticProp</span> = <span class="string">&quot;static prop&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 메서드</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property">staticMethod</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;staticMethod&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> me = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 생성자 함수에 추가한 정적 프로퍼티/메서드는 생성자 함수로 참조/호출한다.</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="title function_">staticMethod</span>(); <span class="comment">// staticMethod</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 정적 프로퍼티/메서드는 생성자 함수가 생성한 인스턴스로 참조/호출할 수 없다.</span></span><br><span class="line"><span class="comment">// 인스턴스로 참조/호출할 수 있는 프로퍼티/메서드는 프로토타입 체인 상에 존재해야 한다.</span></span><br><span class="line">me.<span class="title function_">staticMethod</span>(); <span class="comment">// TypeError: me.staticMethod is not a function</span></span><br></pre></td></tr></table></figure>
+
+<p>생성자 함수로 생성한 인스턴스로 정적 프로퍼티와 메소드를 참조, 호출할 수 없다.</p>
+<p>생성자 함수가 생성한 인스턴스는 프로퍼티, 메소드를 참조할 때 <span style="color:red">프로토타입 체인 내에서만 할 수 있다.</span></p>
+<p>정적 프로퍼티,메소드는 인스턴스의 프로토타입 체인 내에 없기 때문에 참조, 호출할 수 없다.</p>
+<aside>
+💡 MDN에 보면 정적메서드와 프로토타입 메서드를 구분하여 소개한다. 정적 메서드는 Object.isExtensible(), Object.keys() 처럼 중간에 prototype이 들어가지 않지만 프로토타입 메서드는 Object.prototype.hasOwnProperty() 처럼 중간에 prototype이 들어간다.
+</aside>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/08/18/Javascript/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A9%E1%86%A8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/08/17/Javascript/%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%8C%E1%85%B5%E1%84%92%E1%85%A3%E1%86%BC%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%85%E1%85%A2%E1%84%86%E1%85%B5%E1%86%BC%E1%84%80%E1%85%AA%20%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%90%E1%85%A9%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
                             aria-label=": 객체지향프로그래밍과 프로토타입"
                         >
@@ -1490,74 +1578,6 @@
                         <p>
                             <a
                                 href="/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/02/CS/CDN/"
-                            aria-label=": CDN"
-                        >
-                            CDN
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-02T08:40:07+09:00">
-	
-		    2022/08/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌CDN"><a href="#📌CDN" class="headerlink" title="📌CDN"></a>📌CDN</h1><ul>
-<li>Content Delivery Network의 약자</li>
-<li>지리적으로 분산된 여러 서버가 있고 사용자와 지리적으로 가까운 서버에서 전송하여 전송속도를 높인다.</li>
-<li>ATM기기와 비슷하다고 생각하면 된다.</li>
-</ul>
-<p>CDN은 전체 트래픽의 균형을 맞춰 인터넷 컨텐츠에 접속하는 사용자들에게 최고의 웹 경험을 제공한다.</p>
-<h2 id="사용이유"><a href="#사용이유" class="headerlink" title="사용이유"></a>사용이유</h2><p>20여 년동안 전 세계 사용자들이 빠르고 확장성있게 온라인 콘텐츠를 전송하도록 도와주었다.</p>
-<p>만약 CDN을 사용하지 않았더라면 Origin 서버가 data를 복제 및 저장한 후 사용자가 웹에 접속하는 곳까지 컨텐츠를 가져가야하기 때문에 인터넷 속도가 느려질 수 있다.</p>
-<h2 id="단점"><a href="#단점" class="headerlink" title="단점"></a>단점</h2><p>Origin 서버와 다른 여러 서버가 연결되어 있는데, 이 서버중 한곳에라도 문제가 생길 시 CDN을 사용하는 데에 문제가 발생할 수 있다.</p>
-<p>가령 수강생들끼리 axios를 CDN으로 적용하여 페어프로그래밍 진행중 CDN이 먹통이 되어 모두 원하는 코드가 동작하지 않았던 경험이 있다.</p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>간편하게는 사용하면 좋을 것 같지만 프로젝트를 하거나 안정성이 요구되는 상황에서는 CDN을 지양하는 것이 좋겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/02/CS/CDN/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

@@ -326,6 +326,119 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"
+                            aria-label=": CBD Library Tip"
+                        >
+                            CBD Library Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-29T23:09:53+09:00">
+	
+		    2022/09/29
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="9-CBD"><a href="#9-CBD" class="headerlink" title="9. CBD"></a>9. CBD</h1><h2 id="로직"><a href="#로직" class="headerlink" title="로직"></a>로직</h2><ol>
+<li>처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">createState</span>(&#123;</span><br><span class="line">    <span class="attr">todos</span>: [</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">content</span>: <span class="string">&quot;Javascript&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">content</span>: <span class="string">&quot;CSS&quot;</span>, <span class="attr">completed</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">content</span>: <span class="string">&quot;HTML&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">todoFilter</span>: [<span class="string">&quot;All&quot;</span>, <span class="string">&quot;Completed&quot;</span>, <span class="string">&quot;Active&quot;</span>],</span><br><span class="line">    <span class="attr">currentTodoFilterId</span>: <span class="number">0</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>render가 실행되면 App 클래스의 인스턴스를 생성하고 생성된 인스턴스를 domStr 프로토타입 메서드를 사용하여 문자열로 반환하고 이 문자열을 <strong>node(virtual DOM)로 반환</strong>해주었다. 생성된 Virtual DOM과 기존 index.html에 있는 root가 생성한 Real DOM을 비교하는 diff 함수를 실행한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">App</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(app);</span><br><span class="line">  <span class="title function_">diff</span>(app.<span class="title function_">newDOM</span>(), $root);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>App 클래스에서는 todoInput, todoList, todoFilter 라는 인스턴스 프로퍼티에 각각 클래스형 컴포넌트의 인스턴스를 할당해주었다. 이 프로퍼티(컴포넌트)를 components 배열에서 관리를 해준다. 또한, 각 컴포넌트에서 데이터가 변경되어 재렌더링이 발생하면 2번 과정이 발생한다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> components = []; <span class="comment">// App 인스턴스 여러개 만들면 구분해주기 위해 전역에서 선언</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">App</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    components.<span class="title function_">forEach</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="title function_">unmount</span>());</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoInput</span> = <span class="keyword">new</span> <span class="title class_">TodoInput</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoList</span> = <span class="keyword">new</span> <span class="title class_">TodoList</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">todoFilter</span> = <span class="keyword">new</span> <span class="title class_">TodoFilter</span>();</span><br><span class="line"></span><br><span class="line">    components = [<span class="variable language_">this</span>.<span class="property">todoInput</span>, <span class="variable language_">this</span>.<span class="property">todoList</span>, <span class="variable language_">this</span>.<span class="property">todoFilter</span>];</span><br><span class="line"></span><br><span class="line">    components.<span class="title function_">forEach</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="title function_">mount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoInput.domStr()&#125;</span></span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoList.domStr()&#125;</span></span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;<span class="variable language_">this</span>.todoFilter.domStr()&#125;</span></span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">newDOM</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">domStrToNode</span>(<span class="variable language_">this</span>.<span class="title function_">domStr</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이렇게 생성된 컴포넌트에 이벤트 핸들러를 등록시켜주기 위해서는 App 클래스의 인스턴스가 생성될 때, 즉 데이터가 변경되어 렌더링이 될 때 마다 기존 컴포넌트 목록들에게 unmount(이벤트 제거)를 실행하고 다시 컴포넌트를 등록하고 mount(이벤트 등록)을 실행한다.</li>
+<li>이벤트를 등록하고 제거해주어 <strong>컴포넌트의 생명주기를 관리</strong>해주는 이유는 이벤트 위임으로 window에게 이벤트를 등록만 하고 제거해주지 않는다면 <strong>재렌더링 발생하여 컴포넌트가 새로 생성되면 그 때 다시 또 이벤트를 등록해주므로 불필요한 이벤트 등록과 성능상 문제가 발생</strong>할 수 있기 때문에 재렌더링이 발생할 때 꼭 이전 컴포넌트의 이벤트를 제거해줘야한다.</li>
+</ul>
+<ol>
+<li>각 컴포넌트에서는 이벤트 핸들러를 작성해주고 mount 함수 안에 이벤트 리스너를 등록하고 unmount 함수안에 이벤트를 제거해준다. domStr 함수는 해당 컴포넌트를 HTML 구조를 문자열로 반환해준다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TodoList</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> todos = [...state.<span class="property">todos</span>];</span><br><span class="line">    <span class="keyword">if</span> (state.<span class="property">currentTodoFilterId</span> === <span class="number">1</span>)</span><br><span class="line">      todos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span>);</span><br><span class="line">    <span class="keyword">if</span> (state.<span class="property">currentTodoFilterId</span> === <span class="number">2</span>)</span><br><span class="line">      todos = state.<span class="property">todos</span>.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> !todo.<span class="property">completed</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span> = todos.<span class="title function_">map</span>(<span class="function">(<span class="params">&#123; id &#125;</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">TodoItem</span>(id));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="title function_">mount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="title function_">unmount</span>());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">      &lt;ul class=&quot;todo-list&quot;&gt;</span></span><br><span class="line"><span class="string">        <span class="subst">$&#123;<span class="variable language_">this</span>.items.map((item) =&gt; item.domStr()).join(<span class="string">&quot;&quot;</span>)&#125;</span></span></span><br><span class="line"><span class="string">      &lt;/ul&gt;</span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>todoList 경우는 App 에서 todoList, todoInput, todoFilter 컴포넌트를 관리해주는 것처럼 todoItem 컴포넌트를 관리해준다. App 에서 mount 함수를 실행하여 각 컴포넌트의 mount, unmount를 통해 생명주기를 관리해준 것 처럼 todoList의 mount 에서는 todoItem 컴포넌트의 mount, unmount를 관리해준다.</li>
+<li>this.items 에는 각 id에 해당하는 TodoItem의 컴포넌트들로 구성된 배열이 할당된다. 그리고 domStr 함수에서 TodoItem 컴포넌트들을 map 고차함수로 돌면서 각 컴포넌트들의 domStr 함수로 호출하여 문자열로 반환한다.</li>
+<li>TodoFilter에서 domStr 부분에서 id가 꼭 필요한가?<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;ul class=&#x27;todo-filter&#x27;&gt;</span></span><br><span class="line"><span class="string">      <span class="subst">$&#123;state.todoFilter</span></span></span><br><span class="line"><span class="subst"><span class="string">        .map(</span></span></span><br><span class="line"><span class="subst"><span class="string">          (filter, i) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">            <span class="string">`&lt;li class=&quot; filter <span class="subst">$&#123;i === state.currentTodoFilterId ? <span class="string">&#x27;active&#x27;</span> : <span class="string">&#x27;&#x27;</span>&#125;</span>&quot; id=&quot;<span class="subst">$&#123;i&#125;</span>&quot;&gt;<span class="subst">$&#123;filter&#125;</span>&lt;/li&gt;`</span></span></span></span><br><span class="line"><span class="subst"><span class="string">        )</span></span></span><br><span class="line"><span class="subst"><span class="string">        .join(<span class="string">&#x27;&#x27;</span>)&#125;</span></span></span><br><span class="line"><span class="string">    &lt;/ul&gt;</span></span><br><span class="line"><span class="string">  `</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>all, completed, active 에 id가 굳이 필요한가??</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>각 컴포넌트에서 state로 관리하는 부분이 변경될 때, 상태가 바뀌는 부분만 재렌더링이 일어나도록 구현하였으므로 todoInput에서는 재렌더링이 일어날 부분이 없으므로 autofocus 기능이 사라지지 않는다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TodoInput</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">addTodo</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Enter&quot;</span> || e.<span class="property">target</span>.<span class="property">value</span>.<span class="title function_">trim</span>() === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">      state.<span class="property">todos</span> = [</span><br><span class="line">        ...state.<span class="property">todos</span>,</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="title function_">getNextId</span>(), <span class="attr">content</span>: e.<span class="property">target</span>.<span class="property">value</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">      ];</span><br><span class="line">      e.<span class="property">target</span>.<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="variable language_">this</span>.<span class="property">addTodo</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="variable language_">this</span>.<span class="property">addTodo</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">domStr</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`&lt;input class=&#x27;todo-input&#x27; autofocus/&gt;`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><ul>
+<li>checkbox 클릭하면 checked가 생성되고 사라지는 렌더링은 잘 되지만, 화면에서는 바뀌지 않는 문제가 발생하였다.<ul>
+<li>attribute와 property의 차이때문에 발생하는 문제점이라고 생각되었다.</li>
+<li>setAttribute대신에 요소를 replaceChild()로 자식노드를 교체해주었다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li>혼자서 공식문서들여다 보는 것 보다 확실히 옆에서 같이 이야기 하고 생각을 공유하면서 코드를 작성해나가다 보니 diff 알고리즘도 완성할 수 있어서 기뻤다.</li>
+<li>node.children 은 텍스트 노드를 제외한 자식 노드들을 반환</li>
+<li>node.childNodes는 모든 자식 노드를 반환한다.</li>
+<li>attribute와 property의 차이점에 대해 한번 더 생각해볼 수 있는 시간이 있어서 좋았다. attribute는 HTML에 있는 속성으로 rendering이 되면 attribute는 DOM property로 변환된다. 하지만 1:1 매칭이 되지는 않는다는 점을 주의하자.<ul>
+<li>attribute : 변하지 않는 초기 default 값 전달</li>
+<li>property : 사용자의 행동으로 변할 수 있다.</li>
+<li>diff 구현할 때, removeAttribute는 제대로 동작했는데, setAttribute할 때는 checkbox값이 삭제했을 때, 다음 todo에 이전되는 문제가 발생하였는데 이는 따로 정리해둬야겠다.</li>
+</ul>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/28/PairProgramming/level%202/newsViewer,%20CBD%20Library%20Tip/"
                             aria-label=": newsViewer, CBD Library Tip"
                         >
@@ -1334,86 +1447,6 @@
                         <p>
                             <a
                                 href="/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/09/15/PairProgramming/level%201/carousel%20Tip/"
-                            aria-label=": carousel Tip"
-                        >
-                            carousel Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-09-15T19:01:51+09:00">
-	
-		    2022/09/15
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="CarouselSlider-구현-중-느낀점"><a href="#CarouselSlider-구현-중-느낀점" class="headerlink" title="CarouselSlider 구현 중 느낀점"></a>CarouselSlider 구현 중 느낀점</h1><h2 id="1-이미지가-로드되는-시점과-동적-HTML-생성-시점이-다르다"><a href="#1-이미지가-로드되는-시점과-동적-HTML-생성-시점이-다르다" class="headerlink" title="1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다."></a>1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DOM이 로드되고 동적으로 HTML 생성(렌더링)</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, render);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 로드 후 width 및 opacity 할당</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  $container.<span class="property">style</span>.<span class="property">width</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">document</span>.querySelector(<span class="string">&quot;img&quot;</span>).clientWidth&#125;</span>px`</span>;</span><br><span class="line">  $container.<span class="property">style</span>.<span class="property">opacity</span> = <span class="number">1</span>;</span><br><span class="line">  $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&quot;--duration&quot;</span>, <span class="number">400</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>동적으로 HTML을 렌더링해주는데 DOMContentLoaded가 될 때, 이미지의 width를 가져오고 싶었지만 동적 HTML이 생성되고 약간의 시간 후에 이미지가 로드되어 동적 HTML 생성될 때, 이미지태그의 너비를 가져올 수가 없었다.</p>
-</li>
-<li><p><code>--duration</code>은 요구 사항에 맞게 초기 렌더링 때 설정해준다.</p>
-</li>
-</ul>
-<h2 id="2-CSS-inline-style이-아닌-external-CSS-값-가져오기"><a href="#2-CSS-inline-style이-아닌-external-CSS-값-가져오기" class="headerlink" title="2. CSS inline style이 아닌 external CSS 값 가져오기"></a>2. CSS inline style이 아닌 external CSS 값 가져오기</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$container.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 1. prev || next return</span></span><br><span class="line">  <span class="comment">// 2. if (prev) / if (next)</span></span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.carousel-control&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line">  e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.prev&quot;</span>)</span><br><span class="line">    ? $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(</span><br><span class="line">        <span class="string">&quot;--currentSlide&quot;</span>,</span><br><span class="line">        +<span class="title function_">getComputedStyle</span>($container.<span class="property">firstElementChild</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">          <span class="string">&quot;--currentSlide&quot;</span></span><br><span class="line">        ) - <span class="number">1</span></span><br><span class="line">      )</span><br><span class="line">    : e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.next&quot;</span>)</span><br><span class="line">    ? $container.<span class="property">firstElementChild</span>.<span class="property">style</span>.<span class="title function_">setProperty</span>(</span><br><span class="line">        <span class="string">&quot;--currentSlide&quot;</span>,</span><br><span class="line">        +<span class="title function_">getComputedStyle</span>($container.<span class="property">firstElementChild</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">          <span class="string">&quot;--currentSlide&quot;</span></span><br><span class="line">        ) + <span class="number">1</span></span><br><span class="line">      )</span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>document.querySelector(‘div’).style.getPropertyValue() 메서드는 해당 노드의 인라인 스타일의 속성값을 가져올 수 있다.</p>
-</li>
-<li><p>getComputedStyle(document.querySelector(‘div’)).getPropertyValue() 메서드는 해당 노드의 렌더링을 마친 CSS 속성값을 가져올 수 있다. 즉, 외부 CSS 파일의 속성값을 가져올 수 있다.</p>
-</li>
-</ul>
-<h2 id="3-document-querySelector-‘img’-요소가-가진-width-종류"><a href="#3-document-querySelector-‘img’-요소가-가진-width-종류" class="headerlink" title="3. document.querySelector(‘img’) 요소가 가진 width 종류"></a>3. document.querySelector(‘img’) 요소가 가진 width 종류</h2><ul>
-<li>cssWidth : 컨텐츠의 너비를 말한다.</li>
-<li>clientWidth : padding을 포함한 너비를 말한다.</li>
-<li>offsetWidth : border까지 포함한 너비를 말한다.</li>
-</ul>
-<p>처음에 이미지 태그의 너비를 자바스크립트로 가져와야하는데, 이미지 태그가 가진 너비 요소가 여러가지라서 각 너비의 특징에 대해 알게 되었다.</p>
-<p>앞으로 해당 요소 노드를 console 창에 찍어보면서 어떤 프로퍼티를 포함하고 있는지 확인해보면서 내게 필요한 프로퍼티가 무엇인지 찾아보는 팁을 얻었다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/09/15/PairProgramming/level%201/carousel%20Tip/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
