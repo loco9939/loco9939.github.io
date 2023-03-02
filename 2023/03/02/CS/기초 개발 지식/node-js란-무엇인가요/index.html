@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/02/cs/기초 개발 지식/node-js란-무엇인가요/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>node.js란 무엇인가요? - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"node.jsnode.js란 비동기적 이벤트 주도 방식, 논블로킹 I&#x2F;O 모델을 사용하는 구글의 V8 엔진을 장착한 자바스크립트 런타임이다.\n런타임이란, 프로그램이 실행될 때 그 프로그램이 머무는 공간을 의미한다. 때문에 브라우저는 자바스크립트 런타임이라고도 한다.\n이와 동일하게 node.js 또한 자바스크립트 런타임이므로 자바스크립트로 만든 프로그램을 실행할 수 있다.\n이번에는 node.js로 서버를 만들어서 API를 구현해보는 예시를 해보자.\n실습\nnodejs를 설치한다.\n\njson 파일과 서버파일을 생성한다.\n\n\n12345// a.json&#123;  &quot;name&quot;: &quot;Wix&quot;,  &quot;tall&quot;: &quot;178&quot;&#125;\n\n1234567891011121314151617// b.jsimport express from &quot;express&quot;;import fs from &quot;fs&quot;;const app = express();const port = 3000;app.get(&quot;/&quot;, (req, res) =&gt; &#123;  const f = JSON.parse(fs.readFileSync(&quot;a.json&quot;, &#123; encoding: &quot;utf-8&quot; &#125;));  const data = &#123;    name: f.name,    tall: f.tall,  &#125;;  res.send(data);&#125;);app.listen(port, () =&gt; &#123;  console.log(`http://127.0.0.1:$&#123;port&#125;`);&#125;);\n\n\nexpress 모듈 설치\n\n1npm install express\n\nexpress는 node.js에서 동작하는 웹 프레임워크이다. 라우팅, 미들웨어, 정적자원서버 설정이 쉬운 장점이 있다.\n\n터미널로 node 프로그램을 실행해본다.\n\n1node b.js\n\nget() 메서드에 설정한 경로 &#x2F;로 get 요청이 보내졌고 서버에서는 name, tall이 담긴 자바스크립트 객체 데이터가 응답으로 전송되었다.\n앞서 API의 특징을 설명할 때, 파일 내부가 변경되더라도 API를 변경되지 않도록 설계할 수 있다고 하였다.\na.json 파일 내용을 바꾸더라도 API를 바꿔줄 필요가 없다.\n","dateCreated":"2023-03-02T15:58:24+09:00","dateModified":"2023-03-02T16:19:48+09:00","datePublished":"2023-03-02T15:58:24+09:00","description":"","headline":"node.js란 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/","keywords":"node.js"}</script>
+    <meta name="description" content="node.jsnode.js란 비동기적 이벤트 주도 방식, 논블로킹 I&#x2F;O 모델을 사용하는 구글의 V8 엔진을 장착한 자바스크립트 런타임이다. 런타임이란, 프로그램이 실행될 때 그 프로그램이 머무는 공간을 의미한다. 때문에 브라우저는 자바스크립트 런타임이라고도 한다. 이와 동일하게 node.js 또한 자바스크립트 런타임이므로 자바스크립트로 만든 프로">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="node.js란 무엇인가요?">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="node.jsnode.js란 비동기적 이벤트 주도 방식, 논블로킹 I&#x2F;O 모델을 사용하는 구글의 V8 엔진을 장착한 자바스크립트 런타임이다. 런타임이란, 프로그램이 실행될 때 그 프로그램이 머무는 공간을 의미한다. 때문에 브라우저는 자바스크립트 런타임이라고도 한다. 이와 동일하게 node.js 또한 자바스크립트 런타임이므로 자바스크립트로 만든 프로">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-03-02T06:58:24.000Z">
+<meta property="article:modified_time" content="2023-03-02T07:19:48.405Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="node.js">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            node.js란 무엇인가요?
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-02T15:58:24+09:00">
+	
+		    2023/03/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EA%B8%B0%EC%B4%88-%EA%B0%9C%EB%B0%9C-%EC%A7%80%EC%8B%9D/">기초 개발 지식</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="node-js"><a href="#node-js" class="headerlink" title="node.js"></a>node.js</h1><p>node.js란 비동기적 이벤트 주도 방식, 논블로킹 I&#x2F;O 모델을 사용하는 구글의 V8 엔진을 장착한 자바스크립트 런타임이다.</p>
+<p>런타임이란, 프로그램이 실행될 때 그 프로그램이 머무는 공간을 의미한다. 때문에 브라우저는 자바스크립트 런타임이라고도 한다.</p>
+<p>이와 동일하게 node.js 또한 자바스크립트 런타임이므로 자바스크립트로 만든 프로그램을 실행할 수 있다.</p>
+<p>이번에는 node.js로 서버를 만들어서 API를 구현해보는 예시를 해보자.</p>
+<h2 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h2><ol>
+<li><p>nodejs를 설치한다.</p>
+</li>
+<li><p>json 파일과 서버파일을 생성한다.</p>
+</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Wix&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tall&quot;</span><span class="punctuation">:</span> <span class="string">&quot;178&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">&quot;express&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">&quot;fs&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">express</span>();</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;/&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> f = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(fs.<span class="title function_">readFileSync</span>(<span class="string">&quot;a.json&quot;</span>, &#123; <span class="attr">encoding</span>: <span class="string">&quot;utf-8&quot;</span> &#125;));</span><br><span class="line">  <span class="keyword">const</span> data = &#123;</span><br><span class="line">    <span class="attr">name</span>: f.<span class="property">name</span>,</span><br><span class="line">    <span class="attr">tall</span>: f.<span class="property">tall</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  res.<span class="title function_">send</span>(data);</span><br><span class="line">&#125;);</span><br><span class="line">app.<span class="title function_">listen</span>(port, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`http://127.0.0.1:<span class="subst">$&#123;port&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>express 모듈 설치</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express</span><br></pre></td></tr></table></figure>
+
+<p>express는 node.js에서 동작하는 웹 프레임워크이다. 라우팅, 미들웨어, 정적자원서버 설정이 쉬운 장점이 있다.</p>
+<ol start="4">
+<li>터미널로 node 프로그램을 실행해본다.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node b.js</span><br></pre></td></tr></table></figure>
+
+<p>get() 메서드에 설정한 경로 &#x2F;로 get 요청이 보내졌고 서버에서는 name, tall이 담긴 자바스크립트 객체 데이터가 응답으로 전송되었다.</p>
+<p>앞서 API의 특징을 설명할 때, 파일 내부가 변경되더라도 API를 변경되지 않도록 설계할 수 있다고 하였다.</p>
+<p><strong>a.json 파일 내용을 바꾸더라도 API를 바꿔줄 필요가 없다.</strong></p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/node-js/" rel="tag">node.js</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    data-tooltip="자료구조의 기본(C++)"
+                    aria-label="이전: 자료구조의 기본(C++)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="API란 무엇인가요?"
+                    aria-label="다음: API란 무엇인가요?"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    data-tooltip="자료구조의 기본(C++)"
+                    aria-label="이전: 자료구조의 기본(C++)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="API란 무엇인가요?"
+                    aria-label="다음: API란 무엇인가요?"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

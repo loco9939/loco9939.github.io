@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/02/cs/자료구조/자료구조의-기본-c/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>자료구조의 기본(C++) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"자료구조자료구조는 효율적으로 데이터를 관리하고 수정, 삭제, 탐색, 저장할 수 있는 데이터 집합이다.\n어떤 비즈니스 로직을 처리할 때 가장 효과적인 자료구조를 찾아서 쓰는 것이 중요하기 때문에 자료구조를 명확하게 알아야한다.\n자료구조를 설명하기 위해 C++은 이해하기 쉬운 언어이기 때문에 자료구조 공부는 C++로 할 것이다.\n12345678#include &lt;bits/stdc++.h&gt; // 1using namespace std; // 2string a; // 3int main()&#123; // 4    cin &gt;&gt; a; // 5    cout &lt;&lt; a &lt;&lt; &#x27;\\n&#x27;; // 6    return 0; // 7&#125;\n\n\n헤더 파일. import할 때 사용한다. bits&#x2F;stdc++.h 는 모든 표준 라이브러리를 의미한다.\n\nstd라는 네임스페이스 사용하겠다. cin, cout 사용할 때 원래는 std::cin처럼 네임스페이스 달아서 사용해야하는데 이를 기본으로 설정한다는 뜻이다.\n\n문자열 선언. &lt;타입&gt; &lt;변수명&gt; 이런식으로 선언한다. 예를들어 string a = &#39;Wix&#39; 이렇게 선언했다면, a는 lvalue, Wix는 rvalue라고 한다. lvalue는 추후 다시 사용될 수 있는 변수이고 rvalue는 한 번 쓰고 다시 사용되지 않는 변수이다.\n\n입력. 대표적으로 cin, scanf가 있다.\n\n출력. 대표적으로 cout, printf가 있다.\n\nreturn 0은 프로세스가 정상적으로 마무리 됨을 뜻한다.\n\n\n\nint는 4바이트 정수를 사용할 때 사용되는 타입이다. 표현범위는 -2,147,483,648 ~ 2,147,483,647 입니다.\n\n시간복잡도시간복잡도란, 입력 크기에 대해 어떤 알고리즘이 실행되는데 걸리는 시간이다. 직접적인 시간을 측정하는 것이 아닌 주요 로직의 반복횟수를 중점으로 측정된다.\n왜냐하면 직접적인 시간은 여러가지 요인에 따라 변경될 수 있기 때문이다.\n1234567891011for(int i = 0; i &lt; 10; i++)&#123;    for(int j =0; j &lt; n; j++)&#123;        for(int k = 0; k &lt; n; k++)&#123;            if(true) cout &lt;&lt; k &lt;&lt; &#x27;\\n&#x27;;        &#125;    &#125;&#125;for(int i = 0; i &lt; n; i++)&#123;    if(true) cout &lt;&lt; i &lt;&lt; &#x27;\\n&#x27;;    &#125;\n\n위 코드에서 시간 복잡도는 10n^2+n이다.\n빅오표기법(Big - O)빅오표기법은 복잡도에 영향을 가장 많이 끼치는 항의 상수인자를 제거하고 나머지 항을 없애서 복잡도를 표기하는 표기법이다.\n앞선 예시를 빅오표기법으로 나타내면 O(n^2)이다.\n여기서 영향을 가장 많이 끼친다는 의미는 입력 크기가 커질수록 증가속도가 가장 큰 것을 의미한다.\n예를 들어 n^2은 1,4,9,16,25 이런식으로 증가하는데, n은 1,2,3,4,5 이런식을로 증가하기 때문에 영향이 가장 큰 n^2 항의 상수 인자를 제거하여 빅오표기법으로 나타낸 것이다.\n빅오표기법 차트는 외워두자!\nn! &gt; 2^n &gt; n^2 &gt; nlogn &gt; n &gt; logn &gt; 1 순입니다.\n\n상수시간 시간복잡도 O(1)상수시간 시간 복잡도는 입력 크기와 상관없이 일정한 시간복잡도를 가지는 것을 말한다.\n\n입력과 출력\n\n1cin, cout, scanf, printf\n\n\n곱하기\n\n1a[2] *= 2;\n\n\n간단한 비교 if 문\n\n123if (a[0] == 2) &#123;    // 로직&#125;\n\n\n배열 인덱스 참조\n\n12int a[3] = &#123;1,2,3&#125;;int b = a[2]\n","dateCreated":"2023-03-02T16:33:22+09:00","dateModified":"2023-03-02T17:04:55+09:00","datePublished":"2023-03-02T16:33:22+09:00","description":"","headline":"자료구조의 기본(C++)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"}</script>
+    <meta name="description" content="자료구조자료구조는 효율적으로 데이터를 관리하고 수정, 삭제, 탐색, 저장할 수 있는 데이터 집합이다. 어떤 비즈니스 로직을 처리할 때 가장 효과적인 자료구조를 찾아서 쓰는 것이 중요하기 때문에 자료구조를 명확하게 알아야한다. 자료구조를 설명하기 위해 C++은 이해하기 쉬운 언어이기 때문에 자료구조 공부는 C++로 할 것이다. 12345678#include">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="자료구조의 기본(C++)">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="자료구조자료구조는 효율적으로 데이터를 관리하고 수정, 삭제, 탐색, 저장할 수 있는 데이터 집합이다. 어떤 비즈니스 로직을 처리할 때 가장 효과적인 자료구조를 찾아서 쓰는 것이 중요하기 때문에 자료구조를 명확하게 알아야한다. 자료구조를 설명하기 위해 C++은 이해하기 쉬운 언어이기 때문에 자료구조 공부는 C++로 할 것이다. 12345678#include">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/CS/DataStructure/BigO/BigO-Chart.png">
+<meta property="article:published_time" content="2023-03-02T07:33:22.000Z">
+<meta property="article:modified_time" content="2023-03-02T08:04:55.795Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/CS/DataStructure/BigO/BigO-Chart.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            자료구조의 기본(C++)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-02T16:33:22+09:00">
+	
+		    2023/03/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">자료구조</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="자료구조"><a href="#자료구조" class="headerlink" title="자료구조"></a>자료구조</h1><p>자료구조는 효율적으로 데이터를 관리하고 수정, 삭제, 탐색, 저장할 수 있는 데이터 집합이다.</p>
+<p>어떤 비즈니스 로직을 처리할 때 가장 효과적인 자료구조를 찾아서 쓰는 것이 중요하기 때문에 자료구조를 명확하게 알아야한다.</p>
+<p>자료구조를 설명하기 위해 C++은 이해하기 쉬운 언어이기 때문에 자료구조 공부는 C++로 할 것이다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span> <span class="comment">// 1</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; <span class="comment">// 2</span></span><br><span class="line">string a; <span class="comment">// 3</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123; <span class="comment">// 4</span></span><br><span class="line">    cin &gt;&gt; a; <span class="comment">// 5</span></span><br><span class="line">    cout &lt;&lt; a &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// 6</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>헤더 파일. import할 때 사용한다. bits&#x2F;stdc++.h 는 모든 표준 라이브러리를 의미한다.</p>
+</li>
+<li><p>std라는 네임스페이스 사용하겠다. cin, cout 사용할 때 원래는 std::cin처럼 네임스페이스 달아서 사용해야하는데 이를 기본으로 설정한다는 뜻이다.</p>
+</li>
+<li><p>문자열 선언. &lt;타입&gt; &lt;변수명&gt; 이런식으로 선언한다. 예를들어 <code>string a = &#39;Wix&#39;</code> 이렇게 선언했다면, a는 lvalue, Wix는 rvalue라고 한다. lvalue는 추후 다시 사용될 수 있는 변수이고 rvalue는 한 번 쓰고 다시 사용되지 않는 변수이다.</p>
+</li>
+<li><p>입력. 대표적으로 cin, scanf가 있다.</p>
+</li>
+<li><p>출력. 대표적으로 cout, printf가 있다.</p>
+</li>
+<li><p>return 0은 프로세스가 정상적으로 마무리 됨을 뜻한다.</p>
+</li>
+</ol>
+<blockquote>
+<p>int는 4바이트 정수를 사용할 때 사용되는 타입이다. 표현범위는 -2,147,483,648 ~ 2,147,483,647 입니다.</p>
+</blockquote>
+<h1 id="시간복잡도"><a href="#시간복잡도" class="headerlink" title="시간복잡도"></a>시간복잡도</h1><p>시간복잡도란, 입력 크기에 대해 어떤 알고리즘이 실행되는데 걸리는 시간이다. 직접적인 시간을 측정하는 것이 아닌 주요 로직의 반복횟수를 중점으로 측정된다.</p>
+<p>왜냐하면 직접적인 시간은 여러가지 요인에 따라 변경될 수 있기 때문이다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>; j &lt; n; j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> k = <span class="number">0</span>; k &lt; n; k++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="literal">true</span>) cout &lt;&lt; k &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>) cout &lt;&lt; i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 시간 복잡도는 <code>10n^2+n</code>이다.</p>
+<h1 id="빅오표기법-Big-O"><a href="#빅오표기법-Big-O" class="headerlink" title="빅오표기법(Big - O)"></a>빅오표기법(Big - O)</h1><p>빅오표기법은 복잡도에 영향을 가장 많이 끼치는 항의 상수인자를 제거하고 나머지 항을 없애서 복잡도를 표기하는 표기법이다.</p>
+<p>앞선 예시를 빅오표기법으로 나타내면 <code>O(n^2)</code>이다.</p>
+<p>여기서 영향을 가장 많이 끼친다는 의미는 입력 크기가 커질수록 증가속도가 가장 큰 것을 의미한다.</p>
+<p>예를 들어 n^2은 1,4,9,16,25 이런식으로 증가하는데, n은 1,2,3,4,5 이런식을로 증가하기 때문에 영향이 가장 큰 n^2 항의 상수 인자를 제거하여 빅오표기법으로 나타낸 것이다.</p>
+<p><strong>빅오표기법 차트는 외워두자!</strong></p>
+<p>n! &gt; 2^n &gt; n^2 &gt; nlogn &gt; n &gt; logn &gt; 1 순입니다.</p>
+<p><img src="/../../../images/CS/DataStructure/BigO/BigO-Chart.png" alt="Big-O chart"></p>
+<h2 id="상수시간-시간복잡도-O-1"><a href="#상수시간-시간복잡도-O-1" class="headerlink" title="상수시간 시간복잡도 O(1)"></a>상수시간 시간복잡도 O(1)</h2><p>상수시간 시간 복잡도는 입력 크기와 상관없이 일정한 시간복잡도를 가지는 것을 말한다.</p>
+<ol>
+<li>입력과 출력</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cin, cout, scanf, printf</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>곱하기</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[<span class="number">2</span>] *= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>간단한 비교 if 문</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (a[<span class="number">0</span>] == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="comment">// 로직</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>배열 인덱스 참조</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a[<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span> b = a[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/"
+                    data-tooltip="boj-17404 RGB 거리2(JavaScript)"
+                    aria-label="이전: boj-17404 RGB 거리2(JavaScript)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="node.js란 무엇인가요?"
+                    aria-label="다음: node.js란 무엇인가요?"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/"
+                    data-tooltip="boj-17404 RGB 거리2(JavaScript)"
+                    aria-label="이전: boj-17404 RGB 거리2(JavaScript)"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                    data-tooltip="node.js란 무엇인가요?"
+                    aria-label="다음: node.js란 무엇인가요?"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/02/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EA%B8%B0%EB%B3%B8-C/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
