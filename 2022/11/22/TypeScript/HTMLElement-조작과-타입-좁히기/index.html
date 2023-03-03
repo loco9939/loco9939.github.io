@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 TypeScript로 HTML 요소 조작하기123456// index.tsconst title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;\n\n\n\n❗️ title 요소가 null 타입일 수 도 있다.라는 오류!\n자바스크립트에서 HTML 요소를 타입 좁히기 없이 조작할 수 있었지만, TypeScript에서는 타입을 확실하게 지정해줘야지만 오류를 발생시키지 않는다.\n위와 같이 타입을 좁히는 과정을 Narrowing이라고 한다.\n✈️ narrowing 방법1. HTML 구분 명확히12345const img = document.getElementById(&quot;image&quot;);if (img instanceof HTMLImageElement) &#123;  img.src = &quot;new.jpg&quot;;&#125;\n\n\nHTMLImageElement 말고 그냥 HTMLElement로 검사를 하게될 경우 광범위한 타입에 대한 문제와 HTMLElement 에는 src 속성이 없으므로 명확한 타입으로 narrowing 해줘야한다.\n\n2. instance of 연산자12345const title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;\n\n3. optional chaining 연산자12345const button = document.getElementById(&quot;button&quot;);button?.addEventListener(&quot;click&quot;, () =&gt; &#123;  console.log(&quot;clicked!&quot;);&#125;);\n\n\nbutton 요소가 null이거나 undefined 이면 undefined를 반환하고 그렇지 않으면 이벤트 리스너를 등록한다.\n\n4. 명시적 태그 사용(tagged union)12345678910interface UploadEvent &#123;  type: &quot;upload&quot;;  fileName: string;  contents: string;&#125;interface DownloadEvent &#123;  type: &quot;download&quot;;  fileName: string;  contents: string;&#125;\n\n5. let 대신 const 키워드로 선언\n만능은 아니다. 너무 많은 후보들이 있으면 곤란하다.\n\n12345678const mixed = [&quot;x&quot;, 1];// (&#x27;x&#x27;|1)[]// [&#x27;x&#x27;, 1]// [string, number]// readonly [string, number]// (string|number)[]// readonly (string|number)[]\n\n6. if 구문 사용123456789const el = document.getElementById(&quot;foo&quot;); // type is HTMLElement | nullif (el) &#123;  el; // type is HTMLElement  el.innerHTML = &quot;party time&quot;.blink();&#125; else &#123;  el; // type is null  alert(&quot;No element #foo&quot;);&#125;\n\n7. in 연산자 사용1234567891011121314interface A &#123;  a: number;&#125;interface B &#123;  b: number;&#125;function pickAB(ab: A | B) &#123;  if (&quot;a&quot; in ab) &#123;    ab; // type is A  &#125; else &#123;    ab; // type is B  &#125;  ab; // type is A | B&#125;\n","dateCreated":"2022-11-22T21:21:38+09:00","dateModified":"2022-11-23T20:09:51+09:00","datePublished":"2022-11-22T21:21:38+09:00","description":"📌 TypeScript로 HTML 요소 조작하기123456// index.tsconst title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;","headline":"HTMLElement 조작과 타입 좁히기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 TypeScript로 HTML 요소 조작하기123456// index.tsconst title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;\n\n\n\n❗️ title 요소가 null 타입일 수 도 있다.라는 오류!\n자바스크립트에서 HTML 요소를 타입 좁히기 없이 조작할 수 있었지만, TypeScript에서는 타입을 확실하게 지정해줘야지만 오류를 발생시키지 않는다.\n위와 같이 타입을 좁히는 과정을 Narrowing이라고 한다.\n✈️ narrowing 방법1. HTML 구분 명확히12345const img = document.getElementById(&quot;image&quot;);if (img instanceof HTMLImageElement) &#123;  img.src = &quot;new.jpg&quot;;&#125;\n\n\nHTMLImageElement 말고 그냥 HTMLElement로 검사를 하게될 경우 광범위한 타입에 대한 문제와 HTMLElement 에는 src 속성이 없으므로 명확한 타입으로 narrowing 해줘야한다.\n\n2. instance of 연산자12345const title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;\n\n3. optional chaining 연산자12345const button = document.getElementById(&quot;button&quot;);button?.addEventListener(&quot;click&quot;, () =&gt; &#123;  console.log(&quot;clicked!&quot;);&#125;);\n\n\nbutton 요소가 null이거나 undefined 이면 undefined를 반환하고 그렇지 않으면 이벤트 리스너를 등록한다.\n\n4. 명시적 태그 사용(tagged union)12345678910interface UploadEvent &#123;  type: &quot;upload&quot;;  fileName: string;  contents: string;&#125;interface DownloadEvent &#123;  type: &quot;download&quot;;  fileName: string;  contents: string;&#125;\n\n5. let 대신 const 키워드로 선언\n만능은 아니다. 너무 많은 후보들이 있으면 곤란하다.\n\n12345678const mixed = [&quot;x&quot;, 1];// (&#x27;x&#x27;|1)[]// [&#x27;x&#x27;, 1]// [string, number]// readonly [string, number]// (string|number)[]// readonly (string|number)[]\n\n6. if 구문 사용123456789const el = document.getElementById(&quot;foo&quot;); // type is HTMLElement | nullif (el) &#123;  el; // type is HTMLElement  el.innerHTML = &quot;party time&quot;.blink();&#125; else &#123;  el; // type is null  alert(&quot;No element #foo&quot;);&#125;\n\n7. in 연산자 사용1234567891011121314interface A &#123;  a: number;&#125;interface B &#123;  b: number;&#125;function pickAB(ab: A | B) &#123;  if (&quot;a&quot; in ab) &#123;    ab; // type is A  &#125; else &#123;    ab; // type is B  &#125;  ab; // type is A | B&#125;\n","dateCreated":"2022-11-22T21:21:38+09:00","dateModified":"2022-11-23T20:09:51+09:00","datePublished":"2022-11-22T21:21:38+09:00","description":"📌 TypeScript로 HTML 요소 조작하기123456// index.tsconst title = document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &#123;  title.innerHTML = &quot;제목입니다.&quot;;&#125;","headline":"HTMLElement 조작과 타입 좁히기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"}</script>
     <meta name="description" content="📌 TypeScript로 HTML 요소 조작하기123456&#x2F;&#x2F; index.tsconst title &#x3D; document.getElementById(&quot;title&quot;);if (title instanceof HTMLElement) &amp;#123;  title.innerHTML &#x3D; &quot;제목입니다.&quot;;&amp;#125;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="HTMLElement 조작과 타입 좁히기">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":" 컴포넌트란?자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다.\n123&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;SomeComponent /&gt;&lt;/Suspense&gt;\n\n주의사항\n리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존하지 않는다. 컴포넌트가 로드되면 리액트는 중단된 트리를 처음부터 렌더링을 시도한다.\n 컴포넌트는 컴포넌트 내부에서 startTransition이나 useDeferredValue로 인한 업데이트가 아닌 경우라면 fallback이 표시된다.\n컴포넌트가 다시 일시 중단되었기 때문에 이미 보여진 컨텐츠를 감출 필요가 있다면, layout effect를 비운다. 다시 컨텐츠를 보여줄 준비가 됐을 때, 리액트는 layout effect를 발생시킨다. 이는 컨텐츠가 숨겨진 동안 DOM layout을 측정하지 않도록 한다.\n\n사용법컨텐츠가 로딩되는 동안에 fallback을 보여준다.\n1234567891011121314151617import &#123; Suspense &#125; from &quot;react&quot;;import Albums from &quot;./Albums.js&quot;;export default function ArtistPage(&#123; artist &#125;) &#123;  return (    &lt;&gt;      &lt;h1&gt;&#123;artist.name&#125;&lt;/h1&gt;      &lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;        &lt;Albums artistId=&#123;artist.id&#125; /&gt;      &lt;/Suspense&gt;    &lt;/&gt;  );&#125;function Loading() &#123;  return &lt;h2&gt;🌀 Loading...&lt;/h2&gt;;&#125;\n\n컨텐츠를 한번에 공개123456&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;Biography /&gt;  &lt;Panel&gt;    &lt;Albums /&gt;  &lt;/Panel&gt;&lt;/Suspense&gt;\n\n 내부에 하나의 컴포넌트라도 일시중단 되더라도 모든 하위 컴포넌트가 대기했다가 한번에 공개된다.\n가장 가까운 의 fallback을 보여준다.1234567891011121314&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;Details artistId=&#123;artist.id&#125; /&gt;&lt;/Suspense&gt;;function Details(&#123; artistId &#125;) &#123;  return (    &lt;&gt;      &lt;Biography artistId=&#123;artistId&#125; /&gt;      &lt;Panel&gt;        &lt;Albums artistId=&#123;artistId&#125; /&gt;      &lt;/Panel&gt;    &lt;/&gt;  );&#125;\n\n때문에 직접적인 자식이 아니더라도 Biography와 Albums와 가장 가까운 부모  경계를 공유하기 때문에 함께 표시된다.\n로드 될 때, 중첩된 컨텐츠 표시한다.12345678&lt;Suspense fallback=&#123;&lt;BigSpinner /&gt;&#125;&gt;  &lt;Biography /&gt;  &lt;Suspense fallback=&#123;&lt;AlbumsGlimmer /&gt;&#125;&gt;    &lt;Panel&gt;      &lt;Albums /&gt;    &lt;/Panel&gt;  &lt;/Suspense&gt;&lt;/Suspense&gt;\n\n처음에 Biography가 로딩이 완료 되지 않았을 때, BigSpinner가 fallback으로 보여지고, 이후 Biography는 로딩이 완료되었기 때문에 보여지고, 아래 Albums이 로딩이 완료되지 않았다면 AlbumsGlimmer를 보여주고 있다가 로딩이 완료되어 Albums를 보여준다.\n핵심은 Biography가 Albums 로딩이 완료될 때까지 기다리지 않는 다는 것이다.\n이미 공개된 컨텐츠가 숨겨지는 것을 방지하기Code Example Link\n\n 내부에 startTransition이 사용되었다면, fallback이 보여지지 않는다.\n때문에 fallback의 BigSpinner에 의해 이전에 보여진 컨텐츠가 숨겨지는 것을 방지할 수 있다.\n\n","dateCreated":"2023-02-02T16:29:47+09:00","dateModified":"2023-02-02T17:19:14+09:00","datePublished":"2023-02-02T16:29:47+09:00","description":"","headline":"<Suspense> 컴포넌트는 무엇인가?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":" 컴포넌트란?자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다.\n123&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;SomeComponent /&gt;&lt;/Suspense&gt;\n\n주의사항\n리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존하지 않는다. 컴포넌트가 로드되면 리액트는 중단된 트리를 처음부터 렌더링을 시도한다.\n 컴포넌트는 컴포넌트 내부에서 startTransition이나 useDeferredValue로 인한 업데이트가 아닌 경우라면 fallback이 표시된다.\n컴포넌트가 다시 일시 중단되었기 때문에 이미 보여진 컨텐츠를 감출 필요가 있다면, layout effect를 비운다. 다시 컨텐츠를 보여줄 준비가 됐을 때, 리액트는 layout effect를 발생시킨다. 이는 컨텐츠가 숨겨진 동안 DOM layout을 측정하지 않도록 한다.\n\n사용법컨텐츠가 로딩되는 동안에 fallback을 보여준다.\n1234567891011121314151617import &#123; Suspense &#125; from &quot;react&quot;;import Albums from &quot;./Albums.js&quot;;export default function ArtistPage(&#123; artist &#125;) &#123;  return (    &lt;&gt;      &lt;h1&gt;&#123;artist.name&#125;&lt;/h1&gt;      &lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;        &lt;Albums artistId=&#123;artist.id&#125; /&gt;      &lt;/Suspense&gt;    &lt;/&gt;  );&#125;function Loading() &#123;  return &lt;h2&gt;🌀 Loading...&lt;/h2&gt;;&#125;\n\n컨텐츠를 한번에 공개123456&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;Biography /&gt;  &lt;Panel&gt;    &lt;Albums /&gt;  &lt;/Panel&gt;&lt;/Suspense&gt;\n\n 내부에 하나의 컴포넌트라도 일시중단 되더라도 모든 하위 컴포넌트가 대기했다가 한번에 공개된다.\n가장 가까운 의 fallback을 보여준다.1234567891011121314&lt;Suspense fallback=&#123;&lt;Loading /&gt;&#125;&gt;  &lt;Details artistId=&#123;artist.id&#125; /&gt;&lt;/Suspense&gt;;function Details(&#123; artistId &#125;) &#123;  return (    &lt;&gt;      &lt;Biography artistId=&#123;artistId&#125; /&gt;      &lt;Panel&gt;        &lt;Albums artistId=&#123;artistId&#125; /&gt;      &lt;/Panel&gt;    &lt;/&gt;  );&#125;\n\n때문에 직접적인 자식이 아니더라도 Biography와 Albums와 가장 가까운 부모  경계를 공유하기 때문에 함께 표시된다.\n로드 될 때, 중첩된 컨텐츠 표시한다.12345678&lt;Suspense fallback=&#123;&lt;BigSpinner /&gt;&#125;&gt;  &lt;Biography /&gt;  &lt;Suspense fallback=&#123;&lt;AlbumsGlimmer /&gt;&#125;&gt;    &lt;Panel&gt;      &lt;Albums /&gt;    &lt;/Panel&gt;  &lt;/Suspense&gt;&lt;/Suspense&gt;\n\n처음에 Biography가 로딩이 완료 되지 않았을 때, BigSpinner가 fallback으로 보여지고, 이후 Biography는 로딩이 완료되었기 때문에 보여지고, 아래 Albums이 로딩이 완료되지 않았다면 AlbumsGlimmer를 보여주고 있다가 로딩이 완료되어 Albums를 보여준다.\n핵심은 Biography가 Albums 로딩이 완료될 때까지 기다리지 않는 다는 것이다.\n이미 공개된 컨텐츠가 숨겨지는 것을 방지하기Code Example Link\n\n 내부에 startTransition이 사용되었다면, fallback이 보여지지 않는다.\n때문에 fallback의 BigSpinner에 의해 이전에 보여진 컨텐츠가 숨겨지는 것을 방지할 수 있다.\n\n","dateCreated":"2023-02-02T16:29:47+09:00","dateModified":"2023-02-02T17:19:14+09:00","datePublished":"2023-02-02T16:29:47+09:00","description":"","headline":"<Suspense> 컴포넌트는 무엇인가?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"}</script>
     <meta name="description" content="컴포넌트란?자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다. 123&lt;Suspense fallback&#x3D;&amp;#123;&lt;Loading &#x2F;&gt;&amp;#125;&gt;  &lt;SomeComponent &#x2F;&gt;&lt;&#x2F;Suspense&gt;  주의사항 리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="&lt;Suspense&gt; 컴포넌트는 무엇인가?">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"CarouselSlider 구현중 느낀점1. 구현 중 필요한 상수 또는 변수는 따로 구분해주자.12345678910// Dataconst duration = 500;const direction = &#123;  prev: -1,  next: 1,&#125;;const newImages = [images[images.length - 1], ...images, images[0]];let currentSlide = 1;let transitionComplete = true;\n\n\n로직 중간에 재할당이 발생하지 않은 요소는 const 키워드로 선언하여 의도치 않은 재할당을 방지한다.\n\ncurrentSlide는 DOM API를 사용하여 필요할 때마다 가져왔는데, 값을 데이터 부분에서 한번만 가져와서 그 값을 가지고 사용하는 방법으로 하면 DOM API를 자주 사용하여 발생하는 코드의 복잡성을 해결할 수 있다.\n\n\n2. transitionend 이벤트와 transitioncancel 이벤트1234567891011121314const setTransitionCompleteTrue = () =&gt; &#123;  transitionComplete = true;&#125;;$container.addEventListener(&quot;transitionend&quot;, setTransitionCompleteTrue);$container.addEventListener(&quot;transitioncancel&quot;, setTransitionCompleteTrue);$container.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.carousel-control&quot;) || !transitionComplete) return;  e.target.matches(&#x27;.prev&#x27;) // prettier-ignore    ? slideImage(direction.prev, 0, newImages.length - 2)    : slideImage(direction.next, newImages.length - 1, 1);&#125;);\n\n\ntransitionend 이벤트는 요소 노드의 trnasition 이벤트가 완료될 때, 이벤트 핸들러가 호출된다.\n\ntransitioncancel 이벤트는 요소 노드의 trnasition 이벤트가 취소될 때, 이벤트 핸들러가 호출된다.\n\n\n처음에 캐러셀을 구현할 때, 1-4번 사진에서 next 버튼 클릭시 transition-delay가 유지되면서 다음 사진으로 이동했는데, 연타로 클릭하니 transition-delay가 유지되지 않고 다음 사진으로 이동하여 이를 어떻게 구현할 지 생각해보고 구글링을 하다가 transition 이벤트를 알게되어 사용하였다.\ntransition이 완료될 때, transitionComplete를 true로 할당하고 클릭 이벤트가 발생하였을 때는 위와 같이 이미지를 슬라이드 해주는 함수를 구현하였다.\nslideImage 함수 내부의 로직은 위 부분에서 알 필요가 없고 위 부분에서는 단지 클릭 이벤트가 일어났을 때, 이미지를 슬라이드 해주는 관심사가 중요하기 때문에 다른 것은 알 필요가 없도록 코드를 구현하는 것이 바로 관심사의 구분이다.\ntransitionend 이벤트가 가끔 사라지는 경우\nnext 버튼, prev 버튼을 연타해서 클릭하거나 예상치 못한 경우에 transition이벤트가 완료되지 않고 갑자기 사라지는 경우가 발생하였다.\n위와 같이 갑자기 클릭을 계속하여도 transitionend 이벤트가 동작하지 않아 transitionComplete값이 true로 할당되지 않으므로 정상동작하지 않는 것을 볼 수 있다.\n1$container.addEventListener(&quot;transitioncancel&quot;, setTransitionCompleteTrue);\n\n이러한 예외경우를 위해서 transitioncancel이벤트로 이벤트 핸들러로 다뤄주면 예외 처리가 가능하다.\n3. 마지막 캐러셀이 슬라이드 되고 난 후 다시 처음 슬라이드로 이동시키기 (눈속임)1234567891011121314151617const slideImage = (direction, from, to) =&gt; &#123;  transitionComplete = false;  currentSlide += direction;  setSlidesProperty(&quot;--duration&quot;, duration);  setSlidesProperty(&quot;--currentSlide&quot;, currentSlide);  if (currentSlide === from) &#123;    setTimeout(() =&gt; &#123;      currentSlide = to;      setSlidesProperty(&quot;--duration&quot;, 0);      setSlidesProperty(&quot;--currentSlide&quot;, currentSlide);    &#125;, duration);  &#125;&#125;;\n\n코드를 해석하자면 다음과 같다.\n\ntransitionend 이벤트가 발생하면 transitionComplete가 true로 할당이 된다. 즉, transition이벤트가 끝나면 currentSlide를 해당 방향으로 한칸 이동시킨다.\n\n만약 현재 슬라이드가 마지막(from)이라면, transition-delay가 완료되는 시간인 duration 후에 currentSlide에 처음 슬라이드 번호를 할당하고 duration 속성을 0으로 초기화하여 transition 이벤트가 발생하지 않도록 한 후 현재 보이는 슬라이드를 처음 슬라이드 번호로 바뀐 값으로 설정해준다.\n\n\n이렇게 되면 사용자는 마지막 슬라이드로 이동했을 때, 다시 처음 슬라이드로 돌아온 것으로 무한 루프를 구현한 것처럼 느끼게 된다.\nCounter 리팩토링하면서 느낀점1. 이벤트 핸들러 부분과 함수의 역할에 따라 구분해주자.12345678910111213141516171819202122232425262728// 리팩토링 전const counter = (function Counter() &#123;  let counter = 0;  return function (helper) &#123;    counter = helper(counter);    return counter;  &#125;;&#125;)();const increaseCount = (counter) =&gt; &#123;  counter += 1;  return counter;&#125;;const decreaseCount = (counter) =&gt; &#123;  counter = counter &gt; 0 ? counter - 1 : 0;  return counter;&#125;;const $counter = document.querySelector(&quot;.counter&quot;);document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;  $counter.textContent = counter(increaseCount);&#125;);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;  $counter.textContent = counter(decreaseCount);&#125;);\n\n\n리팩토링 전에는 헬퍼함수라는 콜백함수를 받아 클로저를 구현해서 increaseCount, decreaseCount 함수가 counter 함수에서만 사용하는데 전역코드에 존재하므로 다른 곳에서도 사용할 수 있는 함수로 오해할 수 있으므로 이들 함수간의 응집도를 눂혀줘야한다.\n\n또한, 이벤트 핸들러 함수가 렌더링을 해주고 있는데 이보다 렌더링 해주는 함수, 카운트 증가시키는 함수, 카운트 감소시키는 함수 등으로 역할에 따라 구분하는 것이 적절하다.\n\n\n위 두가지 개선사항을 반영하여 나온 코드가 아래 코드이다.\n123456789101112131415161718192021222324// 리팩토링 후const counter = (() =&gt; &#123;  let count = 0;  const $counter = document.querySelector(&quot;.counter&quot;);  const render = () =&gt; &#123;    $counter.textContent = count;  &#125;;  return &#123;    increase() &#123;      count += 1;      render();    &#125;,    decrease() &#123;      if (count &gt; 0) count -= 1;      render();    &#125;,  &#125;;&#125;)();document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, counter.increase);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, counter.decrease);\n\n\ncounter 식별자에 즉시실행함수의 반환값(객체)를 할당하여 처음 Js 파일이 로드되었을 때, 한번만 호출되거나 실행되는 부분과 여러번 호출되는 부분을 구분하였다.\n\n이벤트 핸들러가 직관적으로 클릭하면 무슨일을 하는 지 알 수 있다.\n\n\n\n더 나아가 위 코드를 각 역할에 맞도록 모듈로 구분할 수도 있다.\n\nisPalindrome 리팩토링 중 느낀점1. 응집도 높이기1234567891011121314151617181920212223242526// 리팩토링 전const $input = document.querySelector(&quot;.palindrome-input&quot;);const isPalindrome = (string) =&gt; &#123;  const newString = string.toUpperCase().replace(/[^A-Za-z0-9가-힣]/g, &quot;&quot;);  if (newString === &quot;&quot;) return false;  const reversedString = newString.split(&quot;&quot;).reverse().join(&quot;&quot;);  return newString === reversedString;&#125;;document  .querySelector(&quot;.palindrome-checker&quot;)  .addEventListener(&quot;submit&quot;, (e) =&gt; &#123;    e.preventDefault();    const value = $input.value.trim();    if (value === &quot;&quot;) return;    document.querySelector(&quot;.palindrome-result&quot;).textContent = isPalindrome(      value    )      ? `&quot;$&#123;value&#125;&quot; is a palindrome`      : `&quot;$&#123;value&#125;&quot; is not a palindrome`;    $input.value = &quot;&quot;;  &#125;);\n\n\nisPalindrome함수는 아래 이벤트 핸들러함수 안에서만 사용될 것인데 전역 코드에 있으므로 응집도를 높혀줘야한다.\n\nsplit을 사용하여 배열화 하는 것보다 스프레드 문법을 사용하자.\n\n\n123456789101112131415161718192021222324252627282930// 리팩토링 후const checkPalindrome = (() =&gt; &#123;  const $input = document.querySelector(&quot;.palindrome-input&quot;);  const $result = document.querySelector(&quot;.palindrome-result&quot;);  const isPalindrome = (string) =&gt; &#123;    const newString = string.toUpperCase().replace(/[^A-Za-z0-9가-힣]/g, &quot;&quot;);    if (newString === &quot;&quot;) return false;    const reversedString = [...newString].reverse().join(&quot;&quot;);    return newString === reversedString;  &#125;;  return (e) =&gt; &#123;    e.preventDefault();    const value = $input.value.trim();    if (value === &quot;&quot;) return;    $result.textContent = `&quot;$&#123;value&#125;&quot; is $&#123;      isPalindrome(value) ? &quot;&quot; : &quot;not&quot;    &#125; a palindrome`;    $input.value = &quot;&quot;;  &#125;;&#125;)();document  .querySelector(&quot;.palindrome-checker&quot;)  .addEventListener(&quot;submit&quot;, checkPalindrome);\n\n\nisPalindrome 함수와 이벤트 핸들러 함수의 응집도를 높히기 위해 즉시실행함수로 감싸주었다.\n\n즉시실행함수는 이벤트 객체를 인수로 받는 함수를 반환한다. 이 함수에다가 리팩토링 전에 이벤트 핸들러 안에 있던 코드들을 담아주었다. 즉시실행함수가 반환하는 함수는 외부함수의 식별자를 참조하고 있고 외부함수보다 생명주기가 더 길어서 클로저이다.\n\n문자열을 렌더링해주는 부분에서 조건에 따라 ‘not’이 있고 없고 차이가 있으므로 바꿔주었다.\n\n이터러블 요소에는 스프레드 문법을 사용할 수 있다. 문자열은 이터러블하므로 split() 대신에 spread 문법을 사용하여 배열화 해주었다.\n\n\n","dateCreated":"2022-09-16T19:02:17+09:00","dateModified":"2022-11-18T17:18:59+09:00","datePublished":"2022-09-16T19:02:17+09:00","description":"","headline":"transition 이벤트, counter, isPalindrome Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"CarouselSlider 구현중 느낀점1. 구현 중 필요한 상수 또는 변수는 따로 구분해주자.12345678910// Dataconst duration = 500;const direction = &#123;  prev: -1,  next: 1,&#125;;const newImages = [images[images.length - 1], ...images, images[0]];let currentSlide = 1;let transitionComplete = true;\n\n\n로직 중간에 재할당이 발생하지 않은 요소는 const 키워드로 선언하여 의도치 않은 재할당을 방지한다.\n\ncurrentSlide는 DOM API를 사용하여 필요할 때마다 가져왔는데, 값을 데이터 부분에서 한번만 가져와서 그 값을 가지고 사용하는 방법으로 하면 DOM API를 자주 사용하여 발생하는 코드의 복잡성을 해결할 수 있다.\n\n\n2. transitionend 이벤트와 transitioncancel 이벤트1234567891011121314const setTransitionCompleteTrue = () =&gt; &#123;  transitionComplete = true;&#125;;$container.addEventListener(&quot;transitionend&quot;, setTransitionCompleteTrue);$container.addEventListener(&quot;transitioncancel&quot;, setTransitionCompleteTrue);$container.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.carousel-control&quot;) || !transitionComplete) return;  e.target.matches(&#x27;.prev&#x27;) // prettier-ignore    ? slideImage(direction.prev, 0, newImages.length - 2)    : slideImage(direction.next, newImages.length - 1, 1);&#125;);\n\n\ntransitionend 이벤트는 요소 노드의 trnasition 이벤트가 완료될 때, 이벤트 핸들러가 호출된다.\n\ntransitioncancel 이벤트는 요소 노드의 trnasition 이벤트가 취소될 때, 이벤트 핸들러가 호출된다.\n\n\n처음에 캐러셀을 구현할 때, 1-4번 사진에서 next 버튼 클릭시 transition-delay가 유지되면서 다음 사진으로 이동했는데, 연타로 클릭하니 transition-delay가 유지되지 않고 다음 사진으로 이동하여 이를 어떻게 구현할 지 생각해보고 구글링을 하다가 transition 이벤트를 알게되어 사용하였다.\ntransition이 완료될 때, transitionComplete를 true로 할당하고 클릭 이벤트가 발생하였을 때는 위와 같이 이미지를 슬라이드 해주는 함수를 구현하였다.\nslideImage 함수 내부의 로직은 위 부분에서 알 필요가 없고 위 부분에서는 단지 클릭 이벤트가 일어났을 때, 이미지를 슬라이드 해주는 관심사가 중요하기 때문에 다른 것은 알 필요가 없도록 코드를 구현하는 것이 바로 관심사의 구분이다.\ntransitionend 이벤트가 가끔 사라지는 경우\nnext 버튼, prev 버튼을 연타해서 클릭하거나 예상치 못한 경우에 transition이벤트가 완료되지 않고 갑자기 사라지는 경우가 발생하였다.\n위와 같이 갑자기 클릭을 계속하여도 transitionend 이벤트가 동작하지 않아 transitionComplete값이 true로 할당되지 않으므로 정상동작하지 않는 것을 볼 수 있다.\n1$container.addEventListener(&quot;transitioncancel&quot;, setTransitionCompleteTrue);\n\n이러한 예외경우를 위해서 transitioncancel이벤트로 이벤트 핸들러로 다뤄주면 예외 처리가 가능하다.\n3. 마지막 캐러셀이 슬라이드 되고 난 후 다시 처음 슬라이드로 이동시키기 (눈속임)1234567891011121314151617const slideImage = (direction, from, to) =&gt; &#123;  transitionComplete = false;  currentSlide += direction;  setSlidesProperty(&quot;--duration&quot;, duration);  setSlidesProperty(&quot;--currentSlide&quot;, currentSlide);  if (currentSlide === from) &#123;    setTimeout(() =&gt; &#123;      currentSlide = to;      setSlidesProperty(&quot;--duration&quot;, 0);      setSlidesProperty(&quot;--currentSlide&quot;, currentSlide);    &#125;, duration);  &#125;&#125;;\n\n코드를 해석하자면 다음과 같다.\n\ntransitionend 이벤트가 발생하면 transitionComplete가 true로 할당이 된다. 즉, transition이벤트가 끝나면 currentSlide를 해당 방향으로 한칸 이동시킨다.\n\n만약 현재 슬라이드가 마지막(from)이라면, transition-delay가 완료되는 시간인 duration 후에 currentSlide에 처음 슬라이드 번호를 할당하고 duration 속성을 0으로 초기화하여 transition 이벤트가 발생하지 않도록 한 후 현재 보이는 슬라이드를 처음 슬라이드 번호로 바뀐 값으로 설정해준다.\n\n\n이렇게 되면 사용자는 마지막 슬라이드로 이동했을 때, 다시 처음 슬라이드로 돌아온 것으로 무한 루프를 구현한 것처럼 느끼게 된다.\nCounter 리팩토링하면서 느낀점1. 이벤트 핸들러 부분과 함수의 역할에 따라 구분해주자.12345678910111213141516171819202122232425262728// 리팩토링 전const counter = (function Counter() &#123;  let counter = 0;  return function (helper) &#123;    counter = helper(counter);    return counter;  &#125;;&#125;)();const increaseCount = (counter) =&gt; &#123;  counter += 1;  return counter;&#125;;const decreaseCount = (counter) =&gt; &#123;  counter = counter &gt; 0 ? counter - 1 : 0;  return counter;&#125;;const $counter = document.querySelector(&quot;.counter&quot;);document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;  $counter.textContent = counter(increaseCount);&#125;);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;  $counter.textContent = counter(decreaseCount);&#125;);\n\n\n리팩토링 전에는 헬퍼함수라는 콜백함수를 받아 클로저를 구현해서 increaseCount, decreaseCount 함수가 counter 함수에서만 사용하는데 전역코드에 존재하므로 다른 곳에서도 사용할 수 있는 함수로 오해할 수 있으므로 이들 함수간의 응집도를 눂혀줘야한다.\n\n또한, 이벤트 핸들러 함수가 렌더링을 해주고 있는데 이보다 렌더링 해주는 함수, 카운트 증가시키는 함수, 카운트 감소시키는 함수 등으로 역할에 따라 구분하는 것이 적절하다.\n\n\n위 두가지 개선사항을 반영하여 나온 코드가 아래 코드이다.\n123456789101112131415161718192021222324// 리팩토링 후const counter = (() =&gt; &#123;  let count = 0;  const $counter = document.querySelector(&quot;.counter&quot;);  const render = () =&gt; &#123;    $counter.textContent = count;  &#125;;  return &#123;    increase() &#123;      count += 1;      render();    &#125;,    decrease() &#123;      if (count &gt; 0) count -= 1;      render();    &#125;,  &#125;;&#125;)();document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, counter.increase);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, counter.decrease);\n\n\ncounter 식별자에 즉시실행함수의 반환값(객체)를 할당하여 처음 Js 파일이 로드되었을 때, 한번만 호출되거나 실행되는 부분과 여러번 호출되는 부분을 구분하였다.\n\n이벤트 핸들러가 직관적으로 클릭하면 무슨일을 하는 지 알 수 있다.\n\n\n\n더 나아가 위 코드를 각 역할에 맞도록 모듈로 구분할 수도 있다.\n\nisPalindrome 리팩토링 중 느낀점1. 응집도 높이기1234567891011121314151617181920212223242526// 리팩토링 전const $input = document.querySelector(&quot;.palindrome-input&quot;);const isPalindrome = (string) =&gt; &#123;  const newString = string.toUpperCase().replace(/[^A-Za-z0-9가-힣]/g, &quot;&quot;);  if (newString === &quot;&quot;) return false;  const reversedString = newString.split(&quot;&quot;).reverse().join(&quot;&quot;);  return newString === reversedString;&#125;;document  .querySelector(&quot;.palindrome-checker&quot;)  .addEventListener(&quot;submit&quot;, (e) =&gt; &#123;    e.preventDefault();    const value = $input.value.trim();    if (value === &quot;&quot;) return;    document.querySelector(&quot;.palindrome-result&quot;).textContent = isPalindrome(      value    )      ? `&quot;$&#123;value&#125;&quot; is a palindrome`      : `&quot;$&#123;value&#125;&quot; is not a palindrome`;    $input.value = &quot;&quot;;  &#125;);\n\n\nisPalindrome함수는 아래 이벤트 핸들러함수 안에서만 사용될 것인데 전역 코드에 있으므로 응집도를 높혀줘야한다.\n\nsplit을 사용하여 배열화 하는 것보다 스프레드 문법을 사용하자.\n\n\n123456789101112131415161718192021222324252627282930// 리팩토링 후const checkPalindrome = (() =&gt; &#123;  const $input = document.querySelector(&quot;.palindrome-input&quot;);  const $result = document.querySelector(&quot;.palindrome-result&quot;);  const isPalindrome = (string) =&gt; &#123;    const newString = string.toUpperCase().replace(/[^A-Za-z0-9가-힣]/g, &quot;&quot;);    if (newString === &quot;&quot;) return false;    const reversedString = [...newString].reverse().join(&quot;&quot;);    return newString === reversedString;  &#125;;  return (e) =&gt; &#123;    e.preventDefault();    const value = $input.value.trim();    if (value === &quot;&quot;) return;    $result.textContent = `&quot;$&#123;value&#125;&quot; is $&#123;      isPalindrome(value) ? &quot;&quot; : &quot;not&quot;    &#125; a palindrome`;    $input.value = &quot;&quot;;  &#125;;&#125;)();document  .querySelector(&quot;.palindrome-checker&quot;)  .addEventListener(&quot;submit&quot;, checkPalindrome);\n\n\nisPalindrome 함수와 이벤트 핸들러 함수의 응집도를 높히기 위해 즉시실행함수로 감싸주었다.\n\n즉시실행함수는 이벤트 객체를 인수로 받는 함수를 반환한다. 이 함수에다가 리팩토링 전에 이벤트 핸들러 안에 있던 코드들을 담아주었다. 즉시실행함수가 반환하는 함수는 외부함수의 식별자를 참조하고 있고 외부함수보다 생명주기가 더 길어서 클로저이다.\n\n문자열을 렌더링해주는 부분에서 조건에 따라 ‘not’이 있고 없고 차이가 있으므로 바꿔주었다.\n\n이터러블 요소에는 스프레드 문법을 사용할 수 있다. 문자열은 이터러블하므로 split() 대신에 spread 문법을 사용하여 배열화 해주었다.\n\n\n","dateCreated":"2022-09-16T19:02:17+09:00","dateModified":"2022-11-18T17:18:59+09:00","datePublished":"2022-09-16T19:02:17+09:00","description":"","headline":"transition 이벤트, counter, isPalindrome Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/16/PairProgramming/level%201/transition%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome%20Tip/"}</script>
     <meta name="description" content="CarouselSlider 구현중 느낀점1. 구현 중 필요한 상수 또는 변수는 따로 구분해주자.12345678910&#x2F;&#x2F; Dataconst duration &#x3D; 500;const direction &#x3D; &amp;#123;  prev: -1,  next: 1,&amp;#125;;const newImages &#x3D; [images[images.length - 1], ...images,">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="transition 이벤트, counter, isPalindrome Tip">
@@ -129,20 +129,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -189,7 +175,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -198,86 +184,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

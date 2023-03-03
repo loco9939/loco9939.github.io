@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"🕹 리액트 DOM 컨트롤리액트 앱은 대부분 리액트에 의해 컨트롤되지만 예외인 상황이 있다. 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 리액트가 할 수 없는 일이다.\n이러한 일을 리액트 사이드 이펙트라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.\n사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.\n\nref(참조 설정)\n값이 변경되어도 리액트가 재렌더링하지 않는다.\n\n\ncallback ref(ref 속성에 연결된 함수)\nReact.createRef(참조 객체 생성)\nReact.forwardRef(참조 객체 전달)\n범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.\n외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.\ndomRef를 통해서 전달할 수도 있다.\n\n\n\n💭 예시컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.\n1234567891011121314151617181920212223242526272829303132333435363738394041export class TiltCard extends React.Component &#123;  // DOM 요소 참조를 목적으로 Ref를 생성합니다.  tiltRef = React.createRef(null); // &#123; current:null &#125;  // DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버  #cardDomElement = null;  // 최초 마운트 시점 이후 처리할 로직을 작성합니다.  componentDidMount() &#123;    this.#cardDomElement = this.tiltRef.current;    VanillaTilt.init(this.#cardDomElement);    // 이벤트 구독    this.#cardDomElement.addEventListener(      &quot;tiltChange&quot;,      this.handleChangeTilt.bind(this)    );  &#125;  // 마운트 해제 직전에 처리할 로직을 작성합니다.  componentWillUnmount() &#123;    this.#cardDomElement.vanillaTilt.destroy();    // 이벤트 구독 해지    this.#cardDomElement.removeEventListener(      &quot;tiltChange&quot;,      this.handleChangeTilt.bind(this)    );  &#125;  render() &#123;    const &#123; children &#125; = this.props;    return (      // 생성된 Ref를 참조하도록 설정합니다.      &lt;div ref=&#123;this.tiltRef&#125; className=&quot;tiltCard&quot;&gt;        &#123;children&#125;      &lt;/div&gt;    );  &#125;&#125;\n\n\ntiltRef에 DOM 요소를 저장하기 위해 ref를 생성하였다.\ntiltRef DOM 요소 얻기 위해 “current” 프로퍼티에 접근하였다.\ntiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.\n\n","dateCreated":"2022-11-12T16:59:38+09:00","dateModified":"2022-11-14T19:39:48+09:00","datePublished":"2022-11-12T16:59:38+09:00","description":"","headline":"DOM 컨트롤(ref)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"🕹 리액트 DOM 컨트롤리액트 앱은 대부분 리액트에 의해 컨트롤되지만 예외인 상황이 있다. 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 리액트가 할 수 없는 일이다.\n이러한 일을 리액트 사이드 이펙트라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.\n사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.\n\nref(참조 설정)\n값이 변경되어도 리액트가 재렌더링하지 않는다.\n\n\ncallback ref(ref 속성에 연결된 함수)\nReact.createRef(참조 객체 생성)\nReact.forwardRef(참조 객체 전달)\n범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.\n외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.\ndomRef를 통해서 전달할 수도 있다.\n\n\n\n💭 예시컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.\n1234567891011121314151617181920212223242526272829303132333435363738394041export class TiltCard extends React.Component &#123;  // DOM 요소 참조를 목적으로 Ref를 생성합니다.  tiltRef = React.createRef(null); // &#123; current:null &#125;  // DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버  #cardDomElement = null;  // 최초 마운트 시점 이후 처리할 로직을 작성합니다.  componentDidMount() &#123;    this.#cardDomElement = this.tiltRef.current;    VanillaTilt.init(this.#cardDomElement);    // 이벤트 구독    this.#cardDomElement.addEventListener(      &quot;tiltChange&quot;,      this.handleChangeTilt.bind(this)    );  &#125;  // 마운트 해제 직전에 처리할 로직을 작성합니다.  componentWillUnmount() &#123;    this.#cardDomElement.vanillaTilt.destroy();    // 이벤트 구독 해지    this.#cardDomElement.removeEventListener(      &quot;tiltChange&quot;,      this.handleChangeTilt.bind(this)    );  &#125;  render() &#123;    const &#123; children &#125; = this.props;    return (      // 생성된 Ref를 참조하도록 설정합니다.      &lt;div ref=&#123;this.tiltRef&#125; className=&quot;tiltCard&quot;&gt;        &#123;children&#125;      &lt;/div&gt;    );  &#125;&#125;\n\n\ntiltRef에 DOM 요소를 저장하기 위해 ref를 생성하였다.\ntiltRef DOM 요소 얻기 위해 “current” 프로퍼티에 접근하였다.\ntiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.\n\n","dateCreated":"2022-11-12T16:59:38+09:00","dateModified":"2022-11-14T19:39:48+09:00","datePublished":"2022-11-12T16:59:38+09:00","description":"","headline":"DOM 컨트롤(ref)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"}</script>
     <meta name="description" content="🕹 리액트 DOM 컨트롤리액트 앱은 대부분 리액트에 의해 컨트롤되지만 예외인 상황이 있다. 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 리액트가 할 수 없는 일이다. 이러한 일을 리액트 사이드 이펙트라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="DOM 컨트롤(ref)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

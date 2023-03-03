@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제3×N 크기의 벽을 2×1, 1×2 크기의 타일로 채우는 경우의 수를 구해보자.\n입력첫째 줄에 N(1 ≤ N ≤ 30)이 주어진다.\n출력첫째 줄에 경우의 수를 출력한다.\n예제 입력 112\n\n예제 출력 113\n\n내 코드123456789101112131415161718192021const N = +require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();function fillTile(n) &#123;  const DP = [0, 0, 3];  for (let i = 3; i &lt;= n; i++) &#123;    if (i % 2 !== 0) &#123;      DP[i] = 0;      continue;    &#125;    let k = i - 2;    DP[i] = DP[i - 2] * DP[2] + 2;    while (k &gt;= 2) &#123;      DP[i] += DP[k - 2] * 2;      k -= 2;    &#125;  &#125;  return DP[n];&#125;console.log(fillTile(N));\n\n해설우선 n이 홀수인 경우는 경우의 수가 0이다.\n그다음에 n이 4인 경우는 직접 그려보았다.\n그랬더니 기존 유형을 벗어나는 특이한 모양 2개가 추가되는 것을 알 수 있었다.\nDP[4] &#x3D; DP[2] * 2 + 2 를 알 수 있었다.\n\n이러한 모양은 n이 6인 경우에도 나타났다.\n\n이를 토대로 점화식을 세워보았다.\nDP[i] &#x3D; DP[i-2] * DP[2] + DP[i-4] * 2 + DP[i-6] * 2 + … DP[2] * 2 + 2\n\nDP[i-2]에다가 DP[2]의 반복되는 패턴의 경우의 수를 곱해준다.\n이후에는 특이한 케이스 2개씩 늘어나는 것만 고려해준다. 예를 들어 DP[2] * 2는 DP[i-2]에서의 특이 케이스 경우의 수를 의미한다.\n\n","dateCreated":"2023-02-22T14:04:43+09:00","dateModified":"2023-02-22T14:15:38+09:00","datePublished":"2023-02-22T14:04:43+09:00","description":"","headline":"boj-2133 타일 채우기(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/22/Algorithm/boj/DP/boj-2133-%ED%83%80%EC%9D%BC-%EC%B1%84%EC%9A%B0%EA%B8%B0-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/22/Algorithm/boj/DP/boj-2133-%ED%83%80%EC%9D%BC-%EC%B1%84%EC%9A%B0%EA%B8%B0-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제3×N 크기의 벽을 2×1, 1×2 크기의 타일로 채우는 경우의 수를 구해보자.\n입력첫째 줄에 N(1 ≤ N ≤ 30)이 주어진다.\n출력첫째 줄에 경우의 수를 출력한다.\n예제 입력 112\n\n예제 출력 113\n\n내 코드123456789101112131415161718192021const N = +require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();function fillTile(n) &#123;  const DP = [0, 0, 3];  for (let i = 3; i &lt;= n; i++) &#123;    if (i % 2 !== 0) &#123;      DP[i] = 0;      continue;    &#125;    let k = i - 2;    DP[i] = DP[i - 2] * DP[2] + 2;    while (k &gt;= 2) &#123;      DP[i] += DP[k - 2] * 2;      k -= 2;    &#125;  &#125;  return DP[n];&#125;console.log(fillTile(N));\n\n해설우선 n이 홀수인 경우는 경우의 수가 0이다.\n그다음에 n이 4인 경우는 직접 그려보았다.\n그랬더니 기존 유형을 벗어나는 특이한 모양 2개가 추가되는 것을 알 수 있었다.\nDP[4] &#x3D; DP[2] * 2 + 2 를 알 수 있었다.\n\n이러한 모양은 n이 6인 경우에도 나타났다.\n\n이를 토대로 점화식을 세워보았다.\nDP[i] &#x3D; DP[i-2] * DP[2] + DP[i-4] * 2 + DP[i-6] * 2 + … DP[2] * 2 + 2\n\nDP[i-2]에다가 DP[2]의 반복되는 패턴의 경우의 수를 곱해준다.\n이후에는 특이한 케이스 2개씩 늘어나는 것만 고려해준다. 예를 들어 DP[2] * 2는 DP[i-2]에서의 특이 케이스 경우의 수를 의미한다.\n\n","dateCreated":"2023-02-22T14:04:43+09:00","dateModified":"2023-02-22T14:15:38+09:00","datePublished":"2023-02-22T14:04:43+09:00","description":"","headline":"boj-2133 타일 채우기(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/22/Algorithm/boj/DP/boj-2133-%ED%83%80%EC%9D%BC-%EC%B1%84%EC%9A%B0%EA%B8%B0-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/22/Algorithm/boj/DP/boj-2133-%ED%83%80%EC%9D%BC-%EC%B1%84%EC%9A%B0%EA%B8%B0-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제3×N 크기의 벽을 2×1, 1×2 크기의 타일로 채우는 경우의 수를 구해보자. 입력첫째 줄에 N(1 ≤ N ≤ 30)이 주어진다. 출력첫째 줄에 경우의 수를 출력한다. 예제 입력 112  예제 출력 113  내 코드123456789101112131415161718192021const N &#x3D; +require(&quot;fs&quot;).readFileS">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-2133 타일 채우기(JavaScript)">
@@ -129,20 +129,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -189,7 +175,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -198,86 +184,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

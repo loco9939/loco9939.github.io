@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"branch\nbranch란?분기점을 생성하여 독립적으로 코드를 변경할 수 있도록 도와주는 모델\n명령어\n123456789$git branch // 로컬 브랜치 확인$git branch -r // 원격 브랜치 확인$git branch -a // 둘다 확인$git branch html-init // 브랜치명 입력하면 브랜치 생성$git switch 브랜치명 // 브랜치 이동\n\n\n로컬에서 브랜치 생성한 후 원격 저장소에 push를 해줘야만 github 저장소에 해당 브랜치가 생성된다.\n\n주의사항\n\n처음 브랜치를 push 하는 경우에는 -u 플래그를 사용해줘야한다.그 이유는 원격 저장소에게 새로만든 브랜치가 main 브랜치와 연관성이 있다라는 것을 의미하기 때문이다.\n플래그는 맨 앞에 위치하는 것만 아니면 위치는 상관없다.\n\nbranch 사용 이유\n개발을 할 때, main 브랜치를 두고 개발 브랜치로 소스 코드를 가져와서 원하는 개발을 시도하여도 메인 소스코드에 영향을 주지 않을 수 있어 자유로운 개발을 할 수 있다. 협업에 필수적인 모델이다.\nmerge\n개발 브랜치를 생성한 후 main 브랜치와 합치기 위해서는 merge 작업을 해줘야한다.\n12// main$git merge develop\n\n자신의 역할을 끝낸 즉, merge가 된 브랜치는 바로바로 삭제해준다.\n1$git branch -D develop\n\nmerge conflict\n만약 main 브랜치와 develop 브랜치에서 같은 파일의 같은 라인을 수정했다면, 컴퓨터는 어떤 것을 선택해야할지 알지 못하므로 그 선택을 우리에게 맡긴다.\n1234567891011121314&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD  &lt;head&gt;    &lt;meta charset=&quot;utf-8&quot; /&gt;    &lt;title&gt;git branch practice on branch main&lt;/title&gt;  &lt;/head&gt;  =======  &lt;body&gt;    &lt;h1&gt;homepage&lt;/h1&gt;    &lt;p&gt;This work on branch body-init&lt;/p&gt;  &lt;/body&gt;  &gt;&gt;&gt;&gt;&gt;&gt;&gt; body-init&lt;/html&gt;\n\n이럴 경우 원하는 부분을 선택하여 수정해주고 add, commit을 해주면 된다.\n12$git add index.html$git commit\n\n\nmerge를 할 경우, merge commit이 제목과 내용으로 채워져있다.\n\n주의사항\n\ncommit은 항상 동작하는 단위 (최소단위)여야 한다.\n-m 플래그는 사용하지 말자\nmerge conflict가 발생한 경우 commit 내용으로 어떻게 충돌을 해결했는지도 적어주자\n\ngitflow 전략\n\n\nMaster(Main): 사용자를 위한 배포용 소스코드용\n\nHotfix: 갑작스러운 버그를 수정하기 위한 브랜치\n\nDevelop: 개발용 브랜치로, feature 브랜치에서 작업한 것들을 이곳에서 모아서 확인한다.\n\nFeature: 개발자의 작업 브랜치, add와 commit이 작은 단위로 일어나는 곳\n\n\ngitflow 전략 사용\n\ngithub 저장소에 repository 생성한 다음 나의 로컬 폴더에 git clone 한다.\n\n저장소와 로컬을 연결했다면 저장소를 초기화해준다.\n\n\n1$git flow init\n\n\nfeature 브랜치를 생성하고 이동하여 작업을 시작한다.\n\n1$git flow feature start &quot;브랜치명&quot;\n\n기능이나 최소단위로 작업을 진행한다.\n\n작업이 끝났다면 develop 브랜치와 merge한 뒤 feature 브랜치 삭제\n\n1$git flow feature finish &quot;브랜치명&quot;\n\n위 명령어로 merge,delete 까지 한번에 해줄 수 있다.\n\n기능 개발 마무리되면 release 사용하여 배포 전 브랜치로 이동한다.\n\n1$git flow release start &quot;버전&quot; // ex) v0.1\n\n위 작업을 통해 버전 태그를 달아준다.\n\nrelease 브랜치에서 github 저장소의 main 브랜치와 develop 브랜치, tags를 push 해준다.\n\n12345$git push origin main$git push -u origin develop // develop브랜치는 처음 github에 올라가니 -u 플래그 사용$git push --tags // 한번만 해주면 된다.\n\n\nrelease 브랜치를 merge + delete 해준다.\n\n1$git flow release finish &quot;버전&quot;\n\n\ngithub 저장소에서 tag에 가서 release 해주면 된다.\n\n\n\n\ngitflow 전략을 통한 협업\n\n팀장 또는 단체의 repository에서 fork를 하여 복사본은 나의 github 저장소로 가져온다.\n\n앞서 사용한 feature 브랜치를 사용하여 개발을 한 후 fork한 사본 저장소에 push를 한다.\n\nPR을 하기전 issue 탭에가서 내가 무슨 작업을 할 것 인지 알려주도록 한다.\n\n팀장 또는 단체의 repository에 가서 PR(Pull Request)를 한다.\n\n팀장은 나의 PR을 확인하고 요청에 응답하거나 문제가 있다면 코드리뷰를 하며 PR을 보류한다.\n\nPR이 열려있는 상태에서 나는 나의 develop 브랜치에 돌아가서 코드를 수정한 뒤 commit을 해주면 다시 팀장이 확인하고 끝내 merge를 한다.\n\n\n\n이 후 팀장이 develop 브랜치와 main 브랜치를 merge하면 issue가 closed 된다.\n\n주의사항\n\nPR할 때, 나의 develop 브랜치에서 팀장의 develop 브랜치로 PR을 보내야한다.\n\n소감\ngitflow 수업이 끝난 후 1시간 30분 동안 4명이서 소규모 팀프로젝트를 경험해보았는데, 아직 머릿속에서 내가 어떤 상태이고 무엇을 해야하는지 헷갈려서 조금 어수선한 감이 있었다.\n그래도 피보나치킨 게임(?)을 만들어서 배포까지 해보니 gitflow 전략을 통한 협업의 장점을 느낄 수 있어서 재밌었다.\n\n튜토리얼처럼 단계별로 코드를 따라 치는 것이 아닌 내가 어떤 단계에 있고 어떤 행동을 해야하는지를 생각하며 개발을 해야한다.\n\n","dateCreated":"2022-08-03T17:31:00+09:00","dateModified":"2022-11-18T17:23:33+09:00","datePublished":"2022-08-03T17:31:00+09:00","description":"","headline":"branch 전략이란?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"branch\nbranch란?분기점을 생성하여 독립적으로 코드를 변경할 수 있도록 도와주는 모델\n명령어\n123456789$git branch // 로컬 브랜치 확인$git branch -r // 원격 브랜치 확인$git branch -a // 둘다 확인$git branch html-init // 브랜치명 입력하면 브랜치 생성$git switch 브랜치명 // 브랜치 이동\n\n\n로컬에서 브랜치 생성한 후 원격 저장소에 push를 해줘야만 github 저장소에 해당 브랜치가 생성된다.\n\n주의사항\n\n처음 브랜치를 push 하는 경우에는 -u 플래그를 사용해줘야한다.그 이유는 원격 저장소에게 새로만든 브랜치가 main 브랜치와 연관성이 있다라는 것을 의미하기 때문이다.\n플래그는 맨 앞에 위치하는 것만 아니면 위치는 상관없다.\n\nbranch 사용 이유\n개발을 할 때, main 브랜치를 두고 개발 브랜치로 소스 코드를 가져와서 원하는 개발을 시도하여도 메인 소스코드에 영향을 주지 않을 수 있어 자유로운 개발을 할 수 있다. 협업에 필수적인 모델이다.\nmerge\n개발 브랜치를 생성한 후 main 브랜치와 합치기 위해서는 merge 작업을 해줘야한다.\n12// main$git merge develop\n\n자신의 역할을 끝낸 즉, merge가 된 브랜치는 바로바로 삭제해준다.\n1$git branch -D develop\n\nmerge conflict\n만약 main 브랜치와 develop 브랜치에서 같은 파일의 같은 라인을 수정했다면, 컴퓨터는 어떤 것을 선택해야할지 알지 못하므로 그 선택을 우리에게 맡긴다.\n1234567891011121314&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD  &lt;head&gt;    &lt;meta charset=&quot;utf-8&quot; /&gt;    &lt;title&gt;git branch practice on branch main&lt;/title&gt;  &lt;/head&gt;  =======  &lt;body&gt;    &lt;h1&gt;homepage&lt;/h1&gt;    &lt;p&gt;This work on branch body-init&lt;/p&gt;  &lt;/body&gt;  &gt;&gt;&gt;&gt;&gt;&gt;&gt; body-init&lt;/html&gt;\n\n이럴 경우 원하는 부분을 선택하여 수정해주고 add, commit을 해주면 된다.\n12$git add index.html$git commit\n\n\nmerge를 할 경우, merge commit이 제목과 내용으로 채워져있다.\n\n주의사항\n\ncommit은 항상 동작하는 단위 (최소단위)여야 한다.\n-m 플래그는 사용하지 말자\nmerge conflict가 발생한 경우 commit 내용으로 어떻게 충돌을 해결했는지도 적어주자\n\ngitflow 전략\n\n\nMaster(Main): 사용자를 위한 배포용 소스코드용\n\nHotfix: 갑작스러운 버그를 수정하기 위한 브랜치\n\nDevelop: 개발용 브랜치로, feature 브랜치에서 작업한 것들을 이곳에서 모아서 확인한다.\n\nFeature: 개발자의 작업 브랜치, add와 commit이 작은 단위로 일어나는 곳\n\n\ngitflow 전략 사용\n\ngithub 저장소에 repository 생성한 다음 나의 로컬 폴더에 git clone 한다.\n\n저장소와 로컬을 연결했다면 저장소를 초기화해준다.\n\n\n1$git flow init\n\n\nfeature 브랜치를 생성하고 이동하여 작업을 시작한다.\n\n1$git flow feature start &quot;브랜치명&quot;\n\n기능이나 최소단위로 작업을 진행한다.\n\n작업이 끝났다면 develop 브랜치와 merge한 뒤 feature 브랜치 삭제\n\n1$git flow feature finish &quot;브랜치명&quot;\n\n위 명령어로 merge,delete 까지 한번에 해줄 수 있다.\n\n기능 개발 마무리되면 release 사용하여 배포 전 브랜치로 이동한다.\n\n1$git flow release start &quot;버전&quot; // ex) v0.1\n\n위 작업을 통해 버전 태그를 달아준다.\n\nrelease 브랜치에서 github 저장소의 main 브랜치와 develop 브랜치, tags를 push 해준다.\n\n12345$git push origin main$git push -u origin develop // develop브랜치는 처음 github에 올라가니 -u 플래그 사용$git push --tags // 한번만 해주면 된다.\n\n\nrelease 브랜치를 merge + delete 해준다.\n\n1$git flow release finish &quot;버전&quot;\n\n\ngithub 저장소에서 tag에 가서 release 해주면 된다.\n\n\n\n\ngitflow 전략을 통한 협업\n\n팀장 또는 단체의 repository에서 fork를 하여 복사본은 나의 github 저장소로 가져온다.\n\n앞서 사용한 feature 브랜치를 사용하여 개발을 한 후 fork한 사본 저장소에 push를 한다.\n\nPR을 하기전 issue 탭에가서 내가 무슨 작업을 할 것 인지 알려주도록 한다.\n\n팀장 또는 단체의 repository에 가서 PR(Pull Request)를 한다.\n\n팀장은 나의 PR을 확인하고 요청에 응답하거나 문제가 있다면 코드리뷰를 하며 PR을 보류한다.\n\nPR이 열려있는 상태에서 나는 나의 develop 브랜치에 돌아가서 코드를 수정한 뒤 commit을 해주면 다시 팀장이 확인하고 끝내 merge를 한다.\n\n\n\n이 후 팀장이 develop 브랜치와 main 브랜치를 merge하면 issue가 closed 된다.\n\n주의사항\n\nPR할 때, 나의 develop 브랜치에서 팀장의 develop 브랜치로 PR을 보내야한다.\n\n소감\ngitflow 수업이 끝난 후 1시간 30분 동안 4명이서 소규모 팀프로젝트를 경험해보았는데, 아직 머릿속에서 내가 어떤 상태이고 무엇을 해야하는지 헷갈려서 조금 어수선한 감이 있었다.\n그래도 피보나치킨 게임(?)을 만들어서 배포까지 해보니 gitflow 전략을 통한 협업의 장점을 느낄 수 있어서 재밌었다.\n\n튜토리얼처럼 단계별로 코드를 따라 치는 것이 아닌 내가 어떤 단계에 있고 어떤 행동을 해야하는지를 생각하며 개발을 해야한다.\n\n","dateCreated":"2022-08-03T17:31:00+09:00","dateModified":"2022-11-18T17:23:33+09:00","datePublished":"2022-08-03T17:31:00+09:00","description":"","headline":"branch 전략이란?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"}</script>
     <meta name="description" content="branch branch란?분기점을 생성하여 독립적으로 코드를 변경할 수 있도록 도와주는 모델 명령어 123456789$git branch &#x2F;&#x2F; 로컬 브랜치 확인$git branch -r &#x2F;&#x2F; 원격 브랜치 확인$git branch -a &#x2F;&#x2F; 둘다 확인$git branch html-init &#x2F;&#x2F; 브랜치명 입력하면 브랜치 생성$git switch 브랜치명 &#x2F;&#x2F;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="branch 전략이란?">
@@ -135,20 +135,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -195,7 +181,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -204,86 +190,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

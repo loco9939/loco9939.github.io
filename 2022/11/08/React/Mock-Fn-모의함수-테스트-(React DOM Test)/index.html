@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.\n1234567891011121314151617181920test(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  let expected = &quot;triggering toggle event&quot;;  let received = &quot;&quot;;  render(    &lt;ToggleButton      onToggle=&#123;() =&gt; &#123;        received = expected;      &#125;&#125;    /&gt;  );  expect(received).not.toBe(expected);  const element = screen.queryByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(received).toBe(expected);&#125;);\n\n\n위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.\n\n테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.\n이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.\n그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.\n123456789101112// mock Fntest(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  const mockFn = jest.fn();  render(&lt;ToggleButton onToggle=&#123;mockFn&#125; /&gt;);  const element = screen.getByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(mockFn).toHaveBeenCalled();&#125;);\n\n✏️ React VirtualDOM Test리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.\n1234567test(&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;A11yHidden data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;span&quot;);&#125;);\n\n\nRealDOM에서 querySelector()로 요소를 가져오는 것처럼 VirtualDOM에서는 screen으로 요소를 가져올 수 있다.\n해당 요소를 가져오기 위해서 data-testId 값을 사용하였다.\n\n❗️ localName vs nodeName 차이\nlocalName : 소문자를 반환\nnodeName : 대문자를 반환\n\ndefaultProps 사용하기리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.\n\n직접 파라미터에 App(&#123; as: ComponentName = &#39;div&#39; &#125;) 이런식으로 주는 것을 안티패턴으로 본다.\n\n1234567891011import styles from &quot;./A11yHidden.module.css&quot;;export function A11yHidden(&#123; as: ComponentName, ...restProps &#125;) &#123;  return (    &lt;ComponentName className=&#123;styles.container&#125; &#123;...restProps&#125;&gt;&lt;/ComponentName&gt;  );&#125;A11yHidden.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n\nas 라는 props를 받으면 해당하는 ComponentName으로 태그를 감싸서 컴포넌트를 생성한다.\n\n\ncomponent는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.\n\ngetByRole vs getByTestId기본적으로 div, span 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.\n그에 대한 대안으로 테스트용 data-testId=&quot;tester&quot; 값을 주고 getByTestId()를 사용하여 요소를 가져올 수 있다.\n123456789101112131415// div 요소 가져올 경우test(&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;, () =&gt; &#123;  render(&lt;Banner as=&quot;div&quot; data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;div&quot;);&#125;);// figure 요소 가져올 경우test(&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;Banner /&gt;);  const element = screen.getByRole(&quot;figure&quot;);  expect(element.localName).toBe(&quot;figure&quot;);&#125;);\n\n\nfigure, img 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 getByRole()를 이용하여 가져올 수 있다.\n\n🏓 소감마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.\n이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 storyBook도 사용해봐야겠다.\n","dateCreated":"2022-11-08T21:17:48+09:00","dateModified":"2022-11-08T21:46:43+09:00","datePublished":"2022-11-08T21:17:48+09:00","description":"","headline":"Mock Fn(모의함수) 테스트 (React DOM Test)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/","keywords":"mock, jest"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다.\n1234567891011121314151617181920test(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  let expected = &quot;triggering toggle event&quot;;  let received = &quot;&quot;;  render(    &lt;ToggleButton      onToggle=&#123;() =&gt; &#123;        received = expected;      &#125;&#125;    /&gt;  );  expect(received).not.toBe(expected);  const element = screen.queryByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(received).toBe(expected);&#125;);\n\n\n위 예제는 버튼이 클릭되었을 때, 해당 문구가 할당이 제대로 되는지 확인하는 테스트 코드이다.\n\n테스트 목적은 버튼 클릭이 제대로 인식되는지, 선택된 요소가 예상된 값으로 할당이 되는지를 확인한다.\n이렇게 테스트 코드를 작성하는 것은 번거로운 일이다.\n그러므로 간략하게 테스트 함수를 생성하여 이벤트가 발생할 때, 모의 함수가 호출되면 앞서 말한 로직을 구현해줄 수 있으므로 버튼이 클릭되었을 때, 모의 함수 호출이 제대로 되는지만 확인하면 된다.\n123456789101112// mock Fntest(&quot;`onToggle` 속성(prop)에 연결된 함수가 정상적으로 실행됩니다.&quot;, () =&gt; &#123;  const mockFn = jest.fn();  render(&lt;ToggleButton onToggle=&#123;mockFn&#125; /&gt;);  const element = screen.getByRole(&quot;button&quot;);  fireEvent.click(element); // click button element  expect(mockFn).toHaveBeenCalled();&#125;);\n\n✏️ React VirtualDOM Test리액트에서는 VitualDOM에 렌더링을 하여 RealDOM과 비교하기 때문에 Test시에도 RealDOM이 아닌 VirtualDOM에 렌더링된 것으로 테스트를 해줘야한다.\n1234567test(&quot;컴포넌트는 기본적으로 &lt;span&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;A11yHidden data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;span&quot;);&#125;);\n\n\nRealDOM에서 querySelector()로 요소를 가져오는 것처럼 VirtualDOM에서는 screen으로 요소를 가져올 수 있다.\n해당 요소를 가져오기 위해서 data-testId 값을 사용하였다.\n\n❗️ localName vs nodeName 차이\nlocalName : 소문자를 반환\nnodeName : 대문자를 반환\n\ndefaultProps 사용하기리액트 컴포넌트에서는 props에 default 값을 주기 위해서 defaultProps를 사용한다.\n\n직접 파라미터에 App(&#123; as: ComponentName = &#39;div&#39; &#125;) 이런식으로 주는 것을 안티패턴으로 본다.\n\n1234567891011import styles from &quot;./A11yHidden.module.css&quot;;export function A11yHidden(&#123; as: ComponentName, ...restProps &#125;) &#123;  return (    &lt;ComponentName className=&#123;styles.container&#125; &#123;...restProps&#125;&gt;&lt;/ComponentName&gt;  );&#125;A11yHidden.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n\nas 라는 props를 받으면 해당하는 ComponentName으로 태그를 감싸서 컴포넌트를 생성한다.\n\n\ncomponent는 PascalCase 명명 규칙을 따르기 때문에 이를 따르지 않으면 에러를 발생시킨다.\n\ngetByRole vs getByTestId기본적으로 div, span 같은 태그는 Role(역할)이 없다. 테스트 케이스에서 이러한 요소를 가져오기 위해서는 Role이 없으니 다른 방법을 찾아야한다.\n그에 대한 대안으로 테스트용 data-testId=&quot;tester&quot; 값을 주고 getByTestId()를 사용하여 요소를 가져올 수 있다.\n123456789101112131415// div 요소 가져올 경우test(&#x27;컴포넌트의 `as` 속성(prop) 값이 &quot;div&quot;인 경우, &lt;div&gt; 요소로 렌더링 됩니다.&#x27;, () =&gt; &#123;  render(&lt;Banner as=&quot;div&quot; data-testid=&quot;tester&quot; /&gt;);  const element = screen.getByTestId(&quot;tester&quot;);  expect(element.localName).toBe(&quot;div&quot;);&#125;);// figure 요소 가져올 경우test(&quot;컴포넌트는 기본적으로 &lt;figure&gt; 요소로 렌더링 됩니다.&quot;, () =&gt; &#123;  render(&lt;Banner /&gt;);  const element = screen.getByRole(&quot;figure&quot;);  expect(element.localName).toBe(&quot;figure&quot;);&#125;);\n\n\nfigure, img 등 우리가 직접 Role을 선정해주지 않아도 브라우저에서 해당 태그들을 해석할 때 Role을 할당해주기 때문에 이러한 요소들은 getByRole()를 이용하여 가져올 수 있다.\n\n🏓 소감마침 우테코에서도 Jest를 사용하고 있었는데, 수업시간 때 리액트 DOM 테스트를 해볼 수 있는 기회가 있어서 유익했다. 프론트 엔드에서는 사용자의 행동에 의해 UI가 변경되는 요소들이 많기 때문에 이러한 사용자 액션에 의한 test를 하기 어렵다.\n이럴 경우 사용자가 행동하는 것처럼 테스트를 진행하는 storyBook이라는 testing Tool도 있으니 Jest가 익숙해지면 storyBook도 사용해봐야겠다.\n","dateCreated":"2022-11-08T21:17:48+09:00","dateModified":"2022-11-08T21:46:43+09:00","datePublished":"2022-11-08T21:17:48+09:00","description":"","headline":"Mock Fn(모의함수) 테스트 (React DOM Test)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/08/React/Mock-Fn-%EB%AA%A8%EC%9D%98%ED%95%A8%EC%88%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-(React%20DOM%20Test)/","keywords":"mock, jest"}</script>
     <meta name="description" content="📌 Mock Fn(모의함수)란?테스트를 위한 함수로, 원하는 함수의 로직을 테스트 하려면 작성해야할 코드가 많지만 테스트 함수를 사용하여 원하는 테스트를 시험할 코드만 간략하게 작성하여 테스트해볼 수 있어 편리하다. 1234567891011121314151617181920test(&quot;&#96;onToggle&#96; 속성(prop)에 연결된 함수가 정상적으로 실">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Mock Fn(모의함수) 테스트 (React DOM Test)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

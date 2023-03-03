@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"CarouselSlider 구현 중 느낀점1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다.123456789// DOM이 로드되고 동적으로 HTML 생성(렌더링)window.addEventListener(&quot;DOMContentLoaded&quot;, render);// 이미지 로드 후 width 및 opacity 할당window.addEventListener(&quot;load&quot;, () =&gt; &#123;  $container.style.width = `$&#123;document.querySelector(&quot;img&quot;).clientWidth&#125;px`;  $container.style.opacity = 1;  $container.firstElementChild.style.setProperty(&quot;--duration&quot;, 400);&#125;);\n\n\n동적으로 HTML을 렌더링해주는데 DOMContentLoaded가 될 때, 이미지의 width를 가져오고 싶었지만 동적 HTML이 생성되고 약간의 시간 후에 이미지가 로드되어 동적 HTML 생성될 때, 이미지태그의 너비를 가져올 수가 없었다.\n\n--duration은 요구 사항에 맞게 초기 렌더링 때 설정해준다.\n\n\n2. CSS inline style이 아닌 external CSS 값 가져오기1234567891011121314151617181920$container.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  // 1. prev || next return  // 2. if (prev) / if (next)  if (!e.target.matches(&quot;.carousel-control&quot;)) return;  e.target.matches(&quot;.prev&quot;)    ? $container.firstElementChild.style.setProperty(        &quot;--currentSlide&quot;,        +getComputedStyle($container.firstElementChild).getPropertyValue(          &quot;--currentSlide&quot;        ) - 1      )    : e.target.matches(&quot;.next&quot;)    ? $container.firstElementChild.style.setProperty(        &quot;--currentSlide&quot;,        +getComputedStyle($container.firstElementChild).getPropertyValue(          &quot;--currentSlide&quot;        ) + 1      )    : &quot;&quot;;&#125;);\n\n\ndocument.querySelector(‘div’).style.getPropertyValue() 메서드는 해당 노드의 인라인 스타일의 속성값을 가져올 수 있다.\n\ngetComputedStyle(document.querySelector(‘div’)).getPropertyValue() 메서드는 해당 노드의 렌더링을 마친 CSS 속성값을 가져올 수 있다. 즉, 외부 CSS 파일의 속성값을 가져올 수 있다.\n\n\n3. document.querySelector(‘img’) 요소가 가진 width 종류\ncssWidth : 컨텐츠의 너비를 말한다.\nclientWidth : padding을 포함한 너비를 말한다.\noffsetWidth : border까지 포함한 너비를 말한다.\n\n처음에 이미지 태그의 너비를 자바스크립트로 가져와야하는데, 이미지 태그가 가진 너비 요소가 여러가지라서 각 너비의 특징에 대해 알게 되었다.\n앞으로 해당 요소 노드를 console 창에 찍어보면서 어떤 프로퍼티를 포함하고 있는지 확인해보면서 내게 필요한 프로퍼티가 무엇인지 찾아보는 팁을 얻었다.\n","dateCreated":"2022-09-15T19:01:51+09:00","dateModified":"2022-11-18T17:19:19+09:00","datePublished":"2022-09-15T19:01:51+09:00","description":"","headline":"carousel Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/15/PairProgramming/level%201/carousel%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/15/PairProgramming/level%201/carousel%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"CarouselSlider 구현 중 느낀점1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다.123456789// DOM이 로드되고 동적으로 HTML 생성(렌더링)window.addEventListener(&quot;DOMContentLoaded&quot;, render);// 이미지 로드 후 width 및 opacity 할당window.addEventListener(&quot;load&quot;, () =&gt; &#123;  $container.style.width = `$&#123;document.querySelector(&quot;img&quot;).clientWidth&#125;px`;  $container.style.opacity = 1;  $container.firstElementChild.style.setProperty(&quot;--duration&quot;, 400);&#125;);\n\n\n동적으로 HTML을 렌더링해주는데 DOMContentLoaded가 될 때, 이미지의 width를 가져오고 싶었지만 동적 HTML이 생성되고 약간의 시간 후에 이미지가 로드되어 동적 HTML 생성될 때, 이미지태그의 너비를 가져올 수가 없었다.\n\n--duration은 요구 사항에 맞게 초기 렌더링 때 설정해준다.\n\n\n2. CSS inline style이 아닌 external CSS 값 가져오기1234567891011121314151617181920$container.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  // 1. prev || next return  // 2. if (prev) / if (next)  if (!e.target.matches(&quot;.carousel-control&quot;)) return;  e.target.matches(&quot;.prev&quot;)    ? $container.firstElementChild.style.setProperty(        &quot;--currentSlide&quot;,        +getComputedStyle($container.firstElementChild).getPropertyValue(          &quot;--currentSlide&quot;        ) - 1      )    : e.target.matches(&quot;.next&quot;)    ? $container.firstElementChild.style.setProperty(        &quot;--currentSlide&quot;,        +getComputedStyle($container.firstElementChild).getPropertyValue(          &quot;--currentSlide&quot;        ) + 1      )    : &quot;&quot;;&#125;);\n\n\ndocument.querySelector(‘div’).style.getPropertyValue() 메서드는 해당 노드의 인라인 스타일의 속성값을 가져올 수 있다.\n\ngetComputedStyle(document.querySelector(‘div’)).getPropertyValue() 메서드는 해당 노드의 렌더링을 마친 CSS 속성값을 가져올 수 있다. 즉, 외부 CSS 파일의 속성값을 가져올 수 있다.\n\n\n3. document.querySelector(‘img’) 요소가 가진 width 종류\ncssWidth : 컨텐츠의 너비를 말한다.\nclientWidth : padding을 포함한 너비를 말한다.\noffsetWidth : border까지 포함한 너비를 말한다.\n\n처음에 이미지 태그의 너비를 자바스크립트로 가져와야하는데, 이미지 태그가 가진 너비 요소가 여러가지라서 각 너비의 특징에 대해 알게 되었다.\n앞으로 해당 요소 노드를 console 창에 찍어보면서 어떤 프로퍼티를 포함하고 있는지 확인해보면서 내게 필요한 프로퍼티가 무엇인지 찾아보는 팁을 얻었다.\n","dateCreated":"2022-09-15T19:01:51+09:00","dateModified":"2022-11-18T17:19:19+09:00","datePublished":"2022-09-15T19:01:51+09:00","description":"","headline":"carousel Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/15/PairProgramming/level%201/carousel%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/15/PairProgramming/level%201/carousel%20Tip/"}</script>
     <meta name="description" content="CarouselSlider 구현 중 느낀점1. 이미지가 로드되는 시점과 동적 HTML 생성 시점이 다르다.123456789&#x2F;&#x2F; DOM이 로드되고 동적으로 HTML 생성(렌더링)window.addEventListener(&quot;DOMContentLoaded&quot;, render);&#x2F;&#x2F; 이미지 로드 후 width 및 opacity 할당window.add">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="carousel Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

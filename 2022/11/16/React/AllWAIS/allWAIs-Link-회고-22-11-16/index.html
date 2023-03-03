@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 미션\n Link 역할로써 span태그, img태그 확인\n tabindex&#x3D;”0”를 포함\n img태그는 alt 속성으로 접근 가능한 이름 정의\n\n🐒 문제🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기123456789101112131415161718192021222324import styled from &quot;styled-components&quot;;import &#123; goToLink &#125; from &quot;../../utils&quot;;export function Link(&#123; as = ComponentName, href, children &#125;) &#123;  const StyledLink = styled(`$&#123;as&#125;`)`       ... styles     `;  return (    &lt;&gt;      &lt;StyledLink        tabIndex=&quot;0&quot;        role=&quot;link&quot;        onClick=&#123;(e) =&gt; goToLink(e, href)&#125;        onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;      &gt;        &#123;children&#125;      &lt;/StyledLink&gt;    &lt;/&gt;  );&#125;Link.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n\nLink 컴포넌트 안에다가 styled-component를 생성하고 as props를 전달해주었다.\n\n위와 같이 할 경우, as props에 img 태그가 들어오게 된다면 컴포넌트 명명 규칙에 어긋난다고 나온다.\n이를 해결하기 위해 조건부 렌더링을 해주었다.\n1234567891011121314151617181920212223242526272829303132333435import styled from &quot;styled-components&quot;;import &#123; goToLink &#125; from &quot;../../utils&quot;;export function Link(&#123; as = ComponentName, href, children &#125;) &#123;  const StyledLink = styled(`$&#123;as&#125;`)`    ... styles  `;  return (    &lt;&gt;      &#123;as === &quot;img&quot; ? (        &lt;img          tabIndex=&quot;0&quot;          role=&quot;link&quot;          onClick=&#123;(e) =&gt; goToLink(e, href)&#125;          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;          src=&quot;./gitprofile.jpeg&quot;          alt=&quot;W3C Website&quot;        /&gt;      ) : (        &lt;StyledLink          tabIndex=&quot;0&quot;          role=&quot;link&quot;          onClick=&#123;(e) =&gt; goToLink(e, href)&#125;          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;        &gt;          &#123;children&#125;        &lt;/StyledLink&gt;      )&#125;    &lt;/&gt;  );&#125;Link.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n🐥 img가 업로드 되지 않는 문제\n img 업로드 문제 해결\n\n문제의 원인은 npm 명령어로 webpack server만 실행시켰는데, webpack config.js 파일에 static 속성값을 [build]로 주었기 때문에 정적 이미지 파일을 불러오기 위해서는 build 폴더에서 assets을 찾는다.\n그러므로 npm run build 명령어로 build 폴더를 생성한 후 그 안에다가 img를 넣어주고 경로를 설정해주어 해결하였다.\n123456&lt;Link  as=&quot;img&quot;  alt=&quot;test이미지&quot;  src=&quot;./assets/img/gitprofile.jpeg&quot;  href=&quot;https://www.w3.org/WAI/ARIA/apg/example-index/link/link.html&quot;/&gt;\n\n🐥 aria-label 속성 있을 때, 조건부로 css 추가 (삭제)이 속성을 삭제한 이유는 span 태그를 사용하여 Link 컴포넌트를 구현하였을 때, role=&quot;link&quot;로 해주었기 때문에 aria-label 속성을 굳이 해주지 않아도 되므로 삭제하였다.\n\n\n🏓 회고\nstyled-component를 사용하면서 어떻게 props를 받아서 App에서 렌더링 시켜야할지 헷갈렸었는데 직접 해보니 이해가 잘되었다.\n수업 시간에 배웠던 조건부 렌더링을 실제로 사용하면서 익히니 더욱 이해가 잘되었다. 역시 무언가를 만들어보면서 배우는 것이 힘들지만 더 도움되는 것 같다.\n\n","dateCreated":"2022-11-16T21:47:24+09:00","dateModified":"2023-01-02T23:05:00+09:00","datePublished":"2022-11-16T21:47:24+09:00","description":"","headline":"allWAIs-Link 회고(22.11.16)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 미션\n Link 역할로써 span태그, img태그 확인\n tabindex&#x3D;”0”를 포함\n img태그는 alt 속성으로 접근 가능한 이름 정의\n\n🐒 문제🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기123456789101112131415161718192021222324import styled from &quot;styled-components&quot;;import &#123; goToLink &#125; from &quot;../../utils&quot;;export function Link(&#123; as = ComponentName, href, children &#125;) &#123;  const StyledLink = styled(`$&#123;as&#125;`)`       ... styles     `;  return (    &lt;&gt;      &lt;StyledLink        tabIndex=&quot;0&quot;        role=&quot;link&quot;        onClick=&#123;(e) =&gt; goToLink(e, href)&#125;        onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;      &gt;        &#123;children&#125;      &lt;/StyledLink&gt;    &lt;/&gt;  );&#125;Link.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n\nLink 컴포넌트 안에다가 styled-component를 생성하고 as props를 전달해주었다.\n\n위와 같이 할 경우, as props에 img 태그가 들어오게 된다면 컴포넌트 명명 규칙에 어긋난다고 나온다.\n이를 해결하기 위해 조건부 렌더링을 해주었다.\n1234567891011121314151617181920212223242526272829303132333435import styled from &quot;styled-components&quot;;import &#123; goToLink &#125; from &quot;../../utils&quot;;export function Link(&#123; as = ComponentName, href, children &#125;) &#123;  const StyledLink = styled(`$&#123;as&#125;`)`    ... styles  `;  return (    &lt;&gt;      &#123;as === &quot;img&quot; ? (        &lt;img          tabIndex=&quot;0&quot;          role=&quot;link&quot;          onClick=&#123;(e) =&gt; goToLink(e, href)&#125;          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;          src=&quot;./gitprofile.jpeg&quot;          alt=&quot;W3C Website&quot;        /&gt;      ) : (        &lt;StyledLink          tabIndex=&quot;0&quot;          role=&quot;link&quot;          onClick=&#123;(e) =&gt; goToLink(e, href)&#125;          onKeyDown=&#123;(e) =&gt; goToLink(e, href)&#125;        &gt;          &#123;children&#125;        &lt;/StyledLink&gt;      )&#125;    &lt;/&gt;  );&#125;Link.defaultProps = &#123;  as: &quot;span&quot;,&#125;;\n\n🐥 img가 업로드 되지 않는 문제\n img 업로드 문제 해결\n\n문제의 원인은 npm 명령어로 webpack server만 실행시켰는데, webpack config.js 파일에 static 속성값을 [build]로 주었기 때문에 정적 이미지 파일을 불러오기 위해서는 build 폴더에서 assets을 찾는다.\n그러므로 npm run build 명령어로 build 폴더를 생성한 후 그 안에다가 img를 넣어주고 경로를 설정해주어 해결하였다.\n123456&lt;Link  as=&quot;img&quot;  alt=&quot;test이미지&quot;  src=&quot;./assets/img/gitprofile.jpeg&quot;  href=&quot;https://www.w3.org/WAI/ARIA/apg/example-index/link/link.html&quot;/&gt;\n\n🐥 aria-label 속성 있을 때, 조건부로 css 추가 (삭제)이 속성을 삭제한 이유는 span 태그를 사용하여 Link 컴포넌트를 구현하였을 때, role=&quot;link&quot;로 해주었기 때문에 aria-label 속성을 굳이 해주지 않아도 되므로 삭제하였다.\n\n\n🏓 회고\nstyled-component를 사용하면서 어떻게 props를 받아서 App에서 렌더링 시켜야할지 헷갈렸었는데 직접 해보니 이해가 잘되었다.\n수업 시간에 배웠던 조건부 렌더링을 실제로 사용하면서 익히니 더욱 이해가 잘되었다. 역시 무언가를 만들어보면서 배우는 것이 힘들지만 더 도움되는 것 같다.\n\n","dateCreated":"2022-11-16T21:47:24+09:00","dateModified":"2023-01-02T23:05:00+09:00","datePublished":"2022-11-16T21:47:24+09:00","description":"","headline":"allWAIs-Link 회고(22.11.16)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/16/React/AllWAIS/allWAIs-Link-%ED%9A%8C%EA%B3%A0-22-11-16/"}</script>
     <meta name="description" content="📌 미션  Link 역할로써 span태그, img태그 확인  tabindex&#x3D;”0”를 포함  img태그는 alt 속성으로 접근 가능한 이름 정의  🐒 문제🤿 컴포넌트 props “as”를 img로 주면, img 태그로 렌더링 해주기123456789101112131415161718192021222324import styled from &amp;quot">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="allWAIs-Link 회고(22.11.16)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제B진법 수 N이 주어진다. 이 수를 10진법으로 바꿔 출력하는 프로그램을 작성하시오.\n10진법을 넘어가는 진법은 숫자로 표시할 수 없는 자리가 있다. 이런 경우에는 다음과 같이 알파벳 대문자를 사용한다.\nA: 10, B: 11, …, F: 15, …, Y: 34, Z: 35\n입력첫째 줄에 N과 B가 주어진다. (2 ≤ B ≤ 36)\nB진법 수 N을 10진법으로 바꾸면, 항상 10억보다 작거나 같다.\n출력첫째 줄에 B진법 수 N을 10진법으로 출력한다.\n예제예제 입력 112ZZZZZ 36\n\n예제 출력 1160466175\n\n내 코드12345678910111213141516171819202122232425262728let [N, B] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;);const ALPHABET_CODE = 10;const UPPER_A_CODE = 65;const alphabets = &#123;&#125;;for (let i = 0; i &lt; 26; i++) &#123;  const alphabet = String.fromCharCode(UPPER_A_CODE + i);  alphabets[alphabet] = ALPHABET_CODE + i;&#125;let answer = 0;let pow = 0;while (N.length !== 0) &#123;  const newN = alphabets[N.slice(N.length - 1)]    ? +alphabets[N.slice(N.length - 1)]    : +N.slice(N.length - 1);  let d = B ** pow;  answer = d * newN + answer;  N = N.slice(0, N.length - 1);  index++;&#125;console.log(answer);\n\n\n알파벳 객체를 만들고 이전 문제인 10진법을 36진법으로 바꾸는 로직을 역순으로 짜보았다.\n첫번째 자릿수부터 $36^0*(1의 자리수)$, $36^1*(10의 자리수)$… 이런식으로 10진법의 숫자로 변환할 수 있다.\n\n12345678910111213141516171819// 또 다른 해답let [N, B] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;);let answer = 0;const reversed = N.split(&quot;&quot;).reverse();for (let i = 0; i &lt; N.length; i++) &#123;  if (reversed[i] &gt;= &quot;A&quot; &amp;&amp; reversed[i] &lt;= &quot;Z&quot;) &#123;    reversed[i] = reversed[i].charCodeAt(0) - 55;    answer += reversed[i] * Math.pow(B, i);  &#125; else &#123;    answer += reversed[i] * Math.pow(B, i);  &#125;&#125;console.log(answer);\n\n\n알파벳 코드를 굳이 만들지 않고 부등호를 사용하여 구하여 코드가 간결해졌다.\n지수를 계산할 때, Math.pow() 메서드를 사용하여 깔끔하다.\n\n","dateCreated":"2023-02-21T12:31:52+09:00","dateModified":"2023-02-21T12:33:00+09:00","datePublished":"2023-02-21T12:31:52+09:00","description":"","headline":"boj-2745 진법 변환(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제B진법 수 N이 주어진다. 이 수를 10진법으로 바꿔 출력하는 프로그램을 작성하시오.\n10진법을 넘어가는 진법은 숫자로 표시할 수 없는 자리가 있다. 이런 경우에는 다음과 같이 알파벳 대문자를 사용한다.\nA: 10, B: 11, …, F: 15, …, Y: 34, Z: 35\n입력첫째 줄에 N과 B가 주어진다. (2 ≤ B ≤ 36)\nB진법 수 N을 10진법으로 바꾸면, 항상 10억보다 작거나 같다.\n출력첫째 줄에 B진법 수 N을 10진법으로 출력한다.\n예제예제 입력 112ZZZZZ 36\n\n예제 출력 1160466175\n\n내 코드12345678910111213141516171819202122232425262728let [N, B] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;);const ALPHABET_CODE = 10;const UPPER_A_CODE = 65;const alphabets = &#123;&#125;;for (let i = 0; i &lt; 26; i++) &#123;  const alphabet = String.fromCharCode(UPPER_A_CODE + i);  alphabets[alphabet] = ALPHABET_CODE + i;&#125;let answer = 0;let pow = 0;while (N.length !== 0) &#123;  const newN = alphabets[N.slice(N.length - 1)]    ? +alphabets[N.slice(N.length - 1)]    : +N.slice(N.length - 1);  let d = B ** pow;  answer = d * newN + answer;  N = N.slice(0, N.length - 1);  index++;&#125;console.log(answer);\n\n\n알파벳 객체를 만들고 이전 문제인 10진법을 36진법으로 바꾸는 로직을 역순으로 짜보았다.\n첫번째 자릿수부터 $36^0*(1의 자리수)$, $36^1*(10의 자리수)$… 이런식으로 10진법의 숫자로 변환할 수 있다.\n\n12345678910111213141516171819// 또 다른 해답let [N, B] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;);let answer = 0;const reversed = N.split(&quot;&quot;).reverse();for (let i = 0; i &lt; N.length; i++) &#123;  if (reversed[i] &gt;= &quot;A&quot; &amp;&amp; reversed[i] &lt;= &quot;Z&quot;) &#123;    reversed[i] = reversed[i].charCodeAt(0) - 55;    answer += reversed[i] * Math.pow(B, i);  &#125; else &#123;    answer += reversed[i] * Math.pow(B, i);  &#125;&#125;console.log(answer);\n\n\n알파벳 코드를 굳이 만들지 않고 부등호를 사용하여 구하여 코드가 간결해졌다.\n지수를 계산할 때, Math.pow() 메서드를 사용하여 깔끔하다.\n\n","dateCreated":"2023-02-21T12:31:52+09:00","dateModified":"2023-02-21T12:33:00+09:00","datePublished":"2023-02-21T12:31:52+09:00","description":"","headline":"boj-2745 진법 변환(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"}</script>
     <meta name="description" content="문제B진법 수 N이 주어진다. 이 수를 10진법으로 바꿔 출력하는 프로그램을 작성하시오. 10진법을 넘어가는 진법은 숫자로 표시할 수 없는 자리가 있다. 이런 경우에는 다음과 같이 알파벳 대문자를 사용한다. A: 10, B: 11, …, F: 15, …, Y: 34, Z: 35 입력첫째 줄에 N과 B가 주어진다. (2 ≤ B ≤ 36) B진법 수 N을 10">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-2745 진법 변환(JavaScript)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

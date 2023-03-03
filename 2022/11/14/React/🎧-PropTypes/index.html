@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"\n\n🌈 PropTypes리액트 컴포넌트에 전달되는 Prop(속성)의 Type(타입)을 검사하는 방법에 대해 알아보자.\n1234567891011121314151617EmotionCard.propTypes = &#123;  // 전달 속성 객체, 속성 이름, 컴포넌트 이름  emotion(props, propName, componentName) &#123;    // 체크할 유형    const checkType = &quot;string&quot;;    // 전달 속성 유형    const propType = typeof props[propName];    // 전달 속성 검사 (문자 값인지 확인)    if (propType !== checkType) &#123;      // 문자 값이 아닌 경우 오류 발생      throw new Error(        `$&#123;componentName&#125; 컴포넌트에 전달 된 속성 $&#123;propName&#125;의 데이터 유형은 $&#123;checkType&#125;이 요구되나, 실제 전달된 속성 유형은 $&#123;propType&#125;이니 확인 바랍니다.`      );    &#125;  &#125;,&#125;;\n\n위와 같이 직접 custom propTypes를 통해 prop를 검사할 수 있지만 리액트 팀에서 제공하는 propTypes 패키지를 사용하면 편리하고 안정적으로 prop 검사를 할 수 있다.\n패키지 사용설치1npm i -D prop-types\n\n사용 예시12345678910import PropTypes from &quot;prop-types&quot;;// ...Worker.propTypes = &#123;  name: PropTypes.string.isRequired,  career: PropTypes.number,  onCareerUp: PropTypes.func,  isLeave: PropTypes.bool,&#125;;\n\n\nisRequired 는 필수입력을 요구하는 속성을 표시한다.\n\npropTypes 검사 항목\nPropTypes﹕objectOf vs. shape12345678910import &#123; objectOf, number &#125; from &quot;prop-types&quot;;const geoProps = &#123;  latitude: 37.331706,  longitude: -122.030783,&#125;;ReactComponent.propTypes = &#123;  geoProps: objectOf(number),&#125;;\n\n\npropTypes.objectOf 는 객체의 속성 값이 모두 동일한 타입을 설명할 경우 사용한다.\n\n12345678910111213import &#123; shape, arrayOf, string &#125; from &quot;prop-types&quot;;const personProp = &#123;  name: &quot;야무&quot;,  job: [&quot;강사&quot;, &quot;디자이너&quot;, &quot;개발자&quot;],&#125;;ReactComponent.propTypes = &#123;  personProp: shape(&#123;    name: string,    job: arrayOf(string),  &#125;),&#125;;\n\n\n내가 객체 prop 타입 설정하고 싶다하면 shape를 사용한다.\npropTypes.shape 는 객체의 각 속성별 타입을 설명할 때 사용한다.\n객체의 name 속성은 string, job 속성은 배열을 사용하였다.\njob의 배열에는 string으로만 구성된 배열이므로 arrayOf를 사용하였다.\n\n\n객체의 속성이 정확히 동일하게 일치해야한다면 propTypes.exact()를 사용한다.\n\n❗️ Null 타입 체크 주의propTypes는 null 타입 체크를 할 수 없어 oneOf를 사용한다.\n1234567891011import &#123; oneOf, oneOfType, shape, string &#125; from &quot;prop-types&quot;;SignInedInfo.propTypes = &#123;  authUser: oneOfType([    oneOf([null]), // ← 이렇게 작성합니다.    shape(&#123;      displayName: string.isRequired,      photoURL: string.isRequired,    &#125;),  ]).isRequired,&#125;;\n\n\nPropTypes.oneOf([’grow’, ‘learn’, ‘connect’]) 이 중 하나만 파라미터로 들어올 수 있다.\n\n🔥 defaultProps와 같이 사용하기함수에 기본값을 주듯이 props에 기본값을 주는 것을 리액트에서는 지양한다. 그러므로 다음과 같이 기본값을 줘야한다.\n12345678910111213141516171819import React from &#x27;react&#x27;;import &#123; number, bool&#125;const Worker = (&#123; name, career, onCareerUp, isLeave &#125;) =&gt; (  // ...);// Worker 컴포넌트 전달 속성 기본 값 설정Worker.defaultProps = &#123;  career: 0,  isLeave: true,&#125;Worker.propTypes = &#123;  career:number,  isLeave: bool&#125;export &#123; Worker &#125;;\n\n\nboolean 대신 bool이라고 사용합니다.\n\n","dateCreated":"2022-11-14T21:07:34+09:00","dateModified":"2022-11-23T20:18:28+09:00","datePublished":"2022-11-14T21:07:34+09:00","description":"","headline":"🎧 PropTypes","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/14/React/%F0%9F%8E%A7-PropTypes/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/14/React/%F0%9F%8E%A7-PropTypes/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\n🌈 PropTypes리액트 컴포넌트에 전달되는 Prop(속성)의 Type(타입)을 검사하는 방법에 대해 알아보자.\n1234567891011121314151617EmotionCard.propTypes = &#123;  // 전달 속성 객체, 속성 이름, 컴포넌트 이름  emotion(props, propName, componentName) &#123;    // 체크할 유형    const checkType = &quot;string&quot;;    // 전달 속성 유형    const propType = typeof props[propName];    // 전달 속성 검사 (문자 값인지 확인)    if (propType !== checkType) &#123;      // 문자 값이 아닌 경우 오류 발생      throw new Error(        `$&#123;componentName&#125; 컴포넌트에 전달 된 속성 $&#123;propName&#125;의 데이터 유형은 $&#123;checkType&#125;이 요구되나, 실제 전달된 속성 유형은 $&#123;propType&#125;이니 확인 바랍니다.`      );    &#125;  &#125;,&#125;;\n\n위와 같이 직접 custom propTypes를 통해 prop를 검사할 수 있지만 리액트 팀에서 제공하는 propTypes 패키지를 사용하면 편리하고 안정적으로 prop 검사를 할 수 있다.\n패키지 사용설치1npm i -D prop-types\n\n사용 예시12345678910import PropTypes from &quot;prop-types&quot;;// ...Worker.propTypes = &#123;  name: PropTypes.string.isRequired,  career: PropTypes.number,  onCareerUp: PropTypes.func,  isLeave: PropTypes.bool,&#125;;\n\n\nisRequired 는 필수입력을 요구하는 속성을 표시한다.\n\npropTypes 검사 항목\nPropTypes﹕objectOf vs. shape12345678910import &#123; objectOf, number &#125; from &quot;prop-types&quot;;const geoProps = &#123;  latitude: 37.331706,  longitude: -122.030783,&#125;;ReactComponent.propTypes = &#123;  geoProps: objectOf(number),&#125;;\n\n\npropTypes.objectOf 는 객체의 속성 값이 모두 동일한 타입을 설명할 경우 사용한다.\n\n12345678910111213import &#123; shape, arrayOf, string &#125; from &quot;prop-types&quot;;const personProp = &#123;  name: &quot;야무&quot;,  job: [&quot;강사&quot;, &quot;디자이너&quot;, &quot;개발자&quot;],&#125;;ReactComponent.propTypes = &#123;  personProp: shape(&#123;    name: string,    job: arrayOf(string),  &#125;),&#125;;\n\n\n내가 객체 prop 타입 설정하고 싶다하면 shape를 사용한다.\npropTypes.shape 는 객체의 각 속성별 타입을 설명할 때 사용한다.\n객체의 name 속성은 string, job 속성은 배열을 사용하였다.\njob의 배열에는 string으로만 구성된 배열이므로 arrayOf를 사용하였다.\n\n\n객체의 속성이 정확히 동일하게 일치해야한다면 propTypes.exact()를 사용한다.\n\n❗️ Null 타입 체크 주의propTypes는 null 타입 체크를 할 수 없어 oneOf를 사용한다.\n1234567891011import &#123; oneOf, oneOfType, shape, string &#125; from &quot;prop-types&quot;;SignInedInfo.propTypes = &#123;  authUser: oneOfType([    oneOf([null]), // ← 이렇게 작성합니다.    shape(&#123;      displayName: string.isRequired,      photoURL: string.isRequired,    &#125;),  ]).isRequired,&#125;;\n\n\nPropTypes.oneOf([’grow’, ‘learn’, ‘connect’]) 이 중 하나만 파라미터로 들어올 수 있다.\n\n🔥 defaultProps와 같이 사용하기함수에 기본값을 주듯이 props에 기본값을 주는 것을 리액트에서는 지양한다. 그러므로 다음과 같이 기본값을 줘야한다.\n12345678910111213141516171819import React from &#x27;react&#x27;;import &#123; number, bool&#125;const Worker = (&#123; name, career, onCareerUp, isLeave &#125;) =&gt; (  // ...);// Worker 컴포넌트 전달 속성 기본 값 설정Worker.defaultProps = &#123;  career: 0,  isLeave: true,&#125;Worker.propTypes = &#123;  career:number,  isLeave: bool&#125;export &#123; Worker &#125;;\n\n\nboolean 대신 bool이라고 사용합니다.\n\n","dateCreated":"2022-11-14T21:07:34+09:00","dateModified":"2022-11-23T20:18:28+09:00","datePublished":"2022-11-14T21:07:34+09:00","description":"","headline":"🎧 PropTypes","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/14/React/%F0%9F%8E%A7-PropTypes/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/14/React/%F0%9F%8E%A7-PropTypes/"}</script>
     <meta name="description" content="🌈 PropTypes리액트 컴포넌트에 전달되는 Prop(속성)의 Type(타입)을 검사하는 방법에 대해 알아보자. 1234567891011121314151617EmotionCard.propTypes &#x3D; &amp;#123;  &#x2F;&#x2F; 전달 속성 객체, 속성 이름, 컴포넌트 이름  emotion(props, propName, componentName) &amp;#123;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="🎧 PropTypes">
@@ -129,20 +129,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -189,7 +175,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -198,86 +184,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

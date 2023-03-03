@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제어떤 자연수 N은 그보다 작거나 같은 제곱수들의 합으로 나타낼 수 있다. 예를 들어 11&#x3D;32+12+12(3개 항)이다. 이런 표현방법은 여러 가지가 될 수 있는데, 11의 경우 11&#x3D;22+22+12+12+12(5개 항)도 가능하다. 이 경우, 수학자 숌크라테스는 “11은 3개 항의 제곱수 합으로 표현할 수 있다.”라고 말한다. 또한 11은 그보다 적은 항의 제곱수 합으로 표현할 수 없으므로, 11을 그 합으로써 표현할 수 있는 제곱수 항의 최소 개수는 3이다.\n주어진 자연수 N을 이렇게 제곱수들의 합으로 표현할 때에 그 항의 최소개수를 구하는 프로그램을 작성하시오.\n입력첫째 줄에 자연수 N이 주어진다. (1 ≤ N ≤ 100,000)\n출력주어진 자연수를 제곱수의 합으로 나타낼 때에 그 제곱수 항의 최소 개수를 출력한다.\n예제예제 입력 1127\n\n예제 출력 1124\n\n예제 입력 2121\n\n예제 출력 2121\n\n예제 입력 3124\n\n예제 출력 3121\n\n예제 입력 41211\n\n예제 출력 4123\n\n예제 입력 51213\n\n예제 출력 512\n\n내 코드12345678910111213141516const input = +require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();const DP = Array.from(&#123; length: input + 1 &#125;, (_, i) =&gt; i);for (let i = 4; i &lt;= input; i++) &#123;  for (let j = 1; j &lt;= Math.sqrt(i); j++) &#123;    const sqrt = Math.sqrt(i);    if (sqrt === parseInt(sqrt)) &#123;      DP[i] = 1;    &#125; else &#123;      DP[i] = Math.min(DP[i], DP[i - j ** 2] + 1);    &#125;  &#125;&#125;console.log(DP[input]);\n\n\n처음에는 단순히 초기값을 가지고 다음값을 구하는 식으로만 했었는데, 이렇게 할 경우 최소항을 비교하여 저장하면서 진행할 수 없다고 판단하여 2중 for문을 사용하였다.\n그 결과, 각 DP 마다 해당 index의 제곱근을 빼준 숫자의 DP에 +1 해준 것과 현재 DP를 비교했다.\n\nex) input &#x3D; 18이라면, DP[18] &#x3D; 18인 상태로 시작한다.\n\nj &#x3D; 1 인 경우, DP[17] + 1 &#x3D; 3이므로, DP[18] &#x3D; 3를 저장한다.\nj &#x3D; 2 인 경우, DP[14] + 1 &#x3D; 4이므로, 이전 값을 그대로 둔다.\nj &#x3D; 3 인 경우, DP[9] + 1 &#x3D; 2 이므로, DP[18] &#x3D; 2를 저장한다.\nj &#x3D; 4 인 경우, DP[2] + 1 &#x3D; 3 이므로 이전 값을 그대로 둔다.\n\nj는 제곱근 이전 까지만 순회를 하므로 순회를 종료하고 DP값을 출력한다.\n따라서, DP[18] &#x3D; 2 로 (9+9) 이렇게 답을 구할 수 있다.\n","dateCreated":"2023-02-21T12:15:35+09:00","dateModified":"2023-02-21T12:16:54+09:00","datePublished":"2023-02-21T12:15:35+09:00","description":"","headline":"boj-1699 제곱수의 합(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제어떤 자연수 N은 그보다 작거나 같은 제곱수들의 합으로 나타낼 수 있다. 예를 들어 11&#x3D;32+12+12(3개 항)이다. 이런 표현방법은 여러 가지가 될 수 있는데, 11의 경우 11&#x3D;22+22+12+12+12(5개 항)도 가능하다. 이 경우, 수학자 숌크라테스는 “11은 3개 항의 제곱수 합으로 표현할 수 있다.”라고 말한다. 또한 11은 그보다 적은 항의 제곱수 합으로 표현할 수 없으므로, 11을 그 합으로써 표현할 수 있는 제곱수 항의 최소 개수는 3이다.\n주어진 자연수 N을 이렇게 제곱수들의 합으로 표현할 때에 그 항의 최소개수를 구하는 프로그램을 작성하시오.\n입력첫째 줄에 자연수 N이 주어진다. (1 ≤ N ≤ 100,000)\n출력주어진 자연수를 제곱수의 합으로 나타낼 때에 그 제곱수 항의 최소 개수를 출력한다.\n예제예제 입력 1127\n\n예제 출력 1124\n\n예제 입력 2121\n\n예제 출력 2121\n\n예제 입력 3124\n\n예제 출력 3121\n\n예제 입력 41211\n\n예제 출력 4123\n\n예제 입력 51213\n\n예제 출력 512\n\n내 코드12345678910111213141516const input = +require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();const DP = Array.from(&#123; length: input + 1 &#125;, (_, i) =&gt; i);for (let i = 4; i &lt;= input; i++) &#123;  for (let j = 1; j &lt;= Math.sqrt(i); j++) &#123;    const sqrt = Math.sqrt(i);    if (sqrt === parseInt(sqrt)) &#123;      DP[i] = 1;    &#125; else &#123;      DP[i] = Math.min(DP[i], DP[i - j ** 2] + 1);    &#125;  &#125;&#125;console.log(DP[input]);\n\n\n처음에는 단순히 초기값을 가지고 다음값을 구하는 식으로만 했었는데, 이렇게 할 경우 최소항을 비교하여 저장하면서 진행할 수 없다고 판단하여 2중 for문을 사용하였다.\n그 결과, 각 DP 마다 해당 index의 제곱근을 빼준 숫자의 DP에 +1 해준 것과 현재 DP를 비교했다.\n\nex) input &#x3D; 18이라면, DP[18] &#x3D; 18인 상태로 시작한다.\n\nj &#x3D; 1 인 경우, DP[17] + 1 &#x3D; 3이므로, DP[18] &#x3D; 3를 저장한다.\nj &#x3D; 2 인 경우, DP[14] + 1 &#x3D; 4이므로, 이전 값을 그대로 둔다.\nj &#x3D; 3 인 경우, DP[9] + 1 &#x3D; 2 이므로, DP[18] &#x3D; 2를 저장한다.\nj &#x3D; 4 인 경우, DP[2] + 1 &#x3D; 3 이므로 이전 값을 그대로 둔다.\n\nj는 제곱근 이전 까지만 순회를 하므로 순회를 종료하고 DP값을 출력한다.\n따라서, DP[18] &#x3D; 2 로 (9+9) 이렇게 답을 구할 수 있다.\n","dateCreated":"2023-02-21T12:15:35+09:00","dateModified":"2023-02-21T12:16:54+09:00","datePublished":"2023-02-21T12:15:35+09:00","description":"","headline":"boj-1699 제곱수의 합(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제어떤 자연수 N은 그보다 작거나 같은 제곱수들의 합으로 나타낼 수 있다. 예를 들어 11&#x3D;32+12+12(3개 항)이다. 이런 표현방법은 여러 가지가 될 수 있는데, 11의 경우 11&#x3D;22+22+12+12+12(5개 항)도 가능하다. 이 경우, 수학자 숌크라테스는 “11은 3개 항의 제곱수 합으로 표현할 수 있다.”라고 말한다. 또한">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-1699 제곱수의 합(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

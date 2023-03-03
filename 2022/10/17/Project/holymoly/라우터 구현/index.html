@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"1. 회원가입 로직 구현회원가입 페이지의 input값과 유효성 검사에 따라 에러메세지를 보여줘야 하므로 이를 상태로 관리해줘야한다.\n상태 변경함수와 상태를 props로 전달해준다. 유효성 검사 로직을 true, false 값을 구현하는데 헷갈렸다.\nLodash 구현 실패…페어 프로그래밍을 할 때는 lodash 잘 썼는데, server랑 연동을 하니 왜 lodash 안써지냐 ?\n내일 해결하자.\n2. 라우터 구현라우터 구현을 며칠째 쓰는지 모르겠다…\n라우터를 제대로 이해해야만 했다…\n1234567891011121314151617181920212223242526272829// App.jsconst isSigned = async () =&gt; &#123;  const &#123; data &#125; = await axios.get(&quot;/auth&quot;);  return data.success;&#125;;const routes = [  &#123; path: &quot;/&quot;, component: Home &#125;,  &#123; path: &quot;/rank&quot;, component: Rank, guard: isSigned, redirectTo: Signin &#125;,  &#123; path: &quot;/signin&quot;, component: Signin &#125;,  &#123; path: &quot;/signup&quot;, component: Signup &#125;,  &#123; path: &quot;/matching&quot;, component: MatchingCards &#125;,];class App extends Components &#123;  ...  router(path = window.location.pathname) &#123;    // header 에서 클릭이벤트로 href 를 받아서 path에 담는다.    const route = routes.find(route =&gt; route.path === path);    // change url path    (async () =&gt; &#123;      !route.guard || (await route.guard())        ? this.setState(&#123; Page: route.component &#125;)        : this.setState(&#123; Page: route.redirectTo &#125;);    &#125;)();  &#125;&#125;\n\n\n“pjax 방식으로 라우터를 구현하기 위해서 서버와 도움이 필요하다”라는 말이 이제는 이해가 된다. ajax 방식은 url이 변경되지 않아 seo에 문제가 있어서 이를 해결하기 위해서 pushState를 통해 history API를 구현해준다.\n\n그리고 router 함수는 path를 받아서 해당 path의 컴포넌트를 가지는 route를 찾아서 현재 페이지로 렌더링해준다.\n\n이 때, routes 배열안의 어떤 라우터는 접근 권한이 필요한 라우터가 있는데, 이들한테는 guard라는 프로퍼티가 존재한다. 그러므로 router 함수에서도 guard라는 프로퍼티가 있을 때, 또 guard 프로퍼티의 값이 true, false냐에 따라 컴포넌트를 다르게 보여줘야하는 로직을 짜야한다.\n\n\n이 개념이 CSR(Client Side Rendering)이다. 서버에서는 다음과 같이 코드를 구현해주었다.\n123456789101112131415161718192021222324252627282930313233343536373839// server.jsconst auth = (req, res, next) =&gt; &#123;  const accessToken = req.headers.authorization || req.cookies.accessToken;  try &#123;    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);    console.log(`😀 사용자 인증 성공`, decoded);    next();  &#125; catch &#123;    console.error(&quot;😱 사용자 인증 실패..&quot;);    console.log(accessToken);    return res.redirect(&quot;/signin&quot;);  &#125;&#125;;const isSigned = (req, res) =&gt; &#123;  const accessToken = req.headers.authorization || req.cookies.accessToken;  try &#123;    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);    console.log(`😀 사용자 인증 성공`, decoded);    res.send(&#123; success: true &#125;);  &#125; catch &#123;    console.error(&quot;😱 사용자 인증 실패..&quot;);    res.send(&#123; success: false &#125;);  &#125;&#125;;// auth routeapp.get(&quot;/signin&quot;, (req, res) =&gt; &#123;  res.sendFile(path.join(__dirname, &quot;./public/index.html&quot;));&#125;);app.get(&quot;/auth&quot;, isSigned);app.get(&quot;*&quot;, auth, (req, res) =&gt; &#123;  // auth 미들웨어  res.sendFile(path.join(__dirname, &quot;./public/index.html&quot;));&#125;);\n\n\n서버에서는 모든 경로에서 get 요청이 들어오면 auth 함수의 내부의 로직을 기준으로 사용자가 JWT 토큰이 있는지 유무를 판단하여 결과를 반환한다. 이 결과에 따라 rootContainer를 응답으로 보내주고 클라이언트는 이를 받아서 조건에 맞게미리 구현해둔 router 함수로 화면에 렌더링을 해준다.\n\n그리고 서버에서 또 다른 함수로 JWT 토큰 유무에 따라 성공, 실패 결과를 전달해줘야하므로 auth 와 별개인 isSignin() 함수를 만들어줬다.\n\n\n\n우리는 이 부분에서 auth 라는 함수 하나로만 해결하려고 하다 보니 res.send로 오류를 보내면 &#x2F;rank URL로 직접 요청시 오류 페이지가 보이게 되고 redirect 를 해주자니 오류가 안보내져서 클라이언트에서 router 함수 로직을 구현할 수 없는 딜레마를 겪었다.\n\n그 결과 클라이언트의 isSigned 비동기 함수가 axios로 get 요청을 보내서 data(boolean)를 반환해준 값을 guard 프로퍼티에 등록해주었다.\n이를 사용해 router 함수에서 로직을 구현해주었다.\n소감오늘은 월요일이라서 그런지 머리도 잘 안돌아가고 주말에 푹 쉬어서 죄책감이 약간 들어서 자존감도 떨어지는 하루였다.\n그래도 늘 이런 생각을 하면 달라지는 것은 없다. 이런 생각을 할 시간에 좀 더 연구하고 공부하는 게 나의 미래에 더 도움이 된다.\n이제 미니 프로젝트 마감이 이번주 금요일로 다가왔으니 앞으로 며칠만 더 힘내서 열심히 공부하고 배운것을 꼼꼼하게 정리하도록 해야겠다.\n","dateCreated":"2022-10-17T22:29:58+09:00","dateModified":"2022-11-18T17:20:48+09:00","datePublished":"2022-10-17T22:29:58+09:00","description":"","headline":"라우터 구현","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. 회원가입 로직 구현회원가입 페이지의 input값과 유효성 검사에 따라 에러메세지를 보여줘야 하므로 이를 상태로 관리해줘야한다.\n상태 변경함수와 상태를 props로 전달해준다. 유효성 검사 로직을 true, false 값을 구현하는데 헷갈렸다.\nLodash 구현 실패…페어 프로그래밍을 할 때는 lodash 잘 썼는데, server랑 연동을 하니 왜 lodash 안써지냐 ?\n내일 해결하자.\n2. 라우터 구현라우터 구현을 며칠째 쓰는지 모르겠다…\n라우터를 제대로 이해해야만 했다…\n1234567891011121314151617181920212223242526272829// App.jsconst isSigned = async () =&gt; &#123;  const &#123; data &#125; = await axios.get(&quot;/auth&quot;);  return data.success;&#125;;const routes = [  &#123; path: &quot;/&quot;, component: Home &#125;,  &#123; path: &quot;/rank&quot;, component: Rank, guard: isSigned, redirectTo: Signin &#125;,  &#123; path: &quot;/signin&quot;, component: Signin &#125;,  &#123; path: &quot;/signup&quot;, component: Signup &#125;,  &#123; path: &quot;/matching&quot;, component: MatchingCards &#125;,];class App extends Components &#123;  ...  router(path = window.location.pathname) &#123;    // header 에서 클릭이벤트로 href 를 받아서 path에 담는다.    const route = routes.find(route =&gt; route.path === path);    // change url path    (async () =&gt; &#123;      !route.guard || (await route.guard())        ? this.setState(&#123; Page: route.component &#125;)        : this.setState(&#123; Page: route.redirectTo &#125;);    &#125;)();  &#125;&#125;\n\n\n“pjax 방식으로 라우터를 구현하기 위해서 서버와 도움이 필요하다”라는 말이 이제는 이해가 된다. ajax 방식은 url이 변경되지 않아 seo에 문제가 있어서 이를 해결하기 위해서 pushState를 통해 history API를 구현해준다.\n\n그리고 router 함수는 path를 받아서 해당 path의 컴포넌트를 가지는 route를 찾아서 현재 페이지로 렌더링해준다.\n\n이 때, routes 배열안의 어떤 라우터는 접근 권한이 필요한 라우터가 있는데, 이들한테는 guard라는 프로퍼티가 존재한다. 그러므로 router 함수에서도 guard라는 프로퍼티가 있을 때, 또 guard 프로퍼티의 값이 true, false냐에 따라 컴포넌트를 다르게 보여줘야하는 로직을 짜야한다.\n\n\n이 개념이 CSR(Client Side Rendering)이다. 서버에서는 다음과 같이 코드를 구현해주었다.\n123456789101112131415161718192021222324252627282930313233343536373839// server.jsconst auth = (req, res, next) =&gt; &#123;  const accessToken = req.headers.authorization || req.cookies.accessToken;  try &#123;    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);    console.log(`😀 사용자 인증 성공`, decoded);    next();  &#125; catch &#123;    console.error(&quot;😱 사용자 인증 실패..&quot;);    console.log(accessToken);    return res.redirect(&quot;/signin&quot;);  &#125;&#125;;const isSigned = (req, res) =&gt; &#123;  const accessToken = req.headers.authorization || req.cookies.accessToken;  try &#123;    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);    console.log(`😀 사용자 인증 성공`, decoded);    res.send(&#123; success: true &#125;);  &#125; catch &#123;    console.error(&quot;😱 사용자 인증 실패..&quot;);    res.send(&#123; success: false &#125;);  &#125;&#125;;// auth routeapp.get(&quot;/signin&quot;, (req, res) =&gt; &#123;  res.sendFile(path.join(__dirname, &quot;./public/index.html&quot;));&#125;);app.get(&quot;/auth&quot;, isSigned);app.get(&quot;*&quot;, auth, (req, res) =&gt; &#123;  // auth 미들웨어  res.sendFile(path.join(__dirname, &quot;./public/index.html&quot;));&#125;);\n\n\n서버에서는 모든 경로에서 get 요청이 들어오면 auth 함수의 내부의 로직을 기준으로 사용자가 JWT 토큰이 있는지 유무를 판단하여 결과를 반환한다. 이 결과에 따라 rootContainer를 응답으로 보내주고 클라이언트는 이를 받아서 조건에 맞게미리 구현해둔 router 함수로 화면에 렌더링을 해준다.\n\n그리고 서버에서 또 다른 함수로 JWT 토큰 유무에 따라 성공, 실패 결과를 전달해줘야하므로 auth 와 별개인 isSignin() 함수를 만들어줬다.\n\n\n\n우리는 이 부분에서 auth 라는 함수 하나로만 해결하려고 하다 보니 res.send로 오류를 보내면 &#x2F;rank URL로 직접 요청시 오류 페이지가 보이게 되고 redirect 를 해주자니 오류가 안보내져서 클라이언트에서 router 함수 로직을 구현할 수 없는 딜레마를 겪었다.\n\n그 결과 클라이언트의 isSigned 비동기 함수가 axios로 get 요청을 보내서 data(boolean)를 반환해준 값을 guard 프로퍼티에 등록해주었다.\n이를 사용해 router 함수에서 로직을 구현해주었다.\n소감오늘은 월요일이라서 그런지 머리도 잘 안돌아가고 주말에 푹 쉬어서 죄책감이 약간 들어서 자존감도 떨어지는 하루였다.\n그래도 늘 이런 생각을 하면 달라지는 것은 없다. 이런 생각을 할 시간에 좀 더 연구하고 공부하는 게 나의 미래에 더 도움이 된다.\n이제 미니 프로젝트 마감이 이번주 금요일로 다가왔으니 앞으로 며칠만 더 힘내서 열심히 공부하고 배운것을 꼼꼼하게 정리하도록 해야겠다.\n","dateCreated":"2022-10-17T22:29:58+09:00","dateModified":"2022-11-18T17:20:48+09:00","datePublished":"2022-10-17T22:29:58+09:00","description":"","headline":"라우터 구현","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/17/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"}</script>
     <meta name="description" content="1. 회원가입 로직 구현회원가입 페이지의 input값과 유효성 검사에 따라 에러메세지를 보여줘야 하므로 이를 상태로 관리해줘야한다. 상태 변경함수와 상태를 props로 전달해준다. 유효성 검사 로직을 true, false 값을 구현하는데 헷갈렸다. Lodash 구현 실패…페어 프로그래밍을 할 때는 lodash 잘 썼는데, server랑 연동을 하니 왜 lo">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="라우터 구현">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

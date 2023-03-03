@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"\n\n📌 webpack 이란?모듈로 관리하는 파일들을 번들링 해주는 툴이다.\n🔨 사용방법명령어 환경 구성Webpack 모듈 번들러를 명령어 환경에서 사용하기 위해 webpack, webpack-cli를 설치합니다.\n1$npm i -D webpack webpack-cli\n\n번들 명령어 등록package.json 파일에 webpack 번들링을 수행하는 bundle 명령을 등록합니다.\n123456789&#123;    ...\t&quot;scripts&quot;: &#123;    &quot;webpack:config&quot;: &quot;webpack --target=browserslist --entry=./src/main.js --output-path=public&quot;,    &quot;webpack:dev&quot;: &quot;npm run webpack:config -- --mode=development&quot;,    &quot;webpack:prod&quot;: &quot;npm run webpack:config -- --mode=production&quot;\t&#125;,    ...&#125;\n\n\nentry 폴더와 output 폴더 경로를 지정해주면 된다.\ndev는 개발환경 번들링 작업을 위한 명령이고 prod는 배포환경을 위한 번들링 작업이다. prod의 결과물은 배포 최적화되어 있다.\ntarget 속성은 어떤 브라우저 환경을 대상으로 번들링할 것인지를 명시해주는 것이다. 프로젝트 루트 위치에 .browserslistrc 파일을 생성한다.\n\n1234&gt; 0.5% in KRlast 2 versionsnot deadie 11\n\n명령 실행123$npm run webpack:dev$npm run webpack:prod\n\n🔨 Webpack 구성 파일기본적인 구성으로도 번들링 훌륭하지만 복잡한 구성을 위해서 구성파일을 별도로 작성해 관리하는 것이 좋습니다.\n공통 구성 파일123456789101112131415// webpack/common.jsimport &#123; resolve &#125; from &quot;node:path&quot;;const commonConfig = &#123;  target: &quot;browserslist&quot;,  entry: &#123;    main: resolve(&quot;src/main.js&quot;),  &#125;,  output: &#123;    path: resolve(&quot;public&quot;),    filename: &quot;[name].bundle.js&quot;,  &#125;,&#125;;export default commonConfig;\n\n개발 구성 파일12345678910// webpack/dev.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;const devConfig = merge(commonConfig, &#123;  mode: &quot;development&quot;,  devtool: &quot;eval-cheap-source-map&quot;,&#125;);export default devConfig;\n\n빌드 구성 파일1234567891011121314// webpack/prod.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;const prodConfig = merge(commonConfig, &#123;  mode: &quot;production&quot;,  devtool: false,  output: &#123;    ...commonConfig.output,    filename: &quot;[name].min.js&quot;,  &#125;,&#125;);export default prodConfig;\n\n개발, 빌드 명령 등록1234567// package.json&#123;\t&quot;scripts&quot;: &#123;    &quot;bundle&quot;: &quot;webpack bundle -c webpack/dev.js&quot;,    &quot;build&quot;: &quot;webpack build --progress -c webpack/prod.js&quot;  &#125;&#125;\n\n이제 기본 webpack 구성이 아닌 직접 생성한 파일을 통해서 번들링 작업을 해줄 수 있다.\n🔨 Webpack 개발 서버 구성Webpack 전용 개발 서버를 구동하기위해 패키지를 설치한다.\n1$npm i -D webpack-dev-server\n\n서버 구성 파일123456789101112131415161718192021// webpack/server.jsconst devServer = &#123;  host: &quot;localhost&quot;,  port: 5000,  hot: true,  open: false,  compress: true,  liveReload: true,  static: [&quot;public&quot;],  historyApiFallback: true,  client: &#123;    logging: &quot;info&quot;,    overlay: true,    reconnect: 3,  &#125;,  watchFiles: &#123;    paths: [&quot;src/**/*.*&quot;, &quot;public/**/*.*&quot;],  &#125;,&#125;;export default devServer;\n\n서버 구성 파일 불러오기개발 환경에서 서버 구성 파일을 불러온다.\n123456789101112// webpack/dev.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;import devServer from &quot;./server.js&quot;;const devConfig = merge(commonConfig, &#123;  mode: &quot;development&quot;,  devtool: &quot;eval-cheap-source-map&quot;,  devServer,&#125;);export default devConfig;\n\n서버 구동 명령어 등록12345678910// package.json&#123;  &quot;scripts&quot;: &#123;    &quot;start&quot;: &quot;npm run server -- --open&quot;,    &quot;dev&quot;: &quot;npm run server&quot;,    &quot;server&quot;: &quot;webpack server -c webpack/dev.js&quot;,    &quot;bundle&quot;: &quot;webpack bundle -c webpack/dev.js&quot;,    &quot;build&quot;: &quot;webpack build -c webpack/prod.js&quot;  &#125;&#125;\n\nHTML Entry 수정12345678&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko-KR&quot;&gt;  &lt;head&gt;    &lt;!-- ... --&gt;    &lt;script type=&quot;module&quot; src=&quot;main.bundle.js&quot;&gt;&lt;/script&gt;  &lt;/head&gt;  &lt;!-- ... --&gt;&lt;/html&gt;\n","dateCreated":"2022-11-05T14:22:42+09:00","dateModified":"2022-11-23T20:17:56+09:00","datePublished":"2022-11-05T14:22:42+09:00","description":"","headline":"webpack 설정하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\n📌 webpack 이란?모듈로 관리하는 파일들을 번들링 해주는 툴이다.\n🔨 사용방법명령어 환경 구성Webpack 모듈 번들러를 명령어 환경에서 사용하기 위해 webpack, webpack-cli를 설치합니다.\n1$npm i -D webpack webpack-cli\n\n번들 명령어 등록package.json 파일에 webpack 번들링을 수행하는 bundle 명령을 등록합니다.\n123456789&#123;    ...\t&quot;scripts&quot;: &#123;    &quot;webpack:config&quot;: &quot;webpack --target=browserslist --entry=./src/main.js --output-path=public&quot;,    &quot;webpack:dev&quot;: &quot;npm run webpack:config -- --mode=development&quot;,    &quot;webpack:prod&quot;: &quot;npm run webpack:config -- --mode=production&quot;\t&#125;,    ...&#125;\n\n\nentry 폴더와 output 폴더 경로를 지정해주면 된다.\ndev는 개발환경 번들링 작업을 위한 명령이고 prod는 배포환경을 위한 번들링 작업이다. prod의 결과물은 배포 최적화되어 있다.\ntarget 속성은 어떤 브라우저 환경을 대상으로 번들링할 것인지를 명시해주는 것이다. 프로젝트 루트 위치에 .browserslistrc 파일을 생성한다.\n\n1234&gt; 0.5% in KRlast 2 versionsnot deadie 11\n\n명령 실행123$npm run webpack:dev$npm run webpack:prod\n\n🔨 Webpack 구성 파일기본적인 구성으로도 번들링 훌륭하지만 복잡한 구성을 위해서 구성파일을 별도로 작성해 관리하는 것이 좋습니다.\n공통 구성 파일123456789101112131415// webpack/common.jsimport &#123; resolve &#125; from &quot;node:path&quot;;const commonConfig = &#123;  target: &quot;browserslist&quot;,  entry: &#123;    main: resolve(&quot;src/main.js&quot;),  &#125;,  output: &#123;    path: resolve(&quot;public&quot;),    filename: &quot;[name].bundle.js&quot;,  &#125;,&#125;;export default commonConfig;\n\n개발 구성 파일12345678910// webpack/dev.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;const devConfig = merge(commonConfig, &#123;  mode: &quot;development&quot;,  devtool: &quot;eval-cheap-source-map&quot;,&#125;);export default devConfig;\n\n빌드 구성 파일1234567891011121314// webpack/prod.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;const prodConfig = merge(commonConfig, &#123;  mode: &quot;production&quot;,  devtool: false,  output: &#123;    ...commonConfig.output,    filename: &quot;[name].min.js&quot;,  &#125;,&#125;);export default prodConfig;\n\n개발, 빌드 명령 등록1234567// package.json&#123;\t&quot;scripts&quot;: &#123;    &quot;bundle&quot;: &quot;webpack bundle -c webpack/dev.js&quot;,    &quot;build&quot;: &quot;webpack build --progress -c webpack/prod.js&quot;  &#125;&#125;\n\n이제 기본 webpack 구성이 아닌 직접 생성한 파일을 통해서 번들링 작업을 해줄 수 있다.\n🔨 Webpack 개발 서버 구성Webpack 전용 개발 서버를 구동하기위해 패키지를 설치한다.\n1$npm i -D webpack-dev-server\n\n서버 구성 파일123456789101112131415161718192021// webpack/server.jsconst devServer = &#123;  host: &quot;localhost&quot;,  port: 5000,  hot: true,  open: false,  compress: true,  liveReload: true,  static: [&quot;public&quot;],  historyApiFallback: true,  client: &#123;    logging: &quot;info&quot;,    overlay: true,    reconnect: 3,  &#125;,  watchFiles: &#123;    paths: [&quot;src/**/*.*&quot;, &quot;public/**/*.*&quot;],  &#125;,&#125;;export default devServer;\n\n서버 구성 파일 불러오기개발 환경에서 서버 구성 파일을 불러온다.\n123456789101112// webpack/dev.jsimport &#123; merge &#125; from &quot;webpack-merge&quot;;import commonConfig from &quot;./common.js&quot;;import devServer from &quot;./server.js&quot;;const devConfig = merge(commonConfig, &#123;  mode: &quot;development&quot;,  devtool: &quot;eval-cheap-source-map&quot;,  devServer,&#125;);export default devConfig;\n\n서버 구동 명령어 등록12345678910// package.json&#123;  &quot;scripts&quot;: &#123;    &quot;start&quot;: &quot;npm run server -- --open&quot;,    &quot;dev&quot;: &quot;npm run server&quot;,    &quot;server&quot;: &quot;webpack server -c webpack/dev.js&quot;,    &quot;bundle&quot;: &quot;webpack bundle -c webpack/dev.js&quot;,    &quot;build&quot;: &quot;webpack build -c webpack/prod.js&quot;  &#125;&#125;\n\nHTML Entry 수정12345678&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko-KR&quot;&gt;  &lt;head&gt;    &lt;!-- ... --&gt;    &lt;script type=&quot;module&quot; src=&quot;main.bundle.js&quot;&gt;&lt;/script&gt;  &lt;/head&gt;  &lt;!-- ... --&gt;&lt;/html&gt;\n","dateCreated":"2022-11-05T14:22:42+09:00","dateModified":"2022-11-23T20:17:56+09:00","datePublished":"2022-11-05T14:22:42+09:00","description":"","headline":"webpack 설정하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/05/Settings/webpack-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/"}</script>
     <meta name="description" content="📌 webpack 이란?모듈로 관리하는 파일들을 번들링 해주는 툴이다. 🔨 사용방법명령어 환경 구성Webpack 모듈 번들러를 명령어 환경에서 사용하기 위해 webpack, webpack-cli를 설치합니다. 1$npm i -D webpack webpack-cli  번들 명령어 등록package.json 파일에 webpack 번들링을 수행하는 bun">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="webpack 설정하기">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

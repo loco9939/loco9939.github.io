@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"darkMode 리팩터링 중 느낀점1. setDarkMode 함수의 응집도를 높이고 관심사를 구분하자.12345678910111213141516171819202122232425262728293031323334353637383940414243const setDarkMode = (() =&gt; &#123;  const $body = document.body;  const userTheme = window.matchMedia(&quot;(prefers-color-scheme: dark)&quot;).matches;  const transitionDuration =    +getComputedStyle(document.documentElement).getPropertyValue(      &quot;--transition-duration&quot;    ) * 1000;  const getCurrentMode = () =&gt; JSON.parse(localStorage.getItem(&quot;isDark&quot;));  const toggleMode = () =&gt; &#123;    $body.classList.toggle(&quot;dark&quot;, getCurrentMode());  &#125;;  const setCurrentMode = (selectedMode) =&gt; &#123;    localStorage.setItem(&quot;isDark&quot;, selectedMode);    toggleMode();  &#125;;  return &#123;    toggle() &#123;      setCurrentMode(!getCurrentMode());    &#125;,    init() &#123;      localStorage.getItem(&quot;isDark&quot;) === null        ? setCurrentMode(userTheme)        : toggleMode();    &#125;,    preventBlink() &#123;      setTimeout(() =&gt; &#123;        $body.classList.remove(&quot;hide&quot;);      &#125;, transitionDuration);    &#125;,  &#125;;&#125;)();document  .querySelector(&quot;.toggle-button&quot;)  .addEventListener(&quot;click&quot;, setDarkMode.toggle);window.addEventListener(&quot;DOMContentLoaded&quot;, setDarkMode.init);window.addEventListener(&quot;load&quot;, setDarkMode.preventBlink);\n\n\nsetDarkMode 함수와 관련된 변수와 함수를 한곳에 모아 응집도를 높이고 즉시실행함수로 감싸고 클로저를 구현하였다.\n\n즉시실행함수의 반환값인 toggle, init, preventBlink 함수는 자유변수를 참조하고 외부함수보다 생명주기가 긴 클로저이다.\n\npreventBlink 함수와 init 함수는 결국 렌더링과 관련된 함수여서 하나로 합칠까 생각했지만, 그 경우, 이미지 파일이 많은 프로그램인 경우 이미지가 로드되기 전에 darkMode를 동작이 제대로 되지 않을 수 있다고 판단하여 다른 함수로 구분하였다.\n\naddEventListener는 가능한 한줄로 쓰자는 팀원과의 컨벤션을 지키기 위해 위와같이 작성하였고 이벤트 핸들러가 많아지게 되면서 복잡해지더라도 한줄로 있으면 가독성을 높일 수 있을 것이라 생각했다.\n\n\npopupModal 리팩터링 중 느낀점1. 변수를 사용한 이유123const $modalContainer = document.querySelector(&quot;.modal-container&quot;);const $modal = document.querySelector(&quot;.modal&quot;);const $popupMessage = document.querySelector(&quot;.popup-message&quot;);\n\n\n위의 document.querySelector() DOM API는 처음에 한번만 요소를 가져와 변수에 할당해주면 된다. 굳이 이벤트 핸들러 함수 내부에 적어서 함수가 호출될 때마다 DOM API까지 같이 호출될 필요가 없으므로 변수에 값을 저장해서 사용하였다.\n\n2. 누군가가 코드를 읽을 때, 한번 더 생각하게 하지 않도록 작성하자.123456789101112131415// 1번    toggle(method) &#123;      $modal.classList[method](&#x27;is-open&#x27;);      $modalContainer.classList[method](&#x27;background-gray&#x27;);    &#125;,// 2번    toggle() &#123;      $modal.classList.toggle(&#x27;is-open&#x27;);      $modalContainer.classList.toggle(&#x27;background-gray&#x27;);    &#125;,    remove() &#123;      $modal.classList.remove(&#x27;is-open&#x27;);      $modalContainer.classList.remove(&#x27;background-gray&#x27;);    &#125;,\n\n\n처음에 중복을 줄이기 위해 1번으로 구현했었는데, 오히려 직접 사용해보니 2번의 경우가 가독성이 더 낫다고 판단했다. 그 이유는 이벤트 핸들러에서 toggle(‘remove’) 이런식으로 사용하는 것보다 toggle, remove를 사용하는 것이 더 깔끔하기 때문이다.\n\n3. 이벤트 핸들러 축약표현 알아두기1234567render(e) &#123;  e.preventDefault();  $popupMessage.textContent = `from popup : $&#123;e.target.firstElementChild.value&#125;`;  popupModal.toggle(&#x27;remove&#x27;);&#125;document.querySelector(&#x27;.popup-form&#x27;).addEventListener(&#x27;submit&#x27;, render);\n\n\nrender 함수를 이벤트 핸들러로 등록할 때, event 객체를 받아서 e.preventDefault() 메서드를 실행하는데, 이벤트 핸들러에서는 인수를 전달해주지 않아도 축약표현으로 인식하여 event 객체를 해당 위치에 전달해준다.\n\nstopWatch 리팩터링 중 느낀점1. 배열 디스트럭처링 사용1const [$leftButton, $rightButton] = [...document.querySelectorAll(&quot;.control&quot;)];\n\n\nleftButton, rightButton &#x2F; laps, title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.\n\n2. 버튼 요소의 textContent 값으로 조건문을 구분하는 것은 좋지 않다.123456789101112// 1번if ($leftButton.textContent === &quot;Stop&quot;) &#123;  ...&#125;// 2번let state = &#123;  isStarted:true&#125;if (state.isStarted) &#123;    ...&#125;\n\n\n1번 처럼 textContent로 조건문을 사용하게되면 나중에 textContent를 수정하게되면 유지보수가 어려워지므로 상태로서 관리하는 것을 추천한다.\n\n3. 함수는 각자의 역할에 맞는 코드를 포함하도록 작성해야한다.1234567891011121314151617181920212223242526272829303132333435const render = () =&gt; &#123;  if (state.isStarted) &#123;    $leftButton.textContent = &quot;Stop&quot;;    $rightButton.textContent = &quot;Lap&quot;;    $rightButton.removeAttribute(&quot;disabled&quot;);    $laps.innerHTML = `Laps      $&#123;state.laps.map((_, index) =&gt; `&lt;div&gt;$&#123;index + 1&#125;&lt;/div&gt;`).join(&quot;&quot;)&#125;      `;    $time.innerHTML = `Time      $&#123;state.laps.map((lap) =&gt; `&lt;div&gt;$&#123;lap&#125;&lt;/div&gt;`).join(&quot;&quot;)&#125;      `;  &#125; else &#123;    $leftButton.textContent = &quot;Start&quot;;    $rightButton.textContent = &quot;Reset&quot;;  &#125;&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const toggleStarted = () =&gt; &#123;  setState(&#123; isStarted: !state.isStarted &#125;);  updateTime();&#125;;const addLap = () =&gt; &#123;  const newLap = $display.textContent;  setState(&#123; laps: [...state.laps, newLap] &#125;);&#125;;\n\n\nrender 함수는 leftButton, rightButton을 클릭했을 때, 화면에 글자가 바꾸는 일을 해준다.\n\nsetState 함수는 데이터를 변경하고 그 데이터를 가지고 화면에 render 하는 함수를 호출하는 역할을 한다.\n\ntoggleStarted 함수는 isStarted 데이터를 변경시키고 시간을 갱신하는 역할을 한다.\n\naddLap 함수는 $display의 textContent값으로 laps 데이터를 변경시키는 역할을 한다.\n\n\n\n스톱워치에 아직 리팩터링 중인데, 버튼은 2개인데 가정해야할 상황이 4가지여서 어떻게 짜면 좋을지 고민중이다…\n\n","dateCreated":"2022-09-19T19:07:25+09:00","dateModified":"2022-11-18T17:19:16+09:00","datePublished":"2022-09-19T19:07:25+09:00","description":"","headline":"darkmode, modal, stopwatch Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"darkMode 리팩터링 중 느낀점1. setDarkMode 함수의 응집도를 높이고 관심사를 구분하자.12345678910111213141516171819202122232425262728293031323334353637383940414243const setDarkMode = (() =&gt; &#123;  const $body = document.body;  const userTheme = window.matchMedia(&quot;(prefers-color-scheme: dark)&quot;).matches;  const transitionDuration =    +getComputedStyle(document.documentElement).getPropertyValue(      &quot;--transition-duration&quot;    ) * 1000;  const getCurrentMode = () =&gt; JSON.parse(localStorage.getItem(&quot;isDark&quot;));  const toggleMode = () =&gt; &#123;    $body.classList.toggle(&quot;dark&quot;, getCurrentMode());  &#125;;  const setCurrentMode = (selectedMode) =&gt; &#123;    localStorage.setItem(&quot;isDark&quot;, selectedMode);    toggleMode();  &#125;;  return &#123;    toggle() &#123;      setCurrentMode(!getCurrentMode());    &#125;,    init() &#123;      localStorage.getItem(&quot;isDark&quot;) === null        ? setCurrentMode(userTheme)        : toggleMode();    &#125;,    preventBlink() &#123;      setTimeout(() =&gt; &#123;        $body.classList.remove(&quot;hide&quot;);      &#125;, transitionDuration);    &#125;,  &#125;;&#125;)();document  .querySelector(&quot;.toggle-button&quot;)  .addEventListener(&quot;click&quot;, setDarkMode.toggle);window.addEventListener(&quot;DOMContentLoaded&quot;, setDarkMode.init);window.addEventListener(&quot;load&quot;, setDarkMode.preventBlink);\n\n\nsetDarkMode 함수와 관련된 변수와 함수를 한곳에 모아 응집도를 높이고 즉시실행함수로 감싸고 클로저를 구현하였다.\n\n즉시실행함수의 반환값인 toggle, init, preventBlink 함수는 자유변수를 참조하고 외부함수보다 생명주기가 긴 클로저이다.\n\npreventBlink 함수와 init 함수는 결국 렌더링과 관련된 함수여서 하나로 합칠까 생각했지만, 그 경우, 이미지 파일이 많은 프로그램인 경우 이미지가 로드되기 전에 darkMode를 동작이 제대로 되지 않을 수 있다고 판단하여 다른 함수로 구분하였다.\n\naddEventListener는 가능한 한줄로 쓰자는 팀원과의 컨벤션을 지키기 위해 위와같이 작성하였고 이벤트 핸들러가 많아지게 되면서 복잡해지더라도 한줄로 있으면 가독성을 높일 수 있을 것이라 생각했다.\n\n\npopupModal 리팩터링 중 느낀점1. 변수를 사용한 이유123const $modalContainer = document.querySelector(&quot;.modal-container&quot;);const $modal = document.querySelector(&quot;.modal&quot;);const $popupMessage = document.querySelector(&quot;.popup-message&quot;);\n\n\n위의 document.querySelector() DOM API는 처음에 한번만 요소를 가져와 변수에 할당해주면 된다. 굳이 이벤트 핸들러 함수 내부에 적어서 함수가 호출될 때마다 DOM API까지 같이 호출될 필요가 없으므로 변수에 값을 저장해서 사용하였다.\n\n2. 누군가가 코드를 읽을 때, 한번 더 생각하게 하지 않도록 작성하자.123456789101112131415// 1번    toggle(method) &#123;      $modal.classList[method](&#x27;is-open&#x27;);      $modalContainer.classList[method](&#x27;background-gray&#x27;);    &#125;,// 2번    toggle() &#123;      $modal.classList.toggle(&#x27;is-open&#x27;);      $modalContainer.classList.toggle(&#x27;background-gray&#x27;);    &#125;,    remove() &#123;      $modal.classList.remove(&#x27;is-open&#x27;);      $modalContainer.classList.remove(&#x27;background-gray&#x27;);    &#125;,\n\n\n처음에 중복을 줄이기 위해 1번으로 구현했었는데, 오히려 직접 사용해보니 2번의 경우가 가독성이 더 낫다고 판단했다. 그 이유는 이벤트 핸들러에서 toggle(‘remove’) 이런식으로 사용하는 것보다 toggle, remove를 사용하는 것이 더 깔끔하기 때문이다.\n\n3. 이벤트 핸들러 축약표현 알아두기1234567render(e) &#123;  e.preventDefault();  $popupMessage.textContent = `from popup : $&#123;e.target.firstElementChild.value&#125;`;  popupModal.toggle(&#x27;remove&#x27;);&#125;document.querySelector(&#x27;.popup-form&#x27;).addEventListener(&#x27;submit&#x27;, render);\n\n\nrender 함수를 이벤트 핸들러로 등록할 때, event 객체를 받아서 e.preventDefault() 메서드를 실행하는데, 이벤트 핸들러에서는 인수를 전달해주지 않아도 축약표현으로 인식하여 event 객체를 해당 위치에 전달해준다.\n\nstopWatch 리팩터링 중 느낀점1. 배열 디스트럭처링 사용1const [$leftButton, $rightButton] = [...document.querySelectorAll(&quot;.control&quot;)];\n\n\nleftButton, rightButton &#x2F; laps, title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.\n\n2. 버튼 요소의 textContent 값으로 조건문을 구분하는 것은 좋지 않다.123456789101112// 1번if ($leftButton.textContent === &quot;Stop&quot;) &#123;  ...&#125;// 2번let state = &#123;  isStarted:true&#125;if (state.isStarted) &#123;    ...&#125;\n\n\n1번 처럼 textContent로 조건문을 사용하게되면 나중에 textContent를 수정하게되면 유지보수가 어려워지므로 상태로서 관리하는 것을 추천한다.\n\n3. 함수는 각자의 역할에 맞는 코드를 포함하도록 작성해야한다.1234567891011121314151617181920212223242526272829303132333435const render = () =&gt; &#123;  if (state.isStarted) &#123;    $leftButton.textContent = &quot;Stop&quot;;    $rightButton.textContent = &quot;Lap&quot;;    $rightButton.removeAttribute(&quot;disabled&quot;);    $laps.innerHTML = `Laps      $&#123;state.laps.map((_, index) =&gt; `&lt;div&gt;$&#123;index + 1&#125;&lt;/div&gt;`).join(&quot;&quot;)&#125;      `;    $time.innerHTML = `Time      $&#123;state.laps.map((lap) =&gt; `&lt;div&gt;$&#123;lap&#125;&lt;/div&gt;`).join(&quot;&quot;)&#125;      `;  &#125; else &#123;    $leftButton.textContent = &quot;Start&quot;;    $rightButton.textContent = &quot;Reset&quot;;  &#125;&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const toggleStarted = () =&gt; &#123;  setState(&#123; isStarted: !state.isStarted &#125;);  updateTime();&#125;;const addLap = () =&gt; &#123;  const newLap = $display.textContent;  setState(&#123; laps: [...state.laps, newLap] &#125;);&#125;;\n\n\nrender 함수는 leftButton, rightButton을 클릭했을 때, 화면에 글자가 바꾸는 일을 해준다.\n\nsetState 함수는 데이터를 변경하고 그 데이터를 가지고 화면에 render 하는 함수를 호출하는 역할을 한다.\n\ntoggleStarted 함수는 isStarted 데이터를 변경시키고 시간을 갱신하는 역할을 한다.\n\naddLap 함수는 $display의 textContent값으로 laps 데이터를 변경시키는 역할을 한다.\n\n\n\n스톱워치에 아직 리팩터링 중인데, 버튼은 2개인데 가정해야할 상황이 4가지여서 어떻게 짜면 좋을지 고민중이다…\n\n","dateCreated":"2022-09-19T19:07:25+09:00","dateModified":"2022-11-18T17:19:16+09:00","datePublished":"2022-09-19T19:07:25+09:00","description":"","headline":"darkmode, modal, stopwatch Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/19/PairProgramming/level%201/darkmode,%20modal,%20stopwatch%20Tip/"}</script>
     <meta name="description" content="darkMode 리팩터링 중 느낀점1. setDarkMode 함수의 응집도를 높이고 관심사를 구분하자.12345678910111213141516171819202122232425262728293031323334353637383940414243const setDarkMode &#x3D; (() &#x3D;&gt; &amp;#123;  const $body &#x3D; document.body;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="darkmode, modal, stopwatch Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

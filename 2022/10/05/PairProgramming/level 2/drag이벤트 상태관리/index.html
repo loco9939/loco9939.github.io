@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다.\n12345678910111213141516171819202122232425262728293031class List extends Component &#123;  constructor(id) &#123;    super();    this.id = id;    this.$origin = null;    this.$target = null;  &#125;  addEvent() &#123;    return [      this.createEvent(&#123;        type: &quot;dragstart&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          this.$origin = e.target.closest(&quot;.list-container&quot;);          e.dataTransfer.effectAllowed = &quot;move&quot;;        &#125;,      &#125;),      this.createEvent(&#123;        type: &quot;dragenter&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          if (this.$origin !== e.target.closest(&quot;.list-container&quot;)) &#123;            this.$target = e.target.closest(&quot;.list-container&quot;);            this.swap(this.$origin, this.$target);          &#125;        &#125;,      &#125;),    ];  &#125;&#125;\n\n\ndrag &amp; drop이 발생하는 컴포넌트에서 지역 변수로서 관리해주면 된다.\n\n2. 이벤트 등록 조건 수정각자의 컴포넌트들을 window에 등록해줄 때, 이벤트 위임이므로 걸러주기 위해 matches를 사용하였는데, 이 경우 이벤트가 발생한 요소만 해당되고 이벤트 발생한 부모 요소를 찾을 수 없어 list 요소에 drag 이벤트가 발생하지 않는 문제가 발생하였다.\n12345678910111213141516171819// ComponentcheckEvent() &#123;    if (this.addEvent) &#123;      this.addEvent().forEach((&#123; type, selector, handler &#125;) =&gt; &#123;        if (events.find(event =&gt; event.type === type &amp;&amp; event.selector === selector)) return;        if (selector === &#x27;&#x27;) &#123;          window.addEventListener(type, e =&gt; handler(e));        &#125; else &#123;          window.addEventListener(type, e =&gt; &#123;            if (!e.target.matches(selector) &amp;&amp; !e.target.closest(selector)) return;            handler(e);          &#125;);        &#125;        events = [...events, &#123; type, selector, handler &#125;];      &#125;);    &#125;  &#125;\n\n\n자신을 포함한 부모쪽에서 selector를 찾을 수 있기 때문에 closest도 추가해준다.\n\n3. DOM만 변경하고 상태는 변경시키지 않는 경우list 드래그 시 dragenter가 발생할 때, DOM을 직접 변경하여 화면에 list가 서로 바뀐 것처럼 보이도록 구현하였다. 하지만, drop을 발생시켰을 때, 1번 list에서 2번 리스트로 dragenter 되었다가 다시 1번 list로 드래그 한체로 돌아와서 drop을 하면 DOM 상에서 바뀌지 않았는데, 상태가 바뀐 것으로 감지하여 상태 lists의 순서를 변경하는 문제가 발생하였다.\n12345678910111213141516171819202122232425262728// stateconst arrangeList = (idOrder) =&gt; &#123;  console.log(state);  setState(&#123;    lists: state.lists.sort((a, b) =&gt; &#123;      const aOrder = idOrder.findIndex((id) =&gt; id === a.id);      const bOrder = idOrder.findIndex((id) =&gt; id === b.id);      return aOrder &lt; bOrder ? -1 : aOrder &gt; bOrder ? 1 : 0;    &#125;),  &#125;);  console.log(state);&#125;;// List Componentclass List extends Component &#123;  addEvent() &#123;    ...    this.createEvent(&#123;        type: &#x27;drop&#x27;,        selector: &#x27;.list-container&#x27;,        handler: e =&gt; &#123;          e.stopPropagation();          arrangeList([...document.querySelectorAll(&#x27;.list-container&#x27;)].map($c =&gt; +$c.id));          return false;        &#125;,      &#125;),  &#125;&#125;\n\n\ndragenter 이벤트 핸들러에서 DOM을 직접 변경해주었기 때문에, DOM이 변경되었는지 확인하기 위해서는 DOM API를 사용할 수 밖에 없었다.\n\nDOM에 직접 접근하여 drop 이벤트가 발생하였을 때, DOM의 list-container 요소들을 가져와서 id로 배열을 반환하여 인수로 전달해주었다. 이 때 전달한 인수는 화면에 나타난 list의 순서를 의미한다.\n\n\n페어프로그래밍2의 목적이번 페어프로그래밍2의 목적은 리액트 프레임워크를 배우기 전에 컴포넌트가 무엇인지 제대로 알고 가기 위함이였다.\n컴포넌트란?모든 컴포넌트는 자신이 어디에 그려질지 알면 안된다.\n→ render가 알아야 한다.\n\n컴포넌트는 어떤 모습으로 그려질 것인가에 대한 정보를 가지고 있다.\nrender가 그 정보들을 가지고 그려주는 역할을 한다.\nApp 컴포넌트가 자식 컴포넌트까지도 알아야 그려줄 수 있다.\n부모 컴포넌트가 자식컴포넌트를 알고 있으면 새롭게 그려질 정보와 이전의 그려진 정보를 비교하여 효율적인 렌더링이 가능하다.\n\n\n컴포넌트가 부모요소의 컨테이너를 받아서 그곳에 innerHTML로 그리면 이는 부모가 그린 HTML에 종속되는 것이므로 컴포넌트를 독립적으로 사용할 수 없게되므로 컴포넌트 개념을 벗어난다.\n\n효율적인 렌더링을 위해서…효율적인 렌더링을 위해서는 diff 알고리즘을 구현하였었다. 만약 App 컴포넌트가 일부분을 그리고 나머지 부분을 다른 컴포넌트가 받아서 그리는 하향식 구조로 설계를 하게된다면 diff 알고리즘이 하향식으로 비교해나가는데 이는 어디가 최하단인지 판별해주기가 까다로워진다.\n그러므로 재조정은 App 컴포넌트가 해야한다. App 컴포넌트는 다른 컴포넌트에게 그들을 그리기 위한 정보를 전달받아 이것들을 모아서 render 함수로 보내서 화면에 렌더링을 시켜준다. render 함수는 그려주는 역할을 하고 App 컴포넌트는 그려지기위한 정보를 모두 가지고 있어야한다.\n소감\n코드 작성에 대해 어떤 생각을 가지고 구현했는지 명확하게 얘기할 수 있으면 Ok\n되는대로 짜는 것이 아니라 명확한 이유가 가지고 짜면 위의 문제가 해결\n\n\n내가 작성한 코드는 나만 잘 알고 있다. 상대방에게 설명할 때, 상대방이 어느정도 알고 있을 것이라는 생각은 접어두자.\n\n","dateCreated":"2022-10-05T22:10:02+09:00","dateModified":"2022-11-18T17:19:50+09:00","datePublished":"2022-10-05T22:10:02+09:00","description":"","headline":"drag이벤트 상태관리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다.\n12345678910111213141516171819202122232425262728293031class List extends Component &#123;  constructor(id) &#123;    super();    this.id = id;    this.$origin = null;    this.$target = null;  &#125;  addEvent() &#123;    return [      this.createEvent(&#123;        type: &quot;dragstart&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          this.$origin = e.target.closest(&quot;.list-container&quot;);          e.dataTransfer.effectAllowed = &quot;move&quot;;        &#125;,      &#125;),      this.createEvent(&#123;        type: &quot;dragenter&quot;,        selector: &quot;.list-container&quot;,        handler: (e) =&gt; &#123;          if (this.$origin !== e.target.closest(&quot;.list-container&quot;)) &#123;            this.$target = e.target.closest(&quot;.list-container&quot;);            this.swap(this.$origin, this.$target);          &#125;        &#125;,      &#125;),    ];  &#125;&#125;\n\n\ndrag &amp; drop이 발생하는 컴포넌트에서 지역 변수로서 관리해주면 된다.\n\n2. 이벤트 등록 조건 수정각자의 컴포넌트들을 window에 등록해줄 때, 이벤트 위임이므로 걸러주기 위해 matches를 사용하였는데, 이 경우 이벤트가 발생한 요소만 해당되고 이벤트 발생한 부모 요소를 찾을 수 없어 list 요소에 drag 이벤트가 발생하지 않는 문제가 발생하였다.\n12345678910111213141516171819// ComponentcheckEvent() &#123;    if (this.addEvent) &#123;      this.addEvent().forEach((&#123; type, selector, handler &#125;) =&gt; &#123;        if (events.find(event =&gt; event.type === type &amp;&amp; event.selector === selector)) return;        if (selector === &#x27;&#x27;) &#123;          window.addEventListener(type, e =&gt; handler(e));        &#125; else &#123;          window.addEventListener(type, e =&gt; &#123;            if (!e.target.matches(selector) &amp;&amp; !e.target.closest(selector)) return;            handler(e);          &#125;);        &#125;        events = [...events, &#123; type, selector, handler &#125;];      &#125;);    &#125;  &#125;\n\n\n자신을 포함한 부모쪽에서 selector를 찾을 수 있기 때문에 closest도 추가해준다.\n\n3. DOM만 변경하고 상태는 변경시키지 않는 경우list 드래그 시 dragenter가 발생할 때, DOM을 직접 변경하여 화면에 list가 서로 바뀐 것처럼 보이도록 구현하였다. 하지만, drop을 발생시켰을 때, 1번 list에서 2번 리스트로 dragenter 되었다가 다시 1번 list로 드래그 한체로 돌아와서 drop을 하면 DOM 상에서 바뀌지 않았는데, 상태가 바뀐 것으로 감지하여 상태 lists의 순서를 변경하는 문제가 발생하였다.\n12345678910111213141516171819202122232425262728// stateconst arrangeList = (idOrder) =&gt; &#123;  console.log(state);  setState(&#123;    lists: state.lists.sort((a, b) =&gt; &#123;      const aOrder = idOrder.findIndex((id) =&gt; id === a.id);      const bOrder = idOrder.findIndex((id) =&gt; id === b.id);      return aOrder &lt; bOrder ? -1 : aOrder &gt; bOrder ? 1 : 0;    &#125;),  &#125;);  console.log(state);&#125;;// List Componentclass List extends Component &#123;  addEvent() &#123;    ...    this.createEvent(&#123;        type: &#x27;drop&#x27;,        selector: &#x27;.list-container&#x27;,        handler: e =&gt; &#123;          e.stopPropagation();          arrangeList([...document.querySelectorAll(&#x27;.list-container&#x27;)].map($c =&gt; +$c.id));          return false;        &#125;,      &#125;),  &#125;&#125;\n\n\ndragenter 이벤트 핸들러에서 DOM을 직접 변경해주었기 때문에, DOM이 변경되었는지 확인하기 위해서는 DOM API를 사용할 수 밖에 없었다.\n\nDOM에 직접 접근하여 drop 이벤트가 발생하였을 때, DOM의 list-container 요소들을 가져와서 id로 배열을 반환하여 인수로 전달해주었다. 이 때 전달한 인수는 화면에 나타난 list의 순서를 의미한다.\n\n\n페어프로그래밍2의 목적이번 페어프로그래밍2의 목적은 리액트 프레임워크를 배우기 전에 컴포넌트가 무엇인지 제대로 알고 가기 위함이였다.\n컴포넌트란?모든 컴포넌트는 자신이 어디에 그려질지 알면 안된다.\n→ render가 알아야 한다.\n\n컴포넌트는 어떤 모습으로 그려질 것인가에 대한 정보를 가지고 있다.\nrender가 그 정보들을 가지고 그려주는 역할을 한다.\nApp 컴포넌트가 자식 컴포넌트까지도 알아야 그려줄 수 있다.\n부모 컴포넌트가 자식컴포넌트를 알고 있으면 새롭게 그려질 정보와 이전의 그려진 정보를 비교하여 효율적인 렌더링이 가능하다.\n\n\n컴포넌트가 부모요소의 컨테이너를 받아서 그곳에 innerHTML로 그리면 이는 부모가 그린 HTML에 종속되는 것이므로 컴포넌트를 독립적으로 사용할 수 없게되므로 컴포넌트 개념을 벗어난다.\n\n효율적인 렌더링을 위해서…효율적인 렌더링을 위해서는 diff 알고리즘을 구현하였었다. 만약 App 컴포넌트가 일부분을 그리고 나머지 부분을 다른 컴포넌트가 받아서 그리는 하향식 구조로 설계를 하게된다면 diff 알고리즘이 하향식으로 비교해나가는데 이는 어디가 최하단인지 판별해주기가 까다로워진다.\n그러므로 재조정은 App 컴포넌트가 해야한다. App 컴포넌트는 다른 컴포넌트에게 그들을 그리기 위한 정보를 전달받아 이것들을 모아서 render 함수로 보내서 화면에 렌더링을 시켜준다. render 함수는 그려주는 역할을 하고 App 컴포넌트는 그려지기위한 정보를 모두 가지고 있어야한다.\n소감\n코드 작성에 대해 어떤 생각을 가지고 구현했는지 명확하게 얘기할 수 있으면 Ok\n되는대로 짜는 것이 아니라 명확한 이유가 가지고 짜면 위의 문제가 해결\n\n\n내가 작성한 코드는 나만 잘 알고 있다. 상대방에게 설명할 때, 상대방이 어느정도 알고 있을 것이라는 생각은 접어두자.\n\n","dateCreated":"2022-10-05T22:10:02+09:00","dateModified":"2022-11-18T17:19:50+09:00","datePublished":"2022-10-05T22:10:02+09:00","description":"","headline":"drag이벤트 상태관리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"}</script>
     <meta name="description" content="1. drag 상태 관리dragstart의 origin과 drop의 target 노드를 전역 상태에서 관리하면 setState로 변경될 때마다 리렌더링 발생한다. 요구사항에서는 DOM 변경만 하고 drop 했을 때 상태를 변경하라고 하였으니 전역 상태로 관리해주면 안된다. 12345678910111213141516171819202122232425262728">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="drag이벤트 상태관리">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

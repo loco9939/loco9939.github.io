@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"9. CBD로직\n처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.\n\n12345678910111213window.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; &#123;  createState(&#123;    todos: [      &#123; id: 3, content: &quot;Javascript&quot;, completed: false &#125;,      &#123; id: 2, content: &quot;CSS&quot;, completed: true &#125;,      &#123; id: 1, content: &quot;HTML&quot;, completed: false &#125;,    ],    todoFilter: [&quot;All&quot;, &quot;Completed&quot;, &quot;Active&quot;],    currentTodoFilterId: 0,  &#125;);  render();&#125;);\n\n\nrender가 실행되면 App 클래스의 인스턴스를 생성하고 생성된 인스턴스를 domStr 프로토타입 메서드를 사용하여 문자열로 반환하고 이 문자열을 node(virtual DOM)로 반환해주었다. 생성된 Virtual DOM과 기존 index.html에 있는 root가 생성한 Real DOM을 비교하는 diff 함수를 실행한다.\n\n12345const render = () =&gt; &#123;  const app = new App();  console.log(app);  diff(app.newDOM(), $root);&#125;;\n\n\nApp 클래스에서는 todoInput, todoList, todoFilter 라는 인스턴스 프로퍼티에 각각 클래스형 컴포넌트의 인스턴스를 할당해주었다. 이 프로퍼티(컴포넌트)를 components 배열에서 관리를 해준다. 또한, 각 컴포넌트에서 데이터가 변경되어 재렌더링이 발생하면 2번 과정이 발생한다.\n\n1234567891011121314151617181920212223242526let components = []; // App 인스턴스 여러개 만들면 구분해주기 위해 전역에서 선언class App &#123;  constructor() &#123;    components.forEach((c) =&gt; c.unmount());    this.todoInput = new TodoInput();    this.todoList = new TodoList();    this.todoFilter = new TodoFilter();    components = [this.todoInput, this.todoList, this.todoFilter];    components.forEach((c) =&gt; c.mount());  &#125;  domStr() &#123;    return `      $&#123;this.todoInput.domStr()&#125;      $&#123;this.todoList.domStr()&#125;      $&#123;this.todoFilter.domStr()&#125;    `;  &#125;  newDOM() &#123;    return domStrToNode(this.domStr());  &#125;&#125;\n\n\n이렇게 생성된 컴포넌트에 이벤트 핸들러를 등록시켜주기 위해서는 App 클래스의 인스턴스가 생성될 때, 즉 데이터가 변경되어 렌더링이 될 때 마다 기존 컴포넌트 목록들에게 unmount(이벤트 제거)를 실행하고 다시 컴포넌트를 등록하고 mount(이벤트 등록)을 실행한다.\n이벤트를 등록하고 제거해주어 컴포넌트의 생명주기를 관리해주는 이유는 이벤트 위임으로 window에게 이벤트를 등록만 하고 제거해주지 않는다면 재렌더링 발생하여 컴포넌트가 새로 생성되면 그 때 다시 또 이벤트를 등록해주므로 불필요한 이벤트 등록과 성능상 문제가 발생할 수 있기 때문에 재렌더링이 발생할 때 꼭 이전 컴포넌트의 이벤트를 제거해줘야한다.\n\n\n각 컴포넌트에서는 이벤트 핸들러를 작성해주고 mount 함수 안에 이벤트 리스너를 등록하고 unmount 함수안에 이벤트를 제거해준다. domStr 함수는 해당 컴포넌트를 HTML 구조를 문자열로 반환해준다.\n\n1234567891011121314151617181920212223242526272829class TodoList extends Component &#123;  constructor() &#123;    super();    let todos = [...state.todos];    if (state.currentTodoFilterId === 1)      todos = state.todos.filter((todo) =&gt; todo.completed);    if (state.currentTodoFilterId === 2)      todos = state.todos.filter((todo) =&gt; !todo.completed);    this.items = todos.map((&#123; id &#125;) =&gt; new TodoItem(id));  &#125;  mount() &#123;    this.items.forEach((item) =&gt; item.mount());  &#125;  unmount() &#123;    this.items.forEach((item) =&gt; item.unmount());  &#125;  domStr() &#123;    return `      &lt;ul class=&quot;todo-list&quot;&gt;        $&#123;this.items.map((item) =&gt; item.domStr()).join(&quot;&quot;)&#125;      &lt;/ul&gt;    `;  &#125;&#125;\n\n\ntodoList 경우는 App 에서 todoList, todoInput, todoFilter 컴포넌트를 관리해주는 것처럼 todoItem 컴포넌트를 관리해준다. App 에서 mount 함수를 실행하여 각 컴포넌트의 mount, unmount를 통해 생명주기를 관리해준 것 처럼 todoList의 mount 에서는 todoItem 컴포넌트의 mount, unmount를 관리해준다.\nthis.items 에는 각 id에 해당하는 TodoItem의 컴포넌트들로 구성된 배열이 할당된다. 그리고 domStr 함수에서 TodoItem 컴포넌트들을 map 고차함수로 돌면서 각 컴포넌트들의 domStr 함수로 호출하여 문자열로 반환한다.\nTodoFilter에서 domStr 부분에서 id가 꼭 필요한가?123456789101112domStr() &#123;  return `    &lt;ul class=&#x27;todo-filter&#x27;&gt;      $&#123;state.todoFilter        .map(          (filter, i) =&gt;            `&lt;li class=&quot; filter $&#123;i === state.currentTodoFilterId ? &#x27;active&#x27; : &#x27;&#x27;&#125;&quot; id=&quot;$&#123;i&#125;&quot;&gt;$&#123;filter&#125;&lt;/li&gt;`        )        .join(&#x27;&#x27;)&#125;    &lt;/ul&gt;  `;&#125;\n\nall, completed, active 에 id가 굳이 필요한가??\n\n\n\n\n각 컴포넌트에서 state로 관리하는 부분이 변경될 때, 상태가 바뀌는 부분만 재렌더링이 일어나도록 구현하였으므로 todoInput에서는 재렌더링이 일어날 부분이 없으므로 autofocus 기능이 사라지지 않는다.\n\n123456789101112131415161718192021222324252627class TodoInput extends Component &#123;  constructor() &#123;    super();    this.addTodo = (e) =&gt; &#123;      if (e.key !== &quot;Enter&quot; || e.target.value.trim() === &quot;&quot;) return;      state.todos = [        ...state.todos,        &#123; id: getNextId(), content: e.target.value, completed: false &#125;,      ];      e.target.value = &quot;&quot;;    &#125;;  &#125;  mount() &#123;    window.addEventListener(&quot;keyup&quot;, this.addTodo);  &#125;  unmount() &#123;    window.removeEventListener(&quot;keyup&quot;, this.addTodo);  &#125;  domStr() &#123;    return `&lt;input class=&#x27;todo-input&#x27; autofocus/&gt;`;  &#125;&#125;\n\n문제\ncheckbox 클릭하면 checked가 생성되고 사라지는 렌더링은 잘 되지만, 화면에서는 바뀌지 않는 문제가 발생하였다.\nattribute와 property의 차이때문에 발생하는 문제점이라고 생각되었다.\nsetAttribute대신에 요소를 replaceChild()로 자식노드를 교체해주었다.\n\n\n\n소감\n혼자서 공식문서들여다 보는 것 보다 확실히 옆에서 같이 이야기 하고 생각을 공유하면서 코드를 작성해나가다 보니 diff 알고리즘도 완성할 수 있어서 기뻤다.\nnode.children 은 텍스트 노드를 제외한 자식 노드들을 반환\nnode.childNodes는 모든 자식 노드를 반환한다.\nattribute와 property의 차이점에 대해 한번 더 생각해볼 수 있는 시간이 있어서 좋았다. attribute는 HTML에 있는 속성으로 rendering이 되면 attribute는 DOM property로 변환된다. 하지만 1:1 매칭이 되지는 않는다는 점을 주의하자.\nattribute : 변하지 않는 초기 default 값 전달\nproperty : 사용자의 행동으로 변할 수 있다.\ndiff 구현할 때, removeAttribute는 제대로 동작했는데, setAttribute할 때는 checkbox값이 삭제했을 때, 다음 todo에 이전되는 문제가 발생하였는데 이는 따로 정리해둬야겠다.\n\n\n\n","dateCreated":"2022-09-29T23:09:53+09:00","dateModified":"2022-11-18T17:19:40+09:00","datePublished":"2022-09-29T23:09:53+09:00","description":"","headline":"CBD Library Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"9. CBD로직\n처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.\n\n12345678910111213window.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; &#123;  createState(&#123;    todos: [      &#123; id: 3, content: &quot;Javascript&quot;, completed: false &#125;,      &#123; id: 2, content: &quot;CSS&quot;, completed: true &#125;,      &#123; id: 1, content: &quot;HTML&quot;, completed: false &#125;,    ],    todoFilter: [&quot;All&quot;, &quot;Completed&quot;, &quot;Active&quot;],    currentTodoFilterId: 0,  &#125;);  render();&#125;);\n\n\nrender가 실행되면 App 클래스의 인스턴스를 생성하고 생성된 인스턴스를 domStr 프로토타입 메서드를 사용하여 문자열로 반환하고 이 문자열을 node(virtual DOM)로 반환해주었다. 생성된 Virtual DOM과 기존 index.html에 있는 root가 생성한 Real DOM을 비교하는 diff 함수를 실행한다.\n\n12345const render = () =&gt; &#123;  const app = new App();  console.log(app);  diff(app.newDOM(), $root);&#125;;\n\n\nApp 클래스에서는 todoInput, todoList, todoFilter 라는 인스턴스 프로퍼티에 각각 클래스형 컴포넌트의 인스턴스를 할당해주었다. 이 프로퍼티(컴포넌트)를 components 배열에서 관리를 해준다. 또한, 각 컴포넌트에서 데이터가 변경되어 재렌더링이 발생하면 2번 과정이 발생한다.\n\n1234567891011121314151617181920212223242526let components = []; // App 인스턴스 여러개 만들면 구분해주기 위해 전역에서 선언class App &#123;  constructor() &#123;    components.forEach((c) =&gt; c.unmount());    this.todoInput = new TodoInput();    this.todoList = new TodoList();    this.todoFilter = new TodoFilter();    components = [this.todoInput, this.todoList, this.todoFilter];    components.forEach((c) =&gt; c.mount());  &#125;  domStr() &#123;    return `      $&#123;this.todoInput.domStr()&#125;      $&#123;this.todoList.domStr()&#125;      $&#123;this.todoFilter.domStr()&#125;    `;  &#125;  newDOM() &#123;    return domStrToNode(this.domStr());  &#125;&#125;\n\n\n이렇게 생성된 컴포넌트에 이벤트 핸들러를 등록시켜주기 위해서는 App 클래스의 인스턴스가 생성될 때, 즉 데이터가 변경되어 렌더링이 될 때 마다 기존 컴포넌트 목록들에게 unmount(이벤트 제거)를 실행하고 다시 컴포넌트를 등록하고 mount(이벤트 등록)을 실행한다.\n이벤트를 등록하고 제거해주어 컴포넌트의 생명주기를 관리해주는 이유는 이벤트 위임으로 window에게 이벤트를 등록만 하고 제거해주지 않는다면 재렌더링 발생하여 컴포넌트가 새로 생성되면 그 때 다시 또 이벤트를 등록해주므로 불필요한 이벤트 등록과 성능상 문제가 발생할 수 있기 때문에 재렌더링이 발생할 때 꼭 이전 컴포넌트의 이벤트를 제거해줘야한다.\n\n\n각 컴포넌트에서는 이벤트 핸들러를 작성해주고 mount 함수 안에 이벤트 리스너를 등록하고 unmount 함수안에 이벤트를 제거해준다. domStr 함수는 해당 컴포넌트를 HTML 구조를 문자열로 반환해준다.\n\n1234567891011121314151617181920212223242526272829class TodoList extends Component &#123;  constructor() &#123;    super();    let todos = [...state.todos];    if (state.currentTodoFilterId === 1)      todos = state.todos.filter((todo) =&gt; todo.completed);    if (state.currentTodoFilterId === 2)      todos = state.todos.filter((todo) =&gt; !todo.completed);    this.items = todos.map((&#123; id &#125;) =&gt; new TodoItem(id));  &#125;  mount() &#123;    this.items.forEach((item) =&gt; item.mount());  &#125;  unmount() &#123;    this.items.forEach((item) =&gt; item.unmount());  &#125;  domStr() &#123;    return `      &lt;ul class=&quot;todo-list&quot;&gt;        $&#123;this.items.map((item) =&gt; item.domStr()).join(&quot;&quot;)&#125;      &lt;/ul&gt;    `;  &#125;&#125;\n\n\ntodoList 경우는 App 에서 todoList, todoInput, todoFilter 컴포넌트를 관리해주는 것처럼 todoItem 컴포넌트를 관리해준다. App 에서 mount 함수를 실행하여 각 컴포넌트의 mount, unmount를 통해 생명주기를 관리해준 것 처럼 todoList의 mount 에서는 todoItem 컴포넌트의 mount, unmount를 관리해준다.\nthis.items 에는 각 id에 해당하는 TodoItem의 컴포넌트들로 구성된 배열이 할당된다. 그리고 domStr 함수에서 TodoItem 컴포넌트들을 map 고차함수로 돌면서 각 컴포넌트들의 domStr 함수로 호출하여 문자열로 반환한다.\nTodoFilter에서 domStr 부분에서 id가 꼭 필요한가?123456789101112domStr() &#123;  return `    &lt;ul class=&#x27;todo-filter&#x27;&gt;      $&#123;state.todoFilter        .map(          (filter, i) =&gt;            `&lt;li class=&quot; filter $&#123;i === state.currentTodoFilterId ? &#x27;active&#x27; : &#x27;&#x27;&#125;&quot; id=&quot;$&#123;i&#125;&quot;&gt;$&#123;filter&#125;&lt;/li&gt;`        )        .join(&#x27;&#x27;)&#125;    &lt;/ul&gt;  `;&#125;\n\nall, completed, active 에 id가 굳이 필요한가??\n\n\n\n\n각 컴포넌트에서 state로 관리하는 부분이 변경될 때, 상태가 바뀌는 부분만 재렌더링이 일어나도록 구현하였으므로 todoInput에서는 재렌더링이 일어날 부분이 없으므로 autofocus 기능이 사라지지 않는다.\n\n123456789101112131415161718192021222324252627class TodoInput extends Component &#123;  constructor() &#123;    super();    this.addTodo = (e) =&gt; &#123;      if (e.key !== &quot;Enter&quot; || e.target.value.trim() === &quot;&quot;) return;      state.todos = [        ...state.todos,        &#123; id: getNextId(), content: e.target.value, completed: false &#125;,      ];      e.target.value = &quot;&quot;;    &#125;;  &#125;  mount() &#123;    window.addEventListener(&quot;keyup&quot;, this.addTodo);  &#125;  unmount() &#123;    window.removeEventListener(&quot;keyup&quot;, this.addTodo);  &#125;  domStr() &#123;    return `&lt;input class=&#x27;todo-input&#x27; autofocus/&gt;`;  &#125;&#125;\n\n문제\ncheckbox 클릭하면 checked가 생성되고 사라지는 렌더링은 잘 되지만, 화면에서는 바뀌지 않는 문제가 발생하였다.\nattribute와 property의 차이때문에 발생하는 문제점이라고 생각되었다.\nsetAttribute대신에 요소를 replaceChild()로 자식노드를 교체해주었다.\n\n\n\n소감\n혼자서 공식문서들여다 보는 것 보다 확실히 옆에서 같이 이야기 하고 생각을 공유하면서 코드를 작성해나가다 보니 diff 알고리즘도 완성할 수 있어서 기뻤다.\nnode.children 은 텍스트 노드를 제외한 자식 노드들을 반환\nnode.childNodes는 모든 자식 노드를 반환한다.\nattribute와 property의 차이점에 대해 한번 더 생각해볼 수 있는 시간이 있어서 좋았다. attribute는 HTML에 있는 속성으로 rendering이 되면 attribute는 DOM property로 변환된다. 하지만 1:1 매칭이 되지는 않는다는 점을 주의하자.\nattribute : 변하지 않는 초기 default 값 전달\nproperty : 사용자의 행동으로 변할 수 있다.\ndiff 구현할 때, removeAttribute는 제대로 동작했는데, setAttribute할 때는 checkbox값이 삭제했을 때, 다음 todo에 이전되는 문제가 발생하였는데 이는 따로 정리해둬야겠다.\n\n\n\n","dateCreated":"2022-09-29T23:09:53+09:00","dateModified":"2022-11-18T17:19:40+09:00","datePublished":"2022-09-29T23:09:53+09:00","description":"","headline":"CBD Library Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/29/PairProgramming/level%202/CBD%20Library%20Tip/"}</script>
     <meta name="description" content="9. CBD로직 처음 DOMContentLoaded 이벤트가 발생하였을 때, 초기 state 값 설정 및 render 함수를 실행한다.  12345678910111213window.addEventListener(&quot;DOMContentLoaded&quot;, () &#x3D;&gt; &amp;#123;  createState(&amp;#123;    todos: [">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="CBD Library Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

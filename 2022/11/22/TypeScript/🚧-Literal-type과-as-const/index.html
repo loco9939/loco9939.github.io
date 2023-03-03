@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Literal Type타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다.\n개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다.\n12let john: &quot;Texas&quot;;let kim: 33;\n\n\n이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.\n\n\n\n🔨 타입스크립트 const1const name = &quot;kim&quot; | &quot;loco&quot;;\n\n타입스크립트는 변할 수 있는 중요한 정보를 위와 같이 표현할 수 있다. 물론 자바스크립트에서는 불가능하다.\n❗️ Literal Type 주의사항123456789const user = &#123;  name: &quot;kim&quot;,&#125;;function foo(a: &quot;kim&quot;) &#123;  /*...*/&#125;foo(user.name); // Error\n\n\n위 예시에서 오류가 발생하는 이유는 user 객체의 name 프로퍼티의 타입은 string인데 foo함수 매개변수 a의 타입은 Literal Type인 ‘kim’이기 때문에 오류가 난다.\n\n이러한 문제를 해결하기 위해선 object 만들 때 타입을 미리 제한하여만들거나 as const를 object 자료형에 붙혀서 사용한다.\n🦖 as const123456789type Lang = &quot;JavaScript&quot; | &quot;TypeScript&quot; | &quot;Python&quot;;function setLang(lang: Lang) &#123;  /* ... */&#125;setLang(&quot;JavaScript&quot;); // 정상let language = &quot;JavaScript&quot;;setLang(language); // Error\n\n\n변수에 할당하는 순간 language 식별자가 타입 추론을 string으로 하였다.\n\n이러한 문제를 해결하는 방법은\n1. 타입 선언시 language의 가능한 값 제한12let lang: Lang = &quot;JavaScript&quot;;setLang(lang); // 정상\n\n2. const 키워드를 사용하여 상수로 표현12const lang = &quot;JavaScript&quot;;setLang(lang); // 정상\n\n\nconst 키워드를 사용하여 타입 체커에게 lang은 변경할 수 없다고 알려준다.\n타입스크립트는 lang에 대해 더 정확한 타입인 ‘JavaScript’로 추론할 수 있다.\n\n123456function panTo(where: [number, number]) &#123;  /* ... */&#125;const loc = [10, 20]; // type is number[]panTo(loc); // Error\n\n\n튜플 사용 시 주의사항은 const로 선언하여도 타입스크립트가 길이를 알 수 없는 숫자의 배열로 추론한다.\nconst loc: [number, number] = [10, 20] 로 의도를 정확히 파악할 수 있도록 타입 선언을 제공한다.\n\nconst 와 as const 차이\nconst 는 단지 값이 가리키는 참조가 변하지 않는 얕은 상수이다.\nas const(상수 문맥 제공)은 그 값이 내부까지 깊은 상수라는 사실을 타입스크립트에게 알려준다.\nconst loc = [10, 20] as const 타입이 readonly [number ,number]123function panTo(where: readonly [number, number]) &#123;/* ... */&#125;;const loc = [10,20] as const;panTo(loc); // 정상\n한가지 단점으로는 만약 튜플에 세번째 요소 추가시 오류가 타입 정의가 아닌 호출되는 곳에서 발생한다.\n\n\n\n","dateCreated":"2022-11-22T09:46:27+09:00","dateModified":"2022-11-23T20:16:22+09:00","datePublished":"2022-11-22T09:46:27+09:00","description":"📌 Literal Type타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다.\n개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다.\n12let john: &quot;Texas&quot;;let kim: 33;\n\n\n이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.\n","headline":"🚧 Literal type과 as const","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 Literal Type타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다.\n개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다.\n12let john: &quot;Texas&quot;;let kim: 33;\n\n\n이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.\n\n\n\n🔨 타입스크립트 const1const name = &quot;kim&quot; | &quot;loco&quot;;\n\n타입스크립트는 변할 수 있는 중요한 정보를 위와 같이 표현할 수 있다. 물론 자바스크립트에서는 불가능하다.\n❗️ Literal Type 주의사항123456789const user = &#123;  name: &quot;kim&quot;,&#125;;function foo(a: &quot;kim&quot;) &#123;  /*...*/&#125;foo(user.name); // Error\n\n\n위 예시에서 오류가 발생하는 이유는 user 객체의 name 프로퍼티의 타입은 string인데 foo함수 매개변수 a의 타입은 Literal Type인 ‘kim’이기 때문에 오류가 난다.\n\n이러한 문제를 해결하기 위해선 object 만들 때 타입을 미리 제한하여만들거나 as const를 object 자료형에 붙혀서 사용한다.\n🦖 as const123456789type Lang = &quot;JavaScript&quot; | &quot;TypeScript&quot; | &quot;Python&quot;;function setLang(lang: Lang) &#123;  /* ... */&#125;setLang(&quot;JavaScript&quot;); // 정상let language = &quot;JavaScript&quot;;setLang(language); // Error\n\n\n변수에 할당하는 순간 language 식별자가 타입 추론을 string으로 하였다.\n\n이러한 문제를 해결하는 방법은\n1. 타입 선언시 language의 가능한 값 제한12let lang: Lang = &quot;JavaScript&quot;;setLang(lang); // 정상\n\n2. const 키워드를 사용하여 상수로 표현12const lang = &quot;JavaScript&quot;;setLang(lang); // 정상\n\n\nconst 키워드를 사용하여 타입 체커에게 lang은 변경할 수 없다고 알려준다.\n타입스크립트는 lang에 대해 더 정확한 타입인 ‘JavaScript’로 추론할 수 있다.\n\n123456function panTo(where: [number, number]) &#123;  /* ... */&#125;const loc = [10, 20]; // type is number[]panTo(loc); // Error\n\n\n튜플 사용 시 주의사항은 const로 선언하여도 타입스크립트가 길이를 알 수 없는 숫자의 배열로 추론한다.\nconst loc: [number, number] = [10, 20] 로 의도를 정확히 파악할 수 있도록 타입 선언을 제공한다.\n\nconst 와 as const 차이\nconst 는 단지 값이 가리키는 참조가 변하지 않는 얕은 상수이다.\nas const(상수 문맥 제공)은 그 값이 내부까지 깊은 상수라는 사실을 타입스크립트에게 알려준다.\nconst loc = [10, 20] as const 타입이 readonly [number ,number]123function panTo(where: readonly [number, number]) &#123;/* ... */&#125;;const loc = [10,20] as const;panTo(loc); // 정상\n한가지 단점으로는 만약 튜플에 세번째 요소 추가시 오류가 타입 정의가 아닌 호출되는 곳에서 발생한다.\n\n\n\n","dateCreated":"2022-11-22T09:46:27+09:00","dateModified":"2022-11-23T20:16:22+09:00","datePublished":"2022-11-22T09:46:27+09:00","description":"📌 Literal Type타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다.\n개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다.\n12let john: &quot;Texas&quot;;let kim: 33;\n\n\n이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.\n","headline":"🚧 Literal type과 as const","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"}</script>
     <meta name="description" content="📌 Literal Type타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다. 개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다. 12let john: &quot;Texas&quot;;let kim: 33;   이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="🚧 Literal type과 as const">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

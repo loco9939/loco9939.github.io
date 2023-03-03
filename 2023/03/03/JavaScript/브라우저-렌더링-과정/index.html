@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.\n브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.\n이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html\n2. HTML 파싱과 DOM 생성브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다. 의미없는 문자열 데이터를 브라우저가 이해할 수 있는 자료구조(객체)로 변환하여 메모리에 저장해야한다.\n그래서 HTML 문서를 파싱하여 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다.\n\n서버는 요청의 응답하기 위해 요청한 HTML 파일을 읽어 메모리에 저장한 뒤 메모리에 저장된 바이트(2진수)를 인터넷을 경유하여 응답한다.\n브라우저는 이를 받아 meta 태그의 charset 방식에 따라(UTF-8) 문자열로 변환한다.\n문자열로 변환된 HTML문서를 토큰화한다.\n각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등\nHTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.\n\n3. CSS 파싱과 CSSOM 생성렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 DOM 생성을 일시중단한다.\n그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.\n4. 렌더 트리 생성앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 브라우저 화면에 렌더링되지 않는 노드(meta태그, script 태그 등)와 CSS에 의해 표시되지 않는(display:none) 노드들은 포함하지 않는다.\n지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. 렌더링이 반복 실행되는 원인은 다음과 같다.\n\n자바스크립트에 의한 노드 추가 또는 삭제\n브라우저 창의 리사이징에 의한 viewport 크기 변경\nHTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경\n\n이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 리렌더링이 적게 발생하도록 하여야한다.\n5. 자바스크립트 파싱과 실행HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.\n즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.\nCSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.\n이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 자바스크립트 엔진에 제어권을 넘긴다. (렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)\n이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 다시 DOM 생성을 재개한다.\n자바스크립트 엔진은 자바스크립트 코드를 파싱하기 시작한다. 자바스크립트를 해석하여 AST(추상적 구문 트리)를 생성한다. 그리고 AST를 기반으로 인터프리터가 실행할 수 있는 중간 코드인 바이트 코드를 생성하여 실행한다.\n6. 리플로우와 리페인트만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.\n자바스크립트 파싱에 의한 HTML 파싱중단렌더링 엔진과 자바스크립트 엔진은 서로 제어권을 이동시키면서 병렬적으로 파싱하지 않고 직렬적으로 파싱을 수행한다. 브라우저는 이처럼 동기적으로, 즉 순차적으로 HTML, CSS, 자바스크립트를 파싱하고 실행한다.\nscript 태그를 만나면 제어권이 이동하기 때문에 HTML 문서 내의 script 태그의 위치는 중요한 의미를 갖는다.\n대표적인 문제로는 HTML이 생성되기 전에 자바스크립트 코드가 HTML요소를 동적으로 조작하려고 하면 정상적으로 동작하지 않을 수 있다. 이에 대한 해결책으로는 아래와 같다.\n\nbody 태그 제일 하단에 script 태그(자바스크립트)를 위치 시키는 것\n\nscript 태그의 async&#x2F;defer 어트리뷰트앞서 알아본 문제를 근본적으로 해결하기 위해서 HTML5부터 script 태그에 async와 defer 어트리뷰트가 추가되었다.\n두 어트리뷰트는 src 어트리뷰트를 통해 외부의 자바스크립트 파일을 로드하는 경우에만 사용할 수 있다.\n12&lt;script async src=&quot;extern.js&quot;&gt;&lt;/script&gt;&lt;script defer src=&quot;extern.js&quot;&gt;&lt;/script&gt;\n\n이 둘을 사용하면 HTML 파싱과 외부 자바스크립트 파일의 로드가 비동기적으로 진행된다. 단 두 어트리뷰트의 실행 시점의 차이가 있다.\n\nasync 어트리뷰트\n\n자바스크립트의 파싱과 실행은 자바스크립트 파일의 로드가 완료된 직후 진행된다. 이 때 HTML 파싱이 중단된다.\n여러개의 script 태그에 async 어트리뷰트를 지정하면 script 태그의 순서와는 상관없이 로드가 완료된 자바스크립트부터 먼저 실행되므로 순서가 보장되지 않는다.\n즉, 순서보장이 필요한 script 태그는 async 어트리뷰트 지정하지 않아야 한다.\n\ndefer 어트리뷰트\n\n자바스크립트의 파싱과 실행은 HTML 파싱이 완료된 직후, 즉 DOM 생성이 완료된 직후(DOMContentLoaded 이벤트가 발생한다) 진행된다.\n\n모듈은 기본적으로 defer이다. async는 잘 사용하지 않지만 폰트의 경우 용량도 크고 순서가 크게 상관이 없으니 최대한 빨리 가져오기 위해 async를 사용하기도 한다.\n\n","dateCreated":"2023-03-03T11:37:14+09:00","dateModified":"2023-03-03T11:37:35+09:00","datePublished":"2023-03-03T11:37:14+09:00","description":"","headline":"브라우저 렌더링 과정","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.\n브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.\n이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html\n2. HTML 파싱과 DOM 생성브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다. 의미없는 문자열 데이터를 브라우저가 이해할 수 있는 자료구조(객체)로 변환하여 메모리에 저장해야한다.\n그래서 HTML 문서를 파싱하여 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다.\n\n서버는 요청의 응답하기 위해 요청한 HTML 파일을 읽어 메모리에 저장한 뒤 메모리에 저장된 바이트(2진수)를 인터넷을 경유하여 응답한다.\n브라우저는 이를 받아 meta 태그의 charset 방식에 따라(UTF-8) 문자열로 변환한다.\n문자열로 변환된 HTML문서를 토큰화한다.\n각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등\nHTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.\n\n3. CSS 파싱과 CSSOM 생성렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 DOM 생성을 일시중단한다.\n그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.\n4. 렌더 트리 생성앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 브라우저 화면에 렌더링되지 않는 노드(meta태그, script 태그 등)와 CSS에 의해 표시되지 않는(display:none) 노드들은 포함하지 않는다.\n지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. 렌더링이 반복 실행되는 원인은 다음과 같다.\n\n자바스크립트에 의한 노드 추가 또는 삭제\n브라우저 창의 리사이징에 의한 viewport 크기 변경\nHTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경\n\n이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 리렌더링이 적게 발생하도록 하여야한다.\n5. 자바스크립트 파싱과 실행HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.\n즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.\nCSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.\n이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 자바스크립트 엔진에 제어권을 넘긴다. (렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)\n이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 다시 DOM 생성을 재개한다.\n자바스크립트 엔진은 자바스크립트 코드를 파싱하기 시작한다. 자바스크립트를 해석하여 AST(추상적 구문 트리)를 생성한다. 그리고 AST를 기반으로 인터프리터가 실행할 수 있는 중간 코드인 바이트 코드를 생성하여 실행한다.\n6. 리플로우와 리페인트만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.\n자바스크립트 파싱에 의한 HTML 파싱중단렌더링 엔진과 자바스크립트 엔진은 서로 제어권을 이동시키면서 병렬적으로 파싱하지 않고 직렬적으로 파싱을 수행한다. 브라우저는 이처럼 동기적으로, 즉 순차적으로 HTML, CSS, 자바스크립트를 파싱하고 실행한다.\nscript 태그를 만나면 제어권이 이동하기 때문에 HTML 문서 내의 script 태그의 위치는 중요한 의미를 갖는다.\n대표적인 문제로는 HTML이 생성되기 전에 자바스크립트 코드가 HTML요소를 동적으로 조작하려고 하면 정상적으로 동작하지 않을 수 있다. 이에 대한 해결책으로는 아래와 같다.\n\nbody 태그 제일 하단에 script 태그(자바스크립트)를 위치 시키는 것\n\nscript 태그의 async&#x2F;defer 어트리뷰트앞서 알아본 문제를 근본적으로 해결하기 위해서 HTML5부터 script 태그에 async와 defer 어트리뷰트가 추가되었다.\n두 어트리뷰트는 src 어트리뷰트를 통해 외부의 자바스크립트 파일을 로드하는 경우에만 사용할 수 있다.\n12&lt;script async src=&quot;extern.js&quot;&gt;&lt;/script&gt;&lt;script defer src=&quot;extern.js&quot;&gt;&lt;/script&gt;\n\n이 둘을 사용하면 HTML 파싱과 외부 자바스크립트 파일의 로드가 비동기적으로 진행된다. 단 두 어트리뷰트의 실행 시점의 차이가 있다.\n\nasync 어트리뷰트\n\n자바스크립트의 파싱과 실행은 자바스크립트 파일의 로드가 완료된 직후 진행된다. 이 때 HTML 파싱이 중단된다.\n여러개의 script 태그에 async 어트리뷰트를 지정하면 script 태그의 순서와는 상관없이 로드가 완료된 자바스크립트부터 먼저 실행되므로 순서가 보장되지 않는다.\n즉, 순서보장이 필요한 script 태그는 async 어트리뷰트 지정하지 않아야 한다.\n\ndefer 어트리뷰트\n\n자바스크립트의 파싱과 실행은 HTML 파싱이 완료된 직후, 즉 DOM 생성이 완료된 직후(DOMContentLoaded 이벤트가 발생한다) 진행된다.\n\n모듈은 기본적으로 defer이다. async는 잘 사용하지 않지만 폰트의 경우 용량도 크고 순서가 크게 상관이 없으니 최대한 빨리 가져오기 위해 async를 사용하기도 한다.\n\n","dateCreated":"2023-03-03T11:37:14+09:00","dateModified":"2023-03-03T11:37:35+09:00","datePublished":"2023-03-03T11:37:14+09:00","description":"","headline":"브라우저 렌더링 과정","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/"}</script>
     <meta name="description" content="브라우저란?브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다. 브라우저 렌더링 과정1. 요청과 응답서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="브라우저 렌더링 과정">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

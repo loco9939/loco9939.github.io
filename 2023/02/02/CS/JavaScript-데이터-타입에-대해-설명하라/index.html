@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"JavaScript 데이터 타입자바스크립트는 크게 2가지의 데이터 타입으로 나뉜다.\n\n원시타입 (Primitive Data Type)\n\n객체타입(참조타입) (Object Type, Reference Type)\n\n\n이 중에서도 원시타입에는 6가지의 타입이 존재하고 그 외의 것들은 모두 객체타입이다.\nPrimitive Data Type (원시타입)원시타입의 종류는 6가지가 있다.\n\nnumber (숫자형)\nstring (문자형)\nundefined\nnull\nboolean (불리언형)\nsymbol\n\n원시 타입의 값은 변경 불가능한 값이며, pass-by-value(값에 의한 전달)이다.\nnumberJavascript에서는 숫자형을 모두 실수로 처리한다. 추가로 아래와 같은 자료도 숫자형이다.\n\nInfinity : 양의 무한대\n-Infinity : 음의 무한대\nNaN : 산술 연산 불가(Not A Number)\n\n\nNaN은 자기 자신과 일치하지 않는 유일한 값이다. 그러므로 어떤 값이 NaN인지 판단하기 위해서는 Number.isNaN() 빌트인 함수를 사용하거나 Object.is() 메서드를 사용하여야 한다.\n\n12345NaN === NaN; // falseNumber.isNaN(NaN); // trueObject.is(NaN, NaN); // true\n\nstringC언어와 다르게 JavaScript의 문자열은 원시타입으로 변경 불가능하다.\n12var str = &quot;Hello&quot;;str = &quot;World&quot;;\n\n위 코드에서 str 변수에 ‘World’라는 문자열로 데이터를 수정하는 것이 아니다.임의의 메모리 주소를 갖는 메모리 공간에 ‘World’라는 문자열을 저장하고 변수의 식별자인 str이 새로운 메모리 주소를 가리켜 변수를 재할당하는 것이다.\nboolean참, 거짓을 나타내는 자료형이다. 암묵적 불리언 형변환이 발생하면 해당 값들을 false로 바꿔주는 falsy 값들이 있다.\nfalsy\n“” (빈문자열)\nundefined\nnull\n0, -0\nNaN\n\nundefined변수의 선언 단계는 사실 선언단계와 초기화 단계 두 단계로 나눠서 볼 수 있는데, 초기화 단계에서 컴퓨터가 변수가 할당되기 이전에 undefined값으로 변수의 값을 초기화해준다.\n때문에 이는 개발자의 의도가 담긴 것이 아니다.\nnull변수의 값이 없다는 것에 개발자의 의도를 담고 싶다면 null을 사용한다. 자바스크립트는 대소문자를 구별하기 때문에 null, Null, NULL 모두 다른 값이다.\n\n함수가 유효한 값을 반환할 수 없는 경우 명시적을 null을 반환하기도 한다.\n\nnull 값의 type을 확인하기 위해서는 typeof 연산자를 사용하는 것 대신 일치 연산자(&#x3D;&#x3D;&#x3D;)를 사용한다.\n123var foo = null;typeof null; // &#x27;object&#x27;foo === null; // true\n\nsymbol심볼은 이름이 충돌한 위험이 없는 유일무이한 원시타입의 값이다. 주로 객체의 유일한 프로퍼티 키를 만들기 위해 사용한다.\n123456var key = Symbol(&quot;key&quot;);typeof key; // &#x27;symbol&#x27;var obj = &#123;&#125;;obj[key] = &quot;value&quot;; // 이름이 충돌할 위험이 없는 유일무이한 값인 심볼을 프로퍼티 키로 사용\n\nObject Type, Reference Type (객체타입)객체란, 데이터와 그 데이터에 관련된 동작(절차, 방법, 기능 등)을 모두 포함할 수 있는 개념적 존재이다.\n다시말해 데이터를 의미하는 프로퍼티와 동작을 의미하는 메소드를 포함할 수 있는 독립적 주체이다.\n원시타입을 제외한 나머지 값(배열, 함수, 정규표현식 등)이 모두 객체이다. 객체는 pass-by-reference (참조에 의한 전달)이다.\n얕은 복사와 깊은 복사객체는 참조에 의한 전달을 하기 때문에 복사를 객체 데이터를 복사하였을 때, 서로의 참조값을 공유하고 있으므로 변경 사항도 공유되는 특징이 있다.\n12345678const obj = &#123; name: &quot;yiju&quot;, age: 29 &#125;;const copy_obj = obj;copy_obj.name = &quot;loco&quot;;console.log(copy_obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(copy_obj === obj); // true\n\n때문에 객체를 복사할 때에는 참조값을 다르게 복사해줘야한다. Object.assign 메서드를 사용하거나 ES6에 등장한 Spread 문법을 사용하여 객체를 복사할 수 있다.\n12345678910const obj = &#123; name: &quot;yiju&quot;, age: 29 &#125;;const copy_obj = Object.assign(&#123;&#125;, obj);const copy_obj2 = &#123; ...obj &#125;;copy_obj.name = &quot;loco&quot;;copy_obj2.name = &quot;mac&quot;;console.log(obj); // &#123;name: &#x27;yiju&#x27;, age: 29&#125;console.log(copy_obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(copy_obj2); // &#123;name: &#x27;mac&#x27;, age: 29&#125;\n\n위와 같은 방식을 얕은 복사라고 부른다. 왜냐하면 depth가 1단계 밖에 복사하지 못하기 때문이다.\n1234567891011121314const obj = &#123;  name: &quot;yiju&quot;,  age: 29,  school: &#123; high: &quot;donghwa&quot;, univ: &quot;kangwon&quot; &#125;,&#125;;const copy_obj = Object.assign(&#123;&#125;, obj);copy_obj.age = 40;copy_obj.school.high = &quot;Yebong&quot;;// &#123;name:&#x27;yiju&#x27;, age:40, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;console.log(copy_obj);// &#123;name:&#x27;yiju&#x27;, age:29, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;console.log(obj);\n\n1단계 깊이인 age는 다른 참조값을 공유하지 않지만 2단계 깊이인 school의 객체값은 참조값을 공유하고 있다.\n깊은 복사를 하기 위해서는 재귀적으로 객체 내부를 단계별로 복사를 해줘야 가능하다. 혹은 라이브러리를 사용하여 구현할 수 있다.\n\nJSON.stringify()를 사용할 수 도 있지만 이 방법은 메서드까진 복사할 수 없기 때문에 추천되지 않는다.\n\n","dateCreated":"2023-02-02T14:38:32+09:00","dateModified":"2023-02-02T15:15:06+09:00","datePublished":"2023-02-02T14:38:32+09:00","description":"","headline":"JavaScript 데이터 타입에 대해 설명하라","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"JavaScript 데이터 타입자바스크립트는 크게 2가지의 데이터 타입으로 나뉜다.\n\n원시타입 (Primitive Data Type)\n\n객체타입(참조타입) (Object Type, Reference Type)\n\n\n이 중에서도 원시타입에는 6가지의 타입이 존재하고 그 외의 것들은 모두 객체타입이다.\nPrimitive Data Type (원시타입)원시타입의 종류는 6가지가 있다.\n\nnumber (숫자형)\nstring (문자형)\nundefined\nnull\nboolean (불리언형)\nsymbol\n\n원시 타입의 값은 변경 불가능한 값이며, pass-by-value(값에 의한 전달)이다.\nnumberJavascript에서는 숫자형을 모두 실수로 처리한다. 추가로 아래와 같은 자료도 숫자형이다.\n\nInfinity : 양의 무한대\n-Infinity : 음의 무한대\nNaN : 산술 연산 불가(Not A Number)\n\n\nNaN은 자기 자신과 일치하지 않는 유일한 값이다. 그러므로 어떤 값이 NaN인지 판단하기 위해서는 Number.isNaN() 빌트인 함수를 사용하거나 Object.is() 메서드를 사용하여야 한다.\n\n12345NaN === NaN; // falseNumber.isNaN(NaN); // trueObject.is(NaN, NaN); // true\n\nstringC언어와 다르게 JavaScript의 문자열은 원시타입으로 변경 불가능하다.\n12var str = &quot;Hello&quot;;str = &quot;World&quot;;\n\n위 코드에서 str 변수에 ‘World’라는 문자열로 데이터를 수정하는 것이 아니다.임의의 메모리 주소를 갖는 메모리 공간에 ‘World’라는 문자열을 저장하고 변수의 식별자인 str이 새로운 메모리 주소를 가리켜 변수를 재할당하는 것이다.\nboolean참, 거짓을 나타내는 자료형이다. 암묵적 불리언 형변환이 발생하면 해당 값들을 false로 바꿔주는 falsy 값들이 있다.\nfalsy\n“” (빈문자열)\nundefined\nnull\n0, -0\nNaN\n\nundefined변수의 선언 단계는 사실 선언단계와 초기화 단계 두 단계로 나눠서 볼 수 있는데, 초기화 단계에서 컴퓨터가 변수가 할당되기 이전에 undefined값으로 변수의 값을 초기화해준다.\n때문에 이는 개발자의 의도가 담긴 것이 아니다.\nnull변수의 값이 없다는 것에 개발자의 의도를 담고 싶다면 null을 사용한다. 자바스크립트는 대소문자를 구별하기 때문에 null, Null, NULL 모두 다른 값이다.\n\n함수가 유효한 값을 반환할 수 없는 경우 명시적을 null을 반환하기도 한다.\n\nnull 값의 type을 확인하기 위해서는 typeof 연산자를 사용하는 것 대신 일치 연산자(&#x3D;&#x3D;&#x3D;)를 사용한다.\n123var foo = null;typeof null; // &#x27;object&#x27;foo === null; // true\n\nsymbol심볼은 이름이 충돌한 위험이 없는 유일무이한 원시타입의 값이다. 주로 객체의 유일한 프로퍼티 키를 만들기 위해 사용한다.\n123456var key = Symbol(&quot;key&quot;);typeof key; // &#x27;symbol&#x27;var obj = &#123;&#125;;obj[key] = &quot;value&quot;; // 이름이 충돌할 위험이 없는 유일무이한 값인 심볼을 프로퍼티 키로 사용\n\nObject Type, Reference Type (객체타입)객체란, 데이터와 그 데이터에 관련된 동작(절차, 방법, 기능 등)을 모두 포함할 수 있는 개념적 존재이다.\n다시말해 데이터를 의미하는 프로퍼티와 동작을 의미하는 메소드를 포함할 수 있는 독립적 주체이다.\n원시타입을 제외한 나머지 값(배열, 함수, 정규표현식 등)이 모두 객체이다. 객체는 pass-by-reference (참조에 의한 전달)이다.\n얕은 복사와 깊은 복사객체는 참조에 의한 전달을 하기 때문에 복사를 객체 데이터를 복사하였을 때, 서로의 참조값을 공유하고 있으므로 변경 사항도 공유되는 특징이 있다.\n12345678const obj = &#123; name: &quot;yiju&quot;, age: 29 &#125;;const copy_obj = obj;copy_obj.name = &quot;loco&quot;;console.log(copy_obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(copy_obj === obj); // true\n\n때문에 객체를 복사할 때에는 참조값을 다르게 복사해줘야한다. Object.assign 메서드를 사용하거나 ES6에 등장한 Spread 문법을 사용하여 객체를 복사할 수 있다.\n12345678910const obj = &#123; name: &quot;yiju&quot;, age: 29 &#125;;const copy_obj = Object.assign(&#123;&#125;, obj);const copy_obj2 = &#123; ...obj &#125;;copy_obj.name = &quot;loco&quot;;copy_obj2.name = &quot;mac&quot;;console.log(obj); // &#123;name: &#x27;yiju&#x27;, age: 29&#125;console.log(copy_obj); // &#123;name: &#x27;loco&#x27;, age: 29&#125;console.log(copy_obj2); // &#123;name: &#x27;mac&#x27;, age: 29&#125;\n\n위와 같은 방식을 얕은 복사라고 부른다. 왜냐하면 depth가 1단계 밖에 복사하지 못하기 때문이다.\n1234567891011121314const obj = &#123;  name: &quot;yiju&quot;,  age: 29,  school: &#123; high: &quot;donghwa&quot;, univ: &quot;kangwon&quot; &#125;,&#125;;const copy_obj = Object.assign(&#123;&#125;, obj);copy_obj.age = 40;copy_obj.school.high = &quot;Yebong&quot;;// &#123;name:&#x27;yiju&#x27;, age:40, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;console.log(copy_obj);// &#123;name:&#x27;yiju&#x27;, age:29, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;console.log(obj);\n\n1단계 깊이인 age는 다른 참조값을 공유하지 않지만 2단계 깊이인 school의 객체값은 참조값을 공유하고 있다.\n깊은 복사를 하기 위해서는 재귀적으로 객체 내부를 단계별로 복사를 해줘야 가능하다. 혹은 라이브러리를 사용하여 구현할 수 있다.\n\nJSON.stringify()를 사용할 수 도 있지만 이 방법은 메서드까진 복사할 수 없기 때문에 추천되지 않는다.\n\n","dateCreated":"2023-02-02T14:38:32+09:00","dateModified":"2023-02-02T15:15:06+09:00","datePublished":"2023-02-02T14:38:32+09:00","description":"","headline":"JavaScript 데이터 타입에 대해 설명하라","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"}</script>
     <meta name="description" content="JavaScript 데이터 타입자바스크립트는 크게 2가지의 데이터 타입으로 나뉜다.  원시타입 (Primitive Data Type)  객체타입(참조타입) (Object Type, Reference Type)   이 중에서도 원시타입에는 6가지의 타입이 존재하고 그 외의 것들은 모두 객체타입이다. Primitive Data Type (원시타입)원시타입의 종">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="JavaScript 데이터 타입에 대해 설명하라">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

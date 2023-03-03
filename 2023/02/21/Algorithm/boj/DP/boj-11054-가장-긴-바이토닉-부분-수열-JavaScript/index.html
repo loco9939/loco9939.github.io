@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제수열 S가 어떤 수 Sk를 기준으로 S1 &lt; S2 &lt; … Sk-1 &lt; Sk &gt; Sk+1 &gt; … SN-1 &gt; SN을 만족한다면, 그 수열을 바이토닉 수열이라고 한다.\n예를 들어, {10, 20, 30, 25, 20}과 {10, 20, 30, 40}, {50, 40, 25, 10} 은 바이토닉 수열이지만, {1, 2, 3, 2, 1, 2, 3, 2, 1}과 {10, 20, 30, 40, 20, 30} 은 바이토닉 수열이 아니다.\n수열 A가 주어졌을 때, 그 수열의 부분 수열 중 바이토닉 수열이면서 가장 긴 수열의 길이를 구하는 프로그램을 작성하시오.\n입력첫째 줄에 수열 A의 크기 N이 주어지고, 둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ N ≤ 1,000, 1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 부분 수열 중에서 가장 긴 바이토닉 수열의 길이를 출력한다.\n예제 입력 112101 5 2 1 4 3 4 5 2 1\n\n예제 출력 117\n\n내 코드12345678910111213141516171819202122232425262728293031323334353637const [N, input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = input.split(&quot; &quot;).map(Number);function LBS(arr) &#123;  const N = arr.length;  const DP_inc = Array.from(&#123; length: N &#125;, () =&gt; 1);  const DP_dec = Array.from(&#123; length: N &#125;, () =&gt; 1);  for (let i = 0; i &lt; N; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP_inc[i] = Math.max(DP_inc[i], DP_inc[j] + 1);      &#125;    &#125;  &#125;  for (let i = N - 1; i &gt;= 0; i--) &#123;    for (let j = i + 1; j &lt; N; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP_dec[i] = Math.max(DP_dec[i], DP_dec[j] + 1);      &#125;    &#125;  &#125;  const DP = [];  for (let i = 0; i &lt; N; i++) &#123;    DP.push(DP_inc[i] + DP_dec[i] - 1);  &#125;  return Math.max(...DP);&#125;console.log(LBS(A));\n\n해설\n수열의 시작 부분부터 해당 index의 증가하는 부분수열 길이를 구한다.\n수열의 마지막 부분부터 해당 index의 감소하는 부분수열의 길이를 구한다.\n증가하는 부분 수열 길이와 감소하는 부분 수열의 길이를 더하여 가장 큰 값의 길이를 구하면 된다.\n\n단, 이 때 기본값으로 세팅한 길이 1이 2번 더해진 것이므로 1을 빼줘야한다.\n12345678910111213141516171819202122// 나의 오답function LBS(arr) &#123;  const N = arr.length;  const DP = Array.from(&#123; length: N &#125;, () =&gt; 1);  for (let i = 1; i &lt; N; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP[i] = Math.max(DP[i], DP[j] + 1);      &#125;    &#125;    for (let k = i + 1; k &lt; N; k++) &#123;      if (A[k] &gt;= A[k - 1]) break;      DP[i] = Math.max(DP[i], DP[i] + 1);    &#125;  &#125;  return Math.max(...DP.map((elem) =&gt; elem - 1));&#125;console.log(LBS(A));\n\n처음에는 감소하는 부분 수열을 구할 때, 역순으로 시작하지 않고 증가하는 부분 수열 구할 때 새로운 반복문으로 해당 index부터 시작하는 감소하는 부분 수열을 구하였는데 이는 DP라는 배열 하나를 가지고 반복문을 돌렸기 때문에 제대로 동작하지 않고 저장값이 꼬여버릴 수 있다.\n","dateCreated":"2023-02-21T12:01:54+09:00","dateModified":"2023-02-21T12:14:27+09:00","datePublished":"2023-02-21T12:01:54+09:00","description":"","headline":"boj-11054 가장 긴 바이토닉 부분 수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11054-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EB%B0%94%EC%9D%B4%ED%86%A0%EB%8B%89-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11054-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EB%B0%94%EC%9D%B4%ED%86%A0%EB%8B%89-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제수열 S가 어떤 수 Sk를 기준으로 S1 &lt; S2 &lt; … Sk-1 &lt; Sk &gt; Sk+1 &gt; … SN-1 &gt; SN을 만족한다면, 그 수열을 바이토닉 수열이라고 한다.\n예를 들어, {10, 20, 30, 25, 20}과 {10, 20, 30, 40}, {50, 40, 25, 10} 은 바이토닉 수열이지만, {1, 2, 3, 2, 1, 2, 3, 2, 1}과 {10, 20, 30, 40, 20, 30} 은 바이토닉 수열이 아니다.\n수열 A가 주어졌을 때, 그 수열의 부분 수열 중 바이토닉 수열이면서 가장 긴 수열의 길이를 구하는 프로그램을 작성하시오.\n입력첫째 줄에 수열 A의 크기 N이 주어지고, 둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ N ≤ 1,000, 1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 부분 수열 중에서 가장 긴 바이토닉 수열의 길이를 출력한다.\n예제 입력 112101 5 2 1 4 3 4 5 2 1\n\n예제 출력 117\n\n내 코드12345678910111213141516171819202122232425262728293031323334353637const [N, input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = input.split(&quot; &quot;).map(Number);function LBS(arr) &#123;  const N = arr.length;  const DP_inc = Array.from(&#123; length: N &#125;, () =&gt; 1);  const DP_dec = Array.from(&#123; length: N &#125;, () =&gt; 1);  for (let i = 0; i &lt; N; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP_inc[i] = Math.max(DP_inc[i], DP_inc[j] + 1);      &#125;    &#125;  &#125;  for (let i = N - 1; i &gt;= 0; i--) &#123;    for (let j = i + 1; j &lt; N; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP_dec[i] = Math.max(DP_dec[i], DP_dec[j] + 1);      &#125;    &#125;  &#125;  const DP = [];  for (let i = 0; i &lt; N; i++) &#123;    DP.push(DP_inc[i] + DP_dec[i] - 1);  &#125;  return Math.max(...DP);&#125;console.log(LBS(A));\n\n해설\n수열의 시작 부분부터 해당 index의 증가하는 부분수열 길이를 구한다.\n수열의 마지막 부분부터 해당 index의 감소하는 부분수열의 길이를 구한다.\n증가하는 부분 수열 길이와 감소하는 부분 수열의 길이를 더하여 가장 큰 값의 길이를 구하면 된다.\n\n단, 이 때 기본값으로 세팅한 길이 1이 2번 더해진 것이므로 1을 빼줘야한다.\n12345678910111213141516171819202122// 나의 오답function LBS(arr) &#123;  const N = arr.length;  const DP = Array.from(&#123; length: N &#125;, () =&gt; 1);  for (let i = 1; i &lt; N; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[j] &lt; A[i]) &#123;        DP[i] = Math.max(DP[i], DP[j] + 1);      &#125;    &#125;    for (let k = i + 1; k &lt; N; k++) &#123;      if (A[k] &gt;= A[k - 1]) break;      DP[i] = Math.max(DP[i], DP[i] + 1);    &#125;  &#125;  return Math.max(...DP.map((elem) =&gt; elem - 1));&#125;console.log(LBS(A));\n\n처음에는 감소하는 부분 수열을 구할 때, 역순으로 시작하지 않고 증가하는 부분 수열 구할 때 새로운 반복문으로 해당 index부터 시작하는 감소하는 부분 수열을 구하였는데 이는 DP라는 배열 하나를 가지고 반복문을 돌렸기 때문에 제대로 동작하지 않고 저장값이 꼬여버릴 수 있다.\n","dateCreated":"2023-02-21T12:01:54+09:00","dateModified":"2023-02-21T12:14:27+09:00","datePublished":"2023-02-21T12:01:54+09:00","description":"","headline":"boj-11054 가장 긴 바이토닉 부분 수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11054-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EB%B0%94%EC%9D%B4%ED%86%A0%EB%8B%89-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11054-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EB%B0%94%EC%9D%B4%ED%86%A0%EB%8B%89-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제수열 S가 어떤 수 Sk를 기준으로 S1 &lt; S2 &lt; … Sk-1 &lt; Sk &gt; Sk+1 &gt; … SN-1 &gt; SN을 만족한다면, 그 수열을 바이토닉 수열이라고 한다. 예를 들어, {10, 20, 30, 25, 20}과 {10, 20, 30, 40}, {50, 40, 25, 10} 은 바이토닉 수열이지만, {1, 2, 3,">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-11054 가장 긴 바이토닉 부분 수열(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

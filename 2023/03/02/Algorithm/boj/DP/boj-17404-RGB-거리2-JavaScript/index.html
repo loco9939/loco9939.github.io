@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제RGB거리에는 집이 N개 있다. 거리는 선분으로 나타낼 수 있고, 1번 집부터 N번 집이 순서대로 있다.\n집은 빨강, 초록, 파랑 중 하나의 색으로 칠해야 한다. 각각의 집을 빨강, 초록, 파랑으로 칠하는 비용이 주어졌을 때, 아래 규칙을 만족하면서 모든 집을 칠하는 비용의 최솟값을 구해보자.\n1번 집의 색은 2번, N번 집의 색과 같지 않아야 한다.N번 집의 색은 N-1번, 1번 집의 색과 같지 않아야 한다.i(2 ≤ i ≤ N-1)번 집의 색은 i-1, i+1번 집의 색과 같지 않아야 한다.\n입력첫째 줄에 집의 수 N(2 ≤ N ≤ 1,000)이 주어진다. 둘째 줄부터 N개의 줄에는 각 집을 빨강, 초록, 파랑으로 칠하는 비용이 1번 집부터 한 줄에 하나씩 주어진다. 집을 칠하는 비용은 1,000보다 작거나 같은 자연수이다.\n출력첫째 줄에 모든 집을 칠하는 비용의 최솟값을 출력한다.\n예제 입력 11234326 40 8349 60 5713 89 99\n\n예제 출력 11110\n\n예제 입력 2123431 100 100100 1 100100 100 1\n\n예제 출력 213\n\n예제 입력 3123431 100 100100 100 1001 100 100\n\n예제 출력 31201\n\n예제 입력 41234567630 19 564 77 6415 19 974 71 5790 86 8493 32 91\n\n예제 출력 41208\n\n예제 입력 5123456789871 39 4432 83 5551 37 6389 29 10083 58 1165 13 1547 25 2960 66 19\n\n예제 출력 51253\n\n내 코드1234567891011121314151617181920212223242526272829303132const [N, ...input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const n = +N;const costs = input.map((elem) =&gt; elem.split(&quot; &quot;).map(Number));const MAX = 100001;let answer = MAX;let dp = Array.from(&#123; length: n + 1 &#125;, () =&gt; [0, 0, 0]);for (let i = 0; i &lt; 3; i++) &#123;  for (let j = 0; j &lt; 3; j++) &#123;    if (i === j) dp[0][j] = costs[0][j];    else dp[0][j] = MAX;  &#125;  for (let j = 1; j &lt; n; j++) &#123;    dp[j][0] = Math.min(dp[j - 1][1], dp[j - 1][2]) + costs[j][0];    dp[j][1] = Math.min(dp[j - 1][0], dp[j - 1][2]) + costs[j][1];    dp[j][2] = Math.min(dp[j - 1][0], dp[j - 1][1]) + costs[j][2];  &#125;  for (let j = 0; j &lt; 3; j++) &#123;    if (i === j) continue;    answer = Math.min(answer, dp[n - 1][j]);  &#125;&#125;console.log(answer);\n\n해설RGB 거리 문제와는 다르게 첫번째 선택한 색상을 마지막에서도 선택하면 안되므로 첫번째 선택한 색상을 기억해두도록 접근하자.\n예를 들어 첫번째 색상을 R로 선택했다고 하면 나머지 G,B 색상은 선택하지 못하도록 최대값으로 설정해준다.\n이후에 다음 집에서는 R을 제외한 나머지 2가지 색상 중 작은 값을 선택하고 해당 집의 색상 비용을 더해줘서 DP 배열을 완성 시켜나간다.\n그리하여 DP 배열이 완성되고 나면 DP 배열의 최종 인덱스에 위치한 배열 중 가장 작은 값을 answer 변수에 저장해둔다.\n이렇게 첫번째 집을 R로 설정한 경우, G로 설정한 경우, B로 설정한 경우 총 3번을 진행하고 나서 최종적으로 answer 값을 출력해주면 된다.\n","dateCreated":"2023-03-02T20:44:13+09:00","dateModified":"2023-03-02T21:12:14+09:00","datePublished":"2023-03-02T20:44:13+09:00","description":"","headline":"boj-17404 RGB 거리2(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제RGB거리에는 집이 N개 있다. 거리는 선분으로 나타낼 수 있고, 1번 집부터 N번 집이 순서대로 있다.\n집은 빨강, 초록, 파랑 중 하나의 색으로 칠해야 한다. 각각의 집을 빨강, 초록, 파랑으로 칠하는 비용이 주어졌을 때, 아래 규칙을 만족하면서 모든 집을 칠하는 비용의 최솟값을 구해보자.\n1번 집의 색은 2번, N번 집의 색과 같지 않아야 한다.N번 집의 색은 N-1번, 1번 집의 색과 같지 않아야 한다.i(2 ≤ i ≤ N-1)번 집의 색은 i-1, i+1번 집의 색과 같지 않아야 한다.\n입력첫째 줄에 집의 수 N(2 ≤ N ≤ 1,000)이 주어진다. 둘째 줄부터 N개의 줄에는 각 집을 빨강, 초록, 파랑으로 칠하는 비용이 1번 집부터 한 줄에 하나씩 주어진다. 집을 칠하는 비용은 1,000보다 작거나 같은 자연수이다.\n출력첫째 줄에 모든 집을 칠하는 비용의 최솟값을 출력한다.\n예제 입력 11234326 40 8349 60 5713 89 99\n\n예제 출력 11110\n\n예제 입력 2123431 100 100100 1 100100 100 1\n\n예제 출력 213\n\n예제 입력 3123431 100 100100 100 1001 100 100\n\n예제 출력 31201\n\n예제 입력 41234567630 19 564 77 6415 19 974 71 5790 86 8493 32 91\n\n예제 출력 41208\n\n예제 입력 5123456789871 39 4432 83 5551 37 6389 29 10083 58 1165 13 1547 25 2960 66 19\n\n예제 출력 51253\n\n내 코드1234567891011121314151617181920212223242526272829303132const [N, ...input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const n = +N;const costs = input.map((elem) =&gt; elem.split(&quot; &quot;).map(Number));const MAX = 100001;let answer = MAX;let dp = Array.from(&#123; length: n + 1 &#125;, () =&gt; [0, 0, 0]);for (let i = 0; i &lt; 3; i++) &#123;  for (let j = 0; j &lt; 3; j++) &#123;    if (i === j) dp[0][j] = costs[0][j];    else dp[0][j] = MAX;  &#125;  for (let j = 1; j &lt; n; j++) &#123;    dp[j][0] = Math.min(dp[j - 1][1], dp[j - 1][2]) + costs[j][0];    dp[j][1] = Math.min(dp[j - 1][0], dp[j - 1][2]) + costs[j][1];    dp[j][2] = Math.min(dp[j - 1][0], dp[j - 1][1]) + costs[j][2];  &#125;  for (let j = 0; j &lt; 3; j++) &#123;    if (i === j) continue;    answer = Math.min(answer, dp[n - 1][j]);  &#125;&#125;console.log(answer);\n\n해설RGB 거리 문제와는 다르게 첫번째 선택한 색상을 마지막에서도 선택하면 안되므로 첫번째 선택한 색상을 기억해두도록 접근하자.\n예를 들어 첫번째 색상을 R로 선택했다고 하면 나머지 G,B 색상은 선택하지 못하도록 최대값으로 설정해준다.\n이후에 다음 집에서는 R을 제외한 나머지 2가지 색상 중 작은 값을 선택하고 해당 집의 색상 비용을 더해줘서 DP 배열을 완성 시켜나간다.\n그리하여 DP 배열이 완성되고 나면 DP 배열의 최종 인덱스에 위치한 배열 중 가장 작은 값을 answer 변수에 저장해둔다.\n이렇게 첫번째 집을 R로 설정한 경우, G로 설정한 경우, B로 설정한 경우 총 3번을 진행하고 나서 최종적으로 answer 값을 출력해주면 된다.\n","dateCreated":"2023-03-02T20:44:13+09:00","dateModified":"2023-03-02T21:12:14+09:00","datePublished":"2023-03-02T20:44:13+09:00","description":"","headline":"boj-17404 RGB 거리2(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제RGB거리에는 집이 N개 있다. 거리는 선분으로 나타낼 수 있고, 1번 집부터 N번 집이 순서대로 있다. 집은 빨강, 초록, 파랑 중 하나의 색으로 칠해야 한다. 각각의 집을 빨강, 초록, 파랑으로 칠하는 비용이 주어졌을 때, 아래 규칙을 만족하면서 모든 집을 칠하는 비용의 최솟값을 구해보자. 1번 집의 색은 2번, N번 집의 색과 같지 않아야 한다.N">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-17404 RGB 거리2(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

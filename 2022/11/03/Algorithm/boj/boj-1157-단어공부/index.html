@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 문제알파벳 대소문자로 된 단어가 주어지면, 이 단어에서 가장 많이 사용된 알파벳이 무엇인지 알아내는 프로그램을 작성하시오. 단, 대문자와 소문자를 구분하지 않는다.\n입력첫째 줄에 알파벳 대소문자로 이루어진 단어가 주어진다. 주어지는 단어의 길이는 1,000,000을 넘지 않는다.\n출력첫째 줄에 이 단어에서 가장 많이 사용된 알파벳을 대문자로 출력한다. 단, 가장 많이 사용된 알파벳이 여러 개 존재하는 경우에는 ?를 출력한다.\n\n\n\n입력\n출력\n\n\n\nMississipi\n?\n\n\nzZa\nZ\n\n\nz\nZ\n\n\nbaaa\nA\n\n\n내 코드12345678910111213141516const input = require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();const alphabets = [...new Set([...input.toLowerCase()])];let max = 0;let current = &#x27;&#x27;alphabets.forEach((alphabet,i) =&gt; &#123;    const regExp = new RegExp(alphabet, &#x27;ig&#x27;);    const count = input.match(regExp).length;    if (max &lt; count) &#123;        max = count;        current = alphabet.toUpperCase();    &#125;    else if (max === count &amp;&amp; alphabet.toUpperCase() !== current) current = &#x27;?&#x27;; &#125;)console.log(current)\n\n\n입력값의 알파벳을 소문자로 만들고 중복을 제거해주었다.\n해당 알파벳을 forEach 문으로 순회하면서 초기에 입력값으로 주어진 문자열을 정규표현식으로 확인한다.\n정규표현식에 매치되는 요소의 갯수가 최대값으로 갱신해주고 그 때의 알파벳을 대문자로 저장해둔다.\n만약 새로운 알파벳의 갯수가 최댓값과 같고 현재의 알파벳 대문자와 current에 할당된 알파벳이 같으면 current에 “?”를 할당한다.\n\n🏓 소감문자열을 풀 때, 정규표현식을 사용하면 반복문을 줄이고 코드를 깔끔하게 하여 가독성을 키우는 연습을 하는데 도움이 될 것 같다.\n주어진 테스트 케이스를 다 만족했지만, 제출했을 때 오답이라고 나와서 당황했다. 어떻게 하면 내 제출이 만족 못시키는 케이스가 있을까하고 생각해보면서 여러가지 상황을 제시하면서 테스트 케이스를 찾아내었다.\n그 결과 처음 정규표현식을 생성할 때, alphabets 배열을 순회하면서가 아닌 초기 입력값의 순회한 요소를 넣어주었기 때문에 제대로 된 결과가 나오지 않는다는 것을 깨닫고 수정하였다.\n테스트 케이스를 어떻게 찾아내지라고 생각하면서 막막했었는데,\n\n주어진 문제에서 제한사항 중 내가 놓친 부분이 있는지를 확인한다.\n조건을 만족시키는 다양한 상황을 만들어본다.\n\n위 두가지를 실행해보다보니 찾게되어서 기뻤다.\n","dateCreated":"2022-11-03T10:47:55+09:00","dateModified":"2022-11-03T11:05:27+09:00","datePublished":"2022-11-03T10:47:55+09:00","description":"","headline":"boj-1157 단어공부","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 문제알파벳 대소문자로 된 단어가 주어지면, 이 단어에서 가장 많이 사용된 알파벳이 무엇인지 알아내는 프로그램을 작성하시오. 단, 대문자와 소문자를 구분하지 않는다.\n입력첫째 줄에 알파벳 대소문자로 이루어진 단어가 주어진다. 주어지는 단어의 길이는 1,000,000을 넘지 않는다.\n출력첫째 줄에 이 단어에서 가장 많이 사용된 알파벳을 대문자로 출력한다. 단, 가장 많이 사용된 알파벳이 여러 개 존재하는 경우에는 ?를 출력한다.\n\n\n\n입력\n출력\n\n\n\nMississipi\n?\n\n\nzZa\nZ\n\n\nz\nZ\n\n\nbaaa\nA\n\n\n내 코드12345678910111213141516const input = require(&quot;fs&quot;).readFileSync(&quot;/dev/stdin&quot;).toString().trim();const alphabets = [...new Set([...input.toLowerCase()])];let max = 0;let current = &#x27;&#x27;alphabets.forEach((alphabet,i) =&gt; &#123;    const regExp = new RegExp(alphabet, &#x27;ig&#x27;);    const count = input.match(regExp).length;    if (max &lt; count) &#123;        max = count;        current = alphabet.toUpperCase();    &#125;    else if (max === count &amp;&amp; alphabet.toUpperCase() !== current) current = &#x27;?&#x27;; &#125;)console.log(current)\n\n\n입력값의 알파벳을 소문자로 만들고 중복을 제거해주었다.\n해당 알파벳을 forEach 문으로 순회하면서 초기에 입력값으로 주어진 문자열을 정규표현식으로 확인한다.\n정규표현식에 매치되는 요소의 갯수가 최대값으로 갱신해주고 그 때의 알파벳을 대문자로 저장해둔다.\n만약 새로운 알파벳의 갯수가 최댓값과 같고 현재의 알파벳 대문자와 current에 할당된 알파벳이 같으면 current에 “?”를 할당한다.\n\n🏓 소감문자열을 풀 때, 정규표현식을 사용하면 반복문을 줄이고 코드를 깔끔하게 하여 가독성을 키우는 연습을 하는데 도움이 될 것 같다.\n주어진 테스트 케이스를 다 만족했지만, 제출했을 때 오답이라고 나와서 당황했다. 어떻게 하면 내 제출이 만족 못시키는 케이스가 있을까하고 생각해보면서 여러가지 상황을 제시하면서 테스트 케이스를 찾아내었다.\n그 결과 처음 정규표현식을 생성할 때, alphabets 배열을 순회하면서가 아닌 초기 입력값의 순회한 요소를 넣어주었기 때문에 제대로 된 결과가 나오지 않는다는 것을 깨닫고 수정하였다.\n테스트 케이스를 어떻게 찾아내지라고 생각하면서 막막했었는데,\n\n주어진 문제에서 제한사항 중 내가 놓친 부분이 있는지를 확인한다.\n조건을 만족시키는 다양한 상황을 만들어본다.\n\n위 두가지를 실행해보다보니 찾게되어서 기뻤다.\n","dateCreated":"2022-11-03T10:47:55+09:00","dateModified":"2022-11-03T11:05:27+09:00","datePublished":"2022-11-03T10:47:55+09:00","description":"","headline":"boj-1157 단어공부","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/03/Algorithm/boj/boj-1157-%EB%8B%A8%EC%96%B4%EA%B3%B5%EB%B6%80/"}</script>
     <meta name="description" content="📌 문제알파벳 대소문자로 된 단어가 주어지면, 이 단어에서 가장 많이 사용된 알파벳이 무엇인지 알아내는 프로그램을 작성하시오. 단, 대문자와 소문자를 구분하지 않는다. 입력첫째 줄에 알파벳 대소문자로 이루어진 단어가 주어진다. 주어지는 단어의 길이는 1,000,000을 넘지 않는다. 출력첫째 줄에 이 단어에서 가장 많이 사용된 알파벳을 대문자로 출력한다.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-1157 단어공부">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

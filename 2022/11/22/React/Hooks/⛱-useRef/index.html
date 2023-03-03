@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"\n\n🐶 useRef()리액트에서 ref는 주로 DOM 노드 참조 목적으로 사용된다. 컴포넌트 렌더링에 영향을 주지 않는 값 참조 목적으로 사용된다.\nuseRef()는 함수 컴포넌트 내부에서 특정 값을 지속적으로 참조할 때 사용한다. useState()와 달리 useRef()는 현재 값이 변경되어도 컴포넌트가 다시 렌더링되지 않아 애플리케이션 성능을 최적화 할 수 있다.\n12345// useRef() 훅을 사용해 카운트 참조 생성const countRef = useRef(0);// 카운트 참조의 현재 값이 변경되어도 컴포넌트는 다시 렌더링 되지 않음countRef.current = countRef.current + 1;\n\n\n클래스는 자신의 인스턴스 멤버를 사용해 렌더링 상관없이 특정 값을 기억할 수 있는데 반해, 함수는 다시 렌더링 되면 매번 함수 몸체가 초기화 되므로 특정 값을 기억할 때 useRef()를 사용하면 유용하다.\n\n🐥 useRef() 사용목적1. DOM 요소 접근 및 조작리액트 render() 단계에서는 DOM이 그려지기 전 단계이므로 DOM에 직접 접근할 수 없다.\n하지만 useRef()를 사용하여 컴포넌트가 mount된 시점 이후 DOM 요소에 접근하여 조작할 수 있도록 도와준다.\n12345678910111213function TextInputWithFocusButton() &#123;  const inputEl = useRef(null);  const onButtonClick = () =&gt; &#123;    // `current` points to the mounted text input element    inputEl.current.focus();  &#125;;  return (    &lt;&gt;      &lt;input ref=&#123;inputEl&#125; type=&quot;text&quot; /&gt;      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;/button&gt;    &lt;/&gt;  );&#125;\n\n\n아직 DOM이 그려지기 전이라 DOM 요소에 접근하여 focus()를 활성화 시킬 수 없지만, useRef()를 사용하여 클래스 컴포넌트 생명주기를 고려하여 DOM 요소에 접근할 수 있도록 도와준다.\n\n2. 함수 컴포넌트 내부에서 특정 값을 기억함수 컴포넌트 내부에서 특정 값을 기억하면서 값을 변경해도 컴포넌트 렌더링에 영향을 주지 않아야한다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647import &#123; useEffect, useRef, useState &#125; from &quot;react&quot;;import randomcolor from &quot;randomcolor&quot;;function DoNotReRender() &#123;  const colorRef = useRef(0);  const [stateValue, setStateValue] = useState(0);  const [stateHex, setStateHex] = useState(randomcolor());  const [refHex, setRefHex] = useState(randomcolor());  useEffect(() =&gt; &#123;    setStateHex(randomcolor());  &#125;, [stateValue]);  useEffect(() =&gt; &#123;    setRefHex(randomcolor());  &#125;, [colorRef]);  return (    &lt;Grid lang=&quot;en&quot;&gt;      &lt;GridItem        css=&#123;`          background: $&#123;stateHex&#125;;        `&#125;      &gt;        &lt;h2&gt;State&lt;/h2&gt;        &lt;ChangeColorButton          aria-label=&quot;state 컬러 변경&quot;          onClick=&#123;() =&gt; setStateValue(stateValue + 1)&#125;        /&gt;        &lt;p&gt;컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 됩니다.&lt;/p&gt;      &lt;/GridItem&gt;      &lt;GridItem        css=&#123;`          background: $&#123;refHex&#125;;        `&#125;        onClick=&#123;() =&gt; &#123;          colorRef.current += 10;          console.log(`colorRef.current = $&#123;colorRef.current&#125;`);        &#125;&#125;      &gt;        &lt;h2&gt;Ref&lt;/h2&gt;        &lt;ChangeColorButton aria-label=&quot;ref 컬러 변경&quot; /&gt;        &lt;p&gt;컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 될까요?&lt;/p&gt;      &lt;/GridItem&gt;    &lt;/Grid&gt;  );&#125;\n\n\nuseState()의 setStateValue()메서드를 사용하여 값을 변경한 경우 재렌더링이 발생하지만, useRef()의 current 값을 갱신하면 재렌더링이 발생하지 않는다.\n\n","dateCreated":"2022-11-22T19:27:24+09:00","dateModified":"2022-11-23T20:18:08+09:00","datePublished":"2022-11-22T19:27:24+09:00","description":"","headline":"⛱ useRef","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\n🐶 useRef()리액트에서 ref는 주로 DOM 노드 참조 목적으로 사용된다. 컴포넌트 렌더링에 영향을 주지 않는 값 참조 목적으로 사용된다.\nuseRef()는 함수 컴포넌트 내부에서 특정 값을 지속적으로 참조할 때 사용한다. useState()와 달리 useRef()는 현재 값이 변경되어도 컴포넌트가 다시 렌더링되지 않아 애플리케이션 성능을 최적화 할 수 있다.\n12345// useRef() 훅을 사용해 카운트 참조 생성const countRef = useRef(0);// 카운트 참조의 현재 값이 변경되어도 컴포넌트는 다시 렌더링 되지 않음countRef.current = countRef.current + 1;\n\n\n클래스는 자신의 인스턴스 멤버를 사용해 렌더링 상관없이 특정 값을 기억할 수 있는데 반해, 함수는 다시 렌더링 되면 매번 함수 몸체가 초기화 되므로 특정 값을 기억할 때 useRef()를 사용하면 유용하다.\n\n🐥 useRef() 사용목적1. DOM 요소 접근 및 조작리액트 render() 단계에서는 DOM이 그려지기 전 단계이므로 DOM에 직접 접근할 수 없다.\n하지만 useRef()를 사용하여 컴포넌트가 mount된 시점 이후 DOM 요소에 접근하여 조작할 수 있도록 도와준다.\n12345678910111213function TextInputWithFocusButton() &#123;  const inputEl = useRef(null);  const onButtonClick = () =&gt; &#123;    // `current` points to the mounted text input element    inputEl.current.focus();  &#125;;  return (    &lt;&gt;      &lt;input ref=&#123;inputEl&#125; type=&quot;text&quot; /&gt;      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;/button&gt;    &lt;/&gt;  );&#125;\n\n\n아직 DOM이 그려지기 전이라 DOM 요소에 접근하여 focus()를 활성화 시킬 수 없지만, useRef()를 사용하여 클래스 컴포넌트 생명주기를 고려하여 DOM 요소에 접근할 수 있도록 도와준다.\n\n2. 함수 컴포넌트 내부에서 특정 값을 기억함수 컴포넌트 내부에서 특정 값을 기억하면서 값을 변경해도 컴포넌트 렌더링에 영향을 주지 않아야한다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647import &#123; useEffect, useRef, useState &#125; from &quot;react&quot;;import randomcolor from &quot;randomcolor&quot;;function DoNotReRender() &#123;  const colorRef = useRef(0);  const [stateValue, setStateValue] = useState(0);  const [stateHex, setStateHex] = useState(randomcolor());  const [refHex, setRefHex] = useState(randomcolor());  useEffect(() =&gt; &#123;    setStateHex(randomcolor());  &#125;, [stateValue]);  useEffect(() =&gt; &#123;    setRefHex(randomcolor());  &#125;, [colorRef]);  return (    &lt;Grid lang=&quot;en&quot;&gt;      &lt;GridItem        css=&#123;`          background: $&#123;stateHex&#125;;        `&#125;      &gt;        &lt;h2&gt;State&lt;/h2&gt;        &lt;ChangeColorButton          aria-label=&quot;state 컬러 변경&quot;          onClick=&#123;() =&gt; setStateValue(stateValue + 1)&#125;        /&gt;        &lt;p&gt;컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 됩니다.&lt;/p&gt;      &lt;/GridItem&gt;      &lt;GridItem        css=&#123;`          background: $&#123;refHex&#125;;        `&#125;        onClick=&#123;() =&gt; &#123;          colorRef.current += 10;          console.log(`colorRef.current = $&#123;colorRef.current&#125;`);        &#125;&#125;      &gt;        &lt;h2&gt;Ref&lt;/h2&gt;        &lt;ChangeColorButton aria-label=&quot;ref 컬러 변경&quot; /&gt;        &lt;p&gt;컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 될까요?&lt;/p&gt;      &lt;/GridItem&gt;    &lt;/Grid&gt;  );&#125;\n\n\nuseState()의 setStateValue()메서드를 사용하여 값을 변경한 경우 재렌더링이 발생하지만, useRef()의 current 값을 갱신하면 재렌더링이 발생하지 않는다.\n\n","dateCreated":"2022-11-22T19:27:24+09:00","dateModified":"2022-11-23T20:18:08+09:00","datePublished":"2022-11-22T19:27:24+09:00","description":"","headline":"⛱ useRef","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"}</script>
     <meta name="description" content="🐶 useRef()리액트에서 ref는 주로 DOM 노드 참조 목적으로 사용된다. 컴포넌트 렌더링에 영향을 주지 않는 값 참조 목적으로 사용된다. useRef()는 함수 컴포넌트 내부에서 특정 값을 지속적으로 참조할 때 사용한다. useState()와 달리 useRef()는 현재 값이 변경되어도 컴포넌트가 다시 렌더링되지 않아 애플리케이션 성능을 최적화">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="⛱ useRef">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"스코프스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.\n\n모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.\n식별자는 어떤 값을 구별하기 위해 유일 해야하므로 중복될 수 없다. 단, 스코프가 다르면 중복될 수 있다.\n\n지역 스코프자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.\n즉, 지역 스코프는 함수에 의해서 생성된다.\n\nlet, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.\n\n1234567var x = 1;if (true) &#123;  var x = 10;&#125;console.log(x);\n\nvar 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.\n스코프 체인스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.\n12345678910111213var x = 10; // 전역 스코프function outer() &#123;  var x = 100;  function inner() &#123;    var x = -100;    console.log(x);  &#125;  console.log(x); // 100  inner(); // -100&#125;console.log(x); // 10outer();\n\n\n전역 스코프 (최상위 스코프)\n\nouter 지역 스코프\n\ninner 지역 스코프\n\n\n자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 상위 스코프 방향으로 이동하며 변수를 검색한다.\n\n실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.\n\n렉시컬 스코프렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.\n함수 호출이 아닌 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.\n\n즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.\n\n\n전역변수와 var 키워드변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.\n\n전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.\n\n지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.\n\n\n전역변수의 문제점\n암묵적 결합어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.\n\n긴 생명주기\n\n\n메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.\n\n네임 스페이스 오염\n\n자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.\n\n그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.\n\n전역변수 사용 억제 방법\n즉시실행함수즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.\n\n모듈패턴클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.\n\n\n전역변수 억제와 캡슐화까지 가능하다.\n\n캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)\n\nvar 키워드var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.\n123var x = 10;console.log(window.x); // 10;\n\nvar 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.\n1234567y = 100;function foo() &#123;  z = 20;&#125;foo();\n\n키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.\n선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.\n\n키워드 없이 선언하는 것은 옳지 않다.\n\n러버덕하면서 알게된 내용\n12345678var x = 1;function foo() &#123;  y = 2;&#125;Object.getOwnPropertyDescriptor(window, &quot;x&quot;); //  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;Object.getOwnPropertyDescriptor(window, &quot;y&quot;); // &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;\n\nvar 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.\n하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.\n따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.\n\nlet, const 키워드let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.\nletvar 키워드와 비교하여 let 키워드를 알아보자.\n\n변수 중복 선언 금지\n\n블록 레벨 스코프\n\n\nlet 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.\n\n변수 호이스팅\n\nvar 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.\n선언단계가 자바스크립트 엔진에 의해 실행되고 초기화 단계는 변수 선언문에 도달했을 때, 실행된다.\n1234567let a;console.log(a); // undefineda = 10;console.log(a); // 10console.log(b); // Uncaught ReferenceError: b is not definedlet b;\n\n언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.\nconstlet 키워드와 비교해서 알아보자\n\n선언과 초기화\n\nconst 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.\n123const foo = 1; // 1const baz; // Uncaught SyntaxError : Unexpected identifier\n\n이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.\n\n재할당 금지\n\nconst 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.\n\n상수\n\n변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.\n주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.\n","dateCreated":"2023-01-20T10:30:56+09:00","dateModified":"2023-01-20T10:32:39+09:00","datePublished":"2023-01-20T10:30:56+09:00","description":"","headline":"스코프는 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"스코프스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.\n\n모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.\n식별자는 어떤 값을 구별하기 위해 유일 해야하므로 중복될 수 없다. 단, 스코프가 다르면 중복될 수 있다.\n\n지역 스코프자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.\n즉, 지역 스코프는 함수에 의해서 생성된다.\n\nlet, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.\n\n1234567var x = 1;if (true) &#123;  var x = 10;&#125;console.log(x);\n\nvar 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.\n스코프 체인스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.\n12345678910111213var x = 10; // 전역 스코프function outer() &#123;  var x = 100;  function inner() &#123;    var x = -100;    console.log(x);  &#125;  console.log(x); // 100  inner(); // -100&#125;console.log(x); // 10outer();\n\n\n전역 스코프 (최상위 스코프)\n\nouter 지역 스코프\n\ninner 지역 스코프\n\n\n자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 상위 스코프 방향으로 이동하며 변수를 검색한다.\n\n실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.\n\n렉시컬 스코프렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.\n함수 호출이 아닌 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.\n\n즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.\n\n\n전역변수와 var 키워드변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.\n\n전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.\n\n지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.\n\n\n전역변수의 문제점\n암묵적 결합어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.\n\n긴 생명주기\n\n\n메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.\n\n네임 스페이스 오염\n\n자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.\n\n그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.\n\n전역변수 사용 억제 방법\n즉시실행함수즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.\n\n모듈패턴클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.\n\n\n전역변수 억제와 캡슐화까지 가능하다.\n\n캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)\n\nvar 키워드var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.\n123var x = 10;console.log(window.x); // 10;\n\nvar 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.\n1234567y = 100;function foo() &#123;  z = 20;&#125;foo();\n\n키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.\n선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.\n\n키워드 없이 선언하는 것은 옳지 않다.\n\n러버덕하면서 알게된 내용\n12345678var x = 1;function foo() &#123;  y = 2;&#125;Object.getOwnPropertyDescriptor(window, &quot;x&quot;); //  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;Object.getOwnPropertyDescriptor(window, &quot;y&quot;); // &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;\n\nvar 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.\n하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.\n따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.\n\nlet, const 키워드let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.\nletvar 키워드와 비교하여 let 키워드를 알아보자.\n\n변수 중복 선언 금지\n\n블록 레벨 스코프\n\n\nlet 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.\n\n변수 호이스팅\n\nvar 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.\n선언단계가 자바스크립트 엔진에 의해 실행되고 초기화 단계는 변수 선언문에 도달했을 때, 실행된다.\n1234567let a;console.log(a); // undefineda = 10;console.log(a); // 10console.log(b); // Uncaught ReferenceError: b is not definedlet b;\n\n언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.\nconstlet 키워드와 비교해서 알아보자\n\n선언과 초기화\n\nconst 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.\n123const foo = 1; // 1const baz; // Uncaught SyntaxError : Unexpected identifier\n\n이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.\n\n재할당 금지\n\nconst 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.\n\n상수\n\n변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.\n주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.\n","dateCreated":"2023-01-20T10:30:56+09:00","dateModified":"2023-01-20T10:32:39+09:00","datePublished":"2023-01-20T10:30:56+09:00","description":"","headline":"스코프는 무엇인가요?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"}</script>
     <meta name="description" content="스코프스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.  모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다. 식별자는 어떤 값을 구별하기 위해 유일 해야하므로 중복될 수 없다. 단, 스코프가 다르면 중복될 수 있다.  지역 스코프자바스크립트는 함수 레벨 스코프를 갖는다.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="스코프는 무엇인가요?">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

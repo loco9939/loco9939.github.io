@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.\n\n포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.\n\n🔨 사용방법1ReactDOM.createPortal(child, container);\n\n\nchild는 렌더링할 수 있는 자식\ncontainer는 DOM 요소이다.\n\n123456render() &#123;    return ReactDOM.createPortal(        this.props.children,        domNode    )&#125;\n\n\n위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.\ndomNode는 DOM 내부의 어디에 있던지 간에 상관없다.\n\n\n시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, 키보드 포커스 관리와 접근성을 고려해줘야한다.\n\n🌈 다이얼로그 예시다이얼로그 특징\n다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.\n다이얼로그 바깥으로 초점이동되면 안된다.\ndialog 역할(role)을 부여해야한다.\n모달 기능일 경우 aria-modal=true 이여야한다.\n다이얼로그 제목은 aria-label, aria-labelledby로 설정한다.\n\n1. 부모 컴포넌트1234567891011121314151617181920212223242526272829303132333435363738394041424344454647export class DemoDialog extends React.Component &#123;  #opennerRef = React.createRef(null);  state = &#123;    show: false,  &#125;;  handleShowDialog = () =&gt; &#123;    this.setState(&#123; show: true &#125;);  &#125;;  handleHideDialog = () =&gt; &#123;    this.setState(&#123; show: false &#125;);  &#125;;  render() &#123;    return (      &lt;div className=&#123;styles.box&#125;&gt;        &lt;button          ref=&#123;this.#opennerRef&#125;          type=&quot;button&quot;          className=&#123;styles.openDialogButton&#125;          aria-haspopup=&quot;dialog&quot;          aria-label=&quot;모달 다이얼로그 열기&quot;          title=&quot;모달 다이얼로그 열기&quot;          onClick=&#123;this.handleShowDialog&#125;        &gt;          모달열기        &lt;/button&gt;        &#123;this.state.show &amp;&amp; (          &lt;Dialog            modal            onClose=&#123;this.handleHideDialog&#125;            openner=&#123;this.#opennerRef.current&#125;          &gt;            &lt;Dialog.Header&gt;              &lt;h3&gt;불금 다이얼로그&lt;/h3&gt;            &lt;/Dialog.Header&gt;            &lt;Dialog.Body&gt;              &lt;ul&gt;...&lt;/ul&gt;            &lt;/Dialog.Body&gt;          &lt;/Dialog&gt;        )&#125;      &lt;/div&gt;    );  &#125;&#125;\n\n\n부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.\n\n2. 모달 컴포넌트(자식)root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.\n1234567// public/index.html&lt;body&gt;    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;    &lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;    &lt;div id=&quot;dialogZone&quot;&gt;&lt;/div&gt;&lt;/boyd&gt;\n\n123456789101112131415161718192021222324252627282930313233// Dialog.jsxconst &#123; documentElement: htmlElement &#125; = document;const reactDomContainer = document.getElementById(&quot;root&quot;);export class Dialog extends React.Component &#123;  #containerRef = React.createRef(null);  handleClose = () =&gt; &#123;    this.props.onClose?.();    this.props.openner.focus();  &#125;;  render() &#123;    const &#123; modal = false &#125; = this.props;    return createPortal(      &lt;&gt;        &lt;article          ref=&#123;this.#containerRef&#125;          tabIndex=&#123;-1&#125;          role=&quot;dialog&quot;          aria-modal=&#123;modal&#125;          className=&#123;styles.container&#125;        &gt;          &#123;this.props.children&#125;          &lt;Dialog.Footer onClose=&#123;this.handleClose&#125; /&gt;        &lt;/article&gt;        &#123;modal &amp;&amp; &lt;div className=&#123;styles.dim&#125; onClick=&#123;this.handleClose&#125; /&gt;&#125;      &lt;/&gt;,      document.getElementById(&quot;dialogZone&quot;)    );  &#125;&#125;\n\n\n우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.\n컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.\ncreatePortal()에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.\n모달이 켜져있을 때, Dialog.footer 자식 요소에게 onClose를 props로 전달하였다.\n\n3. 자식 컴포넌트 접근성 고려1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859export class Dialog extends React.Component &#123;    ...#tabbableElements = [];  #bindEscKeyEvents() &#123;    const handler = (e) =&gt; &#123;      if (e.key.toLowerCase().includes(&quot;escape&quot;)) &#123;        console.log(&quot;pressed esc key&quot;);        this.handleClose();      &#125;    &#125;;    document.addEventListener(&quot;keyup&quot;, handler);    // cleanup function    return () =&gt; document.removeEventListener(&quot;keyup&quot;, handler);  &#125;  #unbindEscKeyEvents = null;  componentDidMount() &#123;    this.#containerRef.current.focus();    this.#tabbableElements = getTabbableElements(this.#containerRef.current);    this.settingKeyboardTrap();    htmlElement.style.overflowY = &quot;hidden&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, true);    this.#unbindEscKeyEvents = this.#bindEscKeyEvents();  &#125;  componentWillUnmount() &#123;    htmlElement.style.overflowY = &quot;visible&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, false);    this.#unbindEscKeyEvents?.();  &#125;  settingKeyboardTrap() &#123;    const tabbles = this.#tabbableElements;    const firstElement = tabbles[0];    const lastElement = tabbles[tabbles.length - 1];    firstElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        lastElement.focus();      &#125;    &#125;);    lastElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (!e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        firstElement.focus();      &#125;    &#125;);  &#125;&#125;\n\n\nkey 이벤트를 등록해주고 제거해줄 때, 클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치시켜주면 편하다.\nkeydown 이벤트를 사용해야지만 e.preventDefault()로 기본동작을 막을 수 있다.\n\n\n모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.\nhtmlElement.style.overflowY = &quot;hidden&quot;로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.\n모달이 켜져있으면 root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.\n컴포넌트가 소멸되기 직전에 등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자. (고려하지 않는다면 성능에 문제가 생길 것이다.)\n\n4. 모달 slot 구분어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.\n합성(composition)을 사용하여 컴포넌트 간에 코드를 재사용하도록 하자.\n12345678910111213141516171819202122232425262728Dialog.Header = function DialogHeader(&#123; children &#125;) &#123;  return &lt;header className=&#123;styles.header&#125;&gt;&#123;children&#125;&lt;/header&gt;;&#125;;Dialog.Header.defaultProps = &#123;  children: &lt;h2&gt;React 포털로 연 다이얼로그(with 모달)&lt;/h2&gt;,&#125;;Dialog.Body = function DialogBody(&#123; children &#125;) &#123;  return &lt;div className=&#123;styles.body&#125;&gt;&#123;children&#125;&lt;/div&gt;;&#125;;Dialog.Footer = function DialogFooter(&#123; children, onClose &#125;) &#123;  return (    &lt;footer className=&#123;styles.footer&#125;&gt;      &lt;button        type=&quot;button&quot;        className=&#123;styles.closeButton&#125;        aria-label=&quot;모달 다이얼로그 닫기&quot;        title=&quot;모달 다이얼로그 닫기&quot;        onClick=&#123;onClose&#125;      &gt;        모달닫기      &lt;/button&gt;      &#123;children&#125;    &lt;/footer&gt;  );&#125;;\n","dateCreated":"2022-11-14T19:38:01+09:00","dateModified":"2022-11-14T20:43:12+09:00","datePublished":"2022-11-14T19:38:01+09:00","description":"","headline":"Portal(포털)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.\n\n포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.\n\n🔨 사용방법1ReactDOM.createPortal(child, container);\n\n\nchild는 렌더링할 수 있는 자식\ncontainer는 DOM 요소이다.\n\n123456render() &#123;    return ReactDOM.createPortal(        this.props.children,        domNode    )&#125;\n\n\n위 경우 React는 새로운 div를 생성하지 않고 domNode 안에 자식을 렌더링한다.\ndomNode는 DOM 내부의 어디에 있던지 간에 상관없다.\n\n\n시각적으로 자식을 튀어나오도록 보여야하는 다이얼로그, 호버카드, 툴팁에 사용된다. 이 때, 키보드 포커스 관리와 접근성을 고려해줘야한다.\n\n🌈 다이얼로그 예시다이얼로그 특징\n다이얼로그가 띄워진 상태면 그 아래 위치한 내용은 비활성화 상태여야한다.\n다이얼로그 바깥으로 초점이동되면 안된다.\ndialog 역할(role)을 부여해야한다.\n모달 기능일 경우 aria-modal=true 이여야한다.\n다이얼로그 제목은 aria-label, aria-labelledby로 설정한다.\n\n1. 부모 컴포넌트1234567891011121314151617181920212223242526272829303132333435363738394041424344454647export class DemoDialog extends React.Component &#123;  #opennerRef = React.createRef(null);  state = &#123;    show: false,  &#125;;  handleShowDialog = () =&gt; &#123;    this.setState(&#123; show: true &#125;);  &#125;;  handleHideDialog = () =&gt; &#123;    this.setState(&#123; show: false &#125;);  &#125;;  render() &#123;    return (      &lt;div className=&#123;styles.box&#125;&gt;        &lt;button          ref=&#123;this.#opennerRef&#125;          type=&quot;button&quot;          className=&#123;styles.openDialogButton&#125;          aria-haspopup=&quot;dialog&quot;          aria-label=&quot;모달 다이얼로그 열기&quot;          title=&quot;모달 다이얼로그 열기&quot;          onClick=&#123;this.handleShowDialog&#125;        &gt;          모달열기        &lt;/button&gt;        &#123;this.state.show &amp;&amp; (          &lt;Dialog            modal            onClose=&#123;this.handleHideDialog&#125;            openner=&#123;this.#opennerRef.current&#125;          &gt;            &lt;Dialog.Header&gt;              &lt;h3&gt;불금 다이얼로그&lt;/h3&gt;            &lt;/Dialog.Header&gt;            &lt;Dialog.Body&gt;              &lt;ul&gt;...&lt;/ul&gt;            &lt;/Dialog.Body&gt;          &lt;/Dialog&gt;        )&#125;      &lt;/div&gt;    );  &#125;&#125;\n\n\n부모 컴포넌트에서는 버튼 클릭이벤트로 모달을 조건부 렌더링해주고 있다.\n\n2. 모달 컴포넌트(자식)root 요소가 아닌 곳에 자식 컴포넌트를 그려주기 위해서 public 폴더의 index.html에 다음과 같이 div 요소를 추가해줘야한다.\n1234567// public/index.html&lt;body&gt;    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;    &lt;!-- 다이얼로그를 렌더링 할 컨테이너 요소 --&gt;    &lt;div id=&quot;dialogZone&quot;&gt;&lt;/div&gt;&lt;/boyd&gt;\n\n123456789101112131415161718192021222324252627282930313233// Dialog.jsxconst &#123; documentElement: htmlElement &#125; = document;const reactDomContainer = document.getElementById(&quot;root&quot;);export class Dialog extends React.Component &#123;  #containerRef = React.createRef(null);  handleClose = () =&gt; &#123;    this.props.onClose?.();    this.props.openner.focus();  &#125;;  render() &#123;    const &#123; modal = false &#125; = this.props;    return createPortal(      &lt;&gt;        &lt;article          ref=&#123;this.#containerRef&#125;          tabIndex=&#123;-1&#125;          role=&quot;dialog&quot;          aria-modal=&#123;modal&#125;          className=&#123;styles.container&#125;        &gt;          &#123;this.props.children&#125;          &lt;Dialog.Footer onClose=&#123;this.handleClose&#125; /&gt;        &lt;/article&gt;        &#123;modal &amp;&amp; &lt;div className=&#123;styles.dim&#125; onClick=&#123;this.handleClose&#125; /&gt;&#125;      &lt;/&gt;,      document.getElementById(&quot;dialogZone&quot;)    );  &#125;&#125;\n\n\n우선 해당 모달 컴포넌트를 그릴 domNode를 htmlElement로 지정해주었다.\n컨테이너 DOM 요소 가져오기 위해서 ref를 생성해주었다.\ncreatePortal()에 렌더링할 자식 컴포넌트와 자식 컴포넌트를 렌더링할 컨테이너를 전달하였다.\n모달이 켜져있을 때, Dialog.footer 자식 요소에게 onClose를 props로 전달하였다.\n\n3. 자식 컴포넌트 접근성 고려1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859export class Dialog extends React.Component &#123;    ...#tabbableElements = [];  #bindEscKeyEvents() &#123;    const handler = (e) =&gt; &#123;      if (e.key.toLowerCase().includes(&quot;escape&quot;)) &#123;        console.log(&quot;pressed esc key&quot;);        this.handleClose();      &#125;    &#125;;    document.addEventListener(&quot;keyup&quot;, handler);    // cleanup function    return () =&gt; document.removeEventListener(&quot;keyup&quot;, handler);  &#125;  #unbindEscKeyEvents = null;  componentDidMount() &#123;    this.#containerRef.current.focus();    this.#tabbableElements = getTabbableElements(this.#containerRef.current);    this.settingKeyboardTrap();    htmlElement.style.overflowY = &quot;hidden&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, true);    this.#unbindEscKeyEvents = this.#bindEscKeyEvents();  &#125;  componentWillUnmount() &#123;    htmlElement.style.overflowY = &quot;visible&quot;;    reactDomContainer.setAttribute(&quot;aria-hidden&quot;, false);    this.#unbindEscKeyEvents?.();  &#125;  settingKeyboardTrap() &#123;    const tabbles = this.#tabbableElements;    const firstElement = tabbles[0];    const lastElement = tabbles[tabbles.length - 1];    firstElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        lastElement.focus();      &#125;    &#125;);    lastElement.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;      if (!e.shiftKey &amp;&amp; e.key.toLowerCase().includes(&quot;tab&quot;)) &#123;        e.preventDefault();        firstElement.focus();      &#125;    &#125;);  &#125;&#125;\n\n\nkey 이벤트를 등록해주고 제거해줄 때, 클로저를 사용하여 이벤트 핸들러를 동일한 참조값으로 일치시켜주면 편하다.\nkeydown 이벤트를 사용해야지만 e.preventDefault()로 기본동작을 막을 수 있다.\n\n\n모달 컴포넌트가 생성되었을 때, 해당 컨테이너(article)에 초점을 가게하기 위해 ref를 전달해준 것이다.\nhtmlElement.style.overflowY = &quot;hidden&quot;로 모달 컴포넌트가 띄워져있을 때, 다른 요소는 스크롤이 비활성화시켜주었다.\n모달이 켜져있으면 root 컨테이너는 aria-hidden을 스크린 리더기에서도 모달만 읽히도록 해줘야한다.\n컴포넌트가 소멸되기 직전에 등록했던 key 이벤트를 제거해줘야하는 것을 잊지 말자. (고려하지 않는다면 성능에 문제가 생길 것이다.)\n\n4. 모달 slot 구분어떤 컴포넌트들은 어떤 자식 요소가 들어올지 예상할 수 없는 경우가 있다. 이럴 경우 children prop을 사용하여 자식 요소를 출력에 그대로 전달하는 것이 좋다.\n합성(composition)을 사용하여 컴포넌트 간에 코드를 재사용하도록 하자.\n12345678910111213141516171819202122232425262728Dialog.Header = function DialogHeader(&#123; children &#125;) &#123;  return &lt;header className=&#123;styles.header&#125;&gt;&#123;children&#125;&lt;/header&gt;;&#125;;Dialog.Header.defaultProps = &#123;  children: &lt;h2&gt;React 포털로 연 다이얼로그(with 모달)&lt;/h2&gt;,&#125;;Dialog.Body = function DialogBody(&#123; children &#125;) &#123;  return &lt;div className=&#123;styles.body&#125;&gt;&#123;children&#125;&lt;/div&gt;;&#125;;Dialog.Footer = function DialogFooter(&#123; children, onClose &#125;) &#123;  return (    &lt;footer className=&#123;styles.footer&#125;&gt;      &lt;button        type=&quot;button&quot;        className=&#123;styles.closeButton&#125;        aria-label=&quot;모달 다이얼로그 닫기&quot;        title=&quot;모달 다이얼로그 닫기&quot;        onClick=&#123;onClose&#125;      &gt;        모달닫기      &lt;/button&gt;      &#123;children&#125;    &lt;/footer&gt;  );&#125;;\n","dateCreated":"2022-11-14T19:38:01+09:00","dateModified":"2022-11-14T20:43:12+09:00","datePublished":"2022-11-14T19:38:01+09:00","description":"","headline":"Portal(포털)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"}</script>
     <meta name="description" content="📌 Portal이란?포털을 사용하면 애플리케이션 영역을 벗어나 특정 위치에 컴포넌트를 렌더링할 수 있다. 즉, 지금껏 root 컨테이너에만 렌더링을 해왔다면 포털을 사용하여 root 컨테이너 외부에다가도 컴포넌트를 렌더링할 수 있게된다.  포털을 통해 렌더링된 컴포넌트는 DOM 트리 위치와 상관없이 React 컴포넌트 트리에 포함되기 때문이다.  🔨 사">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Portal(포털)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

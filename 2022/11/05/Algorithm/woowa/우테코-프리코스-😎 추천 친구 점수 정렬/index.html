@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"🚀 기능 요구 사항레벨 2의 팀 프로젝트 미션으로 SNS(Social Networking Service)를 만들고자 하는 팀이 있다. 팀에 속한 크루 중 평소 알고리즘에 관심이 많은 미스터코는 친구 추천 알고리즘을 구현하고자 아래와 같은 규칙을 세웠다.\n\n사용자와 함께 아는 친구의 수 &#x3D; 10점\n사용자의 타임 라인에 방문한 횟수 &#x3D; 1점\n\n사용자 아이디 user와 친구 관계를 담은 이차원 배열 friends, 사용자 타임 라인 방문 기록 visitors가 매개변수로 주어질 때, 미스터코의 친구 추천 규칙에 따라 점수가 가장 높은 순으로 정렬하여 최대 5명을 return 하도록 solution 메서드를 완성하라. 이때 추천 점수가 0점인 경우 추천하지 않으며, 추천 점수가 같은 경우는 이름순으로 정렬한다.\n제한사항\nuser는 길이가 1 이상 30 이하인 문자열이다.\nfriends는 길이가 1 이상 10,000 이하인 배열이다.\nfriends의 각 원소는 길이가 2인 배열로 [아이디 A, 아이디 B] 순으로 들어있다.\nA와 B는 친구라는 의미이다.\n아이디는 길이가 1 이상 30 이하인 문자열이다.\n\n\nvisitors는 길이가 0 이상 10,000 이하인 배열이다.\n사용자 아이디는 알파벳 소문자로만 이루어져 있다.\n동일한 친구 관계가 중복해서 주어지지 않는다.\n추천할 친구가 없는 경우는 주어지지 않는다.\n\n실행 결과 예시\n\n\nuser\nfriends\nvisitors\nresult\n\n\n\n“mrko”\n[ [“donut”, “andole”], [“donut”, “jun”], [“donut”, “mrko”], [“shakevan”, “andole”], [“shakevan”, “jun”], [“shakevan”, “mrko”] ]\n[“bedi”, “bedi”, “donut”, “bedi”, “shakevan”]\n[“andole”, “jun”, “bedi”]\n\n\n내 코드1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465function problem7(user, friends, visitors) &#123;  if (    typeof user !== &quot;string&quot; ||    !Array.isArray(friends) ||    !Array.isArray(visitors)  )    throw new Error(      &quot;user는 문자열, friends는 배열, visitors는 배열이여야 합니다.&quot;    );  if (!user.length || user.length &gt; 30)    throw new RangeError(&quot;user는 길이가 1 이상 30 이하인 문자열이여야 합니다.&quot;);  if (!friends.length || friends.length &gt; 10000)    throw new RangeError(      &quot;friends는 길이가 1 이상 10,000 이하인 배열이여야 합니다.&quot;    );  if (visitors.length &lt; 0 || visitors.length &gt; 10000)    throw new RangeError(      &quot;visitors는 길이가 0 이상 10,000 이하인 배열이여야 합니다.&quot;    );  // 유저의 친구들  let userFriends = [];  friends.forEach((friend) =&gt; &#123;    if (friend.includes(user)) userFriends = [...userFriends, ...friend];  &#125;);  userFriends = userFriends.filter((friend) =&gt; friend !== user);  // 유저 친구의 친구들 =&gt; 알 수도 있는 친구들  let mayKnowUsers = [];  friends.forEach((friend) =&gt; &#123;    userFriends.forEach((userFriend) =&gt; &#123;      if (friend.includes(userFriend))        mayKnowUsers = [...mayKnowUsers, ...friend];    &#125;);  &#125;);  mayKnowUsers = mayKnowUsers.filter((mayKnowUser) =&gt; &#123;    return mayKnowUser !== user &amp;&amp; !userFriends.includes(mayKnowUser);  &#125;);  // 유저 점수 계산  const userCount = &#123;&#125;;  mayKnowUsers.forEach((mayKnowUser) =&gt; &#123;    userCount[mayKnowUser] = (userCount[mayKnowUser] ?? 0) + 10;  &#125;);  visitors.forEach((visitor) =&gt; &#123;    if (visitor === user || userFriends.includes(visitor)) return;    userCount[visitor] = (userCount[visitor] ?? 0) + 1;  &#125;);  // 점수 기준 내림차순 정렬  const sortFunc = (userA, userB) =&gt; &#123;    const numA = userCount[userA];    const numB = userCount[userB];    if (numA - numB &gt; 0) return -1;    else if (numA - numB &lt; 0) return 1;    else return userA &lt; userB ? -1 : userA === userB ? 0 : 1;  &#125;;  const userId = Object.keys(userCount);  return userId.sort((userA, userB) =&gt; sortFunc(userA, userB)).slice(0, 5);&#125;\n\n\n유저의 친구들을 구하였다.\n유저의 친구들의 친구들을 구하였다. ⇒ 10점을 매기기 위해\n방문객과 유저의 친구의 친구들을 순회하면서 점수를 매겼다.\n점수를 기준으로 내림차순 정렬과 동일 점수일 때 알파벳 순으로 정렬을 해주었다.\n\n🏓 소감이 문제는 처음에 한국말을 이해하기 어려워서 오랫동안 고전했던 문제이다. 친구에게 문제를 차근히 설명해보면서 요구사항에 대해 파악할 수 있었다.\n\n시간이 부족하여 6번문제와 7번문제는 리팩터링을 많이 못한 것이 아쉬웠다.\n이전까지 sort() 메서드는 단순히 오름차순, 내림차순 정렬에만 사용되는 것이라고 생각했는데, 이번 기회에 sort() 메서드는 두개의 인자를 받아서 -1, 0, 1 값을 return 하는 것을 기준으로 배열의 index를 직접 변경하는 메서드이라는 것을 제대로 알게되었다.\n\n","dateCreated":"2022-11-05T19:36:33+09:00","dateModified":"2022-11-05T19:37:56+09:00","datePublished":"2022-11-05T19:36:33+09:00","description":"","headline":"우테코-프리코스-😎 추천 친구 점수 정렬","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"🚀 기능 요구 사항레벨 2의 팀 프로젝트 미션으로 SNS(Social Networking Service)를 만들고자 하는 팀이 있다. 팀에 속한 크루 중 평소 알고리즘에 관심이 많은 미스터코는 친구 추천 알고리즘을 구현하고자 아래와 같은 규칙을 세웠다.\n\n사용자와 함께 아는 친구의 수 &#x3D; 10점\n사용자의 타임 라인에 방문한 횟수 &#x3D; 1점\n\n사용자 아이디 user와 친구 관계를 담은 이차원 배열 friends, 사용자 타임 라인 방문 기록 visitors가 매개변수로 주어질 때, 미스터코의 친구 추천 규칙에 따라 점수가 가장 높은 순으로 정렬하여 최대 5명을 return 하도록 solution 메서드를 완성하라. 이때 추천 점수가 0점인 경우 추천하지 않으며, 추천 점수가 같은 경우는 이름순으로 정렬한다.\n제한사항\nuser는 길이가 1 이상 30 이하인 문자열이다.\nfriends는 길이가 1 이상 10,000 이하인 배열이다.\nfriends의 각 원소는 길이가 2인 배열로 [아이디 A, 아이디 B] 순으로 들어있다.\nA와 B는 친구라는 의미이다.\n아이디는 길이가 1 이상 30 이하인 문자열이다.\n\n\nvisitors는 길이가 0 이상 10,000 이하인 배열이다.\n사용자 아이디는 알파벳 소문자로만 이루어져 있다.\n동일한 친구 관계가 중복해서 주어지지 않는다.\n추천할 친구가 없는 경우는 주어지지 않는다.\n\n실행 결과 예시\n\n\nuser\nfriends\nvisitors\nresult\n\n\n\n“mrko”\n[ [“donut”, “andole”], [“donut”, “jun”], [“donut”, “mrko”], [“shakevan”, “andole”], [“shakevan”, “jun”], [“shakevan”, “mrko”] ]\n[“bedi”, “bedi”, “donut”, “bedi”, “shakevan”]\n[“andole”, “jun”, “bedi”]\n\n\n내 코드1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465function problem7(user, friends, visitors) &#123;  if (    typeof user !== &quot;string&quot; ||    !Array.isArray(friends) ||    !Array.isArray(visitors)  )    throw new Error(      &quot;user는 문자열, friends는 배열, visitors는 배열이여야 합니다.&quot;    );  if (!user.length || user.length &gt; 30)    throw new RangeError(&quot;user는 길이가 1 이상 30 이하인 문자열이여야 합니다.&quot;);  if (!friends.length || friends.length &gt; 10000)    throw new RangeError(      &quot;friends는 길이가 1 이상 10,000 이하인 배열이여야 합니다.&quot;    );  if (visitors.length &lt; 0 || visitors.length &gt; 10000)    throw new RangeError(      &quot;visitors는 길이가 0 이상 10,000 이하인 배열이여야 합니다.&quot;    );  // 유저의 친구들  let userFriends = [];  friends.forEach((friend) =&gt; &#123;    if (friend.includes(user)) userFriends = [...userFriends, ...friend];  &#125;);  userFriends = userFriends.filter((friend) =&gt; friend !== user);  // 유저 친구의 친구들 =&gt; 알 수도 있는 친구들  let mayKnowUsers = [];  friends.forEach((friend) =&gt; &#123;    userFriends.forEach((userFriend) =&gt; &#123;      if (friend.includes(userFriend))        mayKnowUsers = [...mayKnowUsers, ...friend];    &#125;);  &#125;);  mayKnowUsers = mayKnowUsers.filter((mayKnowUser) =&gt; &#123;    return mayKnowUser !== user &amp;&amp; !userFriends.includes(mayKnowUser);  &#125;);  // 유저 점수 계산  const userCount = &#123;&#125;;  mayKnowUsers.forEach((mayKnowUser) =&gt; &#123;    userCount[mayKnowUser] = (userCount[mayKnowUser] ?? 0) + 10;  &#125;);  visitors.forEach((visitor) =&gt; &#123;    if (visitor === user || userFriends.includes(visitor)) return;    userCount[visitor] = (userCount[visitor] ?? 0) + 1;  &#125;);  // 점수 기준 내림차순 정렬  const sortFunc = (userA, userB) =&gt; &#123;    const numA = userCount[userA];    const numB = userCount[userB];    if (numA - numB &gt; 0) return -1;    else if (numA - numB &lt; 0) return 1;    else return userA &lt; userB ? -1 : userA === userB ? 0 : 1;  &#125;;  const userId = Object.keys(userCount);  return userId.sort((userA, userB) =&gt; sortFunc(userA, userB)).slice(0, 5);&#125;\n\n\n유저의 친구들을 구하였다.\n유저의 친구들의 친구들을 구하였다. ⇒ 10점을 매기기 위해\n방문객과 유저의 친구의 친구들을 순회하면서 점수를 매겼다.\n점수를 기준으로 내림차순 정렬과 동일 점수일 때 알파벳 순으로 정렬을 해주었다.\n\n🏓 소감이 문제는 처음에 한국말을 이해하기 어려워서 오랫동안 고전했던 문제이다. 친구에게 문제를 차근히 설명해보면서 요구사항에 대해 파악할 수 있었다.\n\n시간이 부족하여 6번문제와 7번문제는 리팩터링을 많이 못한 것이 아쉬웠다.\n이전까지 sort() 메서드는 단순히 오름차순, 내림차순 정렬에만 사용되는 것이라고 생각했는데, 이번 기회에 sort() 메서드는 두개의 인자를 받아서 -1, 0, 1 값을 return 하는 것을 기준으로 배열의 index를 직접 변경하는 메서드이라는 것을 제대로 알게되었다.\n\n","dateCreated":"2022-11-05T19:36:33+09:00","dateModified":"2022-11-05T19:37:56+09:00","datePublished":"2022-11-05T19:36:33+09:00","description":"","headline":"우테코-프리코스-😎 추천 친구 점수 정렬","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"}</script>
     <meta name="description" content="🚀 기능 요구 사항레벨 2의 팀 프로젝트 미션으로 SNS(Social Networking Service)를 만들고자 하는 팀이 있다. 팀에 속한 크루 중 평소 알고리즘에 관심이 많은 미스터코는 친구 추천 알고리즘을 구현하고자 아래와 같은 규칙을 세웠다.  사용자와 함께 아는 친구의 수 &#x3D; 10점 사용자의 타임 라인에 방문한 횟수 &#x3D; 1점">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="우테코-프리코스-😎 추천 친구 점수 정렬">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

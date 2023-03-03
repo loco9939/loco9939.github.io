@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"\n\nmerge sort\n정렬되지 않는 배열을 각각 하나의 원소만 포함하는 n개의 부분 배열로 분할한다. n개의 부분 배열이 1개가 될 때까지 반복해서 병합할 때 정렬한다. 최종적으로 남은 부분 배열이 정렬된 배열이 된다.\n두가지 역할을 하는 함수로 나누어 설명할 수 있다.\n\nmergeSort(arr): 배열을 절반으로 나누는 함수\nmerge(left, right): 반으로 나뉜 두 배열을 정렬하여 새로운 배열로 병합하는 함수\n\nmerge 함수 구현left[0]과 right[0]를 비교하여 더 작은 수를 새로운 배열에 순서대로 담는다.\n만약 left[0]이 right[0]보다 작다면 새로운 배열에 left[0]을 담고 이후에 left[1]과 right[0]을 비교한다.\n이렇게 비교하면서 새로운 배열을 생성하기를 left, right 배열의 요소가 하나도 남지 않을 때 까지 반복한다.\n이게 가능하기 위해서는 left와 right는 정렬된 상태의 배열이여야만 합니다. left, right를 정렬된 배열로 만들어 주기 위해서 mergeSort 함수를 이용합니다.\nmergeSort 함수 구현mergeSort 함수는 인수로 주어진 배열을 요소가 1개일 때까지 절반으로 나누고 정렬하며 merge 해주는 함수이다.\n즉, 요소가 1개인 서로 다른 두 배열을 정렬하면서 하나의 배열로 만들어간다.\n12345678910111213141516171819const arr = [33,2,51,1,10,3];// 1단계 - 나누기[33,2,51], [1,10,3]// 2단계 - 나누기[33,2],[51],[1,10],[3]// 3단계 - 나누기[33],[2],[51],[1],[10],[3]// 4단계 - 병합[2,33], [1,51], [3,10]// 5단계 - 병합[1,2,33,51], [3, 10]// 6단계 - 최종 병합[1,2,3,10,33,51]\n\n코드 구현1234567891011121314151617181920212223242526272829const merge = (left, right) =&gt; &#123;  const sorted = [];    // left, right 비교하여 정렬된 배열에 담는다.  while (left.length &amp;&amp; right.length) &#123;    if (left[0] &lt;= right[0]) &#123;      sorted.push(left.shift());    &#125; else &#123;      sorted.push(right.shift());    &#125;  &#125;  // left 또는 right 배열 중 하나는 아직 남아있으므로 남은 배열은 정렬되어 있으므로 복사하여 뒤에 붙혀준다.  return [...sorted, ...left, ...right];&#125;const mergeSort = arr =&gt; &#123;  if (arr.length === 1) return arr;  const mid = Math.ceil(arr.length / 2);  const left = arr.slice(0, mid);  const right = arr.slice(mid);  return merge(mergeSort(left), mergeSort(right));&#125;const arr = [33,2,51,1,10,3];const sorted = mergeSort(arr);console.log(arr); // [33,2,51,1,10,3]console.log(sorted); // [1,2,3,10,33,51]\n\n정리\nmergeSort는 O(n log n) 시간 복잡도를 가진다. 왜냐하면 절반씩 나눠서 비교하기 때문이다.\n안정 정렬에 속한다.\n\n참고자료\n\nproshy 병합정렬\nmaramarathon 병합정렬\n\n","dateCreated":"2022-12-29T13:07:29+09:00","dateModified":"2022-12-29T14:21:55+09:00","datePublished":"2022-12-29T13:07:29+09:00","description":"","headline":"merge sort","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/12/29/Algorithm/merge%20sort/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/12/29/Algorithm/merge%20sort/","keywords":"정렬, merge sort"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\nmerge sort\n정렬되지 않는 배열을 각각 하나의 원소만 포함하는 n개의 부분 배열로 분할한다. n개의 부분 배열이 1개가 될 때까지 반복해서 병합할 때 정렬한다. 최종적으로 남은 부분 배열이 정렬된 배열이 된다.\n두가지 역할을 하는 함수로 나누어 설명할 수 있다.\n\nmergeSort(arr): 배열을 절반으로 나누는 함수\nmerge(left, right): 반으로 나뉜 두 배열을 정렬하여 새로운 배열로 병합하는 함수\n\nmerge 함수 구현left[0]과 right[0]를 비교하여 더 작은 수를 새로운 배열에 순서대로 담는다.\n만약 left[0]이 right[0]보다 작다면 새로운 배열에 left[0]을 담고 이후에 left[1]과 right[0]을 비교한다.\n이렇게 비교하면서 새로운 배열을 생성하기를 left, right 배열의 요소가 하나도 남지 않을 때 까지 반복한다.\n이게 가능하기 위해서는 left와 right는 정렬된 상태의 배열이여야만 합니다. left, right를 정렬된 배열로 만들어 주기 위해서 mergeSort 함수를 이용합니다.\nmergeSort 함수 구현mergeSort 함수는 인수로 주어진 배열을 요소가 1개일 때까지 절반으로 나누고 정렬하며 merge 해주는 함수이다.\n즉, 요소가 1개인 서로 다른 두 배열을 정렬하면서 하나의 배열로 만들어간다.\n12345678910111213141516171819const arr = [33,2,51,1,10,3];// 1단계 - 나누기[33,2,51], [1,10,3]// 2단계 - 나누기[33,2],[51],[1,10],[3]// 3단계 - 나누기[33],[2],[51],[1],[10],[3]// 4단계 - 병합[2,33], [1,51], [3,10]// 5단계 - 병합[1,2,33,51], [3, 10]// 6단계 - 최종 병합[1,2,3,10,33,51]\n\n코드 구현1234567891011121314151617181920212223242526272829const merge = (left, right) =&gt; &#123;  const sorted = [];    // left, right 비교하여 정렬된 배열에 담는다.  while (left.length &amp;&amp; right.length) &#123;    if (left[0] &lt;= right[0]) &#123;      sorted.push(left.shift());    &#125; else &#123;      sorted.push(right.shift());    &#125;  &#125;  // left 또는 right 배열 중 하나는 아직 남아있으므로 남은 배열은 정렬되어 있으므로 복사하여 뒤에 붙혀준다.  return [...sorted, ...left, ...right];&#125;const mergeSort = arr =&gt; &#123;  if (arr.length === 1) return arr;  const mid = Math.ceil(arr.length / 2);  const left = arr.slice(0, mid);  const right = arr.slice(mid);  return merge(mergeSort(left), mergeSort(right));&#125;const arr = [33,2,51,1,10,3];const sorted = mergeSort(arr);console.log(arr); // [33,2,51,1,10,3]console.log(sorted); // [1,2,3,10,33,51]\n\n정리\nmergeSort는 O(n log n) 시간 복잡도를 가진다. 왜냐하면 절반씩 나눠서 비교하기 때문이다.\n안정 정렬에 속한다.\n\n참고자료\n\nproshy 병합정렬\nmaramarathon 병합정렬\n\n","dateCreated":"2022-12-29T13:07:29+09:00","dateModified":"2022-12-29T14:21:55+09:00","datePublished":"2022-12-29T13:07:29+09:00","description":"","headline":"merge sort","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/12/29/Algorithm/merge%20sort/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/12/29/Algorithm/merge%20sort/","keywords":"정렬, merge sort"}</script>
     <meta name="description" content="merge sort 정렬되지 않는 배열을 각각 하나의 원소만 포함하는 n개의 부분 배열로 분할한다. n개의 부분 배열이 1개가 될 때까지 반복해서 병합할 때 정렬한다. 최종적으로 남은 부분 배열이 정렬된 배열이 된다. 두가지 역할을 하는 함수로 나누어 설명할 수 있다.  mergeSort(arr): 배열을 절반으로 나누는 함수 merge(left, ri">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="merge sort">
@@ -129,20 +129,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -189,7 +175,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -198,86 +184,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

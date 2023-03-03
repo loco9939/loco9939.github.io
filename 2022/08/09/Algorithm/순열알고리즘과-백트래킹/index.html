@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"순열 알고리즘코딩문제를 풀 때 중간 과정에서 자주 등장하는(?) 알고리즘으로 조합, 순열 알고리즘이 있다.\n오늘은 백트랙킹과 DFS를 이용하여 순열 알고리즘을 구현하는 방법을 알아보자\n\n\n순열순열은 순서에 상관있게 n개의 원소 중에 r개를 중복없이 골라 나열하는 경우의 수\nex) [“a”,”b”,”c”] 배열에서 3개의 알파벳으로 단어를 만드는 경우의 수\n\n순열과 조합 알고리즘을 이해하기 위해 백트래킹(tree 구조) 패턴으로 보면 이해가 쉽다.\n\n\n백트랙킹과 DFS(깊이 우선 탐색)으로 순열 알고리즘을 구현해보자\n123456789101112131415161718192021function permutation(arr) &#123;  const result = [];  // DFS  const dfs = (i, arr) =&gt; &#123;    // base condition    if (i === arr.length) &#123;      return result.push([...arr]);    &#125;    for (let j = i; j &lt; arr.length; j++) &#123;      // swap      [arr[i], arr[j]] = [arr[j], arr[i]];      // dfs      dfs(i + 1, arr);      // swap back      [arr[i], arr[j]] = [arr[j], arr[i]];    &#125;  &#125;;  dfs(0, arr);  return result;&#125;\n\n\n배열의 각 위치를 나타내는 i, j가 있다고 생각하자. (i,j는 처음에 a 위치에서 시작한다)\n\ni가 배열의 길이만큼 커지면 그 때의 arr 배열값을 result 배열에 더해준다.\n\ni,j의 위치를 바꿔준다. dfs 함수를 재귀적으로 i+1로 호출한다.\n\n\n그 결과 첫번째 result 배열에 담기는 값은 abc 이다.\n이후 다시 원상복귀로 돌아오면서 i &#x3D; 1일 때, 반복문이 j&#x3D;2 &lt; arr.length 조건에 만족하므로 a b c 요소에서 i &#x3D; 1인 b 요소와 j &#x3D; 2인 c 요소를 바꿔준다. (a c b)\n이 후 dfs(i+1,arr) 함수 재귀로 호출하면 i &#x3D; 2 &#x3D; j가 되므로 a c b 위치가 바뀌지 않고 결국 i &#x3D; arr.length가 되어 2번째로 출력되는 값은 acb 가 된다.\nacb를 다시 원상 복귀 시킨 후 i &#x3D; 1, j &#x3D; 3으로 반복문이 종료되고 다시 처음이였던 i &#x3D; 0 &#x3D; j로 돌아오게 된다.\n\n이제 반복문으로 i &#x3D; 0, j++ 되어 j &#x3D; 1이 되어 bac로 위치 바꿔주고 앞선 과정을 반복한다.\n\n\n만약 재귀가 이해가 잘 안된다면 디버깅을 통해서 노트에 적어가면서 이해해보자. 사실 나도 2번째 보고 있는데 이해가 잘 안되서 자주 확인하기 위해 TIL을 작성하였다.\n\n","dateCreated":"2022-08-09T18:49:29+09:00","dateModified":"2022-11-23T20:05:32+09:00","datePublished":"2022-08-09T18:49:29+09:00","description":"순열 알고리즘코딩문제를 풀 때 중간 과정에서 자주 등장하는(?) 알고리즘으로 조합, 순열 알고리즘이 있다.\n오늘은 백트랙킹과 DFS를 이용하여 순열 알고리즘을 구현하는 방법을 알아보자","headline":"순열알고리즘과 백트래킹","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/","keywords":"순열, 백트래킹, DFS"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"순열 알고리즘코딩문제를 풀 때 중간 과정에서 자주 등장하는(?) 알고리즘으로 조합, 순열 알고리즘이 있다.\n오늘은 백트랙킹과 DFS를 이용하여 순열 알고리즘을 구현하는 방법을 알아보자\n\n\n순열순열은 순서에 상관있게 n개의 원소 중에 r개를 중복없이 골라 나열하는 경우의 수\nex) [“a”,”b”,”c”] 배열에서 3개의 알파벳으로 단어를 만드는 경우의 수\n\n순열과 조합 알고리즘을 이해하기 위해 백트래킹(tree 구조) 패턴으로 보면 이해가 쉽다.\n\n\n백트랙킹과 DFS(깊이 우선 탐색)으로 순열 알고리즘을 구현해보자\n123456789101112131415161718192021function permutation(arr) &#123;  const result = [];  // DFS  const dfs = (i, arr) =&gt; &#123;    // base condition    if (i === arr.length) &#123;      return result.push([...arr]);    &#125;    for (let j = i; j &lt; arr.length; j++) &#123;      // swap      [arr[i], arr[j]] = [arr[j], arr[i]];      // dfs      dfs(i + 1, arr);      // swap back      [arr[i], arr[j]] = [arr[j], arr[i]];    &#125;  &#125;;  dfs(0, arr);  return result;&#125;\n\n\n배열의 각 위치를 나타내는 i, j가 있다고 생각하자. (i,j는 처음에 a 위치에서 시작한다)\n\ni가 배열의 길이만큼 커지면 그 때의 arr 배열값을 result 배열에 더해준다.\n\ni,j의 위치를 바꿔준다. dfs 함수를 재귀적으로 i+1로 호출한다.\n\n\n그 결과 첫번째 result 배열에 담기는 값은 abc 이다.\n이후 다시 원상복귀로 돌아오면서 i &#x3D; 1일 때, 반복문이 j&#x3D;2 &lt; arr.length 조건에 만족하므로 a b c 요소에서 i &#x3D; 1인 b 요소와 j &#x3D; 2인 c 요소를 바꿔준다. (a c b)\n이 후 dfs(i+1,arr) 함수 재귀로 호출하면 i &#x3D; 2 &#x3D; j가 되므로 a c b 위치가 바뀌지 않고 결국 i &#x3D; arr.length가 되어 2번째로 출력되는 값은 acb 가 된다.\nacb를 다시 원상 복귀 시킨 후 i &#x3D; 1, j &#x3D; 3으로 반복문이 종료되고 다시 처음이였던 i &#x3D; 0 &#x3D; j로 돌아오게 된다.\n\n이제 반복문으로 i &#x3D; 0, j++ 되어 j &#x3D; 1이 되어 bac로 위치 바꿔주고 앞선 과정을 반복한다.\n\n\n만약 재귀가 이해가 잘 안된다면 디버깅을 통해서 노트에 적어가면서 이해해보자. 사실 나도 2번째 보고 있는데 이해가 잘 안되서 자주 확인하기 위해 TIL을 작성하였다.\n\n","dateCreated":"2022-08-09T18:49:29+09:00","dateModified":"2022-11-23T20:05:32+09:00","datePublished":"2022-08-09T18:49:29+09:00","description":"순열 알고리즘코딩문제를 풀 때 중간 과정에서 자주 등장하는(?) 알고리즘으로 조합, 순열 알고리즘이 있다.\n오늘은 백트랙킹과 DFS를 이용하여 순열 알고리즘을 구현하는 방법을 알아보자","headline":"순열알고리즘과 백트래킹","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/","keywords":"순열, 백트래킹, DFS"}</script>
     <meta name="description" content="순열 알고리즘코딩문제를 풀 때 중간 과정에서 자주 등장하는(?) 알고리즘으로 조합, 순열 알고리즘이 있다. 오늘은 백트랙킹과 DFS를 이용하여 순열 알고리즘을 구현하는 방법을 알아보자">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="순열알고리즘과 백트래킹">
@@ -130,20 +130,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -190,7 +176,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -199,86 +185,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

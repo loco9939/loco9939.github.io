@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수를 구하는 프로그램을 작성하시오.\n덧셈의 순서가 바뀐 경우는 다른 경우로 센다(1+2와 2+1은 서로 다른 경우). 또한 한 개의 수를 여러 번 쓸 수도 있다.\n입력첫째 줄에 두 정수 N(1 ≤ N ≤ 200), K(1 ≤ K ≤ 200)가 주어진다.\n출력첫째 줄에 답을 1,000,000,000으로 나눈 나머지를 출력한다.\n예제예제 입력 11220 2\n\n예제 출력 11221\n\n예제 입력 2126 4\n\n예제 출력 2184\n\n내 코드12345678910111213141516171819const [N, K] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;)  .map(Number);const DP = Array.from(&#123; length: N + 1 &#125;, (_, i) =&gt; &#123;  if (i === 1) return Array.from(&#123; length: K + 1 &#125;, (_, i) =&gt; i + 1);  return new Array(K + 1).fill(1);&#125;);for (let i = 2; i &lt;= N; i++) &#123;  for (let j = 1; j &lt;= K; j++) &#123;    DP[i][j] = (DP[i - 1][j] + DP[i][j - 1]) % 1000000000;  &#125;&#125;console.log(DP[N][K - 1]);\n\n\n✏️ N &#x3D; 1인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.\n❗️ 1개의 수로 1을 만들 수 있는 경우의 수는 1가지이다.\n2개의 수로 1을 만들 수 있는 경우의 수는 0+1, 1+0으로 2가지이다.\n3개의 수로 1을 만들 수 있는 경우의 수는 0+0+1, 0+1+0, 1+0+0으로 3가지이다…\n\n\nN &#x3D; 2인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.\n❗️ 1개의 수로 2를 만들 수 있는 경우의 수는 1가지이다.\n2개의 수로 2를 만들 수 있는 경우의 수는 1+1, 2+0, 0+2로 3가지이다.\n3개의 수로 2를 만들 수 있는 경우의 수는 1+1+0, 1+0+1, 0+1+1, 2+0+0, 0+2+0, 0+0+2로 6가지이다…\n\n\n\n❗️의 조건을 가지고 DP[N][k] 2차원 배열에서, DP[N][1] &#x3D; 1인 것을 알 수 있다.\n✏️의 조건을 가지고 DP[1][k] &#x3D; K 인 것을 알 수 있다.\n\n위와 같은 점화식을 발견하였고 그에 알맞은 식을 만들었다.\n","dateCreated":"2023-02-17T22:37:31+09:00","dateModified":"2023-02-17T22:40:02+09:00","datePublished":"2023-02-17T22:37:31+09:00","description":"","headline":"boj-2225 합분해(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수를 구하는 프로그램을 작성하시오.\n덧셈의 순서가 바뀐 경우는 다른 경우로 센다(1+2와 2+1은 서로 다른 경우). 또한 한 개의 수를 여러 번 쓸 수도 있다.\n입력첫째 줄에 두 정수 N(1 ≤ N ≤ 200), K(1 ≤ K ≤ 200)가 주어진다.\n출력첫째 줄에 답을 1,000,000,000으로 나눈 나머지를 출력한다.\n예제예제 입력 11220 2\n\n예제 출력 11221\n\n예제 입력 2126 4\n\n예제 출력 2184\n\n내 코드12345678910111213141516171819const [N, K] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot; &quot;)  .map(Number);const DP = Array.from(&#123; length: N + 1 &#125;, (_, i) =&gt; &#123;  if (i === 1) return Array.from(&#123; length: K + 1 &#125;, (_, i) =&gt; i + 1);  return new Array(K + 1).fill(1);&#125;);for (let i = 2; i &lt;= N; i++) &#123;  for (let j = 1; j &lt;= K; j++) &#123;    DP[i][j] = (DP[i - 1][j] + DP[i][j - 1]) % 1000000000;  &#125;&#125;console.log(DP[N][K - 1]);\n\n\n✏️ N &#x3D; 1인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.\n❗️ 1개의 수로 1을 만들 수 있는 경우의 수는 1가지이다.\n2개의 수로 1을 만들 수 있는 경우의 수는 0+1, 1+0으로 2가지이다.\n3개의 수로 1을 만들 수 있는 경우의 수는 0+0+1, 0+1+0, 1+0+0으로 3가지이다…\n\n\nN &#x3D; 2인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.\n❗️ 1개의 수로 2를 만들 수 있는 경우의 수는 1가지이다.\n2개의 수로 2를 만들 수 있는 경우의 수는 1+1, 2+0, 0+2로 3가지이다.\n3개의 수로 2를 만들 수 있는 경우의 수는 1+1+0, 1+0+1, 0+1+1, 2+0+0, 0+2+0, 0+0+2로 6가지이다…\n\n\n\n❗️의 조건을 가지고 DP[N][k] 2차원 배열에서, DP[N][1] &#x3D; 1인 것을 알 수 있다.\n✏️의 조건을 가지고 DP[1][k] &#x3D; K 인 것을 알 수 있다.\n\n위와 같은 점화식을 발견하였고 그에 알맞은 식을 만들었다.\n","dateCreated":"2023-02-17T22:37:31+09:00","dateModified":"2023-02-17T22:40:02+09:00","datePublished":"2023-02-17T22:37:31+09:00","description":"","headline":"boj-2225 합분해(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수를 구하는 프로그램을 작성하시오. 덧셈의 순서가 바뀐 경우는 다른 경우로 센다(1+2와 2+1은 서로 다른 경우). 또한 한 개의 수를 여러 번 쓸 수도 있다. 입력첫째 줄에 두 정수 N(1 ≤ N ≤ 200), K(1 ≤ K ≤ 200)가 주어진다. 출력첫째 줄에 답을 1,000,000,">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-2225 합분해(JavaScript)">
@@ -128,20 +128,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -188,7 +174,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -197,86 +183,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

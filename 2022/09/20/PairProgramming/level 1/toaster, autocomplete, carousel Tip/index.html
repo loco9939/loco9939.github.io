@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast = (messageType) =&gt; &#123;  const [type, title, message] = messageType;  const $newToast = document.createElement(&quot;div&quot;);  $newToast.style.bottom = &quot;0&quot;;  $newToast.classList.add(&quot;toast&quot;, type);  $newToast.innerHTML = `    &lt;h4 class=&quot;toast-title&quot;&gt;$&#123;title&#125; $&#123;    [...document.querySelectorAll(&quot;body .toast&quot;)].length  &#125;&lt;/h4&gt;    &lt;div class=&quot;toast-message&quot;&gt;      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;        &lt;use xlink:href=&quot;#$&#123;type&#125;&quot; /&gt;      &lt;/svg&gt;      &lt;p&gt;$&#123;message&#125;&lt;/p&gt;    &lt;/div&gt;    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`;  return $newToast;&#125;;\n\n\n배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.\n\n2. 함수를 사용하는 이유를 고민하자.123456789101112const addToast = (messageType) =&gt; &#123;  const $newToast = generateToast(messageType);  $body.appendChild($newToast);  lineUpToast();  setTimeout(() =&gt; &#123;    $newToast.remove();    lineUpToast();  &#125;, 3000);&#125;;\n\n\nsetTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.\n\nAutocomplete 리팩터링 중 느낀점1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수123456789101112131415161718192021let state = &#123;  countryCode: [],&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const init = () =&gt; &#123;  setState(&#123; countryCode &#125;);&#125;;document  .querySelector(&quot;.autocomplete-toggle-button&quot;)  .addEventListener(&quot;click&quot;, () =&gt; &#123;    $suggester.classList.toggle(&quot;hide&quot;);    $searchInput.focus();    autocomplete.init();  &#125;);\n\n\n이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.\n\n또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.\n\n\n2. 함수 역할의 분리123456789101112const findCountry = (inputValue) =&gt; &#123;  const regExp = new RegExp(inputValue, &quot;i&quot;);  const newCountryCode = countryCode    .filter(([, country]) =&gt; country.match(regExp))    .map(([code, country]) =&gt; [      code,      country.replace(regExp, `&lt;strong&gt;$&#123;country.match(regExp)&#125;&lt;/strong&gt;`),    ]);  setState(&#123; countryCode: newCountryCode &#125;);&#125;;\n\n\n이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.\n\n또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.\n\n\n\n([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.\n\n3. 함수의 가독성을 높이자.1234const selectCountry = (target) =&gt; &#123;  $toggleButtonSpan.innerHTML = target.firstElementChild.innerHTML;  $toggleButtonSpan.classList.add(&quot;country&quot;);&#125;;\n\n\nselectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.\n\nCarousel 리팩터링 중 느낀점1. state로 관리해야하는 데이터와 그렇지 않은 데이터1234567let state = &#123;  currentSlide: 1,&#125;;let isTransitioned = true;const DURATION = 500;const newImages = [images[images.length - 1], ...images, images[0]];\n\n\n이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.\n\nstate로 관리해야하는 데이터\n사용자의 액션에 의해서 변경되는 데이터\n\n실제 화면의 렌더링에 영향을 끼치는 데이터\n\n서버에 저장해야할 필요가 있는 데이터\n\n\n위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.\n그에 대한 근거는 다음 예시를 통해 알아보자.\n1234567const completeTransition = () =&gt; &#123;  setState(&#123; isTransitioned: true &#125;);&#125;;const completeTransition = () =&gt; &#123;  isTransitioned = true;&#125;;\n\n\n모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.\n\n즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.\n2. Model과 Controller 패턴의 사용123456789101112131415161718const carousel = () =&gt; &#123;  const carouselSlider = (() =&gt; &#123;      ...    return &#123;      init,      setStyle,      prev,      next,      completeTransition,    &#125;  &#125;)();  window.addEventListener(&#x27;DOMContentLoaded&#x27;, carouselSlider.init);&#125;carousel(document.querySelector(&#x27;.carousel&#x27;), [images...])\n\n\naddEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.\n\n3. DOMContentLoaded와 load 이벤트 핸들러123window.addEventListener(&quot;DOMContentLoaded&quot;, carouselSlider.init);window.addEventListener(&quot;load&quot;, carouselSlider.setStyle);\n\n\n이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.\n\n또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.\n\n\n","dateCreated":"2022-09-20T18:45:54+09:00","dateModified":"2022-11-18T17:19:03+09:00","datePublished":"2022-09-20T18:45:54+09:00","description":"","headline":"toaster, autocomplete, carousel Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast = (messageType) =&gt; &#123;  const [type, title, message] = messageType;  const $newToast = document.createElement(&quot;div&quot;);  $newToast.style.bottom = &quot;0&quot;;  $newToast.classList.add(&quot;toast&quot;, type);  $newToast.innerHTML = `    &lt;h4 class=&quot;toast-title&quot;&gt;$&#123;title&#125; $&#123;    [...document.querySelectorAll(&quot;body .toast&quot;)].length  &#125;&lt;/h4&gt;    &lt;div class=&quot;toast-message&quot;&gt;      &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;        &lt;use xlink:href=&quot;#$&#123;type&#125;&quot; /&gt;      &lt;/svg&gt;      &lt;p&gt;$&#123;message&#125;&lt;/p&gt;    &lt;/div&gt;    &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`;  return $newToast;&#125;;\n\n\n배열 스트럭처링으로 매개변수를 함수 내부에서 나눠서 배치하였다.\n\n2. 함수를 사용하는 이유를 고민하자.123456789101112const addToast = (messageType) =&gt; &#123;  const $newToast = generateToast(messageType);  $body.appendChild($newToast);  lineUpToast();  setTimeout(() =&gt; &#123;    $newToast.remove();    lineUpToast();  &#125;, 3000);&#125;;\n\n\nsetTimeout 함수를 따로 함수로 빼서 사용해보면 어떨까 생각해보았지만, 만약 함수로 들어가게 된다면 오히려 그 함수를 이해하기 위해 더 큰 노력을 쏟아야 할 수 있으므로 가치 판단을 하여 함수로 넣을지 말지를 고민하자.\n\nAutocomplete 리팩터링 중 느낀점1. setState 함수는 함수 내부의 데이터를 변경만 하는 함수123456789101112131415161718192021let state = &#123;  countryCode: [],&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const init = () =&gt; &#123;  setState(&#123; countryCode &#125;);&#125;;document  .querySelector(&quot;.autocomplete-toggle-button&quot;)  .addEventListener(&quot;click&quot;, () =&gt; &#123;    $suggester.classList.toggle(&quot;hide&quot;);    $searchInput.focus();    autocomplete.init();  &#125;);\n\n\n이벤트 핸들러는 모델에서 return 해준 함수만 사용할 수 있도록 하여 관심사를 분리해준다.\n\n또한, 이벤트 핸들러가 setState 함수를 사용하여 데이터를 직접 변경하는 것은 옳지 않다. 위와 같이 init 함수를 통해서 사용하는 것으로 한다. 왜냐하면 setState 함수는 데이터 변경에만 관여하는 함수이지 다른 기능을 하는 함수가 아니기 때문이다.\n\n\n2. 함수 역할의 분리123456789101112const findCountry = (inputValue) =&gt; &#123;  const regExp = new RegExp(inputValue, &quot;i&quot;);  const newCountryCode = countryCode    .filter(([, country]) =&gt; country.match(regExp))    .map(([code, country]) =&gt; [      code,      country.replace(regExp, `&lt;strong&gt;$&#123;country.match(regExp)&#125;&lt;/strong&gt;`),    ]);  setState(&#123; countryCode: newCountryCode &#125;);&#125;;\n\n\n이전 코드에서는 findCountry 함수가 하는 역할을 setState 함수내에 있어 이를 역할에 맞게 구분해주었다.\n\n또한, 배열 디스트럭처링을 사용하여 가독성을 높였다.\n\n\n\n([, country]) 처럼 매개변수로 배열 디스트럭처링 사용할 때, 앞의 매개변수를 사용하지 않는다면, 빈칸으로 두어도 된다.\n\n3. 함수의 가독성을 높이자.1234const selectCountry = (target) =&gt; &#123;  $toggleButtonSpan.innerHTML = target.firstElementChild.innerHTML;  $toggleButtonSpan.classList.add(&quot;country&quot;);&#125;;\n\n\nselectCountry 함수의 매개변수가 이벤트가 발생한 요소를 전달해주도록 코드를 작성하여 더욱 직관적으로 작성했다.\n\nCarousel 리팩터링 중 느낀점1. state로 관리해야하는 데이터와 그렇지 않은 데이터1234567let state = &#123;  currentSlide: 1,&#125;;let isTransitioned = true;const DURATION = 500;const newImages = [images[images.length - 1], ...images, images[0]];\n\n\n이번 과제를 하면서 어떤 데이터를 state로 관리해야할지 결정하는 것이 힘들었다. 짝 코딩을 하면서 나름 이유와 컨벤션을 정하였다.\n\nstate로 관리해야하는 데이터\n사용자의 액션에 의해서 변경되는 데이터\n\n실제 화면의 렌더링에 영향을 끼치는 데이터\n\n서버에 저장해야할 필요가 있는 데이터\n\n\n위 3가지 항목에 해당된다면 해당 데이터를 state로 관리하는 것이 옳다고 판단하였다.\n그에 대한 근거는 다음 예시를 통해 알아보자.\n1234567const completeTransition = () =&gt; &#123;  setState(&#123; isTransitioned: true &#125;);&#125;;const completeTransition = () =&gt; &#123;  isTransitioned = true;&#125;;\n\n\n모델안의 completeTransition 함수는 state 데이터를 수정하고 렌더링을 해주는 코드였다. 하지만 위 데이터는 화면에 보여지는 데이터도 아니고, 사용자의 액션에 의해 직접적으로 변경되었다기 보다는 사용자가 액션을 발생 시켰을 때 개발자가 눈속임으로 화면을 보여주기 위함이기 때문이다.\n\n즉, completeTransition 데이터를 사용자에게 직접적으로 보여주지도 않고 서버에 전송해야할 데이터도 아니고 실제 화면에 렌더링에 영향을 끼치는 데이터가 아니기 때문에 state로 관리 하지 않았다.\n2. Model과 Controller 패턴의 사용123456789101112131415161718const carousel = () =&gt; &#123;  const carouselSlider = (() =&gt; &#123;      ...    return &#123;      init,      setStyle,      prev,      next,      completeTransition,    &#125;  &#125;)();  window.addEventListener(&#x27;DOMContentLoaded&#x27;, carouselSlider.init);&#125;carousel(document.querySelector(&#x27;.carousel&#x27;), [images...])\n\n\naddEventListener가 사용할 수 있는 데이터는 Model에서 반환해준 함수만 사용할 수 있다. 이러한 구조를 만듦으로서 사용자는 자신이 어떤 함수를 사용해야하는지 명시적으로 알 수 있고 다른 함수에 대한 고민을 하지 않아 코드의 이해도를 높일 수 있다.\n\n3. DOMContentLoaded와 load 이벤트 핸들러123window.addEventListener(&quot;DOMContentLoaded&quot;, carouselSlider.init);window.addEventListener(&quot;load&quot;, carouselSlider.setStyle);\n\n\n이미지가 로드된 다음에 이미지의 width 값과 속성을을 설정해줘야지만 제대로 동작하므로 위와 같이 로드되는 시점에 따라 코드를 구분하였다.\n\n또한 요구사항에서 이미지가 로드되어 carousel의 width가 정해진 후 opacity를 1로 바꿔줘야 하므로 로드 시점에 따라 이벤트 핸들러를 구분하는 것이 옳다.\n\n\n","dateCreated":"2022-09-20T18:45:54+09:00","dateModified":"2022-11-18T17:19:03+09:00","datePublished":"2022-09-20T18:45:54+09:00","description":"","headline":"toaster, autocomplete, carousel Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"}</script>
     <meta name="description" content="Toaster 리팩터링 중 느낀점1. 함수의 인수는 3개를 넘지 말자.1234567891011121314151617181920const generateToast &#x3D; (messageType) &#x3D;&gt; &amp;#123;  const [type, title, message] &#x3D; messageType;  const $newToast &#x3D; document.createEl">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="toaster, autocomplete, carousel Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"\n\n📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다.\n이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.\n\n\n🐸 useCallbackuseCallback()은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, 기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.\n1234567891011121314151617181920export function Counter(&#123; count: initialCount, step &#125;) &#123;\tconst [count, setCount] = useState(initialCount);\t// 1\tconst handleIncrement = useCallback(() =&gt; &#123;\t\tsetCount((count) =&gt; count + step);\t\t&#125;, [step]);\t// 2\tconst handleDecrement = useCallback(() =&gt; &#123;\t\tsetCount(count - step);\t\t&#125;, [count, step]);\treturn (\t\t&lt;div&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;\t\t\t&lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;        &lt;/div&gt;    )\n\n\n기억해야할 데이터 타입이 함수인 경우 사용한다.\nuseEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.\n1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. 기억되어있는 정보를 가지고 값을 변경하는 것이다.\n2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. 기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.\n\n🐍 useMemo1useCallback(fn, deps) === useMemo(() =&gt; fn, deps);\n\nuseMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.\n123456789101112131415161718192021222324252627282930313233export function Counter(&#123; count: initialCount, step &#125;) &#123;  const [count, setCount] = useState(initialCount);  // useMemo(() =&gt; fn, deps)  const handleIncrement = useMemo(    () =&gt; () =&gt; setCount((prevCount) =&gt; prevCount + step),    [step]  );  // useCallback(fn, deps)  const handleDecrement = useCallback(() =&gt; &#123;    setCount((prevCount) =&gt; prevCount - step);  &#125;, [step]);  // memoized Components  const DecButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;,    [handleDecrement]  );  const IncButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;,    [handleIncrement]  );  return (    &lt;div&gt;      &#123;DecButton&#125;      &lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;      &#123;IncButton&#125;    &lt;/div&gt;  );&#125;\n\n\nuseMemo()는 해당 컴포넌트를 기억한다.\n종속성 배열 [count, onDecrement, onIncrement, restProps]이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.\nsetCount()를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.\n\n🏓 소감값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?\n\n\n📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.\n\n","dateCreated":"2022-11-22T19:46:22+09:00","dateModified":"2022-11-23T20:20:51+09:00","datePublished":"2022-11-22T19:46:22+09:00","description":"","headline":"🏰 useCallback과 useMemo","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\n📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다.\n이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.\n\n\n🐸 useCallbackuseCallback()은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, 기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.\n1234567891011121314151617181920export function Counter(&#123; count: initialCount, step &#125;) &#123;\tconst [count, setCount] = useState(initialCount);\t// 1\tconst handleIncrement = useCallback(() =&gt; &#123;\t\tsetCount((count) =&gt; count + step);\t\t&#125;, [step]);\t// 2\tconst handleDecrement = useCallback(() =&gt; &#123;\t\tsetCount(count - step);\t\t&#125;, [count, step]);\treturn (\t\t&lt;div&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;\t\t\t&lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;        &lt;/div&gt;    )\n\n\n기억해야할 데이터 타입이 함수인 경우 사용한다.\nuseEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.\n1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. 기억되어있는 정보를 가지고 값을 변경하는 것이다.\n2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. 기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.\n\n🐍 useMemo1useCallback(fn, deps) === useMemo(() =&gt; fn, deps);\n\nuseMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.\n123456789101112131415161718192021222324252627282930313233export function Counter(&#123; count: initialCount, step &#125;) &#123;  const [count, setCount] = useState(initialCount);  // useMemo(() =&gt; fn, deps)  const handleIncrement = useMemo(    () =&gt; () =&gt; setCount((prevCount) =&gt; prevCount + step),    [step]  );  // useCallback(fn, deps)  const handleDecrement = useCallback(() =&gt; &#123;    setCount((prevCount) =&gt; prevCount - step);  &#125;, [step]);  // memoized Components  const DecButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;,    [handleDecrement]  );  const IncButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;,    [handleIncrement]  );  return (    &lt;div&gt;      &#123;DecButton&#125;      &lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;      &#123;IncButton&#125;    &lt;/div&gt;  );&#125;\n\n\nuseMemo()는 해당 컴포넌트를 기억한다.\n종속성 배열 [count, onDecrement, onIncrement, restProps]이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.\nsetCount()를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.\n\n🏓 소감값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?\n\n\n📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.\n\n","dateCreated":"2022-11-22T19:46:22+09:00","dateModified":"2022-11-23T20:20:51+09:00","datePublished":"2022-11-22T19:46:22+09:00","description":"","headline":"🏰 useCallback과 useMemo","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"}</script>
     <meta name="description" content="📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다. 이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.   🐸 us">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="🏰 useCallback과 useMemo">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

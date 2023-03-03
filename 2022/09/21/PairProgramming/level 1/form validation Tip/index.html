@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state = &#123;  id: &quot;pending&quot;,  pw: &quot;pending&quot;,&#125;;const [$idSuccessIcon, $pwSuccessIcon] = [  ...document.querySelectorAll(&quot;.icon-success&quot;),];const [$idErrorIcon, $pwErrorIcon] = [  ...document.querySelectorAll(&quot;.icon-error&quot;),];const [$idErrorMessage, $pwErrorMessage] = [  ...document.querySelectorAll(&quot;.error&quot;),];const $signinButton = document.querySelector(&quot;.button&quot;);const render = () =&gt; &#123;  $idSuccessIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;success&quot;);  $idErrorIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;error&quot;);  $pwSuccessIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;success&quot;);  $pwErrorIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;error&quot;);  $idErrorMessage.textContent =    state.id === &quot;error&quot; ? &quot;이메일 형식에 맞게 입력해 주세요.&quot; : &quot;&quot;;  $pwErrorMessage.textContent =    state.pw === &quot;error&quot; ? &quot;영문 또는 숫자를 6~12자 입력하세요.&quot; : &quot;&quot;;  if (state.id === &quot;success&quot; &amp;&amp; state.pw === &quot;success&quot;)    $signinButton.removeAttribute(&quot;disabled&quot;);  else $signinButton.setAttribute(&quot;disabled&quot;, &quot;&quot;);&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const checkIdValidation = (input) =&gt; &#123;  if (input === &quot;&quot;) &#123;    setState(&#123; id: &quot;pending&quot; &#125;);    return;  &#125;  const regExp =    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/;  setState(&#123; id: regExp.test(input) ? &quot;success&quot; : &quot;error&quot; &#125;);&#125;;const $signIdInput = document.querySelector(&quot;#signin-userid&quot;);$signIdInput.addEventListener(  &quot;keyup&quot;,  _.debounce(() =&gt; &#123;    checkIdValidation($signIdInput.value);  &#125;, 500));\n\n\n위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.\n\n위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.\n\n\n하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 별로 좋지 않는 습관이다.\n왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.\n그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.\n위 코드를 리팩터링한 결과는 다음과 같다.\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455const signinSchema = &#123;  userid: &#123;    value: &quot;&quot;,    get valid() &#123;      return /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/.test(        this.value      );    &#125;,    message: &quot;이메일 형식에 맞게 입력해 주세요.&quot;,  &#125;,  password: &#123;    value: &quot;&quot;,    get valid() &#123;      return /\\w&#123;6,12&#125;$/.test(this.value);    &#125;,    message: &quot;영문 또는 숫자를 6~12자 입력하세요.&quot;,  &#125;,  get valid() &#123;    return this.userid.valid &amp;&amp; this.password.valid;  &#125;,&#125;;const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.\n\n\n마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.\n\n\nemail과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.\n\ninput에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.\n\n접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.\n\n\n\n각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.\n\n2. DOM API 사용을 줄이자.1234567891011121314151617181920212223242526const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;\n\n\n최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.\n\ndocument.querySelector(`#$&#123;target.id&#125; ~ .icon-success`) 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.\n\n\n\nDOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.\n\n3. input 이벤트 타입123456document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.\n\n리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.\n\n또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.\n\ne.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.\n\n\n","dateCreated":"2022-09-21T19:11:05+09:00","dateModified":"2022-11-18T17:19:12+09:00","datePublished":"2022-09-21T19:11:05+09:00","description":"","headline":"form validation Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state = &#123;  id: &quot;pending&quot;,  pw: &quot;pending&quot;,&#125;;const [$idSuccessIcon, $pwSuccessIcon] = [  ...document.querySelectorAll(&quot;.icon-success&quot;),];const [$idErrorIcon, $pwErrorIcon] = [  ...document.querySelectorAll(&quot;.icon-error&quot;),];const [$idErrorMessage, $pwErrorMessage] = [  ...document.querySelectorAll(&quot;.error&quot;),];const $signinButton = document.querySelector(&quot;.button&quot;);const render = () =&gt; &#123;  $idSuccessIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;success&quot;);  $idErrorIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;error&quot;);  $pwSuccessIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;success&quot;);  $pwErrorIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;error&quot;);  $idErrorMessage.textContent =    state.id === &quot;error&quot; ? &quot;이메일 형식에 맞게 입력해 주세요.&quot; : &quot;&quot;;  $pwErrorMessage.textContent =    state.pw === &quot;error&quot; ? &quot;영문 또는 숫자를 6~12자 입력하세요.&quot; : &quot;&quot;;  if (state.id === &quot;success&quot; &amp;&amp; state.pw === &quot;success&quot;)    $signinButton.removeAttribute(&quot;disabled&quot;);  else $signinButton.setAttribute(&quot;disabled&quot;, &quot;&quot;);&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const checkIdValidation = (input) =&gt; &#123;  if (input === &quot;&quot;) &#123;    setState(&#123; id: &quot;pending&quot; &#125;);    return;  &#125;  const regExp =    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/;  setState(&#123; id: regExp.test(input) ? &quot;success&quot; : &quot;error&quot; &#125;);&#125;;const $signIdInput = document.querySelector(&quot;#signin-userid&quot;);$signIdInput.addEventListener(  &quot;keyup&quot;,  _.debounce(() =&gt; &#123;    checkIdValidation($signIdInput.value);  &#125;, 500));\n\n\n위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.\n\n위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.\n\n\n하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 별로 좋지 않는 습관이다.\n왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.\n그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.\n위 코드를 리팩터링한 결과는 다음과 같다.\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455const signinSchema = &#123;  userid: &#123;    value: &quot;&quot;,    get valid() &#123;      return /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/.test(        this.value      );    &#125;,    message: &quot;이메일 형식에 맞게 입력해 주세요.&quot;,  &#125;,  password: &#123;    value: &quot;&quot;,    get valid() &#123;      return /\\w&#123;6,12&#125;$/.test(this.value);    &#125;,    message: &quot;영문 또는 숫자를 6~12자 입력하세요.&quot;,  &#125;,  get valid() &#123;    return this.userid.valid &amp;&amp; this.password.valid;  &#125;,&#125;;const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.\n\n\n마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.\n\n\nemail과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.\n\ninput에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.\n\n접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.\n\n\n\n각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.\n\n2. DOM API 사용을 줄이자.1234567891011121314151617181920212223242526const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;\n\n\n최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.\n\ndocument.querySelector(`#$&#123;target.id&#125; ~ .icon-success`) 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.\n\n\n\nDOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.\n\n3. input 이벤트 타입123456document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.\n\n리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.\n\n또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.\n\ne.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.\n\n\n","dateCreated":"2022-09-21T19:11:05+09:00","dateModified":"2022-11-18T17:19:12+09:00","datePublished":"2022-09-21T19:11:05+09:00","description":"","headline":"form validation Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"}</script>
     <meta name="description" content="Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state &#x3D; &amp;#123;  id: &quot;pending">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="form validation Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

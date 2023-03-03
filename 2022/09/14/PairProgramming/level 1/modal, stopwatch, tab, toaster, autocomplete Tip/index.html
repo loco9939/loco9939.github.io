@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"modal 창 구현 중 느낀점12345678910111213141516171819202122232425&lt;body&gt;  &lt;div class=&quot;modal-container&quot;&gt;    &lt;div class=&quot;modal&quot;&gt;      &lt;h2&gt;Hello&lt;/h2&gt;      &lt;p&gt;희준이주화이팅&lt;/p&gt;      &lt;form action=&quot;/&quot; class=&quot;popup-form&quot;&gt;        &lt;input type=&quot;text&quot; class=&quot;popup-input&quot; /&gt;        &lt;button class=&quot;popup-ok&quot;&gt;OK&lt;/button&gt;      &lt;/form&gt;      &lt;button class=&quot;popup-cancel is-close&quot;&gt;Cancel&lt;/button&gt;      &lt;button class=&quot;popup-close&quot;&gt;        &lt;i class=&quot;bx bx-x is-close&quot;&gt;&lt;/i&gt;      &lt;/button&gt;    &lt;/div&gt;  &lt;/div&gt;  &lt;script&gt;    const $modal = document.querySelector(&quot;.modal&quot;);    const $modalContainer = document.querySelector(&quot;.modal-container&quot;);    document.querySelector(&quot;.popup-button&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;      $modal.classList.toggle(&quot;is-open&quot;);      $modalContainer.classList.toggle(&quot;background-gray&quot;);    &#125;);  &lt;/script&gt;&lt;/body&gt;\n\n\nbody 태그 안에 modal div 박스 하나만 만드는 것이 아닌 다음과 같이 modal container로 감싸주는 것이 편하다.\n\n\n그렇지 않으면 modal 배경색을 입히기가 까다로워진다.\n\nstopwatch 구현 중 느낀점123456789101112131415let timeId;const updateTime = () =&gt; &#123;  const startTime = Date.now();  timeId = setInterval(() =&gt; &#123;    const date = new Date(Date.now() - startTime);    const milliseconds = Math.floor(date.getMilliseconds() / 10);    const seconds = date.getSeconds();    const minutes = date.getMinutes();    $display.textContent = `$&#123;minutes &lt; 10 ? `0$&#123;minutes&#125;` : `$&#123;minutes&#125;`&#125;:$&#123;      seconds &lt; 10 ? `0$&#123;seconds&#125;` : `$&#123;seconds&#125;`    &#125;:$&#123;milliseconds &lt; 10 ? `0$&#123;milliseconds&#125;` : `$&#123;milliseconds&#125;`&#125;`;  &#125;, 10);&#125;;\n\n\n시간을 수정하는 로직을 함수로 구분하여 역할을 나눠보려 하였다.\n\n\nModel, Controller, View 생각하면서 리팩토링 해보자.\n\nTab 구현 중 느낀점1. 비동기 코드로 전달받은 데이터 다루기123456const state = &#123;  datas: [],&#125;;fetchTabsData().then((tabDatas) =&gt; &#123;  state.datas = tabDatas;&#125;);\n\n\nfetchTabsData() 함수가 프로미스르 반환하는데, 프로미스 콜백함수가 1초 뒤에 데이터를 resolve 인자로 전달해준다. 그러므로 비동기로 받아온 데이터를 state로 관리해주도록 하였다.\n\n2. CSS 사용자 정의 변수 변경 또는 값 취득하기123const $tabs = document.querySelector(&quot;.tabs&quot;);$tabs.style.setProperty(&quot;--tabs-length&quot;, 3);\n\n\nJs를 사용하여 CSS에서 설정한 사용자 정의 변수를 가져올 수도 있고 위처럼 직접 값을 설정해줄 수도 있다.\n\n3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자12345678910111213141516171819202122232425setTimeout(() =&gt; &#123;  const &#123; datas &#125; = state;  $tabs.style.setProperty(&quot;--tabs-length&quot;, datas.length);  document.querySelector(&quot;.spinner&quot;).style.display = &quot;none&quot;;  $tabs.innerHTML = `  &lt;nav&gt;  $&#123;datas    .map(      (data, index) =&gt;        `&lt;div class=&quot;tab&quot; data-index=&quot;$&#123;index&#125;&quot;&gt;$&#123;data.title&#125;&lt;/div&gt;`    )    .join(&quot;&quot;)&#125;  &lt;span class=&quot;glider&quot;&gt;&lt;/span&gt;  &lt;/nav&gt;  $&#123;datas    .map(      (data, index) =&gt; `&lt;div class=&quot;tab-content $&#123;index === 0 ? &quot;active&quot; : &quot;&quot;&#125;&quot;&gt;      $&#123;data.content&#125;    &lt;/div&gt;`    )    .join(&quot;&quot;)&#125;  `;&#125;, 1000);\n\n\n위 코드는 리팩토링을 하면서 조금더 역할을 나눠서 수정해봐야겠다.\n\n4. template literal로 연산을 하려면 다음과 같이 해야한다.12345678910$tabs.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.tab&quot;)) return;  document.querySelector(&quot;.glider&quot;).style.transform =    &quot;translateX(&quot; + e.target.dataset.index * 200 + &quot;px)&quot;;  document.querySelector(&quot;.glider&quot;).style.transform = `translateX($&#123;    e.target.dataset.index * 200  &#125;px)`;&#125;);\n\n\n처음에 연산결과를 ${}안에 넣지 않고 document.querySelector(&#39;.glider&#39;).style.transform = $&#123;e.target.dataset.index&#125; 200 px 이런식으로 했는데 이렇게 하면 안되고 위처럼 해야한다.\n\nToaster 구현 중 느낀점1. toastBox 재사용을 위해 함수로 만들었다.12345678910111213141516171819const newToastBox = (type, title, Message) =&gt; &#123;  const $div = document.createElement(&quot;div&quot;);  $div.classList.add(&quot;toast&quot;, type);  $div.innerHTML = `  &lt;h4 class=&quot;toast-title&quot;&gt;$&#123;title&#125; $&#123;    [...document.querySelectorAll(&quot;body .toast&quot;)].length  &#125;&lt;/h4&gt;  &lt;div class=&quot;toast-message&quot;&gt;    &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;      &lt;use xlink:href=&quot;#$&#123;type&#125;&quot; /&gt;    &lt;/svg&gt;    &lt;p&gt;$&#123;Message&#125;&lt;/p&gt;  &lt;/div&gt;  &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`;  $div.style.bottom = &quot;0&quot;;  return $div;&#125;;\n\n\nToastBox 를 재사용하기 위해 함수를 사용하는 것을 적절했으나, 함수가 너무 많은 역할을 하고 있다. 렌더링부터 div 생성과 반환을 함께 하고 있어 리팩토링이 필요하다.\n\n2. render 함수는 화면에 rendering 해주는 역할을 한다.1234567const render = () =&gt; &#123;  [...document.querySelectorAll(&quot;body .toast&quot;)].forEach((toast, index) =&gt; &#123;    toast.style.bottom =      ([...document.querySelectorAll(&quot;body .toast&quot;)].length - index - 1) * 100 +      &quot;px&quot;;  &#125;);&#125;;\n\n\n위 render 함수는 토스트 요소에 bottom style 값을 할당해주는 역할을 하고 있으므로, 리팩토링이 필요하다.\n\nAutocomplete 구현 중 느낀점1. e.target.matches() vs e.target.closest()12345document.querySelector(&quot;body&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.closest(&quot;.autocomplete&quot;)) &#123;    document.querySelector(&quot;.autocomplete-suggester&quot;).classList.add(&quot;hide&quot;);  &#125;&#125;);\n\n\n해당 요소 바깥쪽을 클릭하였을 때 .autocomplete-suggester에 hide 클래스를 추가해주는 로직이다.\n\ne.target.closest(‘.autocomplete’)는 이벤트 발생한 요소의 상위 요소를 찾아가면서 인자로 넘겨준 요소를 찾고 반환한다.만약 없다면 null 값을 반환한다.\n\n하지만, e.target.matches(‘.autocomplete’)는 이벤트 발생한 요소가 인자로 넘겨준 요소를 가지고 있는지 판단하여 불리언값을 반환한다.\n\n\n\nmatches()의 경우 이벤트 전파를 캐치하기가 어려우므로 상황에 따라 적절하게 사용하자.\n\n\n방향키로 포커스 이동시 스크롤 이상하게 내려오는 현상\n\n1234567891011121314$suggestList.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;  if (e.key === &quot;ArrowDown&quot;) &#123;    e.preventDefault();    e.target.nextElementSibling === null      ? $suggestList.firstElementChild.focus()      : e.target.nextElementSibling.focus();  &#125;  if (e.key === &quot;ArrowUp&quot;) &#123;    e.preventDefault();    e.target.previousElementSibling === null // prettier-ignore      ? $suggestList.lastElementChild.focus()      : e.target.previousElementSibling.focus();  &#125;&#125;);\n\n\n방향키로 포커스 이동시 한번 이동할 때 마다 스크롤도 같이 내려와서 어색하게 동작하는 것을 방지하지 위해 방향키 값이 “ArrowDown”, “ArrowUp” 일 때만 e.preventDefault(); 를 해주었다.\n\nfocus() 메서드를 사용하여 선택 요소에 포커스를 선택해주었다.\n\n\n3. lodash로 debounce 구현 제대로 하기123456$searchInput.addEventListener(  &quot;keyup&quot;,  _.debounce(() =&gt; &#123;    setState(&#123; inputValue: $searchInput.value &#125;);  &#125;, 500));\n\n\n위와 같이 “keyup” 이벤트 발생 시 lodash debounce 메서드를 이벤트 핸들러로 등록해줘야한다.\n\n또한, debounce의 콜백함수에 실행할 코드를 입력해줄 때, setState함수가 인수를 받는다면 위와같이 써줘야한다.\n\n\n\n단, 인수를 받지 않는다면 _.debounce(setState,500) 이런식으로 사용할 수 있다.\n\n4. 사용자가 입력한 값과 countryCode를 state로 관리하였다.123456789101112131415let state = &#123;  inputValue: &quot;&quot;,  countryCode: [],&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  const regExp = new RegExp(`$&#123;state.inputValue&#125;`, &quot;i&quot;);  state.countryCode = countryCode.filter((country) =&gt; country[1].match(regExp));  state.countryCode = state.countryCode.map((country) =&gt; [    country[0],    country[1].replace(regExp, `&lt;strong&gt;$&#123;country[1].match(regExp)&#125;&lt;/strong&gt;`),  ]);  render();&#125;;\n\n\n사용자가 입력한 값을 state로 관리하여 그 값과 countryCode의 1번째 요소인 나라이름과 일치하는 부분을 찾아 strong 태그로 감싼 값으로 바꿔주었다.\n\nstrong 태그 대신 b 태그를 사용하면 안된다.\n\n\n","dateCreated":"2022-09-14T18:57:44+09:00","dateModified":"2022-11-18T17:19:08+09:00","datePublished":"2022-09-14T18:57:44+09:00","description":"","headline":"modal, stopwatch, tab, toaster, autocomplete Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"modal 창 구현 중 느낀점12345678910111213141516171819202122232425&lt;body&gt;  &lt;div class=&quot;modal-container&quot;&gt;    &lt;div class=&quot;modal&quot;&gt;      &lt;h2&gt;Hello&lt;/h2&gt;      &lt;p&gt;희준이주화이팅&lt;/p&gt;      &lt;form action=&quot;/&quot; class=&quot;popup-form&quot;&gt;        &lt;input type=&quot;text&quot; class=&quot;popup-input&quot; /&gt;        &lt;button class=&quot;popup-ok&quot;&gt;OK&lt;/button&gt;      &lt;/form&gt;      &lt;button class=&quot;popup-cancel is-close&quot;&gt;Cancel&lt;/button&gt;      &lt;button class=&quot;popup-close&quot;&gt;        &lt;i class=&quot;bx bx-x is-close&quot;&gt;&lt;/i&gt;      &lt;/button&gt;    &lt;/div&gt;  &lt;/div&gt;  &lt;script&gt;    const $modal = document.querySelector(&quot;.modal&quot;);    const $modalContainer = document.querySelector(&quot;.modal-container&quot;);    document.querySelector(&quot;.popup-button&quot;).addEventListener(&quot;click&quot;, () =&gt; &#123;      $modal.classList.toggle(&quot;is-open&quot;);      $modalContainer.classList.toggle(&quot;background-gray&quot;);    &#125;);  &lt;/script&gt;&lt;/body&gt;\n\n\nbody 태그 안에 modal div 박스 하나만 만드는 것이 아닌 다음과 같이 modal container로 감싸주는 것이 편하다.\n\n\n그렇지 않으면 modal 배경색을 입히기가 까다로워진다.\n\nstopwatch 구현 중 느낀점123456789101112131415let timeId;const updateTime = () =&gt; &#123;  const startTime = Date.now();  timeId = setInterval(() =&gt; &#123;    const date = new Date(Date.now() - startTime);    const milliseconds = Math.floor(date.getMilliseconds() / 10);    const seconds = date.getSeconds();    const minutes = date.getMinutes();    $display.textContent = `$&#123;minutes &lt; 10 ? `0$&#123;minutes&#125;` : `$&#123;minutes&#125;`&#125;:$&#123;      seconds &lt; 10 ? `0$&#123;seconds&#125;` : `$&#123;seconds&#125;`    &#125;:$&#123;milliseconds &lt; 10 ? `0$&#123;milliseconds&#125;` : `$&#123;milliseconds&#125;`&#125;`;  &#125;, 10);&#125;;\n\n\n시간을 수정하는 로직을 함수로 구분하여 역할을 나눠보려 하였다.\n\n\nModel, Controller, View 생각하면서 리팩토링 해보자.\n\nTab 구현 중 느낀점1. 비동기 코드로 전달받은 데이터 다루기123456const state = &#123;  datas: [],&#125;;fetchTabsData().then((tabDatas) =&gt; &#123;  state.datas = tabDatas;&#125;);\n\n\nfetchTabsData() 함수가 프로미스르 반환하는데, 프로미스 콜백함수가 1초 뒤에 데이터를 resolve 인자로 전달해준다. 그러므로 비동기로 받아온 데이터를 state로 관리해주도록 하였다.\n\n2. CSS 사용자 정의 변수 변경 또는 값 취득하기123const $tabs = document.querySelector(&quot;.tabs&quot;);$tabs.style.setProperty(&quot;--tabs-length&quot;, 3);\n\n\nJs를 사용하여 CSS에서 설정한 사용자 정의 변수를 가져올 수도 있고 위처럼 직접 값을 설정해줄 수도 있다.\n\n3. 비동기로 데이터를 가져오니 화면에서 데이터를 렌더링 해주기 전에 대기시간을 주자12345678910111213141516171819202122232425setTimeout(() =&gt; &#123;  const &#123; datas &#125; = state;  $tabs.style.setProperty(&quot;--tabs-length&quot;, datas.length);  document.querySelector(&quot;.spinner&quot;).style.display = &quot;none&quot;;  $tabs.innerHTML = `  &lt;nav&gt;  $&#123;datas    .map(      (data, index) =&gt;        `&lt;div class=&quot;tab&quot; data-index=&quot;$&#123;index&#125;&quot;&gt;$&#123;data.title&#125;&lt;/div&gt;`    )    .join(&quot;&quot;)&#125;  &lt;span class=&quot;glider&quot;&gt;&lt;/span&gt;  &lt;/nav&gt;  $&#123;datas    .map(      (data, index) =&gt; `&lt;div class=&quot;tab-content $&#123;index === 0 ? &quot;active&quot; : &quot;&quot;&#125;&quot;&gt;      $&#123;data.content&#125;    &lt;/div&gt;`    )    .join(&quot;&quot;)&#125;  `;&#125;, 1000);\n\n\n위 코드는 리팩토링을 하면서 조금더 역할을 나눠서 수정해봐야겠다.\n\n4. template literal로 연산을 하려면 다음과 같이 해야한다.12345678910$tabs.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.tab&quot;)) return;  document.querySelector(&quot;.glider&quot;).style.transform =    &quot;translateX(&quot; + e.target.dataset.index * 200 + &quot;px)&quot;;  document.querySelector(&quot;.glider&quot;).style.transform = `translateX($&#123;    e.target.dataset.index * 200  &#125;px)`;&#125;);\n\n\n처음에 연산결과를 ${}안에 넣지 않고 document.querySelector(&#39;.glider&#39;).style.transform = $&#123;e.target.dataset.index&#125; 200 px 이런식으로 했는데 이렇게 하면 안되고 위처럼 해야한다.\n\nToaster 구현 중 느낀점1. toastBox 재사용을 위해 함수로 만들었다.12345678910111213141516171819const newToastBox = (type, title, Message) =&gt; &#123;  const $div = document.createElement(&quot;div&quot;);  $div.classList.add(&quot;toast&quot;, type);  $div.innerHTML = `  &lt;h4 class=&quot;toast-title&quot;&gt;$&#123;title&#125; $&#123;    [...document.querySelectorAll(&quot;body .toast&quot;)].length  &#125;&lt;/h4&gt;  &lt;div class=&quot;toast-message&quot;&gt;    &lt;svg width=&quot;24&quot; height=&quot;24&quot;&gt;      &lt;use xlink:href=&quot;#$&#123;type&#125;&quot; /&gt;    &lt;/svg&gt;    &lt;p&gt;$&#123;Message&#125;&lt;/p&gt;  &lt;/div&gt;  &lt;a class=&quot;toast-close&quot;&gt;&amp;times;&lt;/a&gt;`;  $div.style.bottom = &quot;0&quot;;  return $div;&#125;;\n\n\nToastBox 를 재사용하기 위해 함수를 사용하는 것을 적절했으나, 함수가 너무 많은 역할을 하고 있다. 렌더링부터 div 생성과 반환을 함께 하고 있어 리팩토링이 필요하다.\n\n2. render 함수는 화면에 rendering 해주는 역할을 한다.1234567const render = () =&gt; &#123;  [...document.querySelectorAll(&quot;body .toast&quot;)].forEach((toast, index) =&gt; &#123;    toast.style.bottom =      ([...document.querySelectorAll(&quot;body .toast&quot;)].length - index - 1) * 100 +      &quot;px&quot;;  &#125;);&#125;;\n\n\n위 render 함수는 토스트 요소에 bottom style 값을 할당해주는 역할을 하고 있으므로, 리팩토링이 필요하다.\n\nAutocomplete 구현 중 느낀점1. e.target.matches() vs e.target.closest()12345document.querySelector(&quot;body&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.closest(&quot;.autocomplete&quot;)) &#123;    document.querySelector(&quot;.autocomplete-suggester&quot;).classList.add(&quot;hide&quot;);  &#125;&#125;);\n\n\n해당 요소 바깥쪽을 클릭하였을 때 .autocomplete-suggester에 hide 클래스를 추가해주는 로직이다.\n\ne.target.closest(‘.autocomplete’)는 이벤트 발생한 요소의 상위 요소를 찾아가면서 인자로 넘겨준 요소를 찾고 반환한다.만약 없다면 null 값을 반환한다.\n\n하지만, e.target.matches(‘.autocomplete’)는 이벤트 발생한 요소가 인자로 넘겨준 요소를 가지고 있는지 판단하여 불리언값을 반환한다.\n\n\n\nmatches()의 경우 이벤트 전파를 캐치하기가 어려우므로 상황에 따라 적절하게 사용하자.\n\n\n방향키로 포커스 이동시 스크롤 이상하게 내려오는 현상\n\n1234567891011121314$suggestList.addEventListener(&quot;keydown&quot;, (e) =&gt; &#123;  if (e.key === &quot;ArrowDown&quot;) &#123;    e.preventDefault();    e.target.nextElementSibling === null      ? $suggestList.firstElementChild.focus()      : e.target.nextElementSibling.focus();  &#125;  if (e.key === &quot;ArrowUp&quot;) &#123;    e.preventDefault();    e.target.previousElementSibling === null // prettier-ignore      ? $suggestList.lastElementChild.focus()      : e.target.previousElementSibling.focus();  &#125;&#125;);\n\n\n방향키로 포커스 이동시 한번 이동할 때 마다 스크롤도 같이 내려와서 어색하게 동작하는 것을 방지하지 위해 방향키 값이 “ArrowDown”, “ArrowUp” 일 때만 e.preventDefault(); 를 해주었다.\n\nfocus() 메서드를 사용하여 선택 요소에 포커스를 선택해주었다.\n\n\n3. lodash로 debounce 구현 제대로 하기123456$searchInput.addEventListener(  &quot;keyup&quot;,  _.debounce(() =&gt; &#123;    setState(&#123; inputValue: $searchInput.value &#125;);  &#125;, 500));\n\n\n위와 같이 “keyup” 이벤트 발생 시 lodash debounce 메서드를 이벤트 핸들러로 등록해줘야한다.\n\n또한, debounce의 콜백함수에 실행할 코드를 입력해줄 때, setState함수가 인수를 받는다면 위와같이 써줘야한다.\n\n\n\n단, 인수를 받지 않는다면 _.debounce(setState,500) 이런식으로 사용할 수 있다.\n\n4. 사용자가 입력한 값과 countryCode를 state로 관리하였다.123456789101112131415let state = &#123;  inputValue: &quot;&quot;,  countryCode: [],&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  const regExp = new RegExp(`$&#123;state.inputValue&#125;`, &quot;i&quot;);  state.countryCode = countryCode.filter((country) =&gt; country[1].match(regExp));  state.countryCode = state.countryCode.map((country) =&gt; [    country[0],    country[1].replace(regExp, `&lt;strong&gt;$&#123;country[1].match(regExp)&#125;&lt;/strong&gt;`),  ]);  render();&#125;;\n\n\n사용자가 입력한 값을 state로 관리하여 그 값과 countryCode의 1번째 요소인 나라이름과 일치하는 부분을 찾아 strong 태그로 감싼 값으로 바꿔주었다.\n\nstrong 태그 대신 b 태그를 사용하면 안된다.\n\n\n","dateCreated":"2022-09-14T18:57:44+09:00","dateModified":"2022-11-18T17:19:08+09:00","datePublished":"2022-09-14T18:57:44+09:00","description":"","headline":"modal, stopwatch, tab, toaster, autocomplete Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/14/PairProgramming/level%201/modal,%20stopwatch,%20tab,%20toaster,%20autocomplete%20Tip/"}</script>
     <meta name="description" content="modal 창 구현 중 느낀점12345678910111213141516171819202122232425&lt;body&gt;  &lt;div class&#x3D;&quot;modal-container&quot;&gt;    &lt;div class&#x3D;&quot;modal&quot;&gt;      &lt;h2&gt;Hello&lt;&#x2F;h2&gt;      &lt;p&amp;g">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="modal, stopwatch, tab, toaster, autocomplete Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

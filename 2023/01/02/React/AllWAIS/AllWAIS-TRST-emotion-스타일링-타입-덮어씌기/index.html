@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"Emotion Styled Component Cascading 문제Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.\n1234567891011121314151617181920212223242526272829const StyledTabPanel = styled.div&lt;TabPanelProps&lt;&quot;div&quot;&gt;&gt;`  padding: 5px;  border: 2px solid hsl(219deg 1% 72%);  border-radius: 0 5px 5px;  background: hsl(220deg 43% 99%);  min-height: 10em;  min-width: 550px;  overflow: auto;  display: $&#123;(props) =&gt;    props.dataIndex === +(props.id?.slice(-1) as unknown as number)      ? &quot;block&quot;      : &quot;none&quot;&#125;;`;function TabPanel(&#123; children, className, ...restProps &#125;: TabPanelProps&lt;&quot;div&quot;&gt;) &#123;  const &#123; selected, setSelected &#125; = useTabsContext();  return (    &lt;StyledTabPanel      role=&quot;tabpanel&quot;      tabIndex=&#123;0&#125;      dataIndex=&#123;selected&#125;      className=&#123;className&#125;      &#123;...restProps&#125;    &gt;      &#123;children&#125;    &lt;/StyledTabPanel&gt;  );&#125;\n\nstyled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.\n\nTypeScript 오류 - 사용량 덮어씜\nprops를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.\n1234567891011121314151617181920212223242526272829303132333435363738type Component&lt;T extends React.ElementType&gt; = &#123;  className?: string;  children?: React.ReactNode;&#125; &amp; React.ComponentPropsWithRef&lt;T&gt;;type TabPanelProps&lt;T extends React.ElementType&gt; = &#123;  dataIndex?: TabsContextValue[&quot;selected&quot;];&#125; &amp; Component&lt;T&gt;;const StyledTabPanel = styled.div&lt;TabPanelProps&lt;&quot;div&quot;&gt;&gt;`  padding: 5px;  border: 2px solid hsl(219deg 1% 72%);  border-radius: 0 5px 5px;  background: hsl(220deg 43% 99%);  min-height: 10em;  min-width: 550px;  overflow: auto;  display: $&#123;(props) =&gt;    props.dataIndex === +(props.id?.slice(-1) as unknown as number)      ? &quot;block&quot;      : &quot;none&quot;&#125;;`;function TabPanel(&#123; children, className, ...restProps &#125;: TabPanelProps&lt;&quot;div&quot;&gt;) &#123;  const &#123; selected, setSelected &#125; = useTabsContext();  return (    &lt;StyledTabPanel      role=&quot;tabpanel&quot;      tabIndex=&#123;0&#125;      dataIndex=&#123;selected&#125;      className=&#123;className&#125;      &#123;...restProps&#125;    &gt;      &#123;children&#125;    &lt;/StyledTabPanel&gt;  );&#125;\n\n\n해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.\nstyled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.\n\n","dateCreated":"2023-01-02T23:02:32+09:00","dateModified":"2023-01-02T23:25:20+09:00","datePublished":"2023-01-02T23:02:32+09:00","description":"","headline":"AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"Emotion Styled Component Cascading 문제Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.\n1234567891011121314151617181920212223242526272829const StyledTabPanel = styled.div&lt;TabPanelProps&lt;&quot;div&quot;&gt;&gt;`  padding: 5px;  border: 2px solid hsl(219deg 1% 72%);  border-radius: 0 5px 5px;  background: hsl(220deg 43% 99%);  min-height: 10em;  min-width: 550px;  overflow: auto;  display: $&#123;(props) =&gt;    props.dataIndex === +(props.id?.slice(-1) as unknown as number)      ? &quot;block&quot;      : &quot;none&quot;&#125;;`;function TabPanel(&#123; children, className, ...restProps &#125;: TabPanelProps&lt;&quot;div&quot;&gt;) &#123;  const &#123; selected, setSelected &#125; = useTabsContext();  return (    &lt;StyledTabPanel      role=&quot;tabpanel&quot;      tabIndex=&#123;0&#125;      dataIndex=&#123;selected&#125;      className=&#123;className&#125;      &#123;...restProps&#125;    &gt;      &#123;children&#125;    &lt;/StyledTabPanel&gt;  );&#125;\n\nstyled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.\n\nTypeScript 오류 - 사용량 덮어씜\nprops를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.\n1234567891011121314151617181920212223242526272829303132333435363738type Component&lt;T extends React.ElementType&gt; = &#123;  className?: string;  children?: React.ReactNode;&#125; &amp; React.ComponentPropsWithRef&lt;T&gt;;type TabPanelProps&lt;T extends React.ElementType&gt; = &#123;  dataIndex?: TabsContextValue[&quot;selected&quot;];&#125; &amp; Component&lt;T&gt;;const StyledTabPanel = styled.div&lt;TabPanelProps&lt;&quot;div&quot;&gt;&gt;`  padding: 5px;  border: 2px solid hsl(219deg 1% 72%);  border-radius: 0 5px 5px;  background: hsl(220deg 43% 99%);  min-height: 10em;  min-width: 550px;  overflow: auto;  display: $&#123;(props) =&gt;    props.dataIndex === +(props.id?.slice(-1) as unknown as number)      ? &quot;block&quot;      : &quot;none&quot;&#125;;`;function TabPanel(&#123; children, className, ...restProps &#125;: TabPanelProps&lt;&quot;div&quot;&gt;) &#123;  const &#123; selected, setSelected &#125; = useTabsContext();  return (    &lt;StyledTabPanel      role=&quot;tabpanel&quot;      tabIndex=&#123;0&#125;      dataIndex=&#123;selected&#125;      className=&#123;className&#125;      &#123;...restProps&#125;    &gt;      &#123;children&#125;    &lt;/StyledTabPanel&gt;  );&#125;\n\n\n해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.\nstyled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.\n\n","dateCreated":"2023-01-02T23:02:32+09:00","dateModified":"2023-01-02T23:25:20+09:00","datePublished":"2023-01-02T23:02:32+09:00","description":"","headline":"AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"}</script>
     <meta name="description" content="Emotion Styled Component Cascading 문제Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다. 1234567891011121314151617181920212223242526272829const StyledTabPanel &#x3D; styled.div&lt;TabPanelProps&lt;&amp;q">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기">
@@ -130,20 +130,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -190,7 +176,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -199,86 +185,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

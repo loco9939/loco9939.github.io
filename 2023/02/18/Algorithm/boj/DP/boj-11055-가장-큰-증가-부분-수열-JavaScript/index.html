@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제수열 A가 주어졌을 때, 그 수열의 증가 부분 수열 중에서 합이 가장 큰 것을 구하는 프로그램을 작성하시오.\n예를 들어, 수열 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 인 경우에 합이 가장 큰 증가 부분 수열은 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 이고, 합은 113이다.\n입력첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.\n둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 합이 가장 큰 증가 부분 수열의 합을 출력한다.\n예제 입력 112101 100 2 50 60 3 5 6 7 8\n\n예제 출력 11113\n\n내 코드12345678910111213141516171819202122const [N, input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = input.split(&quot; &quot;).map(Number);function maxIncreasingSubArray(A) &#123;  const n = A.length;  const DP = [...A];  for (let i = 1; i &lt; n; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[i] &gt; A[j] &amp;&amp; DP[i] &lt; DP[j] + A[i]) &#123;        DP[i] = DP[j] + A[i];      &#125;    &#125;  &#125;  return Math.max(...DP);&#125;console.log(maxIncreasingSubArray(A));\n\n풀이\nDP는 해당 인덱스까지 가장 긴 부분수열의 합을 나타낸다. 이를 계산하기 편하게 하기 위해 DP에 A 수열의 값을 spread 문법으로 복사해준다.\n\n어짜피 DP[0]은 1로 확정이므로 i(인덱스)가 1부터 반복문을 순회한다.이는 DP에 값을 저장하기 위한 반복문이다.\n\ni 이전까지 수열 값과 A[i]값을 비교하여 A[i]가 A[j]보다 크고 DP[i] 값이 DP[j]+A[i] 보다 작으면 증가하는 부분 수열에 포함될 수 있다.\n\n\n그렇기 때문에 해당 DP[i]값을 새로운 값으로 갱신해준다.\n예시1const A = [1, 100, 2, 50, 60, 3, 5, 6, 7, 8];\n\n1. i = 1 &amp;&amp; j = 0 일 때\nA[1] &#x3D; 100, A[0] &#x3D; 1이므로 A[i] &gt; A[j] 조건 만족한다\nDP[1] &lt; DP[0] + A[1] 만족하므로 DP[1] &#x3D; DP[0] + A[1]로 갱신\n\n1DP = [1, 101, 2, 50, 60, 3, 5, 6, 7, 8];\n\n2. i &#x3D; 2 이고2.1. j &#x3D; 0 일 때\nA[2]&#x3D;2, A[0] &#x3D; 1 이므로 A[i] &gt; A[j] 조건 만족한다.\nDP[2] &lt; DP[0] + A[2] 만족하므로 DP[2] &#x3D; DP[0] + A[2]로 갱신\n\n2.2. j &#x3D; 1 일 때,\nA[2]&#x3D;2, A[1] &#x3D; 100 이므로 A[i] &gt; A[j] 조건 만족하지 못한다.\n\n1DP = [1, 101, 3, 50, 60, 3, 5, 6, 7, 8];\n\n즉, 0번째부터 해당 인덱스까지 수열의 두 수를 비교하고 DP에 저장된 값도 비교하여 둘다 만족하면 DP 값을 갱신하는 것이다.\n","dateCreated":"2023-02-18T23:06:38+09:00","dateModified":"2023-02-18T23:32:35+09:00","datePublished":"2023-02-18T23:06:38+09:00","description":"","headline":"boj-11055 가장 큰 증가 부분 수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제수열 A가 주어졌을 때, 그 수열의 증가 부분 수열 중에서 합이 가장 큰 것을 구하는 프로그램을 작성하시오.\n예를 들어, 수열 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 인 경우에 합이 가장 큰 증가 부분 수열은 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 이고, 합은 113이다.\n입력첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.\n둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 합이 가장 큰 증가 부분 수열의 합을 출력한다.\n예제 입력 112101 100 2 50 60 3 5 6 7 8\n\n예제 출력 11113\n\n내 코드12345678910111213141516171819202122const [N, input] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = input.split(&quot; &quot;).map(Number);function maxIncreasingSubArray(A) &#123;  const n = A.length;  const DP = [...A];  for (let i = 1; i &lt; n; i++) &#123;    for (let j = 0; j &lt; i; j++) &#123;      if (A[i] &gt; A[j] &amp;&amp; DP[i] &lt; DP[j] + A[i]) &#123;        DP[i] = DP[j] + A[i];      &#125;    &#125;  &#125;  return Math.max(...DP);&#125;console.log(maxIncreasingSubArray(A));\n\n풀이\nDP는 해당 인덱스까지 가장 긴 부분수열의 합을 나타낸다. 이를 계산하기 편하게 하기 위해 DP에 A 수열의 값을 spread 문법으로 복사해준다.\n\n어짜피 DP[0]은 1로 확정이므로 i(인덱스)가 1부터 반복문을 순회한다.이는 DP에 값을 저장하기 위한 반복문이다.\n\ni 이전까지 수열 값과 A[i]값을 비교하여 A[i]가 A[j]보다 크고 DP[i] 값이 DP[j]+A[i] 보다 작으면 증가하는 부분 수열에 포함될 수 있다.\n\n\n그렇기 때문에 해당 DP[i]값을 새로운 값으로 갱신해준다.\n예시1const A = [1, 100, 2, 50, 60, 3, 5, 6, 7, 8];\n\n1. i = 1 &amp;&amp; j = 0 일 때\nA[1] &#x3D; 100, A[0] &#x3D; 1이므로 A[i] &gt; A[j] 조건 만족한다\nDP[1] &lt; DP[0] + A[1] 만족하므로 DP[1] &#x3D; DP[0] + A[1]로 갱신\n\n1DP = [1, 101, 2, 50, 60, 3, 5, 6, 7, 8];\n\n2. i &#x3D; 2 이고2.1. j &#x3D; 0 일 때\nA[2]&#x3D;2, A[0] &#x3D; 1 이므로 A[i] &gt; A[j] 조건 만족한다.\nDP[2] &lt; DP[0] + A[2] 만족하므로 DP[2] &#x3D; DP[0] + A[2]로 갱신\n\n2.2. j &#x3D; 1 일 때,\nA[2]&#x3D;2, A[1] &#x3D; 100 이므로 A[i] &gt; A[j] 조건 만족하지 못한다.\n\n1DP = [1, 101, 3, 50, 60, 3, 5, 6, 7, 8];\n\n즉, 0번째부터 해당 인덱스까지 수열의 두 수를 비교하고 DP에 저장된 값도 비교하여 둘다 만족하면 DP 값을 갱신하는 것이다.\n","dateCreated":"2023-02-18T23:06:38+09:00","dateModified":"2023-02-18T23:32:35+09:00","datePublished":"2023-02-18T23:06:38+09:00","description":"","headline":"boj-11055 가장 큰 증가 부분 수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/18/Algorithm/boj/DP/boj-11055-%EA%B0%80%EC%9E%A5-%ED%81%B0-%EC%A6%9D%EA%B0%80-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제수열 A가 주어졌을 때, 그 수열의 증가 부분 수열 중에서 합이 가장 큰 것을 구하는 프로그램을 작성하시오. 예를 들어, 수열 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 인 경우에 합이 가장 큰 증가 부분 수열은 A &#x3D; {1, 100, 2, 50, 60, 3, 5, 6, 7, 8} 이고, 합은 113이다. 입">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-11055 가장 큰 증가 부분 수열(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

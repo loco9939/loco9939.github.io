@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제수열 A가 주어졌을 때, 가장 긴 증가하는 부분 수열을 구하는 프로그램을 작성하시오.\n예를 들어, 수열 A &#x3D; {10, 20, 10, 30, 20, 50} 인 경우에 가장 긴 증가하는 부분 수열은 A &#x3D; {10, 20, 10, 30, 20, 50} 이고, 길이는 4이다.\n입력첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.\n둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 가장 긴 증가하는 부분 수열의 길이를 출력한다.\n예제예제 입력 1123610 20 10 30 20 50\n\n예제 출력 114\n\n내 코드123456789101112131415161718const [N, a] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = a.split(&quot; &quot;).map(Number);const DP = Array.from(&#123; length: N &#125;, () =&gt; 1);for (let i = 1; i &lt; N; i++) &#123;  for (let j = 0; j &lt; i; j++) &#123;    if (A[j] &lt; A[i]) &#123;      DP[i] = Math.max(DP[i], DP[j] + 1);    &#125;  &#125;&#125;console.log(Math.max(...DP));\n\n\n처음 모두 자신의 길이를 자신을 포함하므로 1로 설정해준다.\n만약 i 번째 수가 i보다 작은 번째의 수보다 크다면 DP[i]는 이전 DP값에 1을 더해준 것과 기존 DP[i]값 중 큰 값을 저장해둔다.\nex) A = [10,20,10,30,20,50]이고 DP[1]을 계산하면, A[0] &lt; A[1] 이므로 DP[1] = DP[0] + 1이다.\n왜냐하면 DP는 자신의 길이를 나타내는 것인데 이전 수보다 크다는 것은 자기 자신을 수열로 포함시킬 수 있다는 뜻이므로 +1을 해주는 것이다. 또한, 자신 보다 작은 수의 DP가 여러개 일 수도 있으므로 반복문을 돌면서 이들 중 최댓값만 저장해주면 된다.\n\n\n\n","dateCreated":"2023-02-21T12:20:55+09:00","dateModified":"2023-02-21T12:21:30+09:00","datePublished":"2023-02-21T12:20:55+09:00","description":"","headline":"boj-11053 가장 긴 증가하는 부분수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제수열 A가 주어졌을 때, 가장 긴 증가하는 부분 수열을 구하는 프로그램을 작성하시오.\n예를 들어, 수열 A &#x3D; {10, 20, 10, 30, 20, 50} 인 경우에 가장 긴 증가하는 부분 수열은 A &#x3D; {10, 20, 10, 30, 20, 50} 이고, 길이는 4이다.\n입력첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.\n둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)\n출력첫째 줄에 수열 A의 가장 긴 증가하는 부분 수열의 길이를 출력한다.\n예제예제 입력 1123610 20 10 30 20 50\n\n예제 출력 114\n\n내 코드123456789101112131415161718const [N, a] = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(&quot;\\n&quot;);const A = a.split(&quot; &quot;).map(Number);const DP = Array.from(&#123; length: N &#125;, () =&gt; 1);for (let i = 1; i &lt; N; i++) &#123;  for (let j = 0; j &lt; i; j++) &#123;    if (A[j] &lt; A[i]) &#123;      DP[i] = Math.max(DP[i], DP[j] + 1);    &#125;  &#125;&#125;console.log(Math.max(...DP));\n\n\n처음 모두 자신의 길이를 자신을 포함하므로 1로 설정해준다.\n만약 i 번째 수가 i보다 작은 번째의 수보다 크다면 DP[i]는 이전 DP값에 1을 더해준 것과 기존 DP[i]값 중 큰 값을 저장해둔다.\nex) A = [10,20,10,30,20,50]이고 DP[1]을 계산하면, A[0] &lt; A[1] 이므로 DP[1] = DP[0] + 1이다.\n왜냐하면 DP는 자신의 길이를 나타내는 것인데 이전 수보다 크다는 것은 자기 자신을 수열로 포함시킬 수 있다는 뜻이므로 +1을 해주는 것이다. 또한, 자신 보다 작은 수의 DP가 여러개 일 수도 있으므로 반복문을 돌면서 이들 중 최댓값만 저장해주면 된다.\n\n\n\n","dateCreated":"2023-02-21T12:20:55+09:00","dateModified":"2023-02-21T12:21:30+09:00","datePublished":"2023-02-21T12:20:55+09:00","description":"","headline":"boj-11053 가장 긴 증가하는 부분수열(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11053-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EC%A6%9D%EA%B0%80%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84%EC%88%98%EC%97%B4-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제수열 A가 주어졌을 때, 가장 긴 증가하는 부분 수열을 구하는 프로그램을 작성하시오. 예를 들어, 수열 A &#x3D; {10, 20, 10, 30, 20, 50} 인 경우에 가장 긴 증가하는 부분 수열은 A &#x3D; {10, 20, 10, 30, 20, 50} 이고, 길이는 4이다. 입력첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-11053 가장 긴 증가하는 부분수열(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

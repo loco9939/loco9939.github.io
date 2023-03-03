@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"useState란?1const [state, setState] = useState(initialState);\n\n리액트에서 상태 변수를 컴포넌트에 추가할 때 사용하는 리액트 훅이다.\n특징으로는 상태를 변경하기 위해서는 set 함수를 사용하여 변경해야만 하고, set 함수에 새로운 값을 인자로 전달하면 새로운 상태로 렌더링을 일으킨다.\nuseState로 컴포넌트 Reset 시키기주로 어떤 상태를 reset 시키기 위해 아래와 같은 코드를 작성할 것이다.\n12345678910111213141516171819202122function App() &#123;  const [list, setList] = useState([]);  const resetList = () =&gt; &#123;    setList([]);  &#125;;  const addList = () =&gt; &#123;    setList([...list, 10]);  &#125;;  return (    &lt;&gt;      &lt;button onClick=&#123;resetList&#125;&gt;Reset Button&lt;/button&gt;      &lt;button onClick=&#123;addList&#125;&gt;Add 10&lt;/button&gt;      &lt;div&gt;        &#123;list.map((num) =&gt; (          &lt;p&gt;&#123;num&#125;&lt;/p&gt;        ))&#125;      &lt;/div&gt;    &lt;/&gt;  );&#125;\n\n위와 같이 직접 상태를 초기화 하는 방법도 있지만 key props에게 변경된 상태를 전달함으로써 해당 컴포넌트는 물론 해당 컴포넌트의 하위 컴포넌트까지 reset할 수 있다.\n123456789101112131415161718192021222324252627import &#123; useState &#125; from &quot;react&quot;;export default function App() &#123;  const [version, setVersion] = useState(0);  function handleReset() &#123;    setVersion(version + 1);  &#125;  return (    &lt;&gt;      &lt;button onClick=&#123;handleReset&#125;&gt;Reset&lt;/button&gt;      &lt;Form key=&#123;version&#125; /&gt;    &lt;/&gt;  );&#125;function Form() &#123;  const [name, setName] = useState(&quot;Taylor&quot;);  return (    &lt;&gt;      &lt;input value=&#123;name&#125; onChange=&#123;(e) =&gt; setName(e.target.value)&#125; /&gt;      &lt;p&gt;Hello, &#123;name&#125;.&lt;/p&gt;    &lt;/&gt;  );&#125;\n","dateCreated":"2023-02-07T23:23:20+09:00","dateModified":"2023-02-07T23:35:39+09:00","datePublished":"2023-02-07T23:23:20+09:00","description":"","headline":"useState로 컴포넌트 리셋하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"useState란?1const [state, setState] = useState(initialState);\n\n리액트에서 상태 변수를 컴포넌트에 추가할 때 사용하는 리액트 훅이다.\n특징으로는 상태를 변경하기 위해서는 set 함수를 사용하여 변경해야만 하고, set 함수에 새로운 값을 인자로 전달하면 새로운 상태로 렌더링을 일으킨다.\nuseState로 컴포넌트 Reset 시키기주로 어떤 상태를 reset 시키기 위해 아래와 같은 코드를 작성할 것이다.\n12345678910111213141516171819202122function App() &#123;  const [list, setList] = useState([]);  const resetList = () =&gt; &#123;    setList([]);  &#125;;  const addList = () =&gt; &#123;    setList([...list, 10]);  &#125;;  return (    &lt;&gt;      &lt;button onClick=&#123;resetList&#125;&gt;Reset Button&lt;/button&gt;      &lt;button onClick=&#123;addList&#125;&gt;Add 10&lt;/button&gt;      &lt;div&gt;        &#123;list.map((num) =&gt; (          &lt;p&gt;&#123;num&#125;&lt;/p&gt;        ))&#125;      &lt;/div&gt;    &lt;/&gt;  );&#125;\n\n위와 같이 직접 상태를 초기화 하는 방법도 있지만 key props에게 변경된 상태를 전달함으로써 해당 컴포넌트는 물론 해당 컴포넌트의 하위 컴포넌트까지 reset할 수 있다.\n123456789101112131415161718192021222324252627import &#123; useState &#125; from &quot;react&quot;;export default function App() &#123;  const [version, setVersion] = useState(0);  function handleReset() &#123;    setVersion(version + 1);  &#125;  return (    &lt;&gt;      &lt;button onClick=&#123;handleReset&#125;&gt;Reset&lt;/button&gt;      &lt;Form key=&#123;version&#125; /&gt;    &lt;/&gt;  );&#125;function Form() &#123;  const [name, setName] = useState(&quot;Taylor&quot;);  return (    &lt;&gt;      &lt;input value=&#123;name&#125; onChange=&#123;(e) =&gt; setName(e.target.value)&#125; /&gt;      &lt;p&gt;Hello, &#123;name&#125;.&lt;/p&gt;    &lt;/&gt;  );&#125;\n","dateCreated":"2023-02-07T23:23:20+09:00","dateModified":"2023-02-07T23:35:39+09:00","datePublished":"2023-02-07T23:23:20+09:00","description":"","headline":"useState로 컴포넌트 리셋하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"}</script>
     <meta name="description" content="useState란?1const [state, setState] &#x3D; useState(initialState);  리액트에서 상태 변수를 컴포넌트에 추가할 때 사용하는 리액트 훅이다. 특징으로는 상태를 변경하기 위해서는 set 함수를 사용하여 변경해야만 하고, set 함수에 새로운 값을 인자로 전달하면 새로운 상태로 렌더링을 일으킨다. useState로 컴포넌">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="useState로 컴포넌트 리셋하기">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

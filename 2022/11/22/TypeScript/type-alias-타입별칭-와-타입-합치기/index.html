@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;\n\n\n\n\n위와 같이 함수 타입도 type alias를 저장하여 사용할 수 있다.\n함수타입을 사용하려면 함수를 표현식으로 정의해줘야한다.\n\ncallback 함수 type 지정하기1234567891011121314type CutType = (x: string) =&gt; string;let cutZero: CutType = function (x) &#123;  let result = x.replace(/^0+/, &quot;&quot;);  return result;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;const newFunc = (str: string, funA: CutType, funB: (x: string) =&gt; number) =&gt; &#123;  return removeDash(cutZero(str));&#125;;\n\n\n만약 콜백 함수의 타입을 지정해주고 싶다면 위와 같이 지정해줄 수 있다.\n\n✏️ readonly로 객체 잠그기12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;;\n\n\n위와 같이 자바스크립트에서 const 키워드로 재할당을 막아도 객체 내부까지는 막을 수 없다. 이럴 때 readonly 타입을 지정해주면 막을 수 있다.\n\n12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;; // Error\n\n\n컴파일 시 에러가 발생한다.(변환된 js 파일은 바뀌어 있다.)\n\nreadonly number[ ]는 배열 요소를 읽을 수만 있다.\n\n배열을 변경하는 pop 메서드를 비롯한 다른 메서드를 호출할 수 없다.\n\n\n❗️ readonly 주의사항123const a: number[] = [1, 2, 3];const b: readonly number[] = a;const c: number[] = b; // Error: &#x27;readonly number[]는 변경가능한 number[] 타입에 할당할 수 없다.\n\n\nnumber[ ]는 readonly number[ ]보다 기능이 많기 때문에 readonly number[ ]의 서브타입이다.\nnumber[ ]는 readonly number[ ]에 할당 가능하다.\n\n1234567function arraySum(arr: readonly number[]) &#123;  let sum = 0;  for (const num of arr) &#123;    sum += num;  &#125;  return sum;&#125;\n\n\n함수가 매개변수를 변경하지 않는다면 readonly로 선언해야한다.\n\n⛳️ type 키워드 여러개 합치기123type Name = string;type Age = number;type person = Name | Age;\n\n\nOR 연산자를 사용하여 유니온 타입으로 만들 수 있다.\n\n12345678type PositionX = &#123; x: number &#125;;type PositionY = &#123; y: number &#125;;type XandY = PositionX &amp; PositionY;type XandZ = PositionX &amp; &#123; z: number &#125;;let pos: XandY = &#123; x: 1, y: 2 &#125;;let pos: XandZ = &#123; x: 10, z: 3 &#125;;\n\n\n객체 타입은 &amp; 연산자를 사용하여 **합치기(extends)**가 가능하다.\nXandY type is &#123; x: number, y: number &#125;\nType alias &amp; Type alias 뿐만 아니라 Type alias &amp; { key: type }도 가능하다.\n\n\ntype 키워드는 재정의가 불가능하다.\n\n❗️ &amp; 연산자 주의사항12345type Combined = &#123; a: number &#125; &amp; &#123; b: string &#125;;type Conflicting = &#123; a: number &#125; &amp; &#123; a: string &#125;;const ta: Combined = &#123; a: 1, b: &quot;st&quot; &#125;; // 정상const tt: Conflicting = &#123; a: 1 &#125;; // Error\n\n\nCombined 타입은 { a: number, b: string }\nConflicting 타입은 { a: number와 string의 교집합 === never }\n\n","dateCreated":"2022-11-22T09:06:56+09:00","dateModified":"2022-11-23T20:15:42+09:00","datePublished":"2022-11-22T09:06:56+09:00","description":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;","headline":"type alias(타입별칭)와 타입 합치기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;\n\n\n\n\n위와 같이 함수 타입도 type alias를 저장하여 사용할 수 있다.\n함수타입을 사용하려면 함수를 표현식으로 정의해줘야한다.\n\ncallback 함수 type 지정하기1234567891011121314type CutType = (x: string) =&gt; string;let cutZero: CutType = function (x) &#123;  let result = x.replace(/^0+/, &quot;&quot;);  return result;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;const newFunc = (str: string, funA: CutType, funB: (x: string) =&gt; number) =&gt; &#123;  return removeDash(cutZero(str));&#125;;\n\n\n만약 콜백 함수의 타입을 지정해주고 싶다면 위와 같이 지정해줄 수 있다.\n\n✏️ readonly로 객체 잠그기12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;;\n\n\n위와 같이 자바스크립트에서 const 키워드로 재할당을 막아도 객체 내부까지는 막을 수 없다. 이럴 때 readonly 타입을 지정해주면 막을 수 있다.\n\n12345const person = &#123;  name: &quot;yiju&quot;,&#125;;person.name = &quot;loco&quot;; // Error\n\n\n컴파일 시 에러가 발생한다.(변환된 js 파일은 바뀌어 있다.)\n\nreadonly number[ ]는 배열 요소를 읽을 수만 있다.\n\n배열을 변경하는 pop 메서드를 비롯한 다른 메서드를 호출할 수 없다.\n\n\n❗️ readonly 주의사항123const a: number[] = [1, 2, 3];const b: readonly number[] = a;const c: number[] = b; // Error: &#x27;readonly number[]는 변경가능한 number[] 타입에 할당할 수 없다.\n\n\nnumber[ ]는 readonly number[ ]보다 기능이 많기 때문에 readonly number[ ]의 서브타입이다.\nnumber[ ]는 readonly number[ ]에 할당 가능하다.\n\n1234567function arraySum(arr: readonly number[]) &#123;  let sum = 0;  for (const num of arr) &#123;    sum += num;  &#125;  return sum;&#125;\n\n\n함수가 매개변수를 변경하지 않는다면 readonly로 선언해야한다.\n\n⛳️ type 키워드 여러개 합치기123type Name = string;type Age = number;type person = Name | Age;\n\n\nOR 연산자를 사용하여 유니온 타입으로 만들 수 있다.\n\n12345678type PositionX = &#123; x: number &#125;;type PositionY = &#123; y: number &#125;;type XandY = PositionX &amp; PositionY;type XandZ = PositionX &amp; &#123; z: number &#125;;let pos: XandY = &#123; x: 1, y: 2 &#125;;let pos: XandZ = &#123; x: 10, z: 3 &#125;;\n\n\n객체 타입은 &amp; 연산자를 사용하여 **합치기(extends)**가 가능하다.\nXandY type is &#123; x: number, y: number &#125;\nType alias &amp; Type alias 뿐만 아니라 Type alias &amp; { key: type }도 가능하다.\n\n\ntype 키워드는 재정의가 불가능하다.\n\n❗️ &amp; 연산자 주의사항12345type Combined = &#123; a: number &#125; &amp; &#123; b: string &#125;;type Conflicting = &#123; a: number &#125; &amp; &#123; a: string &#125;;const ta: Combined = &#123; a: 1, b: &quot;st&quot; &#125;; // 정상const tt: Conflicting = &#123; a: 1 &#125;; // Error\n\n\nCombined 타입은 { a: number, b: string }\nConflicting 타입은 { a: number와 string의 교집합 === never }\n\n","dateCreated":"2022-11-22T09:06:56+09:00","dateModified":"2022-11-23T20:15:42+09:00","datePublished":"2022-11-22T09:06:56+09:00","description":"📌 type alias(타입별칭)1type Animal = string | number;\n\n\ntype 타입변수명 &#x3D; 타입종류\n이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.\n관습적으로 대문자 사용\n\n🏓 function type 지정하기123456789type NumOut = (x: number, y: number) =&gt; number;let ABC: NumOut = function (x, y) &#123;  return x + y;&#125;;function removeDash(x: string): number &#123;  let result = x.replace(/-/g, &quot;&quot;);  return parseFloat(result);&#125;","headline":"type alias(타입별칭)와 타입 합치기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"}</script>
     <meta name="description" content="📌 type alias(타입별칭)1type Animal &#x3D; string | number;   type 타입변수명 &#x3D; 타입종류 이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다. 관습적으로 대문자 사용  🏓 function type 지정하기123456789type NumOut &#x3D; (x: number, y: number) &#x3D;&gt; nu">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="type alias(타입별칭)와 타입 합치기">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"문제요즘 민규네 동네에서는 스타트링크에서 만든 PS카드를 모으는 것이 유행이다.\nPS카드는 PS(Problem Solving)분야에서 유명한 사람들의 아이디와 얼굴이 적혀있는 카드이다. 각각의 카드에는 등급을 나타내는 색이 칠해져 있고, 다음과 같이 8가지가 있다.\n\n전설카드\n레드카드\n오렌지카드\n퍼플카드\n블루카드\n청록카드\n그린카드\n그레이카드\n\n카드는 카드팩의 형태로만 구매할 수 있고, 카드팩의 종류는 카드 1개가 포함된 카드팩, 카드 2개가 포함된 카드팩, … 카드 N개가 포함된 카드팩과 같이 총 N가지가 존재한다.\n민규는 카드의 개수가 적은 팩이더라도 가격이 비싸면 높은 등급의 카드가 많이 들어있을 것이라는 미신을 믿고 있다. 따라서, 민규는 돈을 최대한 많이 지불해서 카드 N개 구매하려고 한다. 카드가 i개 포함된 카드팩의 가격은 Pi원이다.\n예를 들어, 카드팩이 총 4가지 종류가 있고, P1 &#x3D; 1, P2 &#x3D; 5, P3 &#x3D; 6, P4 &#x3D; 7인 경우에 민규가 카드 4개를 갖기 위해 지불해야 하는 금액의 최댓값은 10원이다. 2개 들어있는 카드팩을 2번 사면 된다.\nP1 &#x3D; 5, P2 &#x3D; 2, P3 &#x3D; 8, P4 &#x3D; 10인 경우에는 카드가 1개 들어있는 카드팩을 4번 사면 20원이고, 이 경우가 민규가 지불해야 하는 금액의 최댓값이다.\n마지막으로, P1 &#x3D; 3, P2 &#x3D; 5, P3 &#x3D; 15, P4 &#x3D; 16인 경우에는 3개 들어있는 카드팩과 1개 들어있는 카드팩을 구매해 18원을 지불하는 것이 최댓값이다.\n카드 팩의 가격이 주어졌을 때, N개의 카드를 구매하기 위해 민규가 지불해야 하는 금액의 최댓값을 구하는 프로그램을 작성하시오. N개보다 많은 개수의 카드를 산 다음, 나머지 카드를 버려서 N개를 만드는 것은 불가능하다. 즉, 구매한 카드팩에 포함되어 있는 카드 개수의 합은 N과 같아야 한다.\n입력첫째 줄에 민규가 구매하려고 하는 카드의 개수 N이 주어진다. (1 ≤ N ≤ 1,000)\n둘째 줄에는 Pi가 P1부터 PN까지 순서대로 주어진다. (1 ≤ Pi ≤ 10,000)\n출력첫째 줄에 민규가 카드 N개를 갖기 위해 지불해야 하는 금액의 최댓값을 출력한다.\n예제예제 입력 112341 5 6 7\n\n예제 출력 11210\n\n예제 입력 2123510 9 8 7 6\n\n예제 출력 21250\n\n예제 입력 3123101 1 2 3 5 8 13 21 34 55\n\n예제 출력 31255\n\n예제 입력 4123105 10 11 12 13 30 35 40 45 47\n\n예제 출력 41250\n\n예제 입력 512345 2 8 10\n\n예제 출력 51220\n\n예제 입력 612343 5 15 16\n\n예제 출력 6118\n\n내 코드1234567891011121314151617const input = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(/\\s/);const N = +input.shift();const prices = input.map(Number);const DP = new Array(N + 1).fill(0);for (let i = 1; i &lt;= N; i++) &#123;  for (let j = 1; j &lt;= i; j++) &#123;    DP[i] = Math.max(DP[i], DP[i - j] + prices[j - 1]);  &#125;&#125;console.log(DP[N]);\n\n처음에는 반복문 1회만으로 가능할 것이라 생각하여 단일 반복문으로 패턴을 파악하였는데 테케만 통과하고 틀렸다고 나왔다.\n그래서 다른 사람 해설을 보고 이해하였다.\nex) N &#x3D; 4\n\ni &#x3D; 1, DP[4]와 prices[4-1-1]+DP[1] 중 최대값 할당\ni &#x3D; 2, DP[4]와 prices[4-2-1]+DP[2] 중 최대값 할당\ni &#x3D; 3, DP[4]와 prices[4-3-1]+DP[3] 중 최대값 할당\n\n위 경우의 수를 반복해야하므로 이중 for문이 필요하다는 것을 알게되었다.\n","dateCreated":"2023-02-21T12:26:01+09:00","dateModified":"2023-02-21T12:26:52+09:00","datePublished":"2023-02-21T12:26:01+09:00","description":"","headline":"boj-11052 카드 구매하기(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/","keywords":"DP"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제요즘 민규네 동네에서는 스타트링크에서 만든 PS카드를 모으는 것이 유행이다.\nPS카드는 PS(Problem Solving)분야에서 유명한 사람들의 아이디와 얼굴이 적혀있는 카드이다. 각각의 카드에는 등급을 나타내는 색이 칠해져 있고, 다음과 같이 8가지가 있다.\n\n전설카드\n레드카드\n오렌지카드\n퍼플카드\n블루카드\n청록카드\n그린카드\n그레이카드\n\n카드는 카드팩의 형태로만 구매할 수 있고, 카드팩의 종류는 카드 1개가 포함된 카드팩, 카드 2개가 포함된 카드팩, … 카드 N개가 포함된 카드팩과 같이 총 N가지가 존재한다.\n민규는 카드의 개수가 적은 팩이더라도 가격이 비싸면 높은 등급의 카드가 많이 들어있을 것이라는 미신을 믿고 있다. 따라서, 민규는 돈을 최대한 많이 지불해서 카드 N개 구매하려고 한다. 카드가 i개 포함된 카드팩의 가격은 Pi원이다.\n예를 들어, 카드팩이 총 4가지 종류가 있고, P1 &#x3D; 1, P2 &#x3D; 5, P3 &#x3D; 6, P4 &#x3D; 7인 경우에 민규가 카드 4개를 갖기 위해 지불해야 하는 금액의 최댓값은 10원이다. 2개 들어있는 카드팩을 2번 사면 된다.\nP1 &#x3D; 5, P2 &#x3D; 2, P3 &#x3D; 8, P4 &#x3D; 10인 경우에는 카드가 1개 들어있는 카드팩을 4번 사면 20원이고, 이 경우가 민규가 지불해야 하는 금액의 최댓값이다.\n마지막으로, P1 &#x3D; 3, P2 &#x3D; 5, P3 &#x3D; 15, P4 &#x3D; 16인 경우에는 3개 들어있는 카드팩과 1개 들어있는 카드팩을 구매해 18원을 지불하는 것이 최댓값이다.\n카드 팩의 가격이 주어졌을 때, N개의 카드를 구매하기 위해 민규가 지불해야 하는 금액의 최댓값을 구하는 프로그램을 작성하시오. N개보다 많은 개수의 카드를 산 다음, 나머지 카드를 버려서 N개를 만드는 것은 불가능하다. 즉, 구매한 카드팩에 포함되어 있는 카드 개수의 합은 N과 같아야 한다.\n입력첫째 줄에 민규가 구매하려고 하는 카드의 개수 N이 주어진다. (1 ≤ N ≤ 1,000)\n둘째 줄에는 Pi가 P1부터 PN까지 순서대로 주어진다. (1 ≤ Pi ≤ 10,000)\n출력첫째 줄에 민규가 카드 N개를 갖기 위해 지불해야 하는 금액의 최댓값을 출력한다.\n예제예제 입력 112341 5 6 7\n\n예제 출력 11210\n\n예제 입력 2123510 9 8 7 6\n\n예제 출력 21250\n\n예제 입력 3123101 1 2 3 5 8 13 21 34 55\n\n예제 출력 31255\n\n예제 입력 4123105 10 11 12 13 30 35 40 45 47\n\n예제 출력 41250\n\n예제 입력 512345 2 8 10\n\n예제 출력 51220\n\n예제 입력 612343 5 15 16\n\n예제 출력 6118\n\n내 코드1234567891011121314151617const input = require(&quot;fs&quot;)  .readFileSync(&quot;/dev/stdin&quot;)  .toString()  .trim()  .split(/\\s/);const N = +input.shift();const prices = input.map(Number);const DP = new Array(N + 1).fill(0);for (let i = 1; i &lt;= N; i++) &#123;  for (let j = 1; j &lt;= i; j++) &#123;    DP[i] = Math.max(DP[i], DP[i - j] + prices[j - 1]);  &#125;&#125;console.log(DP[N]);\n\n처음에는 반복문 1회만으로 가능할 것이라 생각하여 단일 반복문으로 패턴을 파악하였는데 테케만 통과하고 틀렸다고 나왔다.\n그래서 다른 사람 해설을 보고 이해하였다.\nex) N &#x3D; 4\n\ni &#x3D; 1, DP[4]와 prices[4-1-1]+DP[1] 중 최대값 할당\ni &#x3D; 2, DP[4]와 prices[4-2-1]+DP[2] 중 최대값 할당\ni &#x3D; 3, DP[4]와 prices[4-3-1]+DP[3] 중 최대값 할당\n\n위 경우의 수를 반복해야하므로 이중 for문이 필요하다는 것을 알게되었다.\n","dateCreated":"2023-02-21T12:26:01+09:00","dateModified":"2023-02-21T12:26:52+09:00","datePublished":"2023-02-21T12:26:01+09:00","description":"","headline":"boj-11052 카드 구매하기(JavaScript)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/","keywords":"DP"}</script>
     <meta name="description" content="문제요즘 민규네 동네에서는 스타트링크에서 만든 PS카드를 모으는 것이 유행이다. PS카드는 PS(Problem Solving)분야에서 유명한 사람들의 아이디와 얼굴이 적혀있는 카드이다. 각각의 카드에는 등급을 나타내는 색이 칠해져 있고, 다음과 같이 8가지가 있다.  전설카드 레드카드 오렌지카드 퍼플카드 블루카드 청록카드 그린카드 그레이카드  카드는 카드팩">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="boj-11052 카드 구매하기(JavaScript)">
@@ -126,20 +126,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -186,7 +172,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -195,86 +181,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

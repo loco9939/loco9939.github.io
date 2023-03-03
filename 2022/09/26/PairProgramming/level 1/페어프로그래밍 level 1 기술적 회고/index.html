@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"stopWatch 회고1. 복잡한 삼항 연산자를 메서드로 간단하게123456const formatElapsedTime = (() =&gt; &#123;  // 1 =&gt; &#x27;01&#x27;, 10 =&gt; &#x27;10&#x27;  const format = (n) =&gt; (n + &quot;&quot;).padStart(2, 0);  // const format = n =&gt; (n &lt; 10 ? &#x27;0&#x27; + n : n + &#x27;&#x27;);  return (&#123; mm, ss, ms &#125;) =&gt; `$&#123;format(mm)&#125;:$&#123;format(ss)&#125;:$&#123;format(ms)&#125;`;&#125;)();\n\n\n삼항 연산자로 조건에 따라 문자열을 직접 넣어서 구현하였는데 padStart 메서드를 사용하면 가독성을 키웠다.\n리팩터링 전에는 minutes, seconds 같은 변수를 사용했는데, format 함수를 사용하여 중복을 제거해주었다.\n\n2. 일관성있는 코드를 작성하자12345678910111213141516171819const renderLaps = (() =&gt; &#123;  const $laps = document.querySelector(&#x27;.stopwatch &gt; .laps&#x27;);  // 랩 타임을 생성하고 DOM에 반영한다.  const createLapElement = (newLap, index) =&gt; &#123;    const $fragment = document.createDocumentFragment();    const $index = document.createElement(&#x27;div&#x27;);    $index.textContent = index;    $fragment.appendChild($index);    const $newLab = document.createElement(&#x27;div&#x27;);    $newLab.textContent = formatElapsedTime(newLap);    $fragment.appendChild($newLab);    $laps.appendChild($fragment);    $laps.style.display = &#x27;grid&#x27;;  &#125;;\n\n\n리팩터링 전에는 addLap 함수에서 insertAdjacentHTML 메서드 사용하고 reset 함수에서는 innerHTML을 사용하여 일관성이 떨어졌다.\n\n위 코드는 fragment 라는 서브 DOM을 구성하여 기존 DOM을 추가하는 용도로 사용하여 일관성을 갖췄다.\n\n\n3. 템플릿 건드리지 말라면 건드리지 말기12345678910111213// 리팩터링 전$laps.innerHTML = `  &lt;div class=&quot;lap-title&quot;&gt;Laps&lt;/div&gt;  &lt;div class=&quot;lap-title&quot;&gt;Time&lt;/div&gt;`;// 리팩터링 후const removeAllLapElement = () =&gt; &#123;  document    .querySelectorAll(&quot;.laps &gt; div:not(.lap-title)&quot;)    .forEach(($lap) =&gt; $lap.remove());  $laps.style.display = &quot;none&quot;;&#125;;\n\n\n요구사항에 맞게 템플릿을 건드리지 않아야한다면 템플릿을 건드리지 않아야 하므로 innerHTML로 새로운 값을 할당하는 대신, 자식 노드에 반복문을 사용하였다.\n\nTabs 회고1234567891011121314151617181920212223// 리팩터링 전window.addEventListener(&quot;DOMContentLoaded&quot;, init);$tabs.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  const $navItems = [...document.querySelectorAll(&quot;.tab-content&quot;)];  if (!e.target.matches(&quot;.tab&quot;)) return;  activateTab(e, $navItems);&#125;);// 리팩터링 후document.querySelector(&quot;nav&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.classList.contains(&quot;tab&quot;)) return;  currentTabIndex = +e.target.dataset.index;  document.querySelector(&quot;.glider&quot;).style.transform = `translate3D($&#123;    currentTabIndex * 100  &#125;%, 0, 0)`;  document.querySelectorAll(&quot;.tab-content&quot;).forEach(($tabContent, i) =&gt; &#123;    $tabContent.classList.toggle(&quot;active&quot;, i === currentTabIndex);  &#125;);&#125;);\n\n\nasync init 함수 내부에서 $tabs 이벤트 핸들러 등록까지 함께 해줘서 응집도 높은 코드를 설계할 수 있다.\n\nautocomplete 회고1. 정규표현식에 콜백함수 사용12345678// 리팩터링 전country.replace(regExp, `&lt;strong&gt;$&#123;country.match(regExp)&#125;&lt;/strong&gt;`);// 리팩터링 후name.replace(  new RegExp(`($&#123;searchString&#125;)`, &quot;i&quot;),  (matched) =&gt; `&lt;strong&gt;$&#123;matched&#125;&lt;/strong&gt;`);\n\n2. 요구사항을 잘 읽고 적합하게 설계하자.12345678910const selectSuggestItem = ($selectedItem) =&gt; &#123;  // prettier-ignore  $toggleButton.innerHTML = ($selectedItem    ? $selectedItem.innerHTML    : `&lt;span&gt;        &lt;i class=&quot;bx bx-search&quot;&gt;&lt;/i&gt;        &lt;span class=&quot;autocomplete-title&quot;&gt;Select a country&lt;/span&gt;      &lt;/span&gt;`  ) + `&lt;i class=&quot;bx bx-caret-down&quot;&gt;&lt;/i&gt;`;&#125;;\n\n\n리팩터링 이전 코드는 li 요소 안의 span 요소를 클릭하면 제대로 동작하지 않았다. 그래서 위와 같이 로직을 수정을 해줬어야 했다. 그러므로 꼭 요구사항을 적절히 읽고 그에 적절한 코드를 작성하는 습관을 기르자.\n\nCarousel 회고1. transitionend 이벤트가 발생했다 안하는 현상123456$container.addEventListener(&quot;transitionend&quot;, carouselSlider.completeTransition);$container.addEventListener(  &quot;transitioncancel&quot;,  carouselSlider.completeTransition);\n\n\ntransition 이벤트가 완료 되었을 때, 이벤트 핸들러를 호출하도록 코드를 작성하였다.그런데 transitionend 이벤트가 발생하기 전 즉, transition이 완료되기 전에 transition-property가 제거되거나 display:none 으로 설정이 변경되면 이벤트가 생성되지 않는다.\n\n그래서 보통은 안전하게 CSS 속성 변화가 되었을 때, transitionend 이벤트를 사용하기 위해 라이브러리를 사용하는데, 요구사항에서 라이브러리를 사용하지 말라고 하였으므로, transitioncancel 이벤트를 사용하였다.\ntransitionend이벤트와 transitioncancel이벤트는 양방향으로 발생한다. 즉, transitionend 이벤트가 발생하면 transitioncancel 이벤트는 발생하지 않는다.\n","dateCreated":"2022-09-26T18:35:38+09:00","dateModified":"2022-11-18T17:18:29+09:00","datePublished":"2022-09-26T18:35:38+09:00","description":"","headline":"페어프로그래밍 level 1 기술적 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/26/PairProgramming/level%201/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%201%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/26/PairProgramming/level%201/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%201%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"stopWatch 회고1. 복잡한 삼항 연산자를 메서드로 간단하게123456const formatElapsedTime = (() =&gt; &#123;  // 1 =&gt; &#x27;01&#x27;, 10 =&gt; &#x27;10&#x27;  const format = (n) =&gt; (n + &quot;&quot;).padStart(2, 0);  // const format = n =&gt; (n &lt; 10 ? &#x27;0&#x27; + n : n + &#x27;&#x27;);  return (&#123; mm, ss, ms &#125;) =&gt; `$&#123;format(mm)&#125;:$&#123;format(ss)&#125;:$&#123;format(ms)&#125;`;&#125;)();\n\n\n삼항 연산자로 조건에 따라 문자열을 직접 넣어서 구현하였는데 padStart 메서드를 사용하면 가독성을 키웠다.\n리팩터링 전에는 minutes, seconds 같은 변수를 사용했는데, format 함수를 사용하여 중복을 제거해주었다.\n\n2. 일관성있는 코드를 작성하자12345678910111213141516171819const renderLaps = (() =&gt; &#123;  const $laps = document.querySelector(&#x27;.stopwatch &gt; .laps&#x27;);  // 랩 타임을 생성하고 DOM에 반영한다.  const createLapElement = (newLap, index) =&gt; &#123;    const $fragment = document.createDocumentFragment();    const $index = document.createElement(&#x27;div&#x27;);    $index.textContent = index;    $fragment.appendChild($index);    const $newLab = document.createElement(&#x27;div&#x27;);    $newLab.textContent = formatElapsedTime(newLap);    $fragment.appendChild($newLab);    $laps.appendChild($fragment);    $laps.style.display = &#x27;grid&#x27;;  &#125;;\n\n\n리팩터링 전에는 addLap 함수에서 insertAdjacentHTML 메서드 사용하고 reset 함수에서는 innerHTML을 사용하여 일관성이 떨어졌다.\n\n위 코드는 fragment 라는 서브 DOM을 구성하여 기존 DOM을 추가하는 용도로 사용하여 일관성을 갖췄다.\n\n\n3. 템플릿 건드리지 말라면 건드리지 말기12345678910111213// 리팩터링 전$laps.innerHTML = `  &lt;div class=&quot;lap-title&quot;&gt;Laps&lt;/div&gt;  &lt;div class=&quot;lap-title&quot;&gt;Time&lt;/div&gt;`;// 리팩터링 후const removeAllLapElement = () =&gt; &#123;  document    .querySelectorAll(&quot;.laps &gt; div:not(.lap-title)&quot;)    .forEach(($lap) =&gt; $lap.remove());  $laps.style.display = &quot;none&quot;;&#125;;\n\n\n요구사항에 맞게 템플릿을 건드리지 않아야한다면 템플릿을 건드리지 않아야 하므로 innerHTML로 새로운 값을 할당하는 대신, 자식 노드에 반복문을 사용하였다.\n\nTabs 회고1234567891011121314151617181920212223// 리팩터링 전window.addEventListener(&quot;DOMContentLoaded&quot;, init);$tabs.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  const $navItems = [...document.querySelectorAll(&quot;.tab-content&quot;)];  if (!e.target.matches(&quot;.tab&quot;)) return;  activateTab(e, $navItems);&#125;);// 리팩터링 후document.querySelector(&quot;nav&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.classList.contains(&quot;tab&quot;)) return;  currentTabIndex = +e.target.dataset.index;  document.querySelector(&quot;.glider&quot;).style.transform = `translate3D($&#123;    currentTabIndex * 100  &#125;%, 0, 0)`;  document.querySelectorAll(&quot;.tab-content&quot;).forEach(($tabContent, i) =&gt; &#123;    $tabContent.classList.toggle(&quot;active&quot;, i === currentTabIndex);  &#125;);&#125;);\n\n\nasync init 함수 내부에서 $tabs 이벤트 핸들러 등록까지 함께 해줘서 응집도 높은 코드를 설계할 수 있다.\n\nautocomplete 회고1. 정규표현식에 콜백함수 사용12345678// 리팩터링 전country.replace(regExp, `&lt;strong&gt;$&#123;country.match(regExp)&#125;&lt;/strong&gt;`);// 리팩터링 후name.replace(  new RegExp(`($&#123;searchString&#125;)`, &quot;i&quot;),  (matched) =&gt; `&lt;strong&gt;$&#123;matched&#125;&lt;/strong&gt;`);\n\n2. 요구사항을 잘 읽고 적합하게 설계하자.12345678910const selectSuggestItem = ($selectedItem) =&gt; &#123;  // prettier-ignore  $toggleButton.innerHTML = ($selectedItem    ? $selectedItem.innerHTML    : `&lt;span&gt;        &lt;i class=&quot;bx bx-search&quot;&gt;&lt;/i&gt;        &lt;span class=&quot;autocomplete-title&quot;&gt;Select a country&lt;/span&gt;      &lt;/span&gt;`  ) + `&lt;i class=&quot;bx bx-caret-down&quot;&gt;&lt;/i&gt;`;&#125;;\n\n\n리팩터링 이전 코드는 li 요소 안의 span 요소를 클릭하면 제대로 동작하지 않았다. 그래서 위와 같이 로직을 수정을 해줬어야 했다. 그러므로 꼭 요구사항을 적절히 읽고 그에 적절한 코드를 작성하는 습관을 기르자.\n\nCarousel 회고1. transitionend 이벤트가 발생했다 안하는 현상123456$container.addEventListener(&quot;transitionend&quot;, carouselSlider.completeTransition);$container.addEventListener(  &quot;transitioncancel&quot;,  carouselSlider.completeTransition);\n\n\ntransition 이벤트가 완료 되었을 때, 이벤트 핸들러를 호출하도록 코드를 작성하였다.그런데 transitionend 이벤트가 발생하기 전 즉, transition이 완료되기 전에 transition-property가 제거되거나 display:none 으로 설정이 변경되면 이벤트가 생성되지 않는다.\n\n그래서 보통은 안전하게 CSS 속성 변화가 되었을 때, transitionend 이벤트를 사용하기 위해 라이브러리를 사용하는데, 요구사항에서 라이브러리를 사용하지 말라고 하였으므로, transitioncancel 이벤트를 사용하였다.\ntransitionend이벤트와 transitioncancel이벤트는 양방향으로 발생한다. 즉, transitionend 이벤트가 발생하면 transitioncancel 이벤트는 발생하지 않는다.\n","dateCreated":"2022-09-26T18:35:38+09:00","dateModified":"2022-11-18T17:18:29+09:00","datePublished":"2022-09-26T18:35:38+09:00","description":"","headline":"페어프로그래밍 level 1 기술적 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/26/PairProgramming/level%201/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%201%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/26/PairProgramming/level%201/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%201%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"}</script>
     <meta name="description" content="stopWatch 회고1. 복잡한 삼항 연산자를 메서드로 간단하게123456const formatElapsedTime &#x3D; (() &#x3D;&gt; &amp;#123;  &#x2F;&#x2F; 1 &#x3D;&gt; &amp;#x27;01&amp;#x27;, 10 &#x3D;&gt; &amp;#x27;10&amp;#x27;  const format &#x3D; (n) &#x3D;&gt; (n + &quot;&quot;).padStart(2, 0);  &#x2F;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="페어프로그래밍 level 1 기술적 회고">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

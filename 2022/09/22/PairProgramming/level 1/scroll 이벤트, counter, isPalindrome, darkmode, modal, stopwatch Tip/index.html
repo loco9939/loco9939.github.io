@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"2번째 리팩터링 하면서 느낀점scrollGotoTop\n스크롤 깊이와 스로틀 딜레이와 같은 정해진 숫자는 상수이므로, 가독성을 높이기 위해 대문자로 네이밍해주었다.\n은닉해야할 정보가 없기 때문에 클로저로 만들어줄 필요가 없다.\n\n\n\ncounter\n리팩터링 전 코드에서는 생성자 함수로 만들어서 인스턴스를 생성하여 클로저를 구현하였다\n하지만 이 방식은 불필요한 인스턴스 생성을 한다는 생각이 들었다.\n리팩토링한 코드는 즉시 실행 함수로 감싸서 변수 할당 같이 한번만 실행해도 되는 것들은 한 번만 실행되도록 만들어주었고, 내부의 데이터에 유일하게 접근할 수 있는 해당 함수를 return 해주어 데이터를 은닉해주었다.\ncounter에 관련된(해당 기능에만 사용되는) 데이터들과 함수들을 한데 묶어줘 응집도를 높여주었다\n\n\n\n12345678//document.body.addEventListener(&#x27;click&#x27;, e =&gt; &#123;//  if (!e.target.matches(&#x27;button&#x27;)) return;//  e.target.matches(&#x27;.increase&#x27;) ? counter.increase() : counter.decrease();//&#125;);document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, counter.increase);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, counter.decrease);\n\n\n증가, 감소 버튼을 이벤트 위임으로 작성해보았다. 이럴 경우 이벤트 핸들러 등록 갯수가 줄어들어 증감 버튼에 대한 로직을 한곳에서 관리할 수 있고 각각의 이벤트 마다 이벤트 핸들러를 등록하지 않아도 된다는 장점이 있다고 생각했다.\n하지만, 이벤트 위임의 경우 각 버튼이 다른 기능을 해야하는 경우라면 이벤트가 발생한 요소에 대한 조건문이 많아지고 그에 따라 코드가 복잡해질 수 있으므로 이벤트 위임 대신 각 요소에 이벤트 핸들러를 등록하는 방법으로 선택하였다.\n\n\n\nisPalindrome\n문자열을 배열로 만들어 주는 경우 str.split(&#39;&#39;) 를 사용하는 것보단 문자열이 이터러블 요소인 것을 감안하여 스프레드 문법([…string])을 사용하였다.\n메서드를 사용하기위해 알아야 할 것들이 많은데 스프레드 문법은 알아야할 정보가 적어 코드의 이해성을 높일 수 있다.\n\n\n\n12345//$result.textContent = isPalindrome(value) ? `&quot;$&#123;value&#125;&quot; is a palindrome` : `&quot;$&#123;value&#125;&quot; is not a palindrome`$result.textContent = `&quot;$&#123;value&#125;&quot; is $&#123;  isPalindrome(value) ? &quot;&quot; : &quot;not&quot;&#125; a palindrome`;\n\n\n중복이 아닌 부분만 삼항 연산자를 이용하여 중복을 줄였다.\ninnerHTML 대신 textContent를 사용한 이유는 해당 요소에 할당한 값이 text 요소로만 이루어져 있기 때문이다.\ninnerText는 숨겨진 텍스트는 무시하고 사용자에게 보여지는 text만 가져올 수 있기 때문에 원하지 않는 오류가 발생할 수 있다. 내부에 특별히 스타일 적용이 없는 문자열을 할당할 때는 성능상 적합하지 않다.\n\n\n\nDarkMode12345// +getComputedStyle(document.querySelector(&#x27;:root&#x27;)).getPropertyValue(&#x27;--transition-duration&#x27;)+getComputedStyle(document.documentElement).getPropertyValue(  &quot;--transition-duration&quot;);\n\n\n:root 에 존재하는 사용자 정의 변수를 가지고 올 경우에는 document.documentElement로 접근해야 한다.\ndocument.querySelector(&#39;:root&#39;) 도 가능하지만 querySelector 메서드를 사용하는 것보다 프로퍼티를 접근하는 것이 더 효율적이므로 판단하여 사용하자.\n\n\n\n1const getCurrentMode = () =&gt; JSON.parse(localStorage.getItem(&quot;isDark&quot;));\n\n\n로컬스토리지에 정보를 저장할 때 문자열로 저장되기 때문에 이를 getter 함수로 가져올 때 문자열 ‘true’ 값을 boolean 값으로 받기 위해 JSON.parse() 메서드를 사용하였다.\n\n1234567891011121314// const setCurrentMode = selectedMode =&gt; &#123;//    localStorage.setItem(&#x27;isDark&#x27;, selectedMode);//    toggleMode();// &#125;;init() &#123;   // localStorage.getItem(&#x27;isDark&#x27;) === null ? setCurrentMode(userTheme) : toggleMode();   localStorage.setItem(&#x27;isDark&#x27;, localStorage.getItem(&#x27;isDark&#x27;) ?? userTheme);   toggleMode();&#125;,toggle() &#123;   localStorage.setItem(&#x27;isDark&#x27;, !getCurrentMode());   toggleMode();&#125;\n\n\n기존에는 삼항연산자를 사용하였지만, 초기값이 없는 null 상태일 때 null 병합 연산자를 사용하여 초기값을 할당함으로써 함수를 줄일 수 있었다. 또한, setCurrentMode 함수가 필요없으므로 함수를 제거하여 코드의 이해성과 가독성을 높였다.\n\n123window.addEventListener(&quot;DOMContentLoaded&quot;, setDarkMode.init);window.addEventListener(&quot;load&quot;, setDarkMode.preventBlink);\n\n\n렌더링 되는 시점이 다르면 다른 역할을 하는 함수로 판단한다.\n\npopupModal\n변수를 사용한 이유는 단지 코드의 중복때문만이 아니라 이벤트가 발생할 때마다 호출될 필요가 없는 함수의 반환값을 변수에 저장하여 사용하기 위함이다.\n특정 목적을 위해서 밀접하게 연관된 기능들을 한데 모아 관리하면 해당 함수에 대한 이해도가 증가하게 되고 이는 유지보수성을 높이는데 도움이 된다. 또한 코드의 재사용성도 증가하는 장점도 있어 응집도를 높이는 구조로 코드를 설계하였습니다. 응집도를 높인 코드를 짜면서 정보를 안전하게 다룰 수 있도록 클로저를 구현하였습니다.\n요구사항에 맞게 Enter키 입력과 OK버튼 클릭시 중복을 줄이는 코드를 작성하기 위해서 이들을 form 태그로 감싸주었고 ‘submit’ 이벤트 타입으로 이벤트 핸들러를 등록하였습니다. cancel 버튼도 연관성을 위해 form 태그 안에 추가하였는데, cancel 버튼은 기본타입을 버튼으로 변경하여 submit 이벤트가 발생하지 않도록 하였습니다.\nis-open 클래스를 이용하여 모달창을 보여주고 사라지도록 구현하였습니다.\n\n1234567891011121314151617181920212223242526272829303132333435363738const popupModal = (() =&gt; &#123;  const $modalContainer = document.querySelector(&quot;.modal-container&quot;);  const $modal = document.querySelector(&quot;.modal&quot;);  const $popupMessage = document.querySelector(&quot;.popup-message&quot;);  return &#123;    toggle() &#123;      $modal.classList.toggle(&quot;is-open&quot;);      $modalContainer.classList.toggle(&quot;background-gray&quot;);    &#125;,    //    remove() &#123;    //      $modal.classList.remove(&#x27;is-open&#x27;);    //      $modalContainer.classList.remove(&#x27;background-gray&#x27;);    //   &#125;,    render(e) &#123;      e.preventDefault();      $popupMessage.textContent = `from popup : $&#123;e.target.firstElementChild.value&#125;`;      popupModal.toggle();    &#125;,  &#125;;&#125;)();document  .querySelector(&quot;.popup-form&quot;)  .addEventListener(&quot;submit&quot;, popupModal.render);document.querySelector(&quot;.modal&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.is-close&quot;)) return;  // popupModal.remove()  popupModal.toggle();&#125;);document.querySelector(&quot;.modal-container&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.modal-container&quot;)) return;  // popupModal.remove()  popupModal.toggle();&#125;);\n\n\ne ⇒ &#123;popupModal.render(e)&#125; === popupModal 인수 전달안해줘도 event 객체 첫번째 인수로 넘어간다. 축약형\ntoggle 메서드를 사용하여 remove 메서드가 필요없어지므로 제거하였다.\n\nstopWatch\n동일한 버튼을 구분할 때 textContent가 Start인지 Stop인지로 판단하는 것은 매우 좋지 않은 방식이므로, isStarted라는 현재 상태(시작&#x2F;정지)를 판단하는 변수를 사용하였습니다.\nleftButton &#x2F; rightButton , laps&#x2F; title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.\n리팩터링 이후 이벤트 핸들러를 위한 leftButton, rightButton만 querySelectorAll로 받아오고 lap,title은 내부적으로 해결하였다.\n\n\n스톱워치내에서 관리해야할 데이터(isStarted, elapsedTime, timerId)를 하나의 객체에 담았다.\nisStarted : 스톱워치가 시작되었는지 여부 (true &#x2F; false)\nelapsedTime : Start 버튼을 누르고 경과된 시간(setInterval의 delay마다 값이 증가하며, 이를 convertTime 함수를 통해 display에 표시한다.)\ntimerId : setInterval 함수의 리턴값을 가지며 clearInterval 함수와 함께 stop 기능을 구현하였다.\n\n\n\n12345678910111213141516const convertTime = (time) =&gt; &#123;  const minutes =    Math.floor(time / 6000) &lt; 10      ? `0$&#123;Math.floor(time / 6000)&#125;`      : `$&#123;Math.floor(time / 6000)&#125;`;  const seconds =    Math.floor((time % 6000) / 100) &lt; 10      ? `0$&#123;Math.floor((time % 6000) / 100)&#125;`      : `$&#123;Math.floor((time % 6000) / 100)&#125;`;  const ms =    Math.floor(time % 6000) % 100 &lt; 10      ? `0$&#123;Math.floor(time % 6000) % 100&#125;`      : `$&#123;Math.floor(time % 6000) % 100&#125;`;  return `$&#123;minutes&#125;:$&#123;seconds&#125;:$&#123;ms&#125;`;&#125;;\n\n\nconvert 함수는 display에 보여질 시간으로 변환하고 그 값을 문자열로 리턴한다.\n\n12// $laps.children.length$laps.childElementCount;\n\n\n리팩터링 전에는 자식노드의 갯수를 알기 위해서 자식노드(children)로 접근한 다음 길이(length)로 접근하여 값을 얻었지만, childElementCount라는 프로퍼티를 이용하여 한 번에 값을 얻을 수 있었다.\n\n1$laps.insertAdjacentHTML(&quot;beforeend&quot;, newLap);\n\n\n리팩터링 전에는 laps를 배열로 관리하여 이를 innerHTML으로 하나가 추가되더라도 모든 부분을 렌더링하였지만, 리팩터링 후에는 insertAdjacentHTML 메서드를 사용하여 HTML을 동적으로 추가해주어 추가된 부분만 렌더링 되도록 해주었다. (참고 : 여기서 beforeend 는 해당 요소의 자식노드 마지막에 삽입하는 것을 의미한다)\nreset 함수에서도 insertAdjacentHTML처럼 추가된 부분만 삭제해주고 싶었지만, 고려해야할 조건들이 많아져 가독성을 위해 기존의 innerHTML을 사용하였다.\n\n12345678return &#123;  toggle,  lapAndReset() &#123;    !data.isStarted ? addLap() : reset();  &#125;,&#125;;$rightButton.addEventListener(&quot;click&quot;, stopWatch.lapAndReset);\n\n\n이벤트 핸들러에서 data.isStarted를 이용하여 조건에 따라 함수를 실행해주려 하였으나 클로저로 구현하였기 때문에 클로저 바깥에서 data.isStarted 값을 참조할 수 없기 때문에 클로저 내부에서 data.isStarted를 참조하여 조건에 맞게 해당 함수를 실행하는 함수를 return하였다.\n\n","dateCreated":"2022-09-22T19:09:28+09:00","dateModified":"2022-11-18T17:18:50+09:00","datePublished":"2022-09-22T19:09:28+09:00","description":"","headline":"scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"2번째 리팩터링 하면서 느낀점scrollGotoTop\n스크롤 깊이와 스로틀 딜레이와 같은 정해진 숫자는 상수이므로, 가독성을 높이기 위해 대문자로 네이밍해주었다.\n은닉해야할 정보가 없기 때문에 클로저로 만들어줄 필요가 없다.\n\n\n\ncounter\n리팩터링 전 코드에서는 생성자 함수로 만들어서 인스턴스를 생성하여 클로저를 구현하였다\n하지만 이 방식은 불필요한 인스턴스 생성을 한다는 생각이 들었다.\n리팩토링한 코드는 즉시 실행 함수로 감싸서 변수 할당 같이 한번만 실행해도 되는 것들은 한 번만 실행되도록 만들어주었고, 내부의 데이터에 유일하게 접근할 수 있는 해당 함수를 return 해주어 데이터를 은닉해주었다.\ncounter에 관련된(해당 기능에만 사용되는) 데이터들과 함수들을 한데 묶어줘 응집도를 높여주었다\n\n\n\n12345678//document.body.addEventListener(&#x27;click&#x27;, e =&gt; &#123;//  if (!e.target.matches(&#x27;button&#x27;)) return;//  e.target.matches(&#x27;.increase&#x27;) ? counter.increase() : counter.decrease();//&#125;);document.querySelector(&quot;.increase&quot;).addEventListener(&quot;click&quot;, counter.increase);document.querySelector(&quot;.decrease&quot;).addEventListener(&quot;click&quot;, counter.decrease);\n\n\n증가, 감소 버튼을 이벤트 위임으로 작성해보았다. 이럴 경우 이벤트 핸들러 등록 갯수가 줄어들어 증감 버튼에 대한 로직을 한곳에서 관리할 수 있고 각각의 이벤트 마다 이벤트 핸들러를 등록하지 않아도 된다는 장점이 있다고 생각했다.\n하지만, 이벤트 위임의 경우 각 버튼이 다른 기능을 해야하는 경우라면 이벤트가 발생한 요소에 대한 조건문이 많아지고 그에 따라 코드가 복잡해질 수 있으므로 이벤트 위임 대신 각 요소에 이벤트 핸들러를 등록하는 방법으로 선택하였다.\n\n\n\nisPalindrome\n문자열을 배열로 만들어 주는 경우 str.split(&#39;&#39;) 를 사용하는 것보단 문자열이 이터러블 요소인 것을 감안하여 스프레드 문법([…string])을 사용하였다.\n메서드를 사용하기위해 알아야 할 것들이 많은데 스프레드 문법은 알아야할 정보가 적어 코드의 이해성을 높일 수 있다.\n\n\n\n12345//$result.textContent = isPalindrome(value) ? `&quot;$&#123;value&#125;&quot; is a palindrome` : `&quot;$&#123;value&#125;&quot; is not a palindrome`$result.textContent = `&quot;$&#123;value&#125;&quot; is $&#123;  isPalindrome(value) ? &quot;&quot; : &quot;not&quot;&#125; a palindrome`;\n\n\n중복이 아닌 부분만 삼항 연산자를 이용하여 중복을 줄였다.\ninnerHTML 대신 textContent를 사용한 이유는 해당 요소에 할당한 값이 text 요소로만 이루어져 있기 때문이다.\ninnerText는 숨겨진 텍스트는 무시하고 사용자에게 보여지는 text만 가져올 수 있기 때문에 원하지 않는 오류가 발생할 수 있다. 내부에 특별히 스타일 적용이 없는 문자열을 할당할 때는 성능상 적합하지 않다.\n\n\n\nDarkMode12345// +getComputedStyle(document.querySelector(&#x27;:root&#x27;)).getPropertyValue(&#x27;--transition-duration&#x27;)+getComputedStyle(document.documentElement).getPropertyValue(  &quot;--transition-duration&quot;);\n\n\n:root 에 존재하는 사용자 정의 변수를 가지고 올 경우에는 document.documentElement로 접근해야 한다.\ndocument.querySelector(&#39;:root&#39;) 도 가능하지만 querySelector 메서드를 사용하는 것보다 프로퍼티를 접근하는 것이 더 효율적이므로 판단하여 사용하자.\n\n\n\n1const getCurrentMode = () =&gt; JSON.parse(localStorage.getItem(&quot;isDark&quot;));\n\n\n로컬스토리지에 정보를 저장할 때 문자열로 저장되기 때문에 이를 getter 함수로 가져올 때 문자열 ‘true’ 값을 boolean 값으로 받기 위해 JSON.parse() 메서드를 사용하였다.\n\n1234567891011121314// const setCurrentMode = selectedMode =&gt; &#123;//    localStorage.setItem(&#x27;isDark&#x27;, selectedMode);//    toggleMode();// &#125;;init() &#123;   // localStorage.getItem(&#x27;isDark&#x27;) === null ? setCurrentMode(userTheme) : toggleMode();   localStorage.setItem(&#x27;isDark&#x27;, localStorage.getItem(&#x27;isDark&#x27;) ?? userTheme);   toggleMode();&#125;,toggle() &#123;   localStorage.setItem(&#x27;isDark&#x27;, !getCurrentMode());   toggleMode();&#125;\n\n\n기존에는 삼항연산자를 사용하였지만, 초기값이 없는 null 상태일 때 null 병합 연산자를 사용하여 초기값을 할당함으로써 함수를 줄일 수 있었다. 또한, setCurrentMode 함수가 필요없으므로 함수를 제거하여 코드의 이해성과 가독성을 높였다.\n\n123window.addEventListener(&quot;DOMContentLoaded&quot;, setDarkMode.init);window.addEventListener(&quot;load&quot;, setDarkMode.preventBlink);\n\n\n렌더링 되는 시점이 다르면 다른 역할을 하는 함수로 판단한다.\n\npopupModal\n변수를 사용한 이유는 단지 코드의 중복때문만이 아니라 이벤트가 발생할 때마다 호출될 필요가 없는 함수의 반환값을 변수에 저장하여 사용하기 위함이다.\n특정 목적을 위해서 밀접하게 연관된 기능들을 한데 모아 관리하면 해당 함수에 대한 이해도가 증가하게 되고 이는 유지보수성을 높이는데 도움이 된다. 또한 코드의 재사용성도 증가하는 장점도 있어 응집도를 높이는 구조로 코드를 설계하였습니다. 응집도를 높인 코드를 짜면서 정보를 안전하게 다룰 수 있도록 클로저를 구현하였습니다.\n요구사항에 맞게 Enter키 입력과 OK버튼 클릭시 중복을 줄이는 코드를 작성하기 위해서 이들을 form 태그로 감싸주었고 ‘submit’ 이벤트 타입으로 이벤트 핸들러를 등록하였습니다. cancel 버튼도 연관성을 위해 form 태그 안에 추가하였는데, cancel 버튼은 기본타입을 버튼으로 변경하여 submit 이벤트가 발생하지 않도록 하였습니다.\nis-open 클래스를 이용하여 모달창을 보여주고 사라지도록 구현하였습니다.\n\n1234567891011121314151617181920212223242526272829303132333435363738const popupModal = (() =&gt; &#123;  const $modalContainer = document.querySelector(&quot;.modal-container&quot;);  const $modal = document.querySelector(&quot;.modal&quot;);  const $popupMessage = document.querySelector(&quot;.popup-message&quot;);  return &#123;    toggle() &#123;      $modal.classList.toggle(&quot;is-open&quot;);      $modalContainer.classList.toggle(&quot;background-gray&quot;);    &#125;,    //    remove() &#123;    //      $modal.classList.remove(&#x27;is-open&#x27;);    //      $modalContainer.classList.remove(&#x27;background-gray&#x27;);    //   &#125;,    render(e) &#123;      e.preventDefault();      $popupMessage.textContent = `from popup : $&#123;e.target.firstElementChild.value&#125;`;      popupModal.toggle();    &#125;,  &#125;;&#125;)();document  .querySelector(&quot;.popup-form&quot;)  .addEventListener(&quot;submit&quot;, popupModal.render);document.querySelector(&quot;.modal&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.is-close&quot;)) return;  // popupModal.remove()  popupModal.toggle();&#125;);document.querySelector(&quot;.modal-container&quot;).addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;.modal-container&quot;)) return;  // popupModal.remove()  popupModal.toggle();&#125;);\n\n\ne ⇒ &#123;popupModal.render(e)&#125; === popupModal 인수 전달안해줘도 event 객체 첫번째 인수로 넘어간다. 축약형\ntoggle 메서드를 사용하여 remove 메서드가 필요없어지므로 제거하였다.\n\nstopWatch\n동일한 버튼을 구분할 때 textContent가 Start인지 Stop인지로 판단하는 것은 매우 좋지 않은 방식이므로, isStarted라는 현재 상태(시작&#x2F;정지)를 판단하는 변수를 사용하였습니다.\nleftButton &#x2F; rightButton , laps&#x2F; title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.\n리팩터링 이후 이벤트 핸들러를 위한 leftButton, rightButton만 querySelectorAll로 받아오고 lap,title은 내부적으로 해결하였다.\n\n\n스톱워치내에서 관리해야할 데이터(isStarted, elapsedTime, timerId)를 하나의 객체에 담았다.\nisStarted : 스톱워치가 시작되었는지 여부 (true &#x2F; false)\nelapsedTime : Start 버튼을 누르고 경과된 시간(setInterval의 delay마다 값이 증가하며, 이를 convertTime 함수를 통해 display에 표시한다.)\ntimerId : setInterval 함수의 리턴값을 가지며 clearInterval 함수와 함께 stop 기능을 구현하였다.\n\n\n\n12345678910111213141516const convertTime = (time) =&gt; &#123;  const minutes =    Math.floor(time / 6000) &lt; 10      ? `0$&#123;Math.floor(time / 6000)&#125;`      : `$&#123;Math.floor(time / 6000)&#125;`;  const seconds =    Math.floor((time % 6000) / 100) &lt; 10      ? `0$&#123;Math.floor((time % 6000) / 100)&#125;`      : `$&#123;Math.floor((time % 6000) / 100)&#125;`;  const ms =    Math.floor(time % 6000) % 100 &lt; 10      ? `0$&#123;Math.floor(time % 6000) % 100&#125;`      : `$&#123;Math.floor(time % 6000) % 100&#125;`;  return `$&#123;minutes&#125;:$&#123;seconds&#125;:$&#123;ms&#125;`;&#125;;\n\n\nconvert 함수는 display에 보여질 시간으로 변환하고 그 값을 문자열로 리턴한다.\n\n12// $laps.children.length$laps.childElementCount;\n\n\n리팩터링 전에는 자식노드의 갯수를 알기 위해서 자식노드(children)로 접근한 다음 길이(length)로 접근하여 값을 얻었지만, childElementCount라는 프로퍼티를 이용하여 한 번에 값을 얻을 수 있었다.\n\n1$laps.insertAdjacentHTML(&quot;beforeend&quot;, newLap);\n\n\n리팩터링 전에는 laps를 배열로 관리하여 이를 innerHTML으로 하나가 추가되더라도 모든 부분을 렌더링하였지만, 리팩터링 후에는 insertAdjacentHTML 메서드를 사용하여 HTML을 동적으로 추가해주어 추가된 부분만 렌더링 되도록 해주었다. (참고 : 여기서 beforeend 는 해당 요소의 자식노드 마지막에 삽입하는 것을 의미한다)\nreset 함수에서도 insertAdjacentHTML처럼 추가된 부분만 삭제해주고 싶었지만, 고려해야할 조건들이 많아져 가독성을 위해 기존의 innerHTML을 사용하였다.\n\n12345678return &#123;  toggle,  lapAndReset() &#123;    !data.isStarted ? addLap() : reset();  &#125;,&#125;;$rightButton.addEventListener(&quot;click&quot;, stopWatch.lapAndReset);\n\n\n이벤트 핸들러에서 data.isStarted를 이용하여 조건에 따라 함수를 실행해주려 하였으나 클로저로 구현하였기 때문에 클로저 바깥에서 data.isStarted 값을 참조할 수 없기 때문에 클로저 내부에서 data.isStarted를 참조하여 조건에 맞게 해당 함수를 실행하는 함수를 return하였다.\n\n","dateCreated":"2022-09-22T19:09:28+09:00","dateModified":"2022-11-18T17:18:50+09:00","datePublished":"2022-09-22T19:09:28+09:00","description":"","headline":"scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"}</script>
     <meta name="description" content="2번째 리팩터링 하면서 느낀점scrollGotoTop 스크롤 깊이와 스로틀 딜레이와 같은 정해진 숫자는 상수이므로, 가독성을 높이기 위해 대문자로 네이밍해주었다. 은닉해야할 정보가 없기 때문에 클로저로 만들어줄 필요가 없다.    counter 리팩터링 전 코드에서는 생성자 함수로 만들어서 인스턴스를 생성하여 클로저를 구현하였다 하지만 이 방식은 불필요한">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

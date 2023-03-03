@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"1. scrollSide불필요한 서버 요청을 최소화 하자.\n토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다.\n서버에 요청을 최소화하자!\n서버 요청을 최소화하기 위해 localStorage에서 값을 가져올 때는 DOMContentLoaded 이벤트가 발생할 때 가져온다.\nlocalStorage에 값을 저장할 때는 페이지를 나가거나 새로고침했을 때 발생하면 되므로 beforeunload 이벤트 핸들러를 사용하였다.\n\n\n\n2. tictactoe얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다.\ngetWinner 함수는 상태값을 가지고 winner가 있는지? 있다면 누구인지를 반환해준다. state에서만 사용되는 함수이므로 접근자 프로퍼티로 사용하여 응집도를 높이는 것이 좋다고 판단하였다.\n\n하지만, setState에서 newState로 재할당이 이루어지면서 접근자 프로퍼티가 제대로 복사되지 않는 문제가 발생하였기 때문에 다시 원래대로 돌려놓았다.\n아니면 재할당을 할 때, 접근자 프로퍼티를 제외한 즉, key,value 쌍이 있는 값만 재할당을 해주는 방법도 있다.\n\n\n즉시실행함수로 감싸서 정보은닉을 하려고 하였지만 정보 은닉만을 위해서 tictactoe를 전부 즉시실행함수로 만드는 것은 어색하다. 왜냐하면 즉시실행함수가 root 컨테이너를 참조하고 있기 때문에 독립적이라고 할 수 없는데 응집시켜놓은 것으로 보여지기 때문이다.\n\ntictactoe에 Container를 건네주고 컴포넌트로 만들었다.\n\n\n\n3. accordion\ntoggle 함수에서 옵션을 주는 경우와 기본값인 경우를 리팩토링으로 나눠보려고 하였는데 더 나은 방법이 떠오르지 않아 그냥 두었다.\n\n4. drag &amp; drop\ndragleave 이벤트와 dragenter 이벤트가 거의 동시에 발생하는데, draggable 요소의 자식 요소에 마우스 포인터가 될 때도 두 이벤트가 발생하여 over 클래스가 붙혔다 떨어져 깜빡이는 현상 발생\ndragleave 이벤트를 제거하고 dragenter 이벤트에 toggle을 달아주어 querySelectorAll(’li’)로 개선하였다.\ndropzone 바깥에서 drop을했을 때 over 클래스가 제거되지 않는 문제가 발생하였는데 dragleave 이벤트를 제거했기 때문이다. dragend 이벤트로 대신 구현하였다.\ndragleave 와 dragenter 발생시 toggle 메서드로 달아주는 방법도 있다.\n\n\n\n5. analog clock\n숫자배열 하드 코딩하는 것 보다 array.from 을 사용하면 각 요소에게 콜백함수를 줘서 map 함수 사용을 제거할 수 있다.\ntimeToDeg 함수의 return 값을 객체형태로 바꿈\n인자가 많아지면서, 구조분해 할당 할 시 더 안정적임\n\n\n\n6. star rating\nquerySelectorAll을 변수에 미리 담아줌\n렌더링이 한번만 되고 이벤트 발생시마다 DOM API를 호출할 필요가 없기 때문\n\n\narray.from 콜백처리하여 map을 제거\n\n7. calendar\nbackground 클릭시 모든 캘린더를 hidden 하는 역할은 input이나 calendar에 종속된 역할이 아님\n상태들을 state 객체로 묶어서 관리\nstate 변경 함수를 거치지 않고 수정하는등의 부수효과를 막기위해\n\n\n이벤트 핸들러 내의 내용을 함수로 추출함\n이벤트 핸들러는 간단히 흐름을 파악할 수 있게 해주고, 자세한 동작은 함수에 정의하는 것이 가독성이 좋다고 생각함.\n\n\n\n8. newsviewer\nviewport를 줄여서 observer-target이 한 화면에 보이면 intersectionObserver API에 문제를 발생한다. scrolling해도 데이터를 가져오지 못한다.\n뷰포트 크기를 계산하여 window.innerHeight와 observer-target의 Y를 계산하여 나눈 값만큼 데이터를 fetch 시켜줘서 화면 비율이 크든 작든 뷰포트에 맞게 데이터를 가져와야한다. 즉, viewport가 확대된 상태면 Math.floor(window.innerHeight / observer-tagetY) 갯수만큼 fetch를 시켜줘서 화면크기에 맞게 초기 렌더링을 해줘야 한다.\nelement.getBoundingClientRect() 로 element의 뷰포트 위치를 구할 수 있다.\n\n\n\n나의 부족한 점\n어떤 문제가 발생했을 때, 문제의 원인을 찾지 못한다.\n해당 문제가 발생한 원인을 제대로 알지 못하여 어떤 부분을 수정해야할지 찾기 어렵다.\n\n\n가치판단이 잘 서지 않는다. A, B가 있을 때 어떤 방법이 더 나은 것인지 선택하기 어렵다. 기준이 나의 생각이라고는 하는데, 남의 얘기를 들어보면 그것도 맞는 것 같다.\n\n소감내일이면 페어프로그래밍2도 끝난다. 페어1을 할 때보단 그래도 조금 실력이 늘었다고 생각하지만, 아직 전체적인 틀을 생각하는 연습이 필요하다고 생각했다. 또한, 주어진 요구사항에 맞는 한가지일을 구현하려고 하지 않고 다른 환경까지 고려하는 행동때문에 코드 작성하기를 망설이는 행동도 조금 나아져서 다행이다.\n나보다 훨씬 잘하는 짝과 함께 해서 진도도 빠르게 나가고 배운 것이 많아서 좋았다. 서로 의견을 편하게 말하면서 코딩을 하다보니 재미도 경험도 더 많이 쌓을 수 있어서 좋은 경험이라고 생각한다. 다만 내가 새로운 지식을 얻기 위해서는 내가 가진 지식을 100% 이해하고 다른 사람에게 설명할 수 있을 정도로 알고 있어야 하므로, 내가 배운 지식을 기록만 하지말고 최대한 다른 사람과 의견을 공유하는 방향으로도 나가봐야겠다고 생각이 들었다.\n나중에 회사에 취업하게 되어도 이런 개발 환경이 갖춰진 회사에서 열심히 배워서 역량을 키워보고 싶다!\n","dateCreated":"2022-10-06T22:22:54+09:00","dateModified":"2022-11-18T17:19:32+09:00","datePublished":"2022-10-06T22:22:54+09:00","description":"","headline":"페어프로그래밍 level 2 기술적 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. scrollSide불필요한 서버 요청을 최소화 하자.\n토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다.\n서버에 요청을 최소화하자!\n서버 요청을 최소화하기 위해 localStorage에서 값을 가져올 때는 DOMContentLoaded 이벤트가 발생할 때 가져온다.\nlocalStorage에 값을 저장할 때는 페이지를 나가거나 새로고침했을 때 발생하면 되므로 beforeunload 이벤트 핸들러를 사용하였다.\n\n\n\n2. tictactoe얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다.\ngetWinner 함수는 상태값을 가지고 winner가 있는지? 있다면 누구인지를 반환해준다. state에서만 사용되는 함수이므로 접근자 프로퍼티로 사용하여 응집도를 높이는 것이 좋다고 판단하였다.\n\n하지만, setState에서 newState로 재할당이 이루어지면서 접근자 프로퍼티가 제대로 복사되지 않는 문제가 발생하였기 때문에 다시 원래대로 돌려놓았다.\n아니면 재할당을 할 때, 접근자 프로퍼티를 제외한 즉, key,value 쌍이 있는 값만 재할당을 해주는 방법도 있다.\n\n\n즉시실행함수로 감싸서 정보은닉을 하려고 하였지만 정보 은닉만을 위해서 tictactoe를 전부 즉시실행함수로 만드는 것은 어색하다. 왜냐하면 즉시실행함수가 root 컨테이너를 참조하고 있기 때문에 독립적이라고 할 수 없는데 응집시켜놓은 것으로 보여지기 때문이다.\n\ntictactoe에 Container를 건네주고 컴포넌트로 만들었다.\n\n\n\n3. accordion\ntoggle 함수에서 옵션을 주는 경우와 기본값인 경우를 리팩토링으로 나눠보려고 하였는데 더 나은 방법이 떠오르지 않아 그냥 두었다.\n\n4. drag &amp; drop\ndragleave 이벤트와 dragenter 이벤트가 거의 동시에 발생하는데, draggable 요소의 자식 요소에 마우스 포인터가 될 때도 두 이벤트가 발생하여 over 클래스가 붙혔다 떨어져 깜빡이는 현상 발생\ndragleave 이벤트를 제거하고 dragenter 이벤트에 toggle을 달아주어 querySelectorAll(’li’)로 개선하였다.\ndropzone 바깥에서 drop을했을 때 over 클래스가 제거되지 않는 문제가 발생하였는데 dragleave 이벤트를 제거했기 때문이다. dragend 이벤트로 대신 구현하였다.\ndragleave 와 dragenter 발생시 toggle 메서드로 달아주는 방법도 있다.\n\n\n\n5. analog clock\n숫자배열 하드 코딩하는 것 보다 array.from 을 사용하면 각 요소에게 콜백함수를 줘서 map 함수 사용을 제거할 수 있다.\ntimeToDeg 함수의 return 값을 객체형태로 바꿈\n인자가 많아지면서, 구조분해 할당 할 시 더 안정적임\n\n\n\n6. star rating\nquerySelectorAll을 변수에 미리 담아줌\n렌더링이 한번만 되고 이벤트 발생시마다 DOM API를 호출할 필요가 없기 때문\n\n\narray.from 콜백처리하여 map을 제거\n\n7. calendar\nbackground 클릭시 모든 캘린더를 hidden 하는 역할은 input이나 calendar에 종속된 역할이 아님\n상태들을 state 객체로 묶어서 관리\nstate 변경 함수를 거치지 않고 수정하는등의 부수효과를 막기위해\n\n\n이벤트 핸들러 내의 내용을 함수로 추출함\n이벤트 핸들러는 간단히 흐름을 파악할 수 있게 해주고, 자세한 동작은 함수에 정의하는 것이 가독성이 좋다고 생각함.\n\n\n\n8. newsviewer\nviewport를 줄여서 observer-target이 한 화면에 보이면 intersectionObserver API에 문제를 발생한다. scrolling해도 데이터를 가져오지 못한다.\n뷰포트 크기를 계산하여 window.innerHeight와 observer-target의 Y를 계산하여 나눈 값만큼 데이터를 fetch 시켜줘서 화면 비율이 크든 작든 뷰포트에 맞게 데이터를 가져와야한다. 즉, viewport가 확대된 상태면 Math.floor(window.innerHeight / observer-tagetY) 갯수만큼 fetch를 시켜줘서 화면크기에 맞게 초기 렌더링을 해줘야 한다.\nelement.getBoundingClientRect() 로 element의 뷰포트 위치를 구할 수 있다.\n\n\n\n나의 부족한 점\n어떤 문제가 발생했을 때, 문제의 원인을 찾지 못한다.\n해당 문제가 발생한 원인을 제대로 알지 못하여 어떤 부분을 수정해야할지 찾기 어렵다.\n\n\n가치판단이 잘 서지 않는다. A, B가 있을 때 어떤 방법이 더 나은 것인지 선택하기 어렵다. 기준이 나의 생각이라고는 하는데, 남의 얘기를 들어보면 그것도 맞는 것 같다.\n\n소감내일이면 페어프로그래밍2도 끝난다. 페어1을 할 때보단 그래도 조금 실력이 늘었다고 생각하지만, 아직 전체적인 틀을 생각하는 연습이 필요하다고 생각했다. 또한, 주어진 요구사항에 맞는 한가지일을 구현하려고 하지 않고 다른 환경까지 고려하는 행동때문에 코드 작성하기를 망설이는 행동도 조금 나아져서 다행이다.\n나보다 훨씬 잘하는 짝과 함께 해서 진도도 빠르게 나가고 배운 것이 많아서 좋았다. 서로 의견을 편하게 말하면서 코딩을 하다보니 재미도 경험도 더 많이 쌓을 수 있어서 좋은 경험이라고 생각한다. 다만 내가 새로운 지식을 얻기 위해서는 내가 가진 지식을 100% 이해하고 다른 사람에게 설명할 수 있을 정도로 알고 있어야 하므로, 내가 배운 지식을 기록만 하지말고 최대한 다른 사람과 의견을 공유하는 방향으로도 나가봐야겠다고 생각이 들었다.\n나중에 회사에 취업하게 되어도 이런 개발 환경이 갖춰진 회사에서 열심히 배워서 역량을 키워보고 싶다!\n","dateCreated":"2022-10-06T22:22:54+09:00","dateModified":"2022-11-18T17:19:32+09:00","datePublished":"2022-10-06T22:22:54+09:00","description":"","headline":"페어프로그래밍 level 2 기술적 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"}</script>
     <meta name="description" content="1. scrollSide불필요한 서버 요청을 최소화 하자. 토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다. 서버에 요청을 최소화하자! 서버 요청을 최소화하기 위해 localStor">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="페어프로그래밍 level 2 기술적 회고">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

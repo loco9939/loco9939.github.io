@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"📌 git fork\ngit fork는 위 사진 처럼 강사님의 원격 저장소의 레포지토리를 나의 원격 저장소로 복제해오는 것이다. 복제해오는 것이지 연결되는 것은 아니다.\n사용하는 이유\n프로젝트를 할 때, 팀장 원격 저장소를 두고 팀원들이 fork하여 각자의 원격 저장소에서 작업을 하여 분업화가 가능하다.\n\n팀장의 원격 저장소는 배포와 밀접한 관련이 있으므로 직접적으로 팀장 원격 저장소로 코드를 push 하지 못하고 Pull Request를 통해 연결할 수 있으므로 안정적인 개발이 가능하다.\n\n\n사용 방법 및 주의사항\n팀장의 원격 저장소를 나의 원격 저장소로 fork 해온다.\n\n이 때, main 브랜치만 복사해오는 옵션이 있는데, main만 가져오고 싶다면 체크하고 아니면 해제한다.\n\nfork한 나의 원격 저장소를 나의 로컬로 clone 해온다.\n\n원격 저장소 목록에 팀장의 원격 저장소를 ‘Leader’라는 이름으로 저장하여 추가한다.\n\n\ngit remote add Leader &lt;팀장의 원격 저장소 URL&gt;\n\nURL이지 git clone 링크와는 다르다.\n\n\n만약 팀장이 코드를 변경하고 push하여 팀장의 원격 저장소가 바뀌고 이를 나의 로컬로 가져오고 싶다면 ?\n\ngit fetch Leader\n이 때, 팀장의 모든 브랜치가 아닌 특정 브랜치만 가져오고 싶다면\ngit fetch Leader &lt;branch 명&gt;\n\n가져온 코드를 내 로컬과 병합해줘야 한다면 ?\n\ngit pull Leader &lt;branch 명&gt;\n처음 팀장 원격 저장소 fork 해와서 나의 로컬의 main 브랜치는 팀장의 원격 저장소의 main 브랜치와 연결이 되어있다. 정확히는 track 추적을 할 수 있다.\n하지만, 팀장의 원격 저장소에서 새로운 브랜치를 생성하였고 나의 로컬에서도 해당 브랜치를 가져오고 싶다면 추가적으로 track 명령어를 실행해줘야한다.\n\n팀장이 브랜치 새로 파고 내 로컬에서 가져오고 싶다면?\n\ngit fetch Leader &lt;branch 명&gt;\n우선 fetch로 해당 branch를 가져온다.\ngit checkout -t Leader &lt;branch 명&gt;\n내 로컬에서 해당 브랜치로 checkout 하여 브랜치를 옮길 때, -t or track 명령어로 추적한다.\ngit pull Leader &lt;branch 명&gt;\n이제 pull을 받아오면 코드를 가져올 수 있다.\n만약 추적을 안하고 가져오게 된다면 변경사항이 없는 상태인데도, pull 해올 때 마다 Merge commit을 하라는 문구가 뜨게될 것 이다…\n🏓 소감수업 중에 강사님 원격 저장소와 연결했는데 문제가 생겼다. 처음 fork 할 때는 강사님 원격 저장소에는 main branch 밖에 없어서 내가 fork 해왔을 때, 연결된 branch는 main branch 뿐이었던 것을 몰랐다.\n수업 중 강사님께서 브랜치를 새로 생성하셨고 나도 똑같이 fetch, checkout, pull을 하였는데, 다음과 같은 오류가 발생했다.\n“관계 없는 커밋 내역의 병합을 거부합니다”\n이러한 오류가 발생한 이유는 새로 생성한 branch를 fetch로 가져오기만 하고 강사님의 원격 저장소의 branch를 추적하지 않기 때문에 발생한 문제였다.\ngit branch -vv\n위 명령어를 사용하면 현재 branch가 어떤 branch를 추적하고 있는지 알 수 있다. 그래서 이미 생성된 branch를 git branch -D &lt;branch 명&gt; 명령어로 삭제한 뒤 위의 방법대로 새롭게 생성한 뒤 추적을 해주었더니 문제가 해결되었다.\n앞으로 git 사용하다가 오류가 나오면 무시하지 말고 어떤 오류인지 제대로 파악하고 해결하도록 해야겠다.\n","dateCreated":"2022-10-29T19:35:46+09:00","dateModified":"2022-10-29T19:44:03+09:00","datePublished":"2022-10-29T19:35:46+09:00","description":"","headline":"git fork 제대로 파헤치기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 git fork\ngit fork는 위 사진 처럼 강사님의 원격 저장소의 레포지토리를 나의 원격 저장소로 복제해오는 것이다. 복제해오는 것이지 연결되는 것은 아니다.\n사용하는 이유\n프로젝트를 할 때, 팀장 원격 저장소를 두고 팀원들이 fork하여 각자의 원격 저장소에서 작업을 하여 분업화가 가능하다.\n\n팀장의 원격 저장소는 배포와 밀접한 관련이 있으므로 직접적으로 팀장 원격 저장소로 코드를 push 하지 못하고 Pull Request를 통해 연결할 수 있으므로 안정적인 개발이 가능하다.\n\n\n사용 방법 및 주의사항\n팀장의 원격 저장소를 나의 원격 저장소로 fork 해온다.\n\n이 때, main 브랜치만 복사해오는 옵션이 있는데, main만 가져오고 싶다면 체크하고 아니면 해제한다.\n\nfork한 나의 원격 저장소를 나의 로컬로 clone 해온다.\n\n원격 저장소 목록에 팀장의 원격 저장소를 ‘Leader’라는 이름으로 저장하여 추가한다.\n\n\ngit remote add Leader &lt;팀장의 원격 저장소 URL&gt;\n\nURL이지 git clone 링크와는 다르다.\n\n\n만약 팀장이 코드를 변경하고 push하여 팀장의 원격 저장소가 바뀌고 이를 나의 로컬로 가져오고 싶다면 ?\n\ngit fetch Leader\n이 때, 팀장의 모든 브랜치가 아닌 특정 브랜치만 가져오고 싶다면\ngit fetch Leader &lt;branch 명&gt;\n\n가져온 코드를 내 로컬과 병합해줘야 한다면 ?\n\ngit pull Leader &lt;branch 명&gt;\n처음 팀장 원격 저장소 fork 해와서 나의 로컬의 main 브랜치는 팀장의 원격 저장소의 main 브랜치와 연결이 되어있다. 정확히는 track 추적을 할 수 있다.\n하지만, 팀장의 원격 저장소에서 새로운 브랜치를 생성하였고 나의 로컬에서도 해당 브랜치를 가져오고 싶다면 추가적으로 track 명령어를 실행해줘야한다.\n\n팀장이 브랜치 새로 파고 내 로컬에서 가져오고 싶다면?\n\ngit fetch Leader &lt;branch 명&gt;\n우선 fetch로 해당 branch를 가져온다.\ngit checkout -t Leader &lt;branch 명&gt;\n내 로컬에서 해당 브랜치로 checkout 하여 브랜치를 옮길 때, -t or track 명령어로 추적한다.\ngit pull Leader &lt;branch 명&gt;\n이제 pull을 받아오면 코드를 가져올 수 있다.\n만약 추적을 안하고 가져오게 된다면 변경사항이 없는 상태인데도, pull 해올 때 마다 Merge commit을 하라는 문구가 뜨게될 것 이다…\n🏓 소감수업 중에 강사님 원격 저장소와 연결했는데 문제가 생겼다. 처음 fork 할 때는 강사님 원격 저장소에는 main branch 밖에 없어서 내가 fork 해왔을 때, 연결된 branch는 main branch 뿐이었던 것을 몰랐다.\n수업 중 강사님께서 브랜치를 새로 생성하셨고 나도 똑같이 fetch, checkout, pull을 하였는데, 다음과 같은 오류가 발생했다.\n“관계 없는 커밋 내역의 병합을 거부합니다”\n이러한 오류가 발생한 이유는 새로 생성한 branch를 fetch로 가져오기만 하고 강사님의 원격 저장소의 branch를 추적하지 않기 때문에 발생한 문제였다.\ngit branch -vv\n위 명령어를 사용하면 현재 branch가 어떤 branch를 추적하고 있는지 알 수 있다. 그래서 이미 생성된 branch를 git branch -D &lt;branch 명&gt; 명령어로 삭제한 뒤 위의 방법대로 새롭게 생성한 뒤 추적을 해주었더니 문제가 해결되었다.\n앞으로 git 사용하다가 오류가 나오면 무시하지 말고 어떤 오류인지 제대로 파악하고 해결하도록 해야겠다.\n","dateCreated":"2022-10-29T19:35:46+09:00","dateModified":"2022-10-29T19:44:03+09:00","datePublished":"2022-10-29T19:35:46+09:00","description":"","headline":"git fork 제대로 파헤치기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/29/git/git%20fork%20%EC%A0%9C%EB%8C%80%EB%A1%9C%20%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0/"}</script>
     <meta name="description" content="📌 git fork git fork는 위 사진 처럼 강사님의 원격 저장소의 레포지토리를 나의 원격 저장소로 복제해오는 것이다. 복제해오는 것이지 연결되는 것은 아니다. 사용하는 이유 프로젝트를 할 때, 팀장 원격 저장소를 두고 팀원들이 fork하여 각자의 원격 저장소에서 작업을 하여 분업화가 가능하다.  팀장의 원격 저장소는 배포와 밀접한 관련이 있으므로">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="git fork 제대로 파헤치기">
@@ -129,20 +129,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -189,7 +175,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -198,86 +184,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             
@@ -423,9 +329,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/10/29/Settings/snippets/"
-                    data-tooltip="Snippets"
-                    aria-label="이전: Snippets"
+                    href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/"
+                    data-tooltip="리액트 공식문서 읽어보기"
+                    aria-label="이전: 리액트 공식문서 읽어보기"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -538,9 +444,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/10/29/Settings/snippets/"
-                    data-tooltip="Snippets"
-                    aria-label="이전: Snippets"
+                    href="/2022/10/29/React/%EB%A6%AC%EC%95%A1%ED%8A%B8%20%EA%B3%B5%EC%8B%9D%EB%AC%B8%EC%84%9C%20%EC%9D%BD%EC%96%B4%EB%B3%B4%EA%B8%B0/"
+                    data-tooltip="리액트 공식문서 읽어보기"
+                    aria-label="이전: 리액트 공식문서 읽어보기"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>

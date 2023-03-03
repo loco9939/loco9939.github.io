@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"Function 함수오늘은 자바스크립트의 함수에 대해 공부해보자.\n자바스크립트에서 함수란, 코드블록으로 일련의 문(statement)을 감싸서 하나의 실행 단위로 정의한 것이다.\n\n함수를 목적에 맞게 사용하기 위해서는 함수이름, 매개변수, 인자 등을 알맞게 설정해줘야한다. 그렇지 않게 사용하는 것은 지양한다.\n\n목적함수를 사용하는 목적은 필요할 때마다 호출하여 일련의 코드들을 재사용하기 위해 사용한다.\n12345678910function returnRank(name, tall) &#123;  // 이름과 키라는 매개변수를 통해 순위를 반환해주는 함수  return rank;&#125;// 100번째 줄returnRank(&quot;yiju&quot;, 188);// 300번째 줄returnRank(&quot;kim&quot;, 160);\n\n위와 같이 하나의 로직을 여러 곳에서 재사용하고 싶을 때 함수를 사용하면 함수 이름으로 가독성도 높아지고 100번째 줄이나 300번째 줄에서 코드가 문제가 발생했을 경우 returnRank 함수가 선언된 부분만 유지보수를 해주면 되기 때문에 유지보수가 간편해진다.\n\n단, 함수는 목적에 맞게 가급적 작게 만들고 매개변수도 3개를 넘지 않도록 만들 것을 지향한다.\n\n\n정의함수를 정의하는 방식은 4가지 방식이 있다.\n\n함수 선언문\n함수 표현식\nFunction 생성자 함수\n화살표 함수(ES6)\n\n기본적인 함수 선언문과 함수 표현식에 대해 알아보자\n\n자바스크립트에서 변수를 선언하면 암묵적으로 정의가 이뤄지기 때문에 선언과 정의가 모호하다.(MDN에서도 모호..) 위에서 함수 선언문이 평가되면 식별자가 암묵적으로 생성되고 함수 객체가 할당된다. 그렇기 때문에 “함수는 정의된다”로 표현한다. C언어에서 정의는 변수에 값을 할당하여 변수의 실체를 명확히 하는 것이다. 즉, 메모리 주소가 연결되면 정의라고 판단)\n\n함수 리터럴리터럴은 문자나 약속된 기호를 사용하여 값을 생성하는 표기법이다. 함수로 함수 리터럴을 사용하여 값을 생성할 수 있다. 함수 리터럴은 다음으로 구성되어 있다.\n123function add(x, y) &#123;  return x + y;&#125;\n\n\nfunction 키워드\n함수 이름 (add) 함수 이름은 함수 몸체 내에서만 참조할 수 있는 식별자\n매개변수 목록 (x,y)\n함수 몸체({})\n\n함수 선언문1234567// 함수 선언문function add(x, y) &#123;  return x + y;&#125;// 함수 호출 (함수이름과 똑같은 식별자를 사용)add(2, 5);\n\n\n함수 선언문은 표현식이 아닌 문이다.\n함수 선언문은 함수 이름을 생략할 수 없다.\n\n앞서 언급했듯이 함수 이름은 함수 몸체 내에서만 참조 가능하다. 그렇다면 함수를 호출하려면 어떻게 할 수 있을까?\n함수 선언문으로 사용되면 자바스크립트 엔진이 암묵적으로 함수 이름과 똑같은 식별자를 생성하고 함수 객체를 할당한다.\n함수 표현식1234567// 함수 표현식var add = function (x, y) &#123;  return x + y;&#125;;// 함수 호출 (함수 이름으로 호출)add(2, 10);\n\n자바스크립트 함수는 객체타입의 값이기 때문에 변수에 할당하거나 프로퍼티의 값으로 될 수 있고 배열과 같은 자료구조의 요소가 될 수 있다.\n이러한 성질 때문에 자바스크립트 함수는 일급객체다.\n\n함수 표현식은 함수 이름 생략하는 것이 일반적이다.\n함수 표현식은 표현식인 문이다. 즉, 값처럼 사용할 수 있다. ex)변수할당\n\n\n중의적 코드 : 기명 함수 리터럴함수 선언문은 함수 이름을 생략할 수 없으며 표현식이 아닌 문이므로 변수에 할당할 수 없다. 그러면 아래의 코드는 어떻게 동작할지 예상해보자.\n1234567891011121314151617181920// 기명 함수 리터럴 단독 사용 문맥 =&gt; 함수 선언문으로 해석function foo() &#123;  console.log(&quot;foo&quot;);&#125;foo(); // foo// 변수에 할당하는 문맥 =&gt; 함수 리터럴 표현식으로 해석var add = function add(x, y) &#123;  return x + y;&#125;;console.log(add(2, 3)); // 5// 피연산자로 사용되는 문맥 =&gt; 함수 리터럴 표현식으로 해석(function bar() &#123;  console.log(&quot;bar&quot;);&#125;);bar(); // ReferenceError : bar is not defined\n\n위 코드에서는 함수 선언문이 변수에 할당된 것처럼 보인다. 이게 어떻게 가능할까?\n우리는 블록문 {}에서 앞서 중의적 표현과 문맥에 대해 다룬 적이 있다.\n자바스크립트 엔진이 {}를 객체 리터럴로 인지할 것인지, 아니면 코드 블록문으로 인지할 것인지는 문맥에 따라 다르게 결정된다.\n이와 같이 기명 함수 리터럴도 중의적인 코드이므로 문맥에 따라 해석이 달라질 수 있다. 다음은 자바스크립트 엔진이 기명 함수 리터럴을 해석하는 방식이다.\n\n기명 함수 리터럴을 단독으로 사용하면 함수 선언문으로 해석\n\n함수 리터럴이 값으로 평가되어야 하는 문맥, 예시처럼 변수에 할당하거나 피연산자로 사용하면 함수 리터럴 표현식으로 해석한다.\n\n\n() 그룹 연산자 안에서 기명 함수 리터럴은 함수 리터럴 표현식으로 해석된다.\n함수 리터럴에서 함수 이름은 함수 몸체 내부에서만 참조가능하기 때문에 외부에서 함수이름으로 호출시 에러 발생\n\n함수 선언문의 경우 함수이름으로 암묵적으로 식별자를 생성하여 객체를 할당해주기 때문에 함수 이름으로 호출 가능\n\n\n함수 선언문 vs 함수 표현식함수 선언문과 함수 표현식은 생성 시점이 다르다.\n123456789101112console.log(add); // ƒ add(x, y) &#123;return x + y;&#125;console.log(sub); // undefined// 함수 선언문function add(x, y) &#123;  return x + y;&#125;// 함수 표현식var sub = function (x, y) &#123;  return x - y;&#125;;\n\n\n함수 선언문 : 모든 선언문이 런타임 이전에 JS엔진에 먼저 실행된다. 즉, 암묵적으로 함수 이름과 동일한 식별자를 생성하여 함수 객체를 할당한다. 함수 호이스팅\n\n함수 표현식 : 변수 선언 부분은 변수 호이스팅이 발생하여 undefined로 초기화되고 변수 할당문은 런타임에서 평가되어 함수 객체로 할당된다.\n\n\n\n함수호출일반 객체와 함수가 다른점은 함수는 호출을 할 수 있다는 것이다. 호출과 참조는 다르다. 호출은 실행흐름을 바꾸기도 하며 코드문들의 결과값을 반환해준다.\n() 함수 호출 연산자를 사용하여 함수를 호출할 수 있다. 그러면 실행흐름이 함수로 옮겨지고 return 키워드를 만나게되면 그 즉시 함수 실행을 종료하고 return 키워드 우측 표현식에 대한 값을 반환한다.\n\nreturn 키워드 다음 행의 문들은 무시된다. return 키워드 다음에 개행하여 코드를 작성하면 자동 세미콜론 삽입 기능에 의해 큰 오류를 발생시킬 수 있다.\n\n인수함수를 호출할 때 매개변수에 들어갈 인수를 전달해줘야한다. 하지만 인수가 매개변수보다 적거나 많더라도 오류를 발생시키지 않는다.\n\n매개변수보다 인수를 적게 전달할 경우 부족한 매개변수는 undefined 처리된다.\n매개변수보다 인수가 많아도 오류 발생 시키지 않는다. 단, 모든 인수는 arguments 객체의 프로퍼티로 보관된다.\n\n12345function add(x,y = 0,z)&#123;  return x+y+z;&#125;add(2, ,5); // X\n\n중간에 y값의 매개변수를 생략하고 싶어서 공백으로 둬서 호출할 수 없다.\n만약 인자를 순서를 신경쓰지 않고 전달해주고 싶다면 객체를 인자로 전달해주면 된다.\n123456$.ajax(&#123;  method: &quot;POST&quot;,  url: &quot;/user&quot;,  data: &#123; id: 1, name: &quot;Lee&quot; &#125;,  cache: false,&#125;);\n\n단, 함수 내부에서 객체를 변경하게 되면 참조값으로 복사되었기 때문에 함수 외부의 객체가 변경되는 부수효과가 발생할 수 있으니 주의해야한다.\n\n순수함수와 비순수함수외부 상태에 의존하거나 참조하거나 즉, 부수효과가 없는 함수를 순수함수라고 하고 그렇지 않은 함수를 비순수함수라고 한다.\n12345var x = 10;function add(a, b) &#123;  return a + b + x;&#125;\n\n위 함수는 a,b 매개변수가 함수 내부로 전달되어도 외부 변수 x의 값이 변경되면 결과값이 달라지기 때문에 순수함수가 아니다.\n순수함수는 오직 매개변수만을 통해 함수 내부로 전달된 인수에게만 의존하여 값을 생성해 반환한다. 전달받은 인수는 변경하지 않는다.\n\n하지만 우리가 순수함수만으로 프로그래밍을 하는 것은 불가능하다. 함수형 프로그래밍은 반복문, 조건문을 제거하여 복잡성을 해결하고 전역 변수 사용을 억제 및 생명주기 최소화하여 상태변경을 최소화하는 것을 목표로 하기 때문에 순수함수만을 사용하는 것은 옳지 않다.\n\n콜백함수함수의 매개변수를 통해 함수 내부로 전달되는 함수를 콜백함수라고 한다. 또한 콜백함수를 매개변수를 통해 받은 함수는 고차함수라고 한다.\n콜백함수는 함수 외부에서 고차함수 내부로 주입하기 때문에 자유롭게 교체가 가능하고 경우에 따라 변경되는 로직을 가진 외부 함수를 내부로 전달할 수 있다.\n123456789101112131415161718// 외부에서 전달받은 f를 n만큼 반복호출function repeat(n, f) &#123;  for (var i = 0; i &lt; n; i++) &#123;    f(i); // i를 전달하면서 f를 호출  &#125;&#125;var logAll = function (i) &#123;  console.log(i);&#125;;repeat(5, logAll); // 0 1 2 3 4var logOdds = function (i) &#123;  if (i % 2) console.log(i);&#125;;repeat(5, logOdds); // 1 3\n\n\n콜백함수를 전달할 때에는 콜백함수를 호출하지 않고 함수 전달만 해야한다.\n\n콜백함수는 비순수함수인가?\n“앞서 함수 내부에서 외부 상태를 직접 참조하지 않더라도 매개변수를 통해 객체를 전달받으면 비순수함수가 된다.”\n&#x3D;&gt; 맞다 콜백함수도 비순수 함수이다. 나중에 addEventListener 함수도 콜백함수를 매개변수로 받아 DOM을 조작하는 것도 배울 텐데 DOM을 조작한다는 것 자체가 비순수함수가 되는 것이다. 다시말해 순수함수만으로 코드를 짜는것은 불가능하다.\n\n소감모던 자바스크립트 12장 함수 파트를 읽으면서 함수 정의와 목적에 대해 배웠고 그동안 무의식적으로 사용했던 함수 이름을 통한 호출에 대해 이유를 알게되어 재밌었다.\n코드 맥락에 맞게 자바스크립트 엔진이 해석하는게 달라질 수 있다는 점과 콜백함수와 순수, 비순수 함수에 대해 제대로 알고 넘어갈 수 있어 좋았다.\n","dateCreated":"2023-03-03T10:50:56+09:00","dateModified":"2023-03-03T10:51:19+09:00","datePublished":"2023-03-03T10:50:56+09:00","description":"","headline":"함수","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"Function 함수오늘은 자바스크립트의 함수에 대해 공부해보자.\n자바스크립트에서 함수란, 코드블록으로 일련의 문(statement)을 감싸서 하나의 실행 단위로 정의한 것이다.\n\n함수를 목적에 맞게 사용하기 위해서는 함수이름, 매개변수, 인자 등을 알맞게 설정해줘야한다. 그렇지 않게 사용하는 것은 지양한다.\n\n목적함수를 사용하는 목적은 필요할 때마다 호출하여 일련의 코드들을 재사용하기 위해 사용한다.\n12345678910function returnRank(name, tall) &#123;  // 이름과 키라는 매개변수를 통해 순위를 반환해주는 함수  return rank;&#125;// 100번째 줄returnRank(&quot;yiju&quot;, 188);// 300번째 줄returnRank(&quot;kim&quot;, 160);\n\n위와 같이 하나의 로직을 여러 곳에서 재사용하고 싶을 때 함수를 사용하면 함수 이름으로 가독성도 높아지고 100번째 줄이나 300번째 줄에서 코드가 문제가 발생했을 경우 returnRank 함수가 선언된 부분만 유지보수를 해주면 되기 때문에 유지보수가 간편해진다.\n\n단, 함수는 목적에 맞게 가급적 작게 만들고 매개변수도 3개를 넘지 않도록 만들 것을 지향한다.\n\n\n정의함수를 정의하는 방식은 4가지 방식이 있다.\n\n함수 선언문\n함수 표현식\nFunction 생성자 함수\n화살표 함수(ES6)\n\n기본적인 함수 선언문과 함수 표현식에 대해 알아보자\n\n자바스크립트에서 변수를 선언하면 암묵적으로 정의가 이뤄지기 때문에 선언과 정의가 모호하다.(MDN에서도 모호..) 위에서 함수 선언문이 평가되면 식별자가 암묵적으로 생성되고 함수 객체가 할당된다. 그렇기 때문에 “함수는 정의된다”로 표현한다. C언어에서 정의는 변수에 값을 할당하여 변수의 실체를 명확히 하는 것이다. 즉, 메모리 주소가 연결되면 정의라고 판단)\n\n함수 리터럴리터럴은 문자나 약속된 기호를 사용하여 값을 생성하는 표기법이다. 함수로 함수 리터럴을 사용하여 값을 생성할 수 있다. 함수 리터럴은 다음으로 구성되어 있다.\n123function add(x, y) &#123;  return x + y;&#125;\n\n\nfunction 키워드\n함수 이름 (add) 함수 이름은 함수 몸체 내에서만 참조할 수 있는 식별자\n매개변수 목록 (x,y)\n함수 몸체({})\n\n함수 선언문1234567// 함수 선언문function add(x, y) &#123;  return x + y;&#125;// 함수 호출 (함수이름과 똑같은 식별자를 사용)add(2, 5);\n\n\n함수 선언문은 표현식이 아닌 문이다.\n함수 선언문은 함수 이름을 생략할 수 없다.\n\n앞서 언급했듯이 함수 이름은 함수 몸체 내에서만 참조 가능하다. 그렇다면 함수를 호출하려면 어떻게 할 수 있을까?\n함수 선언문으로 사용되면 자바스크립트 엔진이 암묵적으로 함수 이름과 똑같은 식별자를 생성하고 함수 객체를 할당한다.\n함수 표현식1234567// 함수 표현식var add = function (x, y) &#123;  return x + y;&#125;;// 함수 호출 (함수 이름으로 호출)add(2, 10);\n\n자바스크립트 함수는 객체타입의 값이기 때문에 변수에 할당하거나 프로퍼티의 값으로 될 수 있고 배열과 같은 자료구조의 요소가 될 수 있다.\n이러한 성질 때문에 자바스크립트 함수는 일급객체다.\n\n함수 표현식은 함수 이름 생략하는 것이 일반적이다.\n함수 표현식은 표현식인 문이다. 즉, 값처럼 사용할 수 있다. ex)변수할당\n\n\n중의적 코드 : 기명 함수 리터럴함수 선언문은 함수 이름을 생략할 수 없으며 표현식이 아닌 문이므로 변수에 할당할 수 없다. 그러면 아래의 코드는 어떻게 동작할지 예상해보자.\n1234567891011121314151617181920// 기명 함수 리터럴 단독 사용 문맥 =&gt; 함수 선언문으로 해석function foo() &#123;  console.log(&quot;foo&quot;);&#125;foo(); // foo// 변수에 할당하는 문맥 =&gt; 함수 리터럴 표현식으로 해석var add = function add(x, y) &#123;  return x + y;&#125;;console.log(add(2, 3)); // 5// 피연산자로 사용되는 문맥 =&gt; 함수 리터럴 표현식으로 해석(function bar() &#123;  console.log(&quot;bar&quot;);&#125;);bar(); // ReferenceError : bar is not defined\n\n위 코드에서는 함수 선언문이 변수에 할당된 것처럼 보인다. 이게 어떻게 가능할까?\n우리는 블록문 {}에서 앞서 중의적 표현과 문맥에 대해 다룬 적이 있다.\n자바스크립트 엔진이 {}를 객체 리터럴로 인지할 것인지, 아니면 코드 블록문으로 인지할 것인지는 문맥에 따라 다르게 결정된다.\n이와 같이 기명 함수 리터럴도 중의적인 코드이므로 문맥에 따라 해석이 달라질 수 있다. 다음은 자바스크립트 엔진이 기명 함수 리터럴을 해석하는 방식이다.\n\n기명 함수 리터럴을 단독으로 사용하면 함수 선언문으로 해석\n\n함수 리터럴이 값으로 평가되어야 하는 문맥, 예시처럼 변수에 할당하거나 피연산자로 사용하면 함수 리터럴 표현식으로 해석한다.\n\n\n() 그룹 연산자 안에서 기명 함수 리터럴은 함수 리터럴 표현식으로 해석된다.\n함수 리터럴에서 함수 이름은 함수 몸체 내부에서만 참조가능하기 때문에 외부에서 함수이름으로 호출시 에러 발생\n\n함수 선언문의 경우 함수이름으로 암묵적으로 식별자를 생성하여 객체를 할당해주기 때문에 함수 이름으로 호출 가능\n\n\n함수 선언문 vs 함수 표현식함수 선언문과 함수 표현식은 생성 시점이 다르다.\n123456789101112console.log(add); // ƒ add(x, y) &#123;return x + y;&#125;console.log(sub); // undefined// 함수 선언문function add(x, y) &#123;  return x + y;&#125;// 함수 표현식var sub = function (x, y) &#123;  return x - y;&#125;;\n\n\n함수 선언문 : 모든 선언문이 런타임 이전에 JS엔진에 먼저 실행된다. 즉, 암묵적으로 함수 이름과 동일한 식별자를 생성하여 함수 객체를 할당한다. 함수 호이스팅\n\n함수 표현식 : 변수 선언 부분은 변수 호이스팅이 발생하여 undefined로 초기화되고 변수 할당문은 런타임에서 평가되어 함수 객체로 할당된다.\n\n\n\n함수호출일반 객체와 함수가 다른점은 함수는 호출을 할 수 있다는 것이다. 호출과 참조는 다르다. 호출은 실행흐름을 바꾸기도 하며 코드문들의 결과값을 반환해준다.\n() 함수 호출 연산자를 사용하여 함수를 호출할 수 있다. 그러면 실행흐름이 함수로 옮겨지고 return 키워드를 만나게되면 그 즉시 함수 실행을 종료하고 return 키워드 우측 표현식에 대한 값을 반환한다.\n\nreturn 키워드 다음 행의 문들은 무시된다. return 키워드 다음에 개행하여 코드를 작성하면 자동 세미콜론 삽입 기능에 의해 큰 오류를 발생시킬 수 있다.\n\n인수함수를 호출할 때 매개변수에 들어갈 인수를 전달해줘야한다. 하지만 인수가 매개변수보다 적거나 많더라도 오류를 발생시키지 않는다.\n\n매개변수보다 인수를 적게 전달할 경우 부족한 매개변수는 undefined 처리된다.\n매개변수보다 인수가 많아도 오류 발생 시키지 않는다. 단, 모든 인수는 arguments 객체의 프로퍼티로 보관된다.\n\n12345function add(x,y = 0,z)&#123;  return x+y+z;&#125;add(2, ,5); // X\n\n중간에 y값의 매개변수를 생략하고 싶어서 공백으로 둬서 호출할 수 없다.\n만약 인자를 순서를 신경쓰지 않고 전달해주고 싶다면 객체를 인자로 전달해주면 된다.\n123456$.ajax(&#123;  method: &quot;POST&quot;,  url: &quot;/user&quot;,  data: &#123; id: 1, name: &quot;Lee&quot; &#125;,  cache: false,&#125;);\n\n단, 함수 내부에서 객체를 변경하게 되면 참조값으로 복사되었기 때문에 함수 외부의 객체가 변경되는 부수효과가 발생할 수 있으니 주의해야한다.\n\n순수함수와 비순수함수외부 상태에 의존하거나 참조하거나 즉, 부수효과가 없는 함수를 순수함수라고 하고 그렇지 않은 함수를 비순수함수라고 한다.\n12345var x = 10;function add(a, b) &#123;  return a + b + x;&#125;\n\n위 함수는 a,b 매개변수가 함수 내부로 전달되어도 외부 변수 x의 값이 변경되면 결과값이 달라지기 때문에 순수함수가 아니다.\n순수함수는 오직 매개변수만을 통해 함수 내부로 전달된 인수에게만 의존하여 값을 생성해 반환한다. 전달받은 인수는 변경하지 않는다.\n\n하지만 우리가 순수함수만으로 프로그래밍을 하는 것은 불가능하다. 함수형 프로그래밍은 반복문, 조건문을 제거하여 복잡성을 해결하고 전역 변수 사용을 억제 및 생명주기 최소화하여 상태변경을 최소화하는 것을 목표로 하기 때문에 순수함수만을 사용하는 것은 옳지 않다.\n\n콜백함수함수의 매개변수를 통해 함수 내부로 전달되는 함수를 콜백함수라고 한다. 또한 콜백함수를 매개변수를 통해 받은 함수는 고차함수라고 한다.\n콜백함수는 함수 외부에서 고차함수 내부로 주입하기 때문에 자유롭게 교체가 가능하고 경우에 따라 변경되는 로직을 가진 외부 함수를 내부로 전달할 수 있다.\n123456789101112131415161718// 외부에서 전달받은 f를 n만큼 반복호출function repeat(n, f) &#123;  for (var i = 0; i &lt; n; i++) &#123;    f(i); // i를 전달하면서 f를 호출  &#125;&#125;var logAll = function (i) &#123;  console.log(i);&#125;;repeat(5, logAll); // 0 1 2 3 4var logOdds = function (i) &#123;  if (i % 2) console.log(i);&#125;;repeat(5, logOdds); // 1 3\n\n\n콜백함수를 전달할 때에는 콜백함수를 호출하지 않고 함수 전달만 해야한다.\n\n콜백함수는 비순수함수인가?\n“앞서 함수 내부에서 외부 상태를 직접 참조하지 않더라도 매개변수를 통해 객체를 전달받으면 비순수함수가 된다.”\n&#x3D;&gt; 맞다 콜백함수도 비순수 함수이다. 나중에 addEventListener 함수도 콜백함수를 매개변수로 받아 DOM을 조작하는 것도 배울 텐데 DOM을 조작한다는 것 자체가 비순수함수가 되는 것이다. 다시말해 순수함수만으로 코드를 짜는것은 불가능하다.\n\n소감모던 자바스크립트 12장 함수 파트를 읽으면서 함수 정의와 목적에 대해 배웠고 그동안 무의식적으로 사용했던 함수 이름을 통한 호출에 대해 이유를 알게되어 재밌었다.\n코드 맥락에 맞게 자바스크립트 엔진이 해석하는게 달라질 수 있다는 점과 콜백함수와 순수, 비순수 함수에 대해 제대로 알고 넘어갈 수 있어 좋았다.\n","dateCreated":"2023-03-03T10:50:56+09:00","dateModified":"2023-03-03T10:51:19+09:00","datePublished":"2023-03-03T10:50:56+09:00","description":"","headline":"함수","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"}</script>
     <meta name="description" content="Function 함수오늘은 자바스크립트의 함수에 대해 공부해보자. 자바스크립트에서 함수란, 코드블록으로 일련의 문(statement)을 감싸서 하나의 실행 단위로 정의한 것이다.  함수를 목적에 맞게 사용하기 위해서는 함수이름, 매개변수, 인자 등을 알맞게 설정해줘야한다. 그렇지 않게 사용하는 것은 지양한다.  목적함수를 사용하는 목적은 필요할 때마다 호출">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="함수">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

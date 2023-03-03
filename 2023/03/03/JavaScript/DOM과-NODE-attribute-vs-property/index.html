@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"DOM렌더링 엔진에 의해 HTML 문서를 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다. DOM이란, HTML문서의 계층적인 구조와 정보를 표현하며 이를 제어할 수 있는 API, 즉 프로퍼티와 메서드를 제공하는 트리 자료구조이다.\n노드HTML 요소는 렌더링 엔진에 의해 DOM을 구성하는 요소 노드 객체로 변환된다. HTML 요소의 어트리뷰트는 어트리뷰트 노드로, HTML 요소의 텍스트 컨텐츠는 텍스트 노드로 변환된다.\n노드 객체들로 구성된 트리 자료구조를 DOM이라한다.\n\n노드도 자바스크립트 객체이므로 프로토타입에 의한 상속 구조를 갖는다.\n\n주의사항상속관계를 아는 것보다 어떤 DOM API를 사용하여 동적으로 변경하고 조작할 수 있는지를 알아야한다.\nquerySelector, querySelectorAll 메서드가 다소 느리긴 하더라도 CSS 선택자로 요소 노드 취득시 구체적인 조건과 일관된 방식으로 요소 노드 취득할 수 있으므로 id 어트리뷰트가 있는 요소는 getElementById 메서드를 사용하고 그 외의 경우에는 querySelector, querySelectorAll 메서드를 사용하자.\nHTMLCollection과 NodeListDOM 컬렉션 객체이 두 객체는 DOM API가 여러 개의 결과값을 반환하기 위한 객체이다. 둘 다 유사 배열 객체이면서 이터러블이다. 그러므로 for…of문으로 순회할 수 있으며 스프레드 문법을 사용하여 간단히 배열로 변환할 수 있다.\n\nHTMLCollection과 NodeList는 노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 객체이다.\nHTMLCollection은 언제나 live 객체로 동작한다.\nNodeList는 대부분의 경우 상태 변화를 실시간으로 반영하지 않고 과거의 정적 상태를 유지하는 non-live 객체로 동작하지만 경우에 따라 live 객체로 동작한다.\n\n결론HTMLCollection, NodeList 객체를 사용하지 말아라. 유사 배열 객체이면서 이터러블인 NodeList, HTMLCollection 객체를 배열로 변환하면 부작용을 제거할 수 있다. 유용한 배열 고차함수 forEach, map, filter 등을 사용할 수 있다.\nDOM 조작DOM 조작은 새로운 노드를 생성하여 DOM에 추가하거나 기존 노드 삭제 또는 교체 하는 것을 말한다. 이 경우 리플로우와 리페인트가 발생한다.\ninnerHTML시작 태그와 종료 태그 사이의 모든 마크업을 문자열로 반환한다. HTML 마크업도 포함된 문자열을 반환하는 것이 textContent 프로퍼티와 차이점이다.\n1234567891011&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;body&gt;    &lt;div id=&quot;foo&quot;&gt;Hello &lt;span&gt;world!&lt;/span&gt;&lt;/div&gt;  &lt;/body&gt;  &lt;script&gt;    // #foo 요소의 콘텐츠 영역 내의 HTML 마크업을 문자열로 취득한다.    console.log(document.getElementById(&#x27;foo&#x27;).innerHTML);    // &quot;Hello &lt;span&gt;world!&lt;/span&gt;&quot;  &lt;/script&gt;&lt;/html&gt;\n\n\n요소 노드의 innerHTML 프로퍼티에 문자열 할당하면 요소 노드의 모든 자식 노드가 제거되고 할당한 문자열이 텍스트로 추가된다. 이 때 HTML 마크업이 포함되어 있으면 파싱되어 요소 노드의 자식 노드로 DOM에 반영된다.\n\n\n💡 단, innerHTML 프로퍼티에 사용자로부터 입력받은 데이터를 그대로 할당하는 것은 크**로스 사이트 스크립팅 공격에 취약하므로 위험**하다.\n\n\n\n복수의 노드 생성과 추가 ⭐️1234567891011121314151617181920212223&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;body&gt;    &lt;ul id=&quot;fruits&quot;&gt;&lt;/ul&gt;  &lt;/body&gt;  &lt;script&gt;    const $fruits = document.getElementById(&#x27;fruits&#x27;);    [&#x27;Apple&#x27;, &#x27;Banana&#x27;, &#x27;Orange&#x27;].forEach(text =&gt; &#123;      // 1. 요소 노드 생성      const $li = document.createElement(&#x27;li&#x27;);      // 2. 텍스트 노드 생성      const textNode = document.createTextNode(text);      // 3. 텍스트 노드를 $li 요소 노드의 자식 노드로 추가      $li.appendChild(textNode);      // 4. $li 요소 노드를 #fruits 요소 노드의 마지막 자식 노드로 추가      $fruits.appendChild($li);    &#125;);  &lt;/script&gt;&lt;/html&gt;\n\n\n위 예제는 3개의 요소 노드가 생성하여 DOM에 3번 추가하여 DOM이 3번 변경된다. 이러한 방법은 리플로우를 많이 발생 시키므로 피해야한다.\n\n⇒ 컨테이너 요소를 미리 생성한 후 DOM에 추가할 3개 요소 노드를 컨테이너 요소의 자식 노드로 추가한 뒤 컨테이너 요소를 #fruits 요소에 자식으로 추가한다. 하지만 이 또한, 불필요한 컨테이너 요소(div)가 DOM에 추가되어 바람직 하지 않다.\n어트리뷰트어트리뷰트 노드와 attributes 프로퍼티HTML 문서의 요소는 여러 개의 어트리뷰트를 가질 수 있다. ex) class, checked, aria-label…\n\n모든 HTML 요소에 공통적인 것부터 해당 요소만 사용할 수 있는 어트리뷰트가 있다.\nHTML 요소의 어트리뷰트는 어트리뷰트 노드로 변환되어 요소 노드와 연결된다. 이는 NamedNodeMap 객체에 담겨 요소 노드의 attributes 프로퍼티에 저장된다.\nattributes 프로퍼티는 getter만 존재하는 접근자 프로퍼티이다.\n\nHTML 어트리뷰트 vs DOM 프로퍼티\nHTML 어트리뷰트는 초기값 (변하지 않는다.)\nDOM 프로퍼티는 HTML 프로퍼티를 초기값으로 가지고 변경될 수 있다.\n\n첫렌더링 까지 어트리뷰트 노드의 어트리뷰트 값과 요소 노드의 value 프로퍼티에 할당된 값은 HTML 어트리뷰트 값과 동일하다. 하지만 첫 렌더링 이후 사용자가 input 요소에 무언가 입력시 바뀌게 된다.\n123456789101112131415&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;  &lt;input id=&quot;user&quot; type=&quot;text&quot; value=&quot;ungmo2&quot;&gt;  &lt;script&gt;    const $input = document.getElementById(&#x27;user&#x27;);    // attributes 프로퍼티에 저장된 value 어트리뷰트 값    console.log($input.getAttribute(&#x27;value&#x27;)); // ungmo2    // 요소 노드의 value 프로퍼티에 저장된 value 어트리뷰트 값    console.log($input.value); // ungmo2  &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n\n\ninput 요소 노드는 상태를 가지고 있고 사용자의 입력에 의한 변경된 최신 상태를 관리해야 할뿐더러 HTML 어트리뷰트로 지정한 초기 상태도 관리해야한다.\n\n즉, 요소 노드의 초기 상태는 어트리뷰트 노드가 관리하며 요소 노드의 최신 상태는 DOM 프로퍼티가 관리한다.\nHTML 어트리뷰트와 DOM 프로퍼티의 대응 관계대부분은 HTML 어트리뷰트는 HTML 어트리뷰트 이름과 동일한 DOM 프로퍼티와 1:1로 대응한다. 반드시는 아니다.\n\nid 어트리뷰트와 id 프로퍼티는 1:1 대응, 동일한 값으로 연동한다.\ninput 요소의 value 어트리뷰트는 value 프로퍼티와 1:1 대응, value 어트리뷰트는 초기상태를, value 프로퍼티는 최신 상태를 갖는다.\nclass 어트리뷰트에 대응하는 DOM 프로퍼티는 className, classList 프로퍼티이다.\n\nDOM 프로퍼티 값의 타입getAttribute 메서드로 취득한 어트리뷰트 값은 언제나 문자열이지만 DOM 프로퍼티로 취득한 최신 상태 값은 문자열이 아닐 수 있다. boolean 타입일 수 있다.\nex) checkbox요소의 checked 어트리뷰트 값은 문자열 이지만 checked 프로퍼티 값은 불리언이다.\n","dateCreated":"2023-03-03T11:38:24+09:00","dateModified":"2023-03-03T11:38:40+09:00","datePublished":"2023-03-03T11:38:24+09:00","description":"","headline":"DOM과 NODE(attribute vs property)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/DOM%EA%B3%BC-NODE-attribute-vs-property/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/DOM%EA%B3%BC-NODE-attribute-vs-property/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"DOM렌더링 엔진에 의해 HTML 문서를 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다. DOM이란, HTML문서의 계층적인 구조와 정보를 표현하며 이를 제어할 수 있는 API, 즉 프로퍼티와 메서드를 제공하는 트리 자료구조이다.\n노드HTML 요소는 렌더링 엔진에 의해 DOM을 구성하는 요소 노드 객체로 변환된다. HTML 요소의 어트리뷰트는 어트리뷰트 노드로, HTML 요소의 텍스트 컨텐츠는 텍스트 노드로 변환된다.\n노드 객체들로 구성된 트리 자료구조를 DOM이라한다.\n\n노드도 자바스크립트 객체이므로 프로토타입에 의한 상속 구조를 갖는다.\n\n주의사항상속관계를 아는 것보다 어떤 DOM API를 사용하여 동적으로 변경하고 조작할 수 있는지를 알아야한다.\nquerySelector, querySelectorAll 메서드가 다소 느리긴 하더라도 CSS 선택자로 요소 노드 취득시 구체적인 조건과 일관된 방식으로 요소 노드 취득할 수 있으므로 id 어트리뷰트가 있는 요소는 getElementById 메서드를 사용하고 그 외의 경우에는 querySelector, querySelectorAll 메서드를 사용하자.\nHTMLCollection과 NodeListDOM 컬렉션 객체이 두 객체는 DOM API가 여러 개의 결과값을 반환하기 위한 객체이다. 둘 다 유사 배열 객체이면서 이터러블이다. 그러므로 for…of문으로 순회할 수 있으며 스프레드 문법을 사용하여 간단히 배열로 변환할 수 있다.\n\nHTMLCollection과 NodeList는 노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 객체이다.\nHTMLCollection은 언제나 live 객체로 동작한다.\nNodeList는 대부분의 경우 상태 변화를 실시간으로 반영하지 않고 과거의 정적 상태를 유지하는 non-live 객체로 동작하지만 경우에 따라 live 객체로 동작한다.\n\n결론HTMLCollection, NodeList 객체를 사용하지 말아라. 유사 배열 객체이면서 이터러블인 NodeList, HTMLCollection 객체를 배열로 변환하면 부작용을 제거할 수 있다. 유용한 배열 고차함수 forEach, map, filter 등을 사용할 수 있다.\nDOM 조작DOM 조작은 새로운 노드를 생성하여 DOM에 추가하거나 기존 노드 삭제 또는 교체 하는 것을 말한다. 이 경우 리플로우와 리페인트가 발생한다.\ninnerHTML시작 태그와 종료 태그 사이의 모든 마크업을 문자열로 반환한다. HTML 마크업도 포함된 문자열을 반환하는 것이 textContent 프로퍼티와 차이점이다.\n1234567891011&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;body&gt;    &lt;div id=&quot;foo&quot;&gt;Hello &lt;span&gt;world!&lt;/span&gt;&lt;/div&gt;  &lt;/body&gt;  &lt;script&gt;    // #foo 요소의 콘텐츠 영역 내의 HTML 마크업을 문자열로 취득한다.    console.log(document.getElementById(&#x27;foo&#x27;).innerHTML);    // &quot;Hello &lt;span&gt;world!&lt;/span&gt;&quot;  &lt;/script&gt;&lt;/html&gt;\n\n\n요소 노드의 innerHTML 프로퍼티에 문자열 할당하면 요소 노드의 모든 자식 노드가 제거되고 할당한 문자열이 텍스트로 추가된다. 이 때 HTML 마크업이 포함되어 있으면 파싱되어 요소 노드의 자식 노드로 DOM에 반영된다.\n\n\n💡 단, innerHTML 프로퍼티에 사용자로부터 입력받은 데이터를 그대로 할당하는 것은 크**로스 사이트 스크립팅 공격에 취약하므로 위험**하다.\n\n\n\n복수의 노드 생성과 추가 ⭐️1234567891011121314151617181920212223&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;body&gt;    &lt;ul id=&quot;fruits&quot;&gt;&lt;/ul&gt;  &lt;/body&gt;  &lt;script&gt;    const $fruits = document.getElementById(&#x27;fruits&#x27;);    [&#x27;Apple&#x27;, &#x27;Banana&#x27;, &#x27;Orange&#x27;].forEach(text =&gt; &#123;      // 1. 요소 노드 생성      const $li = document.createElement(&#x27;li&#x27;);      // 2. 텍스트 노드 생성      const textNode = document.createTextNode(text);      // 3. 텍스트 노드를 $li 요소 노드의 자식 노드로 추가      $li.appendChild(textNode);      // 4. $li 요소 노드를 #fruits 요소 노드의 마지막 자식 노드로 추가      $fruits.appendChild($li);    &#125;);  &lt;/script&gt;&lt;/html&gt;\n\n\n위 예제는 3개의 요소 노드가 생성하여 DOM에 3번 추가하여 DOM이 3번 변경된다. 이러한 방법은 리플로우를 많이 발생 시키므로 피해야한다.\n\n⇒ 컨테이너 요소를 미리 생성한 후 DOM에 추가할 3개 요소 노드를 컨테이너 요소의 자식 노드로 추가한 뒤 컨테이너 요소를 #fruits 요소에 자식으로 추가한다. 하지만 이 또한, 불필요한 컨테이너 요소(div)가 DOM에 추가되어 바람직 하지 않다.\n어트리뷰트어트리뷰트 노드와 attributes 프로퍼티HTML 문서의 요소는 여러 개의 어트리뷰트를 가질 수 있다. ex) class, checked, aria-label…\n\n모든 HTML 요소에 공통적인 것부터 해당 요소만 사용할 수 있는 어트리뷰트가 있다.\nHTML 요소의 어트리뷰트는 어트리뷰트 노드로 변환되어 요소 노드와 연결된다. 이는 NamedNodeMap 객체에 담겨 요소 노드의 attributes 프로퍼티에 저장된다.\nattributes 프로퍼티는 getter만 존재하는 접근자 프로퍼티이다.\n\nHTML 어트리뷰트 vs DOM 프로퍼티\nHTML 어트리뷰트는 초기값 (변하지 않는다.)\nDOM 프로퍼티는 HTML 프로퍼티를 초기값으로 가지고 변경될 수 있다.\n\n첫렌더링 까지 어트리뷰트 노드의 어트리뷰트 값과 요소 노드의 value 프로퍼티에 할당된 값은 HTML 어트리뷰트 값과 동일하다. 하지만 첫 렌더링 이후 사용자가 input 요소에 무언가 입력시 바뀌게 된다.\n123456789101112131415&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;  &lt;input id=&quot;user&quot; type=&quot;text&quot; value=&quot;ungmo2&quot;&gt;  &lt;script&gt;    const $input = document.getElementById(&#x27;user&#x27;);    // attributes 프로퍼티에 저장된 value 어트리뷰트 값    console.log($input.getAttribute(&#x27;value&#x27;)); // ungmo2    // 요소 노드의 value 프로퍼티에 저장된 value 어트리뷰트 값    console.log($input.value); // ungmo2  &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n\n\ninput 요소 노드는 상태를 가지고 있고 사용자의 입력에 의한 변경된 최신 상태를 관리해야 할뿐더러 HTML 어트리뷰트로 지정한 초기 상태도 관리해야한다.\n\n즉, 요소 노드의 초기 상태는 어트리뷰트 노드가 관리하며 요소 노드의 최신 상태는 DOM 프로퍼티가 관리한다.\nHTML 어트리뷰트와 DOM 프로퍼티의 대응 관계대부분은 HTML 어트리뷰트는 HTML 어트리뷰트 이름과 동일한 DOM 프로퍼티와 1:1로 대응한다. 반드시는 아니다.\n\nid 어트리뷰트와 id 프로퍼티는 1:1 대응, 동일한 값으로 연동한다.\ninput 요소의 value 어트리뷰트는 value 프로퍼티와 1:1 대응, value 어트리뷰트는 초기상태를, value 프로퍼티는 최신 상태를 갖는다.\nclass 어트리뷰트에 대응하는 DOM 프로퍼티는 className, classList 프로퍼티이다.\n\nDOM 프로퍼티 값의 타입getAttribute 메서드로 취득한 어트리뷰트 값은 언제나 문자열이지만 DOM 프로퍼티로 취득한 최신 상태 값은 문자열이 아닐 수 있다. boolean 타입일 수 있다.\nex) checkbox요소의 checked 어트리뷰트 값은 문자열 이지만 checked 프로퍼티 값은 불리언이다.\n","dateCreated":"2023-03-03T11:38:24+09:00","dateModified":"2023-03-03T11:38:40+09:00","datePublished":"2023-03-03T11:38:24+09:00","description":"","headline":"DOM과 NODE(attribute vs property)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/DOM%EA%B3%BC-NODE-attribute-vs-property/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/DOM%EA%B3%BC-NODE-attribute-vs-property/"}</script>
     <meta name="description" content="DOM렌더링 엔진에 의해 HTML 문서를 브라우저가 이해할 수 있는 자료구조인 DOM을 생성한다. DOM이란, HTML문서의 계층적인 구조와 정보를 표현하며 이를 제어할 수 있는 API, 즉 프로퍼티와 메서드를 제공하는 트리 자료구조이다. 노드HTML 요소는 렌더링 엔진에 의해 DOM을 구성하는 요소 노드 객체로 변환된다. HTML 요소의 어트리뷰트는 어트">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="DOM과 NODE(attribute vs property)">
@@ -127,20 +127,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -187,7 +173,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -196,86 +182,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             

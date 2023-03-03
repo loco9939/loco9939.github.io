@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"요구사항\n\n 버튼 컴포넌트를 만들어 재사용 가능하게 만들어라\n 아이콘 컴포넌트를 만들어 재사용 가능하게 만들어라\n 컴포넌트를 분리하여라\n\n해결1. src&#x2F;main.js 파일에서 렌더링 준비를 한다.12345678const container = document.querySelector(&#x27;root&#x27;);const root = React.createRoot(container);root.render(  &lt;React.StrictMode&gt;    &lt;h1&gt;Get Ready?&lt;/h1&gt;  &lt;/React.StrictMode&gt;)\n\n\n업로드 버튼 컴포넌트의 type, content를 지정해주어 컴포넌트를 재사용할 수 있다.\n사용자가 컴포넌트를 사용하려면 type과 content를 입력하여 아이콘과 내용을 적어주면 된다.\n\n2. 버튼 컴포넌트 생성1234567891011const Button = props =&gt; &#123;    const  &#123;children, type&#125; = props;    return (    &lt;button className=&quot;upload-button&quot; disabled=&#123;type === &#x27;disabled&#x27; ? &quot;disabled&quot; : &#x27;&#x27;&#125;&gt;        &#123;children&#125;&lt;Icon type=&#123;type&#125; /&gt;    &lt;/button&gt;    )&#125;export default Button\n\n\n버튼 컴포넌트에게 전달받은 props의 type값을 그대로 Icon 컴포넌트에게 전달해주었다.\nprops 객체로 전달받은 type값에 따라 조건부로 disable 속성을 등록&#x2F;해제 해주었다.\n\n3. 아이콘 컴포넌트 생성1234567891011121314151617const icons = &#123;    &quot;idle&quot; : &quot;M1.80202 3.65685L5.27085 0.292893C5.67355 -0.0976316 6.32645 -0.0976317 6.72915 0.292893L10.198 3.65685C10.6007 4.04738 10.6007 4.68054 10.198 5.07107C9.79528 5.46159 9.14238 5.46159 8.73968 5.07107L7.03117 3.41421L7.03117 11C7.03117 11.5523 6.5695 12 6 12C5.4305 12 4.96883 11.5523 4.96883 11L4.96883 3.41421L3.26032 5.07107C2.85762 5.46159 2.20472 5.46159 1.80202 5.07107C1.39933 4.68054 1.39933 4.04738 1.80202 3.65685Z&quot;,    &quot;pending&quot;: &quot;M9.96461 3.87118C9.61452 3.2192 9.10905 2.66362 8.49296 2.25365C7.87687 1.84368 7.16918 1.59198 6.43257 1.52084C5.69597 1.4497 4.95319 1.56132 4.27003 1.84582C3.58688 2.13031 2.98442 2.5789 2.51604 3.15184C2.04766 3.72478 1.7278 4.40439 1.58481 5.13047C1.44181 5.85656 1.48009 6.6067 1.69626 7.31445C1.91242 8.02221 2.29979 8.66573 2.82407 9.18802C3.34834 9.7103 3.99333 10.0952 4.7019 10.3087L5.1124 8.94617C4.6279 8.8002 4.18687 8.53699 3.82839 8.17987C3.46991 7.82275 3.20503 7.38273 3.05723 6.89879C2.90942 6.41484 2.88325 5.90192 2.98102 5.40544C3.0788 4.90897 3.2975 4.44427 3.61777 4.05251C3.93804 3.66075 4.34998 3.35402 4.8171 3.15949C5.28422 2.96496 5.79211 2.88864 6.29578 2.93728C6.79945 2.98592 7.28335 3.15803 7.70461 3.43835C8.12588 3.71868 8.47151 4.09857 8.71088 4.54438L9.96461 3.87118Z&quot;,    &quot;resolved&quot;: &quot;M11.6321 0.725152C12.0601 1.07426 12.124 1.70419 11.7749 2.13214L4.43311 11.1321C4.24683 11.3605 3.96931 11.4951 3.67466 11.4999C3.38 11.5047 3.09822 11.3794 2.90454 11.1573L0.246308 8.10888C-0.116669 7.69263 -0.0734819 7.06094 0.34277 6.69796C0.759022 6.33499 1.39071 6.37817 1.75369 6.79443L3.63274 8.94927L10.2251 0.867921C10.5742 0.439968 11.2042 0.376047 11.6321 0.725152Z&quot;,    &quot;rejected&quot;: &quot;M6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12ZM3.40106 3.25359C3.79159 2.86306 4.42475 2.86306 4.81528 3.25359L6.01883 4.45714L7.22238 3.25359C7.61291 2.86306 8.24607 2.86306 8.6366 3.25359C9.02712 3.64411 9.02712 4.27728 8.6366 4.6678L7.43304 5.87135L8.6366 7.07491C9.02712 7.46543 9.02712 8.0986 8.6366 8.48912C8.24607 8.87964 7.61291 8.87964 7.22238 8.48912L6.01883 7.28557L4.81528 8.48912C4.42475 8.87964 3.79159 8.87964 3.40106 8.48912C3.01054 8.0986 3.01054 7.46543 3.40106 7.07491L4.60462 5.87135L3.40106 4.6678C3.01054 4.27728 3.01054 3.64411 3.40106 3.25359Z&quot;,    &quot;disabled&quot;: &quot;M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6ZM9.65221 6.00001C9.65221 8.01707 8.01707 9.65221 6.00001 9.65221C5.37082 9.65221 4.77878 9.4931 4.26195 9.21293L9.21292 4.26194C9.4931 4.77878 9.65221 5.37081 9.65221 6.00001ZM2.83053 7.81592L7.81591 2.83053C7.28103 2.52342 6.66103 2.34781 6.00001 2.34781C3.98296 2.34781 2.34781 3.98296 2.34781 6.00001C2.34781 6.66103 2.52342 7.28104 2.83053 7.81592Z&quot;&#125;const Icon = props =&gt; &#123;    const &#123;type&#125; = props;    return (    &lt;svg className=&#123;`button-icon $&#123;type === &#x27;pending&#x27; ? &quot;spinner_V8m1&quot; : &quot;&quot;&#125;`&#125; width=&#123;12&#125; height=&#123;12&#125; viewBox=&quot;0 0 12 12&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;        &lt;path fillRule=&quot;evenodd&quot; clipRule=&quot;evenodd&quot; d=&#123;icons[type]&#125; fill=&#123;type === &#x27;disabled&#x27; ? &quot;#ADAEB6&quot; : &quot;#525577&quot;&#125; /&gt;    &lt;/svg&gt;    )&#125;\n\n\nprops 객체로 전달받은 type 값을 가지고 상황에 맞는 아이콘을 보여주고 그에 따라 스타일링도 해주었다.\nicons 객체에 props 객체로 받은 타입에 대한 값을 저장하여 관리하였다.\n\n4. 컴포넌트 분리이 모든 코드가 한 파일에 있기에 이를 컴포넌트 단위와 역할별로 구분해주어야 한다.\n123456789101112131415// ./main.jsimport UploadButton from &#x27;./components/Button.js&#x27;const container = document.getElementById(&#x27;root&#x27;);const root = ReactDOM.createRoot(container);root.render(        &lt;React.StrictMode&gt;            &lt;UploadButton type=&quot;idle&quot;&gt;업로드&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;pending&quot;&gt;업로드 중&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;resolved&quot;&gt;완료&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;rejected&quot;&gt;실패&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;disabled&quot;&gt;업로드&lt;/UploadButton&gt;        &lt;/React.StrictMode&gt;)\n\n1234567891011121314// ./components/UploadButton.jsimport Icon from &#x27;./Icon.js&#x27;const Button = props =&gt; &#123;    const  &#123;children, type&#125; = props;    return (    &lt;button className=&quot;upload-button&quot; disabled=&#123;type === &#x27;disabled&#x27; ? &quot;disabled&quot; : &#x27;&#x27;&#125;&gt;        &#123;children&#125;&lt;Icon type=&#123;type&#125; /&gt;    &lt;/button&gt;    )&#125;export default Button\n\n1234567891011121314151617// ./components/Icon.jsconst icons = &#123;  ...&#125;const Icon = props =&gt; &#123;    const &#123;type&#125; = props;    return (    &lt;svg className=&#123;`button-icon $&#123;type === &#x27;pending&#x27; ? &quot;spinner_V8m1&quot; : &quot;&quot;&#125;`&#125; width=&#123;12&#125; height=&#123;12&#125; viewBox=&quot;0 0 12 12&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;        &lt;path fillRule=&quot;evenodd&quot; clipRule=&quot;evenodd&quot; d=&#123;icons[type]&#125; fill=&#123;type === &#x27;disabled&#x27; ? &quot;#ADAEB6&quot; : &quot;#525577&quot;&#125; /&gt;    &lt;/svg&gt;    )&#125;export default Icon\n\n\n모듈이 하나의 개체로 이루어져 있으므로 기본 내보내기를 해주었다.\n기본 내보내기를 해주었으므로 import시 이름을 변경하여 가져올 수 있다.\n\n💪 맞닥뜨린 문제1. 리액트 import 오류\n12345678910import &#123;createRoot, StrictMode&#125; from &#x27;./react.js&#x27;;const container = document.getElementById(&#x27;root&#x27;);const root = createRoot(container);root.render(  &lt;StrictMode&gt;    &lt;h1&gt;Hi~!&lt;/h1&gt;  &lt;/StrictMode&gt;)\n\n위와 같이 import를 해오고 싶었지만 CDN으로 React를 사용하는 것이기 때문에 react.js를 불러올 수 없다.\n그러므로 ReactDOM, React로 객체처럼 사용해야만 했다.\n🏓 소감간단한 업로드 버튼 컴포넌트를 구현하는 과제를 해보면서 리액트와 좀 더 친숙해지는 계기가 된 것 같다. figma 시안이 워낙 꼼꼼하게 잘 나와있어서 스타일링 하는데는 큰 어려움 없이 해서 좋았다.\n처음 딱 시작하려는 순간부터 오류를 맞이해서 당황하였지만 문제도 잘 해결했고 SVG 파일에 애니메이션과 스타일을 입혀보는 것을 직접 해보니 더 기억에 오래 남을 것 같다.\n","dateCreated":"2022-11-02T16:21:03+09:00","dateModified":"2022-11-02T17:03:53+09:00","datePublished":"2022-11-02T16:21:03+09:00","description":"","headline":"React에서 Upload Button Component 만들기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"요구사항\n\n 버튼 컴포넌트를 만들어 재사용 가능하게 만들어라\n 아이콘 컴포넌트를 만들어 재사용 가능하게 만들어라\n 컴포넌트를 분리하여라\n\n해결1. src&#x2F;main.js 파일에서 렌더링 준비를 한다.12345678const container = document.querySelector(&#x27;root&#x27;);const root = React.createRoot(container);root.render(  &lt;React.StrictMode&gt;    &lt;h1&gt;Get Ready?&lt;/h1&gt;  &lt;/React.StrictMode&gt;)\n\n\n업로드 버튼 컴포넌트의 type, content를 지정해주어 컴포넌트를 재사용할 수 있다.\n사용자가 컴포넌트를 사용하려면 type과 content를 입력하여 아이콘과 내용을 적어주면 된다.\n\n2. 버튼 컴포넌트 생성1234567891011const Button = props =&gt; &#123;    const  &#123;children, type&#125; = props;    return (    &lt;button className=&quot;upload-button&quot; disabled=&#123;type === &#x27;disabled&#x27; ? &quot;disabled&quot; : &#x27;&#x27;&#125;&gt;        &#123;children&#125;&lt;Icon type=&#123;type&#125; /&gt;    &lt;/button&gt;    )&#125;export default Button\n\n\n버튼 컴포넌트에게 전달받은 props의 type값을 그대로 Icon 컴포넌트에게 전달해주었다.\nprops 객체로 전달받은 type값에 따라 조건부로 disable 속성을 등록&#x2F;해제 해주었다.\n\n3. 아이콘 컴포넌트 생성1234567891011121314151617const icons = &#123;    &quot;idle&quot; : &quot;M1.80202 3.65685L5.27085 0.292893C5.67355 -0.0976316 6.32645 -0.0976317 6.72915 0.292893L10.198 3.65685C10.6007 4.04738 10.6007 4.68054 10.198 5.07107C9.79528 5.46159 9.14238 5.46159 8.73968 5.07107L7.03117 3.41421L7.03117 11C7.03117 11.5523 6.5695 12 6 12C5.4305 12 4.96883 11.5523 4.96883 11L4.96883 3.41421L3.26032 5.07107C2.85762 5.46159 2.20472 5.46159 1.80202 5.07107C1.39933 4.68054 1.39933 4.04738 1.80202 3.65685Z&quot;,    &quot;pending&quot;: &quot;M9.96461 3.87118C9.61452 3.2192 9.10905 2.66362 8.49296 2.25365C7.87687 1.84368 7.16918 1.59198 6.43257 1.52084C5.69597 1.4497 4.95319 1.56132 4.27003 1.84582C3.58688 2.13031 2.98442 2.5789 2.51604 3.15184C2.04766 3.72478 1.7278 4.40439 1.58481 5.13047C1.44181 5.85656 1.48009 6.6067 1.69626 7.31445C1.91242 8.02221 2.29979 8.66573 2.82407 9.18802C3.34834 9.7103 3.99333 10.0952 4.7019 10.3087L5.1124 8.94617C4.6279 8.8002 4.18687 8.53699 3.82839 8.17987C3.46991 7.82275 3.20503 7.38273 3.05723 6.89879C2.90942 6.41484 2.88325 5.90192 2.98102 5.40544C3.0788 4.90897 3.2975 4.44427 3.61777 4.05251C3.93804 3.66075 4.34998 3.35402 4.8171 3.15949C5.28422 2.96496 5.79211 2.88864 6.29578 2.93728C6.79945 2.98592 7.28335 3.15803 7.70461 3.43835C8.12588 3.71868 8.47151 4.09857 8.71088 4.54438L9.96461 3.87118Z&quot;,    &quot;resolved&quot;: &quot;M11.6321 0.725152C12.0601 1.07426 12.124 1.70419 11.7749 2.13214L4.43311 11.1321C4.24683 11.3605 3.96931 11.4951 3.67466 11.4999C3.38 11.5047 3.09822 11.3794 2.90454 11.1573L0.246308 8.10888C-0.116669 7.69263 -0.0734819 7.06094 0.34277 6.69796C0.759022 6.33499 1.39071 6.37817 1.75369 6.79443L3.63274 8.94927L10.2251 0.867921C10.5742 0.439968 11.2042 0.376047 11.6321 0.725152Z&quot;,    &quot;rejected&quot;: &quot;M6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12ZM3.40106 3.25359C3.79159 2.86306 4.42475 2.86306 4.81528 3.25359L6.01883 4.45714L7.22238 3.25359C7.61291 2.86306 8.24607 2.86306 8.6366 3.25359C9.02712 3.64411 9.02712 4.27728 8.6366 4.6678L7.43304 5.87135L8.6366 7.07491C9.02712 7.46543 9.02712 8.0986 8.6366 8.48912C8.24607 8.87964 7.61291 8.87964 7.22238 8.48912L6.01883 7.28557L4.81528 8.48912C4.42475 8.87964 3.79159 8.87964 3.40106 8.48912C3.01054 8.0986 3.01054 7.46543 3.40106 7.07491L4.60462 5.87135L3.40106 4.6678C3.01054 4.27728 3.01054 3.64411 3.40106 3.25359Z&quot;,    &quot;disabled&quot;: &quot;M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6ZM9.65221 6.00001C9.65221 8.01707 8.01707 9.65221 6.00001 9.65221C5.37082 9.65221 4.77878 9.4931 4.26195 9.21293L9.21292 4.26194C9.4931 4.77878 9.65221 5.37081 9.65221 6.00001ZM2.83053 7.81592L7.81591 2.83053C7.28103 2.52342 6.66103 2.34781 6.00001 2.34781C3.98296 2.34781 2.34781 3.98296 2.34781 6.00001C2.34781 6.66103 2.52342 7.28104 2.83053 7.81592Z&quot;&#125;const Icon = props =&gt; &#123;    const &#123;type&#125; = props;    return (    &lt;svg className=&#123;`button-icon $&#123;type === &#x27;pending&#x27; ? &quot;spinner_V8m1&quot; : &quot;&quot;&#125;`&#125; width=&#123;12&#125; height=&#123;12&#125; viewBox=&quot;0 0 12 12&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;        &lt;path fillRule=&quot;evenodd&quot; clipRule=&quot;evenodd&quot; d=&#123;icons[type]&#125; fill=&#123;type === &#x27;disabled&#x27; ? &quot;#ADAEB6&quot; : &quot;#525577&quot;&#125; /&gt;    &lt;/svg&gt;    )&#125;\n\n\nprops 객체로 전달받은 type 값을 가지고 상황에 맞는 아이콘을 보여주고 그에 따라 스타일링도 해주었다.\nicons 객체에 props 객체로 받은 타입에 대한 값을 저장하여 관리하였다.\n\n4. 컴포넌트 분리이 모든 코드가 한 파일에 있기에 이를 컴포넌트 단위와 역할별로 구분해주어야 한다.\n123456789101112131415// ./main.jsimport UploadButton from &#x27;./components/Button.js&#x27;const container = document.getElementById(&#x27;root&#x27;);const root = ReactDOM.createRoot(container);root.render(        &lt;React.StrictMode&gt;            &lt;UploadButton type=&quot;idle&quot;&gt;업로드&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;pending&quot;&gt;업로드 중&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;resolved&quot;&gt;완료&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;rejected&quot;&gt;실패&lt;/UploadButton&gt;            &lt;UploadButton type=&quot;disabled&quot;&gt;업로드&lt;/UploadButton&gt;        &lt;/React.StrictMode&gt;)\n\n1234567891011121314// ./components/UploadButton.jsimport Icon from &#x27;./Icon.js&#x27;const Button = props =&gt; &#123;    const  &#123;children, type&#125; = props;    return (    &lt;button className=&quot;upload-button&quot; disabled=&#123;type === &#x27;disabled&#x27; ? &quot;disabled&quot; : &#x27;&#x27;&#125;&gt;        &#123;children&#125;&lt;Icon type=&#123;type&#125; /&gt;    &lt;/button&gt;    )&#125;export default Button\n\n1234567891011121314151617// ./components/Icon.jsconst icons = &#123;  ...&#125;const Icon = props =&gt; &#123;    const &#123;type&#125; = props;    return (    &lt;svg className=&#123;`button-icon $&#123;type === &#x27;pending&#x27; ? &quot;spinner_V8m1&quot; : &quot;&quot;&#125;`&#125; width=&#123;12&#125; height=&#123;12&#125; viewBox=&quot;0 0 12 12&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;        &lt;path fillRule=&quot;evenodd&quot; clipRule=&quot;evenodd&quot; d=&#123;icons[type]&#125; fill=&#123;type === &#x27;disabled&#x27; ? &quot;#ADAEB6&quot; : &quot;#525577&quot;&#125; /&gt;    &lt;/svg&gt;    )&#125;export default Icon\n\n\n모듈이 하나의 개체로 이루어져 있으므로 기본 내보내기를 해주었다.\n기본 내보내기를 해주었으므로 import시 이름을 변경하여 가져올 수 있다.\n\n💪 맞닥뜨린 문제1. 리액트 import 오류\n12345678910import &#123;createRoot, StrictMode&#125; from &#x27;./react.js&#x27;;const container = document.getElementById(&#x27;root&#x27;);const root = createRoot(container);root.render(  &lt;StrictMode&gt;    &lt;h1&gt;Hi~!&lt;/h1&gt;  &lt;/StrictMode&gt;)\n\n위와 같이 import를 해오고 싶었지만 CDN으로 React를 사용하는 것이기 때문에 react.js를 불러올 수 없다.\n그러므로 ReactDOM, React로 객체처럼 사용해야만 했다.\n🏓 소감간단한 업로드 버튼 컴포넌트를 구현하는 과제를 해보면서 리액트와 좀 더 친숙해지는 계기가 된 것 같다. figma 시안이 워낙 꼼꼼하게 잘 나와있어서 스타일링 하는데는 큰 어려움 없이 해서 좋았다.\n처음 딱 시작하려는 순간부터 오류를 맞이해서 당황하였지만 문제도 잘 해결했고 SVG 파일에 애니메이션과 스타일을 입혀보는 것을 직접 해보니 더 기억에 오래 남을 것 같다.\n","dateCreated":"2022-11-02T16:21:03+09:00","dateModified":"2022-11-02T17:03:53+09:00","datePublished":"2022-11-02T16:21:03+09:00","description":"","headline":"React에서 Upload Button Component 만들기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/"}</script>
     <meta name="description" content="요구사항   버튼 컴포넌트를 만들어 재사용 가능하게 만들어라  아이콘 컴포넌트를 만들어 재사용 가능하게 만들어라  컴포넌트를 분리하여라  해결1. src&#x2F;main.js 파일에서 렌더링 준비를 한다.12345678const container &#x3D; document.querySelector(&amp;#x27;root&amp;#x27;);const root &#x3D; React">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="React에서 Upload Button Component 만들기">
@@ -130,20 +130,6 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="/all-tags"
-                            
-                            rel="noopener"
-                            title="태그"
-                        >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">태그</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
                             href="/all-archives"
                             
                             rel="noopener"
@@ -190,7 +176,7 @@
                     
                         <a
                             class="sidebar-button-link "
-                            href="https://github.com/"
+                            href="https://github.com/loco9939"
                             
                                 target="_blank"
                             
@@ -199,86 +185,6 @@
                         >
                         <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">GitHub</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="http://stackoverflow.com/users"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Stack Overflow"
-                        >
-                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Stack Overflow</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://twitter.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Twitter"
-                        >
-                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Twitter</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://facebook.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Facebook"
-                        >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Facebook</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://plus.google.com/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="Google +"
-                        >
-                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">Google +</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="https://www.linkedin.com/profile/"
-                            
-                                target="_blank"
-                            
-                            rel="noopener"
-                            title="LinkedIn"
-                        >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
             
