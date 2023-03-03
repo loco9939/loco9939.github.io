@@ -19,11 +19,11 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다.\n1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다.\n이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여쭤보니 다음과 같은 이점때문에 setState 함수를 만들어 사용하는 것이 좋다는 결론이 나왔다.\n\n관리해야할 상태 객체가 늘어나 확장성이 요구될 때 용이하다.\n\nstate에 대한 에러가 발생하였을 때 에러 핸들링이 용이하다. (상황에 따라 렌더링 할지 말지 결정 가능)\n\nstate가 변경되거나 재할당 되는 경우를 한곳에서 관리하여 용이하다.\n\n\n2. filter 함수를 사용한 코드 리팩터12345678910111213141516// beforelet filteredTodos;if (state.filterId === &quot;completed&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; todo.completed);&#125; else if (state.filterId === &quot;active&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; !todo.completed);&#125; else &#123;  filteredTodos = state.todos;&#125;// afterconst filteredTodos = state.todos.filter((todo) =&gt; &#123;  if (state.filterId === &quot;completed&quot;) return todo.completed;  if (state.filterId === &quot;active&quot;) return !todo.completed;  return todo;&#125;);\n\nif 문으로 filter 함수 반환값이 다르게 filteredTodos 값이 할당되는 경우라면 filter 함수 안에 로직을 넣어서 해결해보자.\n&#x3D;&gt; 훨씬 더 간결해진다.\n3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다.1234567891011121314151617// beforeconst addTodo = (content) =&gt; &#123;  state.todos = [    &#123; id: generateNextTodoId(), content, completed: false &#125;,    ...state.todos,  ];  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst addTodo = (content) =&gt;  setState(&#123;    todos: [      &#123; id: generateNextTodoId(), content, completed: false &#125;,      ...state.todos,    ],  &#125;);\n\n위 예제에서 addTodo 함수는 내부에서 state.todos에 새로운 값을 할당 해준뒤 state를 변경하는 함수를 호출하여 렌더링 해주고 있다.\n하지만, addTodo 함수의 기능은 Model의 todos 배열에 todo 요소 하나를 추가하는 것일 뿐이므로 before 처럼 state.todos(원본)에 재할당 하는 것은 옮지 않다.\nsetState 함수에게 새로운 객체(상태)를 전달하여 state의 변경에 따라 화면에 렌더링 되도록 로직을 짜는 것이 더 통일성을 지킬 수 있다.\n4. 함수의 매개변수를 명확하게 적어주자.1234567891011121314151617181920// beforeconst toggleAllCompleted = (boolean) =&gt; &#123;  state.todos = state.todos.map((todo) =&gt; (&#123; ...todo, completed: boolean &#125;));  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst toggleAll = (checked) =&gt; &#123;  checked    ? setState(&#123;        todos: state.todos.map((todo) =&gt;          !todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;)    : setState(&#123;        todos: state.todos.map((todo) =&gt;          todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;);&#125;;\n\nbefore 처럼 매개변수를 boolean 으로 설정하는 것은 옳지 않다. boolean은 타입을 나타내는 것이지 매개변수에 대한 설명으로는 부적절하다.\n\nafter 코드에서는 인수로 넘어온 모든 check를 토글로 켰다 껐다 할 수 있는 함수이다.\n\n5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자오늘 코딩할 때 이 부분에서 문제를 계속 부딪혀서 시간을 많이 할애하였다.\n1234567891011$todoList.addEventListener(&quot;dblclick&quot;, (e) =&gt; &#123;  e.path[2].classList.add(&quot;editing&quot;);  // e.target.parentNode.parentNode.classList.add(&#x27;editing&#x27;);  e.path[1].nextElementSibling.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;    const content = e.target.value.trim();    if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;    editTodo(content, e.path[1].dataset.id);  &#125;);&#125;);\n\n위 코드에서 ul 태그에서 더블클릭 이벤트 발생하면 div가 안보이게되고 input이 보이게 된다.\n이 때, 내가 어떤 요소를 선택하여 어떤 타입의 이벤트를 등록하였고 그 타입에 따른 이벤트 객체는 무엇이 나오는지를 명확히 이해하고 코딩을 하자.\n헷갈린다면 console.log()를 찍어보면서 확인하자. 그림을 그리거나 HTML 구조와 비교해가면서 이해하면 수월하다.\n소감오늘 MVC TodoList V2를 만들어보면서 아침 10시부터 저녁 12시까지 이거만 집중해봤는데, 확실히 아직 익숙하지 않아서 버벅거리는 거 같다고 생각이 든다. 이해가 안되는 부분은 없지만 손으로 코딩이 술술 나오지가 않아서 어렵게 느껴졌다. 앞으로도 더 손 코딩을 많이 해보는 습관을 길러야 겠다.\n","dateCreated":"2022-09-06T23:33:42+09:00","dateModified":"2022-11-18T17:23:08+09:00","datePublished":"2022-09-06T23:33:42+09:00","description":"","headline":"vanillaJS로 구현한 todoList (MVC패턴) 2탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다.\n1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다.\n이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여쭤보니 다음과 같은 이점때문에 setState 함수를 만들어 사용하는 것이 좋다는 결론이 나왔다.\n\n관리해야할 상태 객체가 늘어나 확장성이 요구될 때 용이하다.\n\nstate에 대한 에러가 발생하였을 때 에러 핸들링이 용이하다. (상황에 따라 렌더링 할지 말지 결정 가능)\n\nstate가 변경되거나 재할당 되는 경우를 한곳에서 관리하여 용이하다.\n\n\n2. filter 함수를 사용한 코드 리팩터12345678910111213141516// beforelet filteredTodos;if (state.filterId === &quot;completed&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; todo.completed);&#125; else if (state.filterId === &quot;active&quot;) &#123;  filteredTodos = state.todos.filter((todo) =&gt; !todo.completed);&#125; else &#123;  filteredTodos = state.todos;&#125;// afterconst filteredTodos = state.todos.filter((todo) =&gt; &#123;  if (state.filterId === &quot;completed&quot;) return todo.completed;  if (state.filterId === &quot;active&quot;) return !todo.completed;  return todo;&#125;);\n\nif 문으로 filter 함수 반환값이 다르게 filteredTodos 값이 할당되는 경우라면 filter 함수 안에 로직을 넣어서 해결해보자.\n&#x3D;&gt; 훨씬 더 간결해진다.\n3. MVC 패턴으로 나누었다면 그에 알맞게 자신만의 역할을 하도록 분류한다.1234567891011121314151617// beforeconst addTodo = (content) =&gt; &#123;  state.todos = [    &#123; id: generateNextTodoId(), content, completed: false &#125;,    ...state.todos,  ];  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst addTodo = (content) =&gt;  setState(&#123;    todos: [      &#123; id: generateNextTodoId(), content, completed: false &#125;,      ...state.todos,    ],  &#125;);\n\n위 예제에서 addTodo 함수는 내부에서 state.todos에 새로운 값을 할당 해준뒤 state를 변경하는 함수를 호출하여 렌더링 해주고 있다.\n하지만, addTodo 함수의 기능은 Model의 todos 배열에 todo 요소 하나를 추가하는 것일 뿐이므로 before 처럼 state.todos(원본)에 재할당 하는 것은 옮지 않다.\nsetState 함수에게 새로운 객체(상태)를 전달하여 state의 변경에 따라 화면에 렌더링 되도록 로직을 짜는 것이 더 통일성을 지킬 수 있다.\n4. 함수의 매개변수를 명확하게 적어주자.1234567891011121314151617181920// beforeconst toggleAllCompleted = (boolean) =&gt; &#123;  state.todos = state.todos.map((todo) =&gt; (&#123; ...todo, completed: boolean &#125;));  setState(&#123; todos: state.todos &#125;);&#125;;// afterconst toggleAll = (checked) =&gt; &#123;  checked    ? setState(&#123;        todos: state.todos.map((todo) =&gt;          !todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;)    : setState(&#123;        todos: state.todos.map((todo) =&gt;          todo.completed ? &#123; ...todo, completed: checked &#125; : todo        ),      &#125;);&#125;;\n\nbefore 처럼 매개변수를 boolean 으로 설정하는 것은 옳지 않다. boolean은 타입을 나타내는 것이지 매개변수에 대한 설명으로는 부적절하다.\n\nafter 코드에서는 인수로 넘어온 모든 check를 토글로 켰다 껐다 할 수 있는 함수이다.\n\n5. 이벤트 핸들러 사용시 이벤트 객체와 선택한 요소를 명확히 이해하자오늘 코딩할 때 이 부분에서 문제를 계속 부딪혀서 시간을 많이 할애하였다.\n1234567891011$todoList.addEventListener(&quot;dblclick&quot;, (e) =&gt; &#123;  e.path[2].classList.add(&quot;editing&quot;);  // e.target.parentNode.parentNode.classList.add(&#x27;editing&#x27;);  e.path[1].nextElementSibling.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;    const content = e.target.value.trim();    if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;    editTodo(content, e.path[1].dataset.id);  &#125;);&#125;);\n\n위 코드에서 ul 태그에서 더블클릭 이벤트 발생하면 div가 안보이게되고 input이 보이게 된다.\n이 때, 내가 어떤 요소를 선택하여 어떤 타입의 이벤트를 등록하였고 그 타입에 따른 이벤트 객체는 무엇이 나오는지를 명확히 이해하고 코딩을 하자.\n헷갈린다면 console.log()를 찍어보면서 확인하자. 그림을 그리거나 HTML 구조와 비교해가면서 이해하면 수월하다.\n소감오늘 MVC TodoList V2를 만들어보면서 아침 10시부터 저녁 12시까지 이거만 집중해봤는데, 확실히 아직 익숙하지 않아서 버벅거리는 거 같다고 생각이 든다. 이해가 안되는 부분은 없지만 손으로 코딩이 술술 나오지가 않아서 어렵게 느껴졌다. 앞으로도 더 손 코딩을 많이 해보는 습관을 길러야 겠다.\n","dateCreated":"2022-09-06T23:33:42+09:00","dateModified":"2022-11-18T17:23:08+09:00","datePublished":"2022-09-06T23:33:42+09:00","description":"","headline":"vanillaJS로 구현한 todoList (MVC패턴) 2탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"}</script>
     <meta name="description" content="오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다. 1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다. 이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="vanillaJS로 구현한 todoList (MVC패턴) 2탄">
-<meta property="og:url" content="https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/index.html">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
 <meta property="og:description" content="오늘은 MVC TodoList V2를 만들어 보면서 배웠던 내용을 정리해보는 시간을 갖겠다. 1. setState를 왜 쓰는지?직접 라이브 코딩한다고 생각을 하면서 한줄 한줄 코딩을 해나가다가 문득 setState 함수를 사용하지 않고 render 함수로 렌더만 해주면 되지 않을까? 라는 생각이 들었다. 이후 경현님께 코드 리뷰를 부탁하여 이러한 의견을 여">
 <meta property="og:locale" content="ko_KR">
@@ -403,7 +403,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/07/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
+                    href="/2022/09/07/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 3탄"
                     aria-label="이전: vanillaJS로 구현한 todoList(MVC패턴) 3탄"
                 >
@@ -417,7 +417,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    href="/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 1탄"
                     aria-label="다음: vanillaJS로 구현한 todoList(MVC패턴) 1탄"
                 >
@@ -444,7 +444,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -457,7 +457,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -470,7 +470,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -518,7 +518,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/07/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
+                    href="/2022/09/07/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%203%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 3탄"
                     aria-label="이전: vanillaJS로 구현한 todoList(MVC패턴) 3탄"
                 >
@@ -532,7 +532,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    href="/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList(MVC패턴) 1탄"
                     aria-label="다음: vanillaJS로 구현한 todoList(MVC패턴) 1탄"
                 >
@@ -559,7 +559,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -572,7 +572,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -585,7 +585,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -619,7 +619,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -632,7 +632,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -645,7 +645,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

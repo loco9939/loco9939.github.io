@@ -19,11 +19,11 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자.\n이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다.\nHTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko&quot;&gt;  &lt;head&gt;    &lt;meta charset=&quot;UTF-8&quot; /&gt;    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;    &lt;title&gt;MVC - TodoList&lt;/title&gt;    &lt;style&gt;      .todo-list &#123;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-filters &#123;        display: flex;        gap: 15px;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-list input:checked + span &#123;        text-decoration: line-through;      &#125;      .active &#123;        text-decoration: underline;      &#125;    &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;    &lt;input type=&quot;text&quot; class=&quot;todo-input&quot; /&gt;    &lt;ul class=&quot;todo-list&quot;&gt;&lt;/ul&gt;    &lt;ul class=&quot;todo-filters&quot;&gt;      &lt;li id=&quot;all&quot; class=&quot;active&quot;&gt;All&lt;/li&gt;      &lt;li id=&quot;completed&quot;&gt;Completed&lt;/li&gt;      &lt;li id=&quot;active&quot;&gt;Active&lt;/li&gt;    &lt;/ul&gt;  &lt;/body&gt;&lt;/html&gt;\n\n\n우선 정적인 요소와 동적인 요소를 구분지어서 HTML 구조를 설계한다.\n\n동적인 todo 요소를 추가할 것이고 그 외에 항목들은 정적인 요소들이다.\nJavascript1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071let todos = [];const $todoInput = document.querySelector(&quot;.todo-input&quot;);const $todoList = document.querySelector(&quot;.todo-list&quot;);const generateNextTodoId = () =&gt;  Math.max(...todos.map((todo) =&gt; todo.id), 0) + 1;const render = (todos) =&gt; &#123;  $todoList.innerHTML = todos    .map(      (&#123; id, content, completed &#125;) =&gt;        `&lt;li id=&quot;$&#123;id&#125;&quot;&gt;          &lt;input type=&quot;checkbox&quot; $&#123;completed ? &quot;checked&quot; : &quot;&quot;&#125; /&gt;          &lt;span&gt;$&#123;content&#125;&lt;/span&gt;          &lt;button&gt;X&lt;/button&gt;        &lt;/li&gt;`    )    .join(&quot;&quot;);&#125;;const setTodos = (newTodos) =&gt; &#123;  todos = newTodos;  render(todos);&#125;;const fetchTodos = () =&gt; &#123;  setTodos([    &#123; id: 3, content: &quot;일찍 일어나기&quot;, completed: false &#125;,    &#123; id: 2, content: &quot;공부하기&quot;, completed: false &#125;,    &#123; id: 1, content: &quot;저녁먹기&quot;, completed: false &#125;,  ]);&#125;;const addTodo = (content) =&gt; &#123;  todos = [&#123; id: generateNextTodoId(), content, completed: false &#125;, ...todos];  setTodos(todos);&#125;;const toggleCompleted = (id) =&gt; &#123;  todos = todos.map((todo) =&gt;    todo.id === +id ? &#123; ...todo, completed: !todo.completed &#125; : todo  );  setTodos(todos);&#125;;const removeTodo = (id) =&gt; &#123;  todos = todos.filter((todo) =&gt; todo.id !== +id);  setTodos(todos);&#125;;window.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; &#123;  fetchTodos();&#125;);$todoInput.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;  const content = $todoInput.value.trim();  if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;  addTodo(content);  $todoInput.value = &quot;&quot;;&#125;);$todoList.addEventListener(&quot;change&quot;, (e) =&gt; &#123;  toggleCompleted(e.target.parentNode.id);&#125;);$todoList.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;button&quot;)) return;  removeTodo(e.target.parentNode.id);&#125;);\n\n\n화면을 나타내는 부분을 View\n\n상태(데이터)와 상태를 변경하는 메서드를 Model\n\n화면으로 부터 받은 이벤틑 객체를 가지고 Model의 함수를 호출하여 상태를 변경하는 Controller\n\n\n크게 3가지 역할로 구분하여 애플리케이션을 바라보자.\n\n단, 너무 이 틀에 강박관념을 갖지 말길 바란다. 이러한 큰 틀이 있는 것일 뿐 100% 이 틀에 맞게 구분하는 것을 불가능하다.\n\n","dateCreated":"2022-09-05T20:26:29+09:00","dateModified":"2022-11-18T17:23:06+09:00","datePublished":"2022-09-05T20:26:29+09:00","description":"","headline":"vanillaJS로 구현한 todoList(MVC패턴) 1탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자.\n이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다.\nHTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko&quot;&gt;  &lt;head&gt;    &lt;meta charset=&quot;UTF-8&quot; /&gt;    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;    &lt;title&gt;MVC - TodoList&lt;/title&gt;    &lt;style&gt;      .todo-list &#123;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-filters &#123;        display: flex;        gap: 15px;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-list input:checked + span &#123;        text-decoration: line-through;      &#125;      .active &#123;        text-decoration: underline;      &#125;    &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;    &lt;input type=&quot;text&quot; class=&quot;todo-input&quot; /&gt;    &lt;ul class=&quot;todo-list&quot;&gt;&lt;/ul&gt;    &lt;ul class=&quot;todo-filters&quot;&gt;      &lt;li id=&quot;all&quot; class=&quot;active&quot;&gt;All&lt;/li&gt;      &lt;li id=&quot;completed&quot;&gt;Completed&lt;/li&gt;      &lt;li id=&quot;active&quot;&gt;Active&lt;/li&gt;    &lt;/ul&gt;  &lt;/body&gt;&lt;/html&gt;\n\n\n우선 정적인 요소와 동적인 요소를 구분지어서 HTML 구조를 설계한다.\n\n동적인 todo 요소를 추가할 것이고 그 외에 항목들은 정적인 요소들이다.\nJavascript1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071let todos = [];const $todoInput = document.querySelector(&quot;.todo-input&quot;);const $todoList = document.querySelector(&quot;.todo-list&quot;);const generateNextTodoId = () =&gt;  Math.max(...todos.map((todo) =&gt; todo.id), 0) + 1;const render = (todos) =&gt; &#123;  $todoList.innerHTML = todos    .map(      (&#123; id, content, completed &#125;) =&gt;        `&lt;li id=&quot;$&#123;id&#125;&quot;&gt;          &lt;input type=&quot;checkbox&quot; $&#123;completed ? &quot;checked&quot; : &quot;&quot;&#125; /&gt;          &lt;span&gt;$&#123;content&#125;&lt;/span&gt;          &lt;button&gt;X&lt;/button&gt;        &lt;/li&gt;`    )    .join(&quot;&quot;);&#125;;const setTodos = (newTodos) =&gt; &#123;  todos = newTodos;  render(todos);&#125;;const fetchTodos = () =&gt; &#123;  setTodos([    &#123; id: 3, content: &quot;일찍 일어나기&quot;, completed: false &#125;,    &#123; id: 2, content: &quot;공부하기&quot;, completed: false &#125;,    &#123; id: 1, content: &quot;저녁먹기&quot;, completed: false &#125;,  ]);&#125;;const addTodo = (content) =&gt; &#123;  todos = [&#123; id: generateNextTodoId(), content, completed: false &#125;, ...todos];  setTodos(todos);&#125;;const toggleCompleted = (id) =&gt; &#123;  todos = todos.map((todo) =&gt;    todo.id === +id ? &#123; ...todo, completed: !todo.completed &#125; : todo  );  setTodos(todos);&#125;;const removeTodo = (id) =&gt; &#123;  todos = todos.filter((todo) =&gt; todo.id !== +id);  setTodos(todos);&#125;;window.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; &#123;  fetchTodos();&#125;);$todoInput.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;  const content = $todoInput.value.trim();  if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;  addTodo(content);  $todoInput.value = &quot;&quot;;&#125;);$todoList.addEventListener(&quot;change&quot;, (e) =&gt; &#123;  toggleCompleted(e.target.parentNode.id);&#125;);$todoList.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;button&quot;)) return;  removeTodo(e.target.parentNode.id);&#125;);\n\n\n화면을 나타내는 부분을 View\n\n상태(데이터)와 상태를 변경하는 메서드를 Model\n\n화면으로 부터 받은 이벤틑 객체를 가지고 Model의 함수를 호출하여 상태를 변경하는 Controller\n\n\n크게 3가지 역할로 구분하여 애플리케이션을 바라보자.\n\n단, 너무 이 틀에 강박관념을 갖지 말길 바란다. 이러한 큰 틀이 있는 것일 뿐 100% 이 틀에 맞게 구분하는 것을 불가능하다.\n\n","dateCreated":"2022-09-05T20:26:29+09:00","dateModified":"2022-11-18T17:23:06+09:00","datePublished":"2022-09-05T20:26:29+09:00","description":"","headline":"vanillaJS로 구현한 todoList(MVC패턴) 1탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"}</script>
     <meta name="description" content="MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자. 이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다. HTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE h">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="vanillaJS로 구현한 todoList(MVC패턴) 1탄">
-<meta property="og:url" content="https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/index.html">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
 <meta property="og:description" content="MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자. 이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다. HTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE h">
 <meta property="og:locale" content="ko_KR">
@@ -392,7 +392,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    href="/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList (MVC패턴) 2탄"
                     aria-label="이전: vanillaJS로 구현한 todoList (MVC패턴) 2탄"
                 >
@@ -406,7 +406,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/"
+                    href="/2022/09/03/JavaScript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/"
                     data-tooltip="callback, Promise, async/await 비동기 예제"
                     aria-label="다음: callback, Promise, async/await 비동기 예제"
                 >
@@ -433,7 +433,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -446,7 +446,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -459,7 +459,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -507,7 +507,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/06/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
+                    href="/2022/09/06/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%202%ED%83%84/"
                     data-tooltip="vanillaJS로 구현한 todoList (MVC패턴) 2탄"
                     aria-label="이전: vanillaJS로 구현한 todoList (MVC패턴) 2탄"
                 >
@@ -521,7 +521,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/09/03/Javascript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/"
+                    href="/2022/09/03/JavaScript/callback,%20Promise,%20async,%20await%20%EB%B9%84%EB%8F%99%EA%B8%B0%20%EC%98%88%EC%A0%9C/"
                     data-tooltip="callback, Promise, async/await 비동기 예제"
                     aria-label="다음: callback, Promise, async/await 비동기 예제"
                 >
@@ -548,7 +548,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -561,7 +561,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -574,7 +574,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -608,7 +608,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -621,7 +621,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -634,7 +634,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/Javascript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/05/JavaScript/vanillaJS%EB%A1%9C%20%EA%B5%AC%ED%98%84%ED%95%9C%20todoList(MVC%ED%8C%A8%ED%84%B4)%201%ED%83%84/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

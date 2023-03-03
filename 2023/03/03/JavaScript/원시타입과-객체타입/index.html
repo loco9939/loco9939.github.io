@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2022/08/10/javascript/원시타입과 객체타입/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/03/javascript/원시타입과-객체타입/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
@@ -19,16 +19,16 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자.\n원시타입과 객체타입\n원시타입1. 원시타입의 값원시타입의 값은 변경 불가능한 값이다. 읽기전용이다.\n12345var str = &quot;hello&quot;;str[0] = &quot;H&quot;;console.log(str); // hello\n\n변수 str의 첫번째 문자열을 인덱스로 접근하여 직접 바꾸려했지만 변경불가능하여 바꿀 수 없다.\n2. 원시타입의 메모리 공간원시타입은 변수 할당 시 메모리 공간에 실제 값을 저장한다.\n변수와 메모리에 대해 자세히 언급하면 사실 변수라는 식별자가 값을 저장하는 게 아닌 값이 저장된 메모리 공간에 대한 메모리 주소를 저장하고 있다.\n\n즉, 메모리 공간에는 값이 저장되어 있고 변수라는 식별자는 메모리 공간의 메모리 주소를 저장한다.\n\n3. 원시타입 값의 전달원시값을 갖는 변수를 다른 변수에 할당하면 원시값이 복사되어 전달된다.\n12345678var str = &quot;hello&quot;;var greeting = str;greeting = &quot;hi&quot;;console.log(str); // helloconsole.log(greeting); // hi\n\n사실 값이 복사되어 전달되는 것이 아니고 동일한 값을 새로운 메모리 저장공간에 저장한 뒤 해당 메모리 공간의 메모리 주소를 copy라는 변수에 할당하는 것이다.\n\n객체타입1. 객체타입의 값객체타입의 값은 변경가능한 값이다.\n1234567891011var obj = &#123;  name: &quot;yiju&quot;,  age: 28,  smoke() &#123;    console.log(&quot;no-smoking&quot;);  &#125;,&#125;;obj.name = &quot;jangoon&quot;;console.log(obj); // &#123;name: &#x27;jangoon&#x27;, age: 28, smoke: ƒ&#125;\n\n2. 객체타입의 메모리 공간객체타입은 변수 할당 시 메모리 공간에 참조값(주소값)이 저장된다.\n원시타입에서는 메모리 공간에 값이 저장되고 변수 식별자에 해당 메모리 공간을 가리키는 주소가 저장되어 있다.\n하지만, 객체타입에서는 메모리 공간에 다른 메모리 공간을 가리키는 메모리 주소가 담겨있다. 다시말해서, 객체타입의 메모리는 원시타입의 메모리보다 과정이 한번 더 일어나게 되는 것이다.\n3. 객체타입 값의 전달객체를 가리키는 변수를 다른 변수에 할당하면 원본의 참조값(주소값)이 복사되어 전달된다.\n1234567var person = &#123;  name: &quot;Lee&quot;,&#125;;var copy = person;console.log(person === copy); // true\n\n변수 person과 copy는 {name:’Lee’} 객체 프로퍼티들의 주소가 담겨있는 메모리 공간의 메모리 주소를 저장한다. 그러므로 같은 참조값(주소값)을 비교하고 있기 때문에 일치 비교 연산자가 true가 나왔다.\n\n객체타입의 얕은복사객체를 spread 문법을 사용하여 얕은복사를 해보자.\n12345678910111213141516171819202122232425262728let person = &#123;  name: &quot;yiju&quot;,  fruit: &#123;    1: &quot;peach&quot;,    2: &quot;strawberry&quot;,  &#125;,&#125;;let someone = &#123; ...person &#125;;// 두 객체가 같은지 비교console.log(person === someone); // false// 객체의 프로퍼티 비교console.log(person.name === someone.name); // trueconsole.log(person.fruit === someone.fruit); // true// 1. 원시타입의 값을 변경했을 경우person.name = &quot;minseok&quot;;console.log(person); // &#123;name: &#x27;minseok&#x27;, fruit: &#123;…&#125;&#125;console.log(someone); // &#123;name: &#x27;yiju&#x27;, fruit: &#123;…&#125;&#125;// 2. 객체타입의 값을 변경했을 경우person.fruit[&quot;1&quot;] = &quot;watermelon&quot;;console.log(person); // fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;console.log(someone); // fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;\n\n변수 person의 원시타입의 값을 수정하였을 때, 서로의 원시타입의 값은 공유하지 않는다. 하지만 객체타입의 값을 바꾼 경우 서로의 객체타입의 값을 공유하는 모습을 볼 수 있다.\n\n왜 그럴까? 앞서 언급한 내용으로 깊게 파헤쳐보자.\n\n\nperson, someone은 일치하지 않으니 서로 다른 주소값을 갖는다. 각각의 주소는 javascript &#123;name:&#39;yiju&#39;,fruit:&#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;&#125;  객체 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다.\n\n예를 들면 name 식별자가 가리키는 주소, fruit 식별자가 가리키는 주소 이런식으로 프로퍼티의 주소들을 담고 있다.\n여기서 name 식별자는 원시타입의 값을 가리키는 메모리 주소를 저장한다. javascript person.name = &#39;minseok&#39; 을 실행하면 person.name과 someone.name이 서로 다른 주소값을 갖게된다.\n\nfruit의 식별자 주소는 javascript &#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125; 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다. person.fruit와 someone.fruit가 서로 같다(메모리 주소가 같다). 즉, fruit 프로퍼티들의 주소가 담긴 메모리 공간을 가리키는 메모리 주소가 같다.\n\n그리하여 javascript fruit[&#39;1&#39;] = &#39;watermelon&#39;  로 fruit 프로퍼티인 1을 수정하면 식별자인 1이 가리키는 메모리 주소가 바뀌게 되고 person과 someone 식별자가 식별자 1을 포함하는 프로퍼티들의 주소를 담은 메모리 공간을 가리키는 메모리 주소는 변하지 않으므로 서로 공유하게 된다.\n\n객체타입의 깊은복사객체타입의 깊은복사는 JSON.parse, JSON.stringify 메서드를 사용하여 구현할 수도 있고 lodash 라는 라이브러리를 사용한다.\n\n하지만 JSON.stringify 방식으로는 함수(메서드)를 복사할 수 없기 때문에 재귀를 사용하거나 실무에선 라이브러리를 사용한다.\n\nlodash 방법12345678const o = &#123; x: &#123; y: 1 &#125; &#125;;const _ = require(&quot;lodash&quot;);const c2 = _.cloneDeep(o);// 객체비교console.log(c2 === o); // falseconsole.log(c2.x === o.x); // false\n\nJSON 방법12345678910const a = &#123;  b: 1,  c: &#123;    d: 2,  &#125;,&#125;;let b = JSON.parse(JSON.stringify(a));b.c.d = 4;console.log(a); // &#123; b: 1, c: &#123; d: 2 &#125; &#125;console.log(b); // &#123; b: 1, c: &#123; d: 4 &#125; &#125;\n\n\n소감자바스크립트 DeepDive 책을 읽으면서 팀원들과 각자 공부한 내용을 말로 풀어서 설명하다보니 내가 무엇이 부족한지 알 수 있었고 내가 모르거나 제대로 알지 못하던 부분을 확실히 알고 이렇게 TIL까지 작성하면서 정리하니 기억에 오래 남을 것 같다.\n","dateCreated":"2022-08-10T17:05:01+09:00","dateModified":"2022-11-18T17:22:02+09:00","datePublished":"2022-08-10T17:05:01+09:00","description":"","headline":"원시타입과 객체타입","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자.\n원시타입과 객체타입\n원시타입1. 원시타입의 값원시타입의 값은 변경 불가능한 값이다. 읽기전용이다.\n12345var str = &quot;hello&quot;;str[0] = &quot;H&quot;;console.log(str); // hello\n\n변수 str의 첫번째 문자열을 인덱스로 접근하여 직접 바꾸려했지만 변경불가능하여 바꿀 수 없다.\n2. 원시타입의 메모리 공간원시타입은 변수 할당 시 메모리 공간에 실제 값을 저장한다.\n변수와 메모리에 대해 자세히 언급하면 사실 변수라는 식별자가 값을 저장하는 게 아닌 값이 저장된 메모리 공간에 대한 메모리 주소를 저장하고 있다.\n\n즉, 메모리 공간에는 값이 저장되어 있고 변수라는 식별자는 메모리 공간의 메모리 주소를 저장한다.\n\n3. 원시타입 값의 전달원시값을 갖는 변수를 다른 변수에 할당하면 원시값이 복사되어 전달된다.\n12345678var str = &quot;hello&quot;;var greeting = str;greeting = &quot;hi&quot;;console.log(str); // helloconsole.log(greeting); // hi\n\n사실 값이 복사되어 전달되는 것이 아니고 동일한 값을 새로운 메모리 저장공간에 저장한 뒤 해당 메모리 공간의 메모리 주소를 copy라는 변수에 할당하는 것이다.\n\n객체타입1. 객체타입의 값객체타입의 값은 변경가능한 값이다.\n1234567891011var obj = &#123;  name: &quot;yiju&quot;,  age: 28,  smoke() &#123;    console.log(&quot;no-smoking&quot;);  &#125;,&#125;;obj.name = &quot;jangoon&quot;;console.log(obj); // &#123;name: &#x27;jangoon&#x27;, age: 28, smoke: ƒ&#125;\n\n2. 객체타입의 메모리 공간객체타입은 변수 할당 시 메모리 공간에 참조값(주소값)이 저장된다.\n원시타입에서는 메모리 공간에 값이 저장되고 변수 식별자에 해당 메모리 공간을 가리키는 주소가 저장되어 있다.\n하지만, 객체타입에서는 메모리 공간에 다른 메모리 공간을 가리키는 메모리 주소가 담겨있다. 다시말해서, 객체타입의 메모리는 원시타입의 메모리보다 과정이 한번 더 일어나게 되는 것이다.\n3. 객체타입 값의 전달객체를 가리키는 변수를 다른 변수에 할당하면 원본의 참조값(주소값)이 복사되어 전달된다.\n1234567var person = &#123;  name: &quot;Lee&quot;,&#125;;var copy = person;console.log(person === copy); // true\n\n변수 person과 copy는 {name:’Lee’} 객체 프로퍼티들의 주소가 담겨있는 메모리 공간의 메모리 주소를 저장한다. 그러므로 같은 참조값(주소값)을 비교하고 있기 때문에 일치 비교 연산자가 true가 나왔다.\n\n객체타입의 얕은복사객체를 spread 문법을 사용하여 얕은복사를 해보자.\n12345678910111213141516171819202122232425262728let person = &#123;  name: &quot;yiju&quot;,  fruit: &#123;    1: &quot;peach&quot;,    2: &quot;strawberry&quot;,  &#125;,&#125;;let someone = &#123; ...person &#125;;// 두 객체가 같은지 비교console.log(person === someone); // false// 객체의 프로퍼티 비교console.log(person.name === someone.name); // trueconsole.log(person.fruit === someone.fruit); // true// 1. 원시타입의 값을 변경했을 경우person.name = &quot;minseok&quot;;console.log(person); // &#123;name: &#x27;minseok&#x27;, fruit: &#123;…&#125;&#125;console.log(someone); // &#123;name: &#x27;yiju&#x27;, fruit: &#123;…&#125;&#125;// 2. 객체타입의 값을 변경했을 경우person.fruit[&quot;1&quot;] = &quot;watermelon&quot;;console.log(person); // fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;console.log(someone); // fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;\n\n변수 person의 원시타입의 값을 수정하였을 때, 서로의 원시타입의 값은 공유하지 않는다. 하지만 객체타입의 값을 바꾼 경우 서로의 객체타입의 값을 공유하는 모습을 볼 수 있다.\n\n왜 그럴까? 앞서 언급한 내용으로 깊게 파헤쳐보자.\n\n\nperson, someone은 일치하지 않으니 서로 다른 주소값을 갖는다. 각각의 주소는 javascript &#123;name:&#39;yiju&#39;,fruit:&#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;&#125;  객체 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다.\n\n예를 들면 name 식별자가 가리키는 주소, fruit 식별자가 가리키는 주소 이런식으로 프로퍼티의 주소들을 담고 있다.\n여기서 name 식별자는 원시타입의 값을 가리키는 메모리 주소를 저장한다. javascript person.name = &#39;minseok&#39; 을 실행하면 person.name과 someone.name이 서로 다른 주소값을 갖게된다.\n\nfruit의 식별자 주소는 javascript &#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125; 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다. person.fruit와 someone.fruit가 서로 같다(메모리 주소가 같다). 즉, fruit 프로퍼티들의 주소가 담긴 메모리 공간을 가리키는 메모리 주소가 같다.\n\n그리하여 javascript fruit[&#39;1&#39;] = &#39;watermelon&#39;  로 fruit 프로퍼티인 1을 수정하면 식별자인 1이 가리키는 메모리 주소가 바뀌게 되고 person과 someone 식별자가 식별자 1을 포함하는 프로퍼티들의 주소를 담은 메모리 공간을 가리키는 메모리 주소는 변하지 않으므로 서로 공유하게 된다.\n\n객체타입의 깊은복사객체타입의 깊은복사는 JSON.parse, JSON.stringify 메서드를 사용하여 구현할 수도 있고 lodash 라는 라이브러리를 사용한다.\n\n하지만 JSON.stringify 방식으로는 함수(메서드)를 복사할 수 없기 때문에 재귀를 사용하거나 실무에선 라이브러리를 사용한다.\n\nlodash 방법12345678const o = &#123; x: &#123; y: 1 &#125; &#125;;const _ = require(&quot;lodash&quot;);const c2 = _.cloneDeep(o);// 객체비교console.log(c2 === o); // falseconsole.log(c2.x === o.x); // false\n\nJSON 방법12345678910const a = &#123;  b: 1,  c: &#123;    d: 2,  &#125;,&#125;;let b = JSON.parse(JSON.stringify(a));b.c.d = 4;console.log(a); // &#123; b: 1, c: &#123; d: 2 &#125; &#125;console.log(b); // &#123; b: 1, c: &#123; d: 4 &#125; &#125;\n\n\n소감자바스크립트 DeepDive 책을 읽으면서 팀원들과 각자 공부한 내용을 말로 풀어서 설명하다보니 내가 무엇이 부족한지 알 수 있었고 내가 모르거나 제대로 알지 못하던 부분을 확실히 알고 이렇게 TIL까지 작성하면서 정리하니 기억에 오래 남을 것 같다.\n","dateCreated":"2023-03-03T10:50:04+09:00","dateModified":"2023-03-03T10:50:35+09:00","datePublished":"2023-03-03T10:50:04+09:00","description":"","headline":"원시타입과 객체타입","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"}</script>
     <meta name="description" content="원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자. 원시타입과 객체타입 원시타입1. 원시타입의 값원시타입의 값은 변경 불가능한 값이다. 읽기전용이다. 12345var str &#x3D; &quot;hello&quot;;str[0] &#x3D; &quot;H&quot;;console.l">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="원시타입과 객체타입">
-<meta property="og:url" content="https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/index.html">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
 <meta property="og:description" content="원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자. 원시타입과 객체타입 원시타입1. 원시타입의 값원시타입의 값은 변경 불가능한 값이다. 읽기전용이다. 12345var str &#x3D; &quot;hello&quot;;str[0] &#x3D; &quot;H&quot;;console.l">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2022-08-10T08:05:01.000Z">
-<meta property="article:modified_time" content="2022-11-18T08:22:02.937Z">
+<meta property="article:published_time" content="2023-03-03T01:50:04.000Z">
+<meta property="article:modified_time" content="2023-03-03T01:50:35.151Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="loco9939">
 <meta property="article:tag" content="javascript">
@@ -333,15 +333,15 @@
     
     
         <div class="post-meta">
-    <time datetime="2022-08-10T17:05:01+09:00">
+    <time datetime="2023-03-03T10:50:04+09:00">
 	
-		    2022/08/10
+		    2023/03/03
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/Javascript/">Javascript</a>
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
 
 
     
@@ -424,7 +424,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/11/Javascript/%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/"
+                    href="/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"
                     data-tooltip="함수"
                     aria-label="이전: 함수"
                 >
@@ -438,9 +438,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/"
-                    data-tooltip="순열알고리즘과 백트래킹"
-                    aria-label="다음: 순열알고리즘과 백트래킹"
+                    href="/2023/03/03/JavaScript/%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85/"
+                    data-tooltip="데이터 타입"
+                    aria-label="다음: 데이터 타입"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -465,7 +465,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -478,7 +478,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -491,7 +491,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -539,7 +539,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/11/Javascript/%E1%84%92%E1%85%A1%E1%86%B7%E1%84%89%E1%85%AE/"
+                    href="/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/"
                     data-tooltip="함수"
                     aria-label="이전: 함수"
                 >
@@ -553,9 +553,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/09/Algorithm/%EC%88%9C%EC%97%B4%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EA%B3%BC-%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/"
-                    data-tooltip="순열알고리즘과 백트래킹"
-                    aria-label="다음: 순열알고리즘과 백트래킹"
+                    href="/2023/03/03/JavaScript/%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85/"
+                    data-tooltip="데이터 타입"
+                    aria-label="다음: 데이터 타입"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -580,7 +580,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -593,7 +593,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -606,7 +606,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -640,7 +640,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -653,7 +653,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -666,7 +666,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/08/10/Javascript/%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%89%E1%85%B5%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%80%E1%85%AA%20%E1%84%80%E1%85%A2%E1%86%A8%E1%84%8E%E1%85%A6%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B8/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
