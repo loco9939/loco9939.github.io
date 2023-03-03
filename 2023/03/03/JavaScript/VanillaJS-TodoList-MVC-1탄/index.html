@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/03/javascript/vanillajs-todolist-mvc-1탄/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>VanillaJS TodoList(MVC)-1탄 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자.\n이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다.\nHTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko&quot;&gt;  &lt;head&gt;    &lt;meta charset=&quot;UTF-8&quot; /&gt;    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;    &lt;title&gt;MVC - TodoList&lt;/title&gt;    &lt;style&gt;      .todo-list &#123;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-filters &#123;        display: flex;        gap: 15px;        list-style-type: none;        padding-inline-start: 0;      &#125;      .todo-list input:checked + span &#123;        text-decoration: line-through;      &#125;      .active &#123;        text-decoration: underline;      &#125;    &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;    &lt;input type=&quot;text&quot; class=&quot;todo-input&quot; /&gt;    &lt;ul class=&quot;todo-list&quot;&gt;&lt;/ul&gt;    &lt;ul class=&quot;todo-filters&quot;&gt;      &lt;li id=&quot;all&quot; class=&quot;active&quot;&gt;All&lt;/li&gt;      &lt;li id=&quot;completed&quot;&gt;Completed&lt;/li&gt;      &lt;li id=&quot;active&quot;&gt;Active&lt;/li&gt;    &lt;/ul&gt;  &lt;/body&gt;&lt;/html&gt;\n\n\n우선 정적인 요소와 동적인 요소를 구분지어서 HTML 구조를 설계한다.\n\n동적인 todo 요소를 추가할 것이고 그 외에 항목들은 정적인 요소들이다.\nJavascript1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071let todos = [];const $todoInput = document.querySelector(&quot;.todo-input&quot;);const $todoList = document.querySelector(&quot;.todo-list&quot;);const generateNextTodoId = () =&gt;  Math.max(...todos.map((todo) =&gt; todo.id), 0) + 1;const render = (todos) =&gt; &#123;  $todoList.innerHTML = todos    .map(      (&#123; id, content, completed &#125;) =&gt;        `&lt;li id=&quot;$&#123;id&#125;&quot;&gt;          &lt;input type=&quot;checkbox&quot; $&#123;completed ? &quot;checked&quot; : &quot;&quot;&#125; /&gt;          &lt;span&gt;$&#123;content&#125;&lt;/span&gt;          &lt;button&gt;X&lt;/button&gt;        &lt;/li&gt;`    )    .join(&quot;&quot;);&#125;;const setTodos = (newTodos) =&gt; &#123;  todos = newTodos;  render(todos);&#125;;const fetchTodos = () =&gt; &#123;  setTodos([    &#123; id: 3, content: &quot;일찍 일어나기&quot;, completed: false &#125;,    &#123; id: 2, content: &quot;공부하기&quot;, completed: false &#125;,    &#123; id: 1, content: &quot;저녁먹기&quot;, completed: false &#125;,  ]);&#125;;const addTodo = (content) =&gt; &#123;  todos = [&#123; id: generateNextTodoId(), content, completed: false &#125;, ...todos];  setTodos(todos);&#125;;const toggleCompleted = (id) =&gt; &#123;  todos = todos.map((todo) =&gt;    todo.id === +id ? &#123; ...todo, completed: !todo.completed &#125; : todo  );  setTodos(todos);&#125;;const removeTodo = (id) =&gt; &#123;  todos = todos.filter((todo) =&gt; todo.id !== +id);  setTodos(todos);&#125;;window.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; &#123;  fetchTodos();&#125;);$todoInput.addEventListener(&quot;keyup&quot;, (e) =&gt; &#123;  const content = $todoInput.value.trim();  if (e.key !== &quot;Enter&quot; || content === &quot;&quot;) return;  addTodo(content);  $todoInput.value = &quot;&quot;;&#125;);$todoList.addEventListener(&quot;change&quot;, (e) =&gt; &#123;  toggleCompleted(e.target.parentNode.id);&#125;);$todoList.addEventListener(&quot;click&quot;, (e) =&gt; &#123;  if (!e.target.matches(&quot;button&quot;)) return;  removeTodo(e.target.parentNode.id);&#125;);\n\n\n화면을 나타내는 부분을 View\n\n상태(데이터)와 상태를 변경하는 메서드를 Model\n\n화면으로 부터 받은 이벤틑 객체를 가지고 Model의 함수를 호출하여 상태를 변경하는 Controller\n\n\n크게 3가지 역할로 구분하여 애플리케이션을 바라보자.\n\n단, 너무 이 틀에 강박관념을 갖지 말길 바란다. 이러한 큰 틀이 있는 것일 뿐 100% 이 틀에 맞게 구분하는 것을 불가능하다.\n\n","dateCreated":"2023-03-03T11:41:06+09:00","dateModified":"2023-03-03T11:43:43+09:00","datePublished":"2023-03-03T11:41:06+09:00","description":"","headline":"VanillaJS TodoList(MVC)-1탄","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"}</script>
+    <meta name="description" content="MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자. 이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다. HTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE h">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="VanillaJS TodoList(MVC)-1탄">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="MVC 패턴을 적용시킨 TodoListMVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자. 이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다. HTML, CSS12345678910111213141516171819202122232425262728293031323334353637383940&lt;!DOCTYPE h">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-03-03T02:41:06.000Z">
+<meta property="article:modified_time" content="2023-03-03T02:43:43.647Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            VanillaJS TodoList(MVC)-1탄
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-03T11:41:06+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="MVC-패턴을-적용시킨-TodoList"><a href="#MVC-패턴을-적용시킨-TodoList" class="headerlink" title="MVC 패턴을 적용시킨 TodoList"></a>MVC 패턴을 적용시킨 TodoList</h1><p>MVC 패턴을 적용 시킨 TodoList를 달달 외울 정도로 손에 익혀두자.</p>
+<p>이를 기본으로 앞으로 애플리케이션을 만들때 두고두고 유용하게 쓰일 것이다.</p>
+<h2 id="HTML-CSS"><a href="#HTML-CSS" class="headerlink" title="HTML, CSS"></a>HTML, CSS</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;ko&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>MVC - TodoList<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-class">.todo-list</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">list-style-type</span>: none;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">padding-inline-start</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-class">.todo-filters</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">gap</span>: <span class="number">15px</span>;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">list-style-type</span>: none;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">padding-inline-start</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-class">.todo-list</span> <span class="selector-tag">input</span><span class="selector-pseudo">:checked</span> + <span class="selector-tag">span</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">text-decoration</span>: line-through;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-class">.active</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">text-decoration</span>: underline;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">class</span>=<span class="string">&quot;todo-input&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;todo-list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;todo-filters&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;all&quot;</span> <span class="attr">class</span>=<span class="string">&quot;active&quot;</span>&gt;</span>All<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;completed&quot;</span>&gt;</span>Completed<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;active&quot;</span>&gt;</span>Active<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>우선 정적인 요소와 동적인 요소를 구분지어서 HTML 구조를 설계한다.</li>
+</ol>
+<p>동적인 todo 요소를 추가할 것이고 그 외에 항목들은 정적인 요소들이다.</p>
+<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> todos = [];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> $todoInput = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.todo-input&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> $todoList = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.todo-list&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">generateNextTodoId</span> = (<span class="params"></span>) =&gt;</span><br><span class="line">  <span class="title class_">Math</span>.<span class="title function_">max</span>(...todos.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">id</span>), <span class="number">0</span>) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">todos</span>) =&gt; &#123;</span><br><span class="line">  $todoList.<span class="property">innerHTML</span> = todos</span><br><span class="line">    .<span class="title function_">map</span>(</span><br><span class="line">      <span class="function">(<span class="params">&#123; id, content, completed &#125;</span>) =&gt;</span></span><br><span class="line">        <span class="string">`&lt;li id=&quot;<span class="subst">$&#123;id&#125;</span>&quot;&gt;</span></span><br><span class="line"><span class="string">          &lt;input type=&quot;checkbox&quot; <span class="subst">$&#123;completed ? <span class="string">&quot;checked&quot;</span> : <span class="string">&quot;&quot;</span>&#125;</span> /&gt;</span></span><br><span class="line"><span class="string">          &lt;span&gt;<span class="subst">$&#123;content&#125;</span>&lt;/span&gt;</span></span><br><span class="line"><span class="string">          &lt;button&gt;X&lt;/button&gt;</span></span><br><span class="line"><span class="string">        &lt;/li&gt;`</span></span><br><span class="line">    )</span><br><span class="line">    .<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setTodos</span> = (<span class="params">newTodos</span>) =&gt; &#123;</span><br><span class="line">  todos = newTodos;</span><br><span class="line">  <span class="title function_">render</span>(todos);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">fetchTodos</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setTodos</span>([</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">content</span>: <span class="string">&quot;일찍 일어나기&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">content</span>: <span class="string">&quot;공부하기&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">content</span>: <span class="string">&quot;저녁먹기&quot;</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  ]);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">content</span>) =&gt; &#123;</span><br><span class="line">  todos = [&#123; <span class="attr">id</span>: <span class="title function_">generateNextTodoId</span>(), content, <span class="attr">completed</span>: <span class="literal">false</span> &#125;, ...todos];</span><br><span class="line">  <span class="title function_">setTodos</span>(todos);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">toggleCompleted</span> = (<span class="params">id</span>) =&gt; &#123;</span><br><span class="line">  todos = todos.<span class="title function_">map</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span></span><br><span class="line">    todo.<span class="property">id</span> === +id ? &#123; ...todo, <span class="attr">completed</span>: !todo.<span class="property">completed</span> &#125; : todo</span><br><span class="line">  );</span><br><span class="line">  <span class="title function_">setTodos</span>(todos);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">removeTodo</span> = (<span class="params">id</span>) =&gt; &#123;</span><br><span class="line">  todos = todos.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">id</span> !== +id);</span><br><span class="line">  <span class="title function_">setTodos</span>(todos);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">fetchTodos</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$todoInput.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> content = $todoInput.<span class="property">value</span>.<span class="title function_">trim</span>();</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Enter&quot;</span> || content === <span class="string">&quot;&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line">  <span class="title function_">addTodo</span>(content);</span><br><span class="line">  $todoInput.<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$todoList.<span class="title function_">addEventListener</span>(<span class="string">&quot;change&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">toggleCompleted</span>(e.<span class="property">target</span>.<span class="property">parentNode</span>.<span class="property">id</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$todoList.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;button&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">removeTodo</span>(e.<span class="property">target</span>.<span class="property">parentNode</span>.<span class="property">id</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>화면을 나타내는 부분을 View</p>
+</li>
+<li><p>상태(데이터)와 상태를 변경하는 메서드를 Model</p>
+</li>
+<li><p>화면으로 부터 받은 이벤틑 객체를 가지고 Model의 함수를 호출하여 상태를 변경하는 Controller</p>
+</li>
+</ol>
+<p>크게 3가지 역할로 구분하여 애플리케이션을 바라보자.</p>
+<blockquote>
+<p>단, 너무 이 틀에 강박관념을 갖지 말길 바란다. 이러한 큰 틀이 있는 것일 뿐 100% 이 틀에 맞게 구분하는 것을 불가능하다.</p>
+</blockquote>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-2%ED%83%84/"
+                    data-tooltip="VanillaJS TodoList(MVC)-2탄"
+                    aria-label="이전: VanillaJS TodoList(MVC)-2탄"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/Callback-Promise-async-await-%EC%98%88%EC%A0%9C/"
+                    data-tooltip="Callback, Promise, async/await 예제"
+                    aria-label="다음: Callback, Promise, async/await 예제"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-2%ED%83%84/"
+                    data-tooltip="VanillaJS TodoList(MVC)-2탄"
+                    aria-label="이전: VanillaJS TodoList(MVC)-2탄"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/Callback-Promise-async-await-%EC%98%88%EC%A0%9C/"
+                    data-tooltip="Callback, Promise, async/await 예제"
+                    aria-label="다음: Callback, Promise, async/await 예제"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/VanillaJS-TodoList-MVC-1%ED%83%84/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

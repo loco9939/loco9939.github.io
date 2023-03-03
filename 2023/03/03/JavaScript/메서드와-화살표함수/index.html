@@ -1,0 +1,764 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/03/javascript/메서드와-화살표함수/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>메서드와 화살표함수 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"ES6 이후 메서드ES6 이전의 함수는 사용 목적에 따라 일반함수로 호출이 가능했고 생성자 함수로 호출이 가능했다. 즉, ES6 이전의 모든 함수는 callable이면서 constructor다.\n123[1, 2, 3].map(function (item) &#123;  return item * 2;&#125;); // [ 2, 4, 6 ]\n\n\n심지어 콜백함수도 constructor이기 때문에 불필요한 프로토타입 객체를 생성한다.\n\n이처럼 ES6 이전의 모든 함수는 사용 목적에 따라 명확한 구분이 없어 호출방식에 제약이 없고 생성자 함수로 호출되지 않아도 프로토타입 객체를 생성한다. 이는 혼란스러워 실수를 유발하고 성능에도 좋지 않다.\n\nES6 이후부터는 오류에 엄격하도록 만들고 있다. ⇒ 오류를 발생시킬 여지가 있는 것들은 그 부분을 개선해주고 있다.\n\nES6 사양에서 메서드는 메서드 축약표현으로 정의된 함수만을 의미한다.\n⇒ 인스턴스 생성할 수 없는 non-constructor이다.\n\n인스턴스 생성 불가\nprototype 프로퍼티 없다\n프로토타입 생성 불가\n\nES6 메서드는 자신을 바인딩한 객체를 가리키는 내부 슬롯 [[HomeObject]]를 갖는다.\n함수 사용 목적에 따라 구분한 ES6에서의 함수이를 해결하기 위해 ES6에서는 함수를 사용 목적에 따라 3가지로 구분하였다.\n\n\n\nES6 함수의 구분\nconstructor\nprototype\nsuper\narguments\n\n\n\n일반함수\nO\nO\nX\nO\n\n\n메서드\nX\nX\nO\nO\n\n\n화살표 함수\nX\nX\nX\nX\n\n\n화살표 함수function 키워드 함수보다 표현만 간단한 것이 아니라 내부 동작도 간략한다.\n주로 콜백 함수 내부에서 this가 전역 객체를 가리키는 문제를 해결하기 위해 사용한다.\n화살표 함수 정의함수 선언문 안되고 함수 표현식으로만 정의 가능하다.\n12345const multiply = (x, y) =&gt; x * y;const multiply = (x) =&gt; x * y; // 매개변수 1개면 소괄호 생략 가능const multiply = () =&gt; x * y; // 매개변수 없으면 소괄호 생략 불가\n\n화살표 함수 몸체 정의함수 몸체 감싸는 {} 중괄호를 생략한 경우 표현식이 아닌 문일 경우 에러를 발생 시킨다.\n123456789101112// concise bodyconst power = x =&gt; x ** 2;power(2); // -&gt; 4// 위 표현은 다음과 동일하다.// block bodyconst power = x =&gt; &#123; return x ** 2; &#125;;const arrow = () =&gt; const x = 1; // SyntaxError: Unexpected token &#x27;const&#x27;// 위 표현은 다음과 같이 해석된다.const arrow = () =&gt; &#123; return const x = 1; &#125;;\n\n객체 리터럴을 반환하는 경우 소괄호로 감싸줘야한다.\n1234567const create = (id, content) =&gt; (&#123; id, content &#125;);create(1, &quot;JavaScript&quot;); // -&gt; &#123;id: 1, content: &quot;JavaScript&quot;&#125;// 위 표현은 다음과 동일하다.const create = (id, content) =&gt; &#123;  return &#123; id, content &#125;;&#125;;\n\n화살표 함수와 일반함수 차이\n화살표 함수는 non-constructor로, 인스턴스 생성할 수 없다.\n\n\n인스턴스 생성 불가\nprototype 프로퍼티 없다\n프로토타입 생성 불가\n\n\n화살표 함수는 중복된 매개변수 이름 선언시 에러 발생\n\n12const arrow = (a, a) =&gt; a + a;// SyntaxError: Duplicate parameter name not allowed in this context\n\n\n화살표 함수는 this, arguments, super, new.target 바인딩 갖지 않는다.\n\n따라서 화살표 함수 내부에서 위의 것들을 참조할 때 스코프 체인상 가장 가까운 상위 함수 중 화살표 함수가 아닌 함수의 this, arguements, super, new.target을 참조한다.\n주의사항 : 메서드를 화살표 함수로 정의하지 않기단, 메서드를 화살표 함수로 정의하면 안된다.\n12345678910// Badconst person = &#123;  name: &quot;Lee&quot;,  sayHi: () =&gt; console.log(`Hi $&#123;this.name&#125;`),&#125;;// sayHi 프로퍼티에 할당된 화살표 함수 내부의 this는 상위 스코프인 전역의 this가 가리키는// 전역 객체를 가리키므로 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는// window.name과 같다. 전역 객체 window에는 빌트인 프로퍼티 name이 존재한다.person.sayHi(); // Hi\n\n메서드 정의할 때는 메서드 축약 표현을 사용하는 것이 좋다.\n123456789// Goodconst person = &#123;  name: &quot;Lee&quot;,  sayHi() &#123;    console.log(`Hi $&#123;this.name&#125;`);  &#125;,&#125;;person.sayHi(); // Hi Lee\n\n\n메서드 내부에서 this는 메서드를 호출한 인스턴스에 바인딩된다.\n\n12345678910// Badfunction Person(name) &#123;  this.name = name;&#125;Person.prototype.sayHi = () =&gt; console.log(`Hi $&#123;this.name&#125;`);const person = new Person(&quot;Lee&quot;);// 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는 window.name과 같다.person.sayHi(); // Hi\n\n\n프로토타입 객체의 프로퍼티에 화살표 함수를 사용하는 것도 문제가 된다.\n프로퍼티 동작 추가 시에는 ES6 메서드 정의 사용할 수 없으므로 일반함수로 정의해야한다.\n\n","dateCreated":"2023-03-03T11:35:17+09:00","dateModified":"2023-03-03T11:35:38+09:00","datePublished":"2023-03-03T11:35:17+09:00","description":"","headline":"메서드와 화살표함수","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"}</script>
+    <meta name="description" content="ES6 이후 메서드ES6 이전의 함수는 사용 목적에 따라 일반함수로 호출이 가능했고 생성자 함수로 호출이 가능했다. 즉, ES6 이전의 모든 함수는 callable이면서 constructor다. 123[1, 2, 3].map(function (item) &amp;#123;  return item * 2;&amp;#125;); &#x2F;&#x2F; [ 2, 4, 6 ]   심지어 콜백함수">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="메서드와 화살표함수">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="ES6 이후 메서드ES6 이전의 함수는 사용 목적에 따라 일반함수로 호출이 가능했고 생성자 함수로 호출이 가능했다. 즉, ES6 이전의 모든 함수는 callable이면서 constructor다. 123[1, 2, 3].map(function (item) &amp;#123;  return item * 2;&amp;#125;); &#x2F;&#x2F; [ 2, 4, 6 ]   심지어 콜백함수">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-03-03T02:35:17.000Z">
+<meta property="article:modified_time" content="2023-03-03T02:35:38.090Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            메서드와 화살표함수
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-03T11:35:17+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="ES6-이후-메서드"><a href="#ES6-이후-메서드" class="headerlink" title="ES6 이후 메서드"></a>ES6 이후 메서드</h1><p>ES6 이전의 함수는 사용 목적에 따라 일반함수로 호출이 가능했고 생성자 함수로 호출이 가능했다. <strong>즉, ES6 이전의 모든 함수는 callable이면서 constructor다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">map</span>(<span class="keyword">function</span> (<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> item * <span class="number">2</span>;</span><br><span class="line">&#125;); <span class="comment">// [ 2, 4, 6 ]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>심지어 콜백함수도 constructor이기 때문에 불필요한 프로토타입 객체를 생성한다.</li>
+</ul>
+<p>이처럼 ES6 이전의 모든 함수는 사용 목적에 따라 명확한 구분이 없어 호출방식에 제약이 없고 생성자 함수로 호출되지 않아도 프로토타입 객체를 생성한다. 이는 혼란스러워 실수를 유발하고 성능에도 좋지 않다.</p>
+<ul>
+<li>ES6 이후부터는 오류에 엄격하도록 만들고 있다. ⇒ 오류를 발생시킬 여지가 있는 것들은 그 부분을 개선해주고 있다.</li>
+</ul>
+<p><strong>ES6 사양에서 메서드는 <span style="color:red">메서드 축약표현으로 정의된 함수만을 의미</span>한다.</strong></p>
+<p>⇒ <strong>인스턴스 생성할 수 없는 non-constructor이다.</strong></p>
+<ul>
+<li>인스턴스 생성 불가</li>
+<li>prototype 프로퍼티 없다</li>
+<li>프로토타입 생성 불가</li>
+</ul>
+<p><strong>ES6 메서드는 자신을 바인딩한 객체를 가리키는 내부 슬롯 [[HomeObject]]를 갖는다.</strong></p>
+<h1 id="함수-사용-목적에-따라-구분한-ES6에서의-함수"><a href="#함수-사용-목적에-따라-구분한-ES6에서의-함수" class="headerlink" title="함수 사용 목적에 따라 구분한 ES6에서의 함수"></a>함수 사용 목적에 따라 구분한 ES6에서의 함수</h1><p>이를 해결하기 위해 ES6에서는 함수를 사용 목적에 따라 3가지로 구분하였다.</p>
+<table>
+<thead>
+<tr>
+<th>ES6 함수의 구분</th>
+<th>constructor</th>
+<th>prototype</th>
+<th>super</th>
+<th>arguments</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>일반함수</td>
+<td>O</td>
+<td>O</td>
+<td>X</td>
+<td>O</td>
+</tr>
+<tr>
+<td>메서드</td>
+<td>X</td>
+<td>X</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>화살표 함수</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+</tbody></table>
+<h1 id="화살표-함수"><a href="#화살표-함수" class="headerlink" title="화살표 함수"></a>화살표 함수</h1><p>function 키워드 함수보다 표현만 간단한 것이 아니라 내부 동작도 간략한다.</p>
+<p>주로 콜백 함수 내부에서 this가 전역 객체를 가리키는 문제를 해결하기 위해 사용한다.</p>
+<h2 id="화살표-함수-정의"><a href="#화살표-함수-정의" class="headerlink" title="화살표 함수 정의"></a>화살표 함수 정의</h2><p>함수 선언문 안되고 함수 표현식으로만 정의 가능하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params">x, y</span>) =&gt; x * y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params">x</span>) =&gt; x * y; <span class="comment">// 매개변수 1개면 소괄호 생략 가능</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">multiply</span> = (<span class="params"></span>) =&gt; x * y; <span class="comment">// 매개변수 없으면 소괄호 생략 불가</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="화살표-함수-몸체-정의"><a href="#화살표-함수-몸체-정의" class="headerlink" title="화살표 함수 몸체 정의"></a>화살표 함수 몸체 정의</h2><p>함수 몸체 감싸는 {} 중괄호를 생략한 경우 표현식이 아닌 문일 경우 에러를 발생 시킨다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// concise body</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">power</span> = x =&gt; x ** <span class="number">2</span>;</span><br><span class="line"><span class="title function_">power</span>(<span class="number">2</span>); <span class="comment">// -&gt; 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 동일하다.</span></span><br><span class="line"><span class="comment">// block body</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">power</span> = x =&gt; &#123; <span class="keyword">return</span> x ** <span class="number">2</span>; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; <span class="keyword">const</span> x = <span class="number">1</span>; <span class="comment">// SyntaxError: Unexpected token &#x27;const&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 같이 해석된다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; &#123; <span class="keyword">return</span> <span class="keyword">const</span> x = <span class="number">1</span>; &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>객체 리터럴을 반환하는 경우 소괄호로 감싸줘야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">create</span> = (<span class="params">id, content</span>) =&gt; (&#123; id, content &#125;);</span><br><span class="line"><span class="title function_">create</span>(<span class="number">1</span>, <span class="string">&quot;JavaScript&quot;</span>); <span class="comment">// -&gt; &#123;id: 1, content: &quot;JavaScript&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 표현은 다음과 동일하다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">create</span> = (<span class="params">id, content</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; id, content &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="화살표-함수와-일반함수-차이"><a href="#화살표-함수와-일반함수-차이" class="headerlink" title="화살표 함수와 일반함수 차이"></a>화살표 함수와 일반함수 차이</h2><ol>
+<li>화살표 함수는 non-constructor로, 인스턴스 생성할 수 없다.</li>
+</ol>
+<ul>
+<li>인스턴스 생성 불가</li>
+<li>prototype 프로퍼티 없다</li>
+<li>프로토타입 생성 불가</li>
+</ul>
+<ol>
+<li>화살표 함수는 중복된 매개변수 이름 선언시 에러 발생</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params">a, a</span>) =&gt; a + a;</span><br><span class="line"><span class="comment">// SyntaxError: Duplicate parameter name not allowed in this context</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>화살표 함수는 this, arguments, super, <a target="_blank" rel="noopener" href="http://new.target/">new.target</a> 바인딩 갖지 않는다.</li>
+</ol>
+<p>따라서 화살표 함수 내부에서 위의 것들을 참조할 때 스코프 체인상 가장 가까운 <strong>상위 함수 중 화살표 함수가 아닌 함수의 this, arguements, super, new.target을 참조한다.</strong></p>
+<h3 id="주의사항-메서드를-화살표-함수로-정의하지-않기"><a href="#주의사항-메서드를-화살표-함수로-정의하지-않기" class="headerlink" title="주의사항 : 메서드를 화살표 함수로 정의하지 않기"></a>주의사항 : 메서드를 화살표 함수로 정의하지 않기</h3><p>단, 메서드를 화살표 함수로 정의하면 안된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Bad</span></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="attr">sayHi</span>: <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// sayHi 프로퍼티에 할당된 화살표 함수 내부의 this는 상위 스코프인 전역의 this가 가리키는</span></span><br><span class="line"><span class="comment">// 전역 객체를 가리키므로 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는</span></span><br><span class="line"><span class="comment">// window.name과 같다. 전역 객체 window에는 빌트인 프로퍼티 name이 존재한다.</span></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi</span></span><br></pre></td></tr></table></figure>
+
+<p>메서드 정의할 때는 메서드 축약 표현을 사용하는 것이 좋다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Good</span></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi Lee</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>메서드 내부에서 this는 메서드를 호출한 인스턴스에 바인딩된다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Bad</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHi</span> = <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Lee&quot;</span>);</span><br><span class="line"><span class="comment">// 이 예제를 브라우저에서 실행하면 this.name은 빈 문자열을 갖는 window.name과 같다.</span></span><br><span class="line">person.<span class="title function_">sayHi</span>(); <span class="comment">// Hi</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>프로토타입 객체의 프로퍼티에 화살표 함수를 사용하는 것도 문제가 된다.</li>
+<li>프로퍼티 동작 추가 시에는 <strong>ES6 메서드 정의 사용할 수 없으므로 일반함수로 정의해야한다.</strong></li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/%EC%9D%B4%ED%84%B0%EB%9F%AC%EB%B8%94%EA%B3%BC-%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0/"
+                    data-tooltip="이터러블과 이터레이터"
+                    aria-label="이전: 이터러블과 이터레이터"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/%EC%83%81%EC%86%8D/"
+                    data-tooltip="상속"
+                    aria-label="다음: 상속"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/%EC%9D%B4%ED%84%B0%EB%9F%AC%EB%B8%94%EA%B3%BC-%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0/"
+                    data-tooltip="이터러블과 이터레이터"
+                    aria-label="이전: 이터러블과 이터레이터"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/03/JavaScript/%EC%83%81%EC%86%8D/"
+                    data-tooltip="상속"
+                    aria-label="다음: 상속"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/03/JavaScript/%EB%A9%94%EC%84%9C%EB%93%9C%EC%99%80-%ED%99%94%EC%82%B4%ED%91%9C%ED%95%A8%EC%88%98/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -318,7 +318,7 @@
                 <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -326,23 +326,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
-                            aria-label=": DOM 컨트롤(ref)"
+                            href="/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"
+                            aria-label=": HTMLElement 조작과 타입 좁히기"
                         >
-                            DOM 컨트롤(ref)
+                            HTMLElement 조작과 타입 좁히기
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2022-11-12T16:59:38+09:00">
+    <time datetime="2022-11-22T21:21:38+09:00">
 	
-		    2022/11/12
+		    2022/11/22
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/React/">React</a>
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
 
 
     
@@ -350,48 +350,17 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h1 id="🕹-리액트-DOM-컨트롤"><a href="#🕹-리액트-DOM-컨트롤" class="headerlink" title="🕹 리액트 DOM 컨트롤"></a>🕹 리액트 DOM 컨트롤</h1><p>리액트 앱은 대부분 리액트에 의해 컨트롤되지만 <strong>예외인 상황이 있다.</strong> 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 <strong>리액트가 할 수 없는 일이다.</strong></p>
-<p>이러한 일을 <red>리액트 사이드 이펙트</red>라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.</p>
-<p>사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.</p>
-<ul>
-<li>ref(참조 설정)<ul>
-<li><strong>값이 변경되어도 리액트가 재렌더링하지 않는다.</strong></li>
-</ul>
-</li>
-<li>callback ref(ref 속성에 연결된 함수)</li>
-<li>React.createRef(참조 객체 생성)</li>
-<li>React.forwardRef(참조 객체 전달)<ul>
-<li>범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.</li>
-<li>외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.</li>
-<li>domRef를 통해서 전달할 수도 있다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="💭-예시"><a href="#💭-예시" class="headerlink" title="💭 예시"></a>💭 예시</h2><p>컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">TiltCard</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="comment">// DOM 요소 참조를 목적으로 Ref를 생성합니다.</span></span><br><span class="line">  tiltRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>); <span class="comment">// &#123; current:null &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버</span></span><br><span class="line">  #cardDomElement = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 최초 마운트 시점 이후 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement = <span class="variable language_">this</span>.<span class="property">tiltRef</span>.<span class="property">current</span>;</span><br><span class="line">    <span class="title class_">VanillaTilt</span>.<span class="title function_">init</span>(<span class="variable language_">this</span>.#cardDomElement);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">addEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 마운트 해제 직전에 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="property">vanillaTilt</span>.<span class="title function_">destroy</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독 해지</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">removeEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; children &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="comment">// 생성된 Ref를 참조하도록 설정합니다.</span></span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.tiltRef&#125;</span> <span class="attr">className</span>=<span class="string">&quot;tiltCard&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>tiltRef에 <strong>DOM 요소를 저장하기 위해 ref를 생성하였다.</strong></li>
-<li>tiltRef DOM 요소 얻기 위해 <strong>“current” 프로퍼티</strong>에 접근하였다.</li>
-<li>tiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.</li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-TypeScript로-HTML-요소-조작하기"><a href="#📌-TypeScript로-HTML-요소-조작하기" class="headerlink" title="📌 TypeScript로 HTML 요소 조작하기"></a>📌 TypeScript로 HTML 요소 조작하기</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.ts</span></span><br><span class="line"><span class="keyword">const</span> title = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;title&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (title <span class="keyword">instanceof</span> <span class="title class_">HTMLElement</span>) &#123;</span><br><span class="line">  title.<span class="property">innerHTML</span> = <span class="string">&quot;제목입니다.&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                     
+                        <a
+                            href="/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": HTMLElement 조작과 타입 좁히기"
+                        >
+                            계속 읽기
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -408,455 +377,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2022/11/11/CS/%F0%9F%A5%81-CORS/"
-                            aria-label=": 🥁 CORS"
+                            href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                            aria-label=": 🏰 useCallback과 useMemo"
                         >
-                            🥁 CORS
+                            🏰 useCallback과 useMemo
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2022-11-11T21:00:28+09:00">
+    <time datetime="2022-11-22T19:46:22+09:00">
 	
-		    2022/11/11
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-CORS란"><a href="#📌-CORS란" class="headerlink" title="📌 CORS란?"></a>📌 CORS란?</h1><p>교차 출처 리소스 공유(Cross-Origin Resource Sharing)는 추가 HTTP Header를 사용하여 한 출처에서 실행 중인 애플리케이션이 다른 출처의 선택한 자원에 접근할 수 있는 권한을 부여하도록 <red>브라우저에게 알려준다.</red></p>
-<p><strong>웹 애플리케이션은 리소스가 자신의 출처(도메인, 프로토콜, 포트)와 다를 때, 교차 출처 HTTP 요청을 실행한다.</strong></p>
-<p>ex) <code>https://domain-a.com</code>의 프론트 엔드 JavaScript 코드가 XMLHttpRequest를 사용하여 <code>https://domain-b.com/data.json</code>을 요청하는 경우 보안 상의 이유로 <red>브라우저는 HTTP 요청을 제한한다.</red></p>
-<ul>
-<li>CORS 체제는 브라우저와 서버 간의 안전한 교차 출처 요청 및 데이터 전송을 지원한다.</li>
-<li>CORS 표준에 맞춘다는 것은 서버에서도 새로운 요청과 응답 Header를 처리해야한다.</li>
-</ul>
-<h2 id="🤿-DeepDive"><a href="#🤿-DeepDive" class="headerlink" title="🤿 DeepDive"></a>🤿 DeepDive</h2><p>CORS 표준은 웹 브라우저에서 허용된 출처를 서버에서 새로운 HTTP Header에 추가함으로써 동작한다.</p>
-<h3 id="📮-Simple-Request"><a href="#📮-Simple-Request" class="headerlink" title="📮 Simple Request"></a>📮 Simple Request</h3><p>HTTP 요청 메서드가 GET, POST 일 때 사용한다.</p>
-<ol>
-<li><p>다른 출처끼리 요청을 보낼 때, 요청에 Origin이라는 Header를 추가한다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://loco9939.com:5000</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Origin은 요청하는 쪽의 Scheme, 도메인, 포트가 담겨있다.</strong></li>
-<li>scheme : https</li>
-<li>도메인 : loco9939.com</li>
-<li>포트 : :5000</li>
-</ul>
-</li>
-<li><p>요청 받은 서버는 응답 Header에 지정된 ACAO(Access Control Allow Origin) 정보를 실어서 보낸다.</p>
-</li>
-<li><p>브라우저가 ACAO 정보가 담긴 응답과 요청의 Origin을 비교하여 동일하면 허락한다.</p>
-</li>
-</ol>
-<h3 id="✈️-Preflight"><a href="#✈️-Preflight" class="headerlink" title="✈️ Preflight"></a>✈️ Preflight</h3><p>브라우저가 사전요청을 먼저 보낸 후 서버의 응답을 보고 안전한지 확인한 후 본 요청을 보내는 방식이다. 본 요청은 Simple Request 방식과 동일하다.</p>
-<h2 id="🌈-CORS-오류-해결-방법"><a href="#🌈-CORS-오류-해결-방법" class="headerlink" title="🌈 CORS 오류 해결 방법"></a>🌈 CORS 오류 해결 방법</h2><h3 id="🔨-서버-측"><a href="#🔨-서버-측" class="headerlink" title="🔨 서버 측"></a>🔨 서버 측</h3><ul>
-<li>ACAO(Access Control Allow Origin) 설정하기<ul>
-<li>구체적인 출처 명시하기</li>
-<li>Credentials: <strong>include 옵션 사용한 경우 * 사용한 경우 CORS 에러발생</strong></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PORT</span> = process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = http.<span class="title function_">createServer</span>(<span class="keyword">function</span> (<span class="params">request, response</span>) &#123;</span><br><span class="line">  <span class="comment">// Setting up Headers</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-origin&quot;</span>, <span class="string">&quot;*&quot;</span>); <span class="comment">// 모든 출처(orogin)을 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(</span><br><span class="line">    <span class="string">&quot;Access-Control-Allow-Methods&quot;</span>,</span><br><span class="line">    <span class="string">&quot;GET, POST, OPTIONS, PUT, PATCH, DELETE&quot;</span></span><br><span class="line">  ); <span class="comment">// 모든 HTTP 메서드 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>, <span class="string">&quot;true&quot;</span>); <span class="comment">// 클라이언트와 서버 간에 쿠키 주고받기 허용</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  response.<span class="title function_">writeHead</span>(<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;text/plain&quot;</span> &#125;);</span><br><span class="line">  response.<span class="title function_">end</span>(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">httpServer.<span class="title function_">listen</span>(<span class="variable constant_">PORT</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Server is running at port 3000...&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Access-Control-Allow-origin 헤더 값으로 * 을 사용하면 모든 Origin에서 오는 요청을 허용한다는 의미이므로 당장은 편할 수 있겠지만, 바꿔서 생각하면 정체도 모르는 이상한 출처에서 오는 요청까지 모두 허용하기 때문에 보안은 더 허술해진다. 그러니 가급적이면 귀찮더라도 다음과 같이 출처를 직접 명시해주도록 하자.</p>
-</blockquote>
-<h3 id="👑-클라이언트-측"><a href="#👑-클라이언트-측" class="headerlink" title="👑 클라이언트 측"></a>👑 클라이언트 측</h3><ul>
-<li>Proxy 설정<ul>
-<li>브라우저 요청을 Proxy에서 설정한 주소로 우회하여 전송하는 방법</li>
-<li>라이브러리 사용한다</li>
-<li>개발단계에서만 사용하고 <red>Production 환경에서는 Proxy 처리가 되지 않는다.</red></li>
-</ul>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/11/CS/%F0%9F%A5%81-CORS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/"
-                            aria-label=": ⛳️ MVC, MVP, MVVM 패턴"
-                        >
-                            ⛳️ MVC, MVP, MVVM 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:59:49+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-디자인-패턴이란"><a href="#📌-디자인-패턴이란" class="headerlink" title="📌 디자인 패턴이란?"></a>📌 디자인 패턴이란?</h1><p>디자인 패턴은 애플리케이션내에서 각자 역할에 맞는 코드끼리 분리하여 유지보수성을 높이고 탄탄한 구조를 가진 애플리케이션을 설계할 수 있다.</p>
-<h2 id="✏️-디자인-패턴-장점"><a href="#✏️-디자인-패턴-장점" class="headerlink" title="✏️ 디자인 패턴 장점"></a>✏️ 디자인 패턴 장점</h2><ol>
-<li>검증된 해결책</li>
-</ol>
-<p>디자인 패턴은 소프트웨어 개발의 문제를 해결하는 확실한 접근 방식을 제공한다.</p>
-<ol start="2">
-<li>쉬운 재사용</li>
-</ol>
-<p>일반적으로 필요에 따라 조정가능하며 즉시 사용가능한 솔루션을 반영한다.</p>
-<p><red>다만, 디자인 패턴이 모든 문제의 해결책은 아니다.</red> 패턴의 역할은 솔루션 체계를 제공하고 이를 지원하는 역할을 한다.</p>
-<p>이외의 사소한 문제를 예방할 수 있고 반복을 피하여 파일 크기를 줄일 수 있으며, 개발자간의 소통을 원할하게 하는 장점이 있다.</p>
-<h2 id="🛤-MVC-패턴"><a href="#🛤-MVC-패턴" class="headerlink" title="🛤 MVC 패턴"></a>🛤 MVC 패턴</h2><p>Model + View + Controller를 합친 용어이다.</p>
-<p><img src="/../../images/design/mvc.png" alt="mvc"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>Controller : 사용자의 입력을 받고 처리하는 부분</li>
-</ul>
-<h3 id="동작"><a href="#동작" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션이 들어오면 컨트롤러가 액션 확인하고 모델을 업데이트한다.</li>
-<li>컨트롤러는 모델을 나타낼 뷰를 선택한다.</li>
-<li>뷰는 모델을 이용하여 화면에 나타낸다.</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">참고 - MVC에서 View가 업데이트 되는 방법</span><br><span class="line">- 뷰가 모델을 이용하여 직접 업데이트</span><br><span class="line">- 모델이 뷰에게 알림을 주어 업데이트</span><br><span class="line">- 뷰가 Polling으로 모델의 변경을 주기적으로 감지하여 업데이트</span><br></pre></td></tr></table></figure>
-
-<p><code>polling이란?</code></p>
-<p>하나의 장치가 충돌 회피 또는 동기화를 목적으로 다른 장치의 상태를 주기적으로 검사하여 일정 조건을 만족할 때, 송수신 자료를 처리하는 방식</p>
-<hr>
-<h3 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>컨트롤러는 여러 개의 뷰를 선택할 수 있는 1:n 구조</li>
-<li>보편적이며 단순하다.</li>
-<li>뷰와 모델 사이의 의존성이 높다. (bad~👎)</li>
-</ul>
-<h2 id="🏸-MVP-패턴"><a href="#🏸-MVP-패턴" class="headerlink" title="🏸 MVP 패턴"></a>🏸 MVP 패턴</h2><p>Model + View + Presenter를 합친 용어이다.</p>
-<p><img src="/../../images/design/mvp.png" alt="mvp"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>Presenter : 뷰에서 요청한 정보로 모델을 가공하여 뷰에게 전달해주는 부분(<strong>View, Model을 붙여주는 접착제역할</strong>)</li>
-</ul>
-<h3 id="동작-1"><a href="#동작-1" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션은 뷰를 통해 들어온다.</li>
-<li>뷰는 프레젠터에게 데이터를 요청한다.</li>
-<li>프레젠터는 모델에게 데이터 요청한다.</li>
-<li>모델은 프레젠터에게 요청받은 데이터를 응답한다.</li>
-<li>프레젠터는 뷰에게 데이터를 응답한다.</li>
-<li>뷰가 응답받은 데이터를 화면에 나타낸다.</li>
-</ol>
-<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>프레젠터는 뷰와 모델의 인스턴스를 가지고 있어 둘을 연결하는 접착제 역할</li>
-<li>프레젠터와 뷰는 1:1</li>
-<li>뷰와 모델간의 의존성이 없다. (Good~👍)</li>
-<li>하지만 뷰와 프레젠터의 의존성 높다.</li>
-</ul>
-<h2 id="👑-MVVM-패턴"><a href="#👑-MVVM-패턴" class="headerlink" title="👑 MVVM 패턴"></a>👑 MVVM 패턴</h2><p>Model + View + View Model을 합친 용어이다.</p>
-<p><img src="/../../images/design/mvvm.png" alt="mvvm"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>View Model : 뷰를 표현하기 위해 만든 뷰를 위한 모델</li>
-</ul>
-<h3 id="동작-2"><a href="#동작-2" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션이 뷰를 통해 들어온다.</li>
-<li>뷰에 액션이 들어오면 Command 패턴으로 뷰 모델에 액션을 전달한다.</li>
-<li>뷰 모델은 모델에게 데이터를 요청한다.</li>
-<li>모델은 뷰 모델에게 요청받은 데이터를 응답한다.</li>
-<li>뷰 모델은 응답받은 데이터를 가공하여 저장한다.</li>
-<li>뷰는 뷰 모델과 데이터 바인딩하여 화면에 나타낸다.</li>
-</ol>
-<h3 id="특징-2"><a href="#특징-2" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>Command 패턴과 데이터 바인딩 두가지 패턴을 사용(<strong>뷰와 뷰 모델 사이의 의존성 제거</strong>)</li>
-<li>뷰 모델과 뷰는 1:n</li>
-<li>뷰와 모델사이의 의존성도 없으므로 각 부분은 독립적으로 모듈화하여 개발할 수 있다.</li>
-<li>뷰 모델 설계가 어렵다.</li>
-</ul>
-<p><code>Command패턴이란?</code></p>
-<p>요청을 객체 형태로 캡슐화하여 사용자가 보낸 요청을 나중에 사용할 수 있도록 메서드명, 매개변수 등 요청에 필요한 정보를 저장,로깅, 취소하는 패턴이다.</p>
-<hr>
-<p>참고</p>
-<p><a target="_blank" rel="noopener" href="https://beomy.tistory.com/43">[디자인패턴]MVC,MVP,MVVM 패턴 비교</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/"
-                            aria-label=": 🎡 Flux 패턴"
-                        >
-                            🎡 Flux 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:29:55+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-Flux-패턴"><a href="#📌-Flux-패턴" class="headerlink" title="📌 Flux 패턴"></a>📌 Flux 패턴</h1><p>페이스북이 전통적인 MVC 디자인 패턴이 복잡한 애플리케이션에서 적합하지 않다고 판단하여 새로운 디자인 패턴을 소개한 것이 바로 <red>단방향 데이터 흐름을 갖는 Flux 패턴이다.</red></p>
-<h2 id="🔥-문제점"><a href="#🔥-문제점" class="headerlink" title="🔥 문제점"></a>🔥 문제점</h2><p><img src="/../../images/flux/complicated%20MVC.png" alt="Complicated MVC"></p>
-<p>애플리케이션 규모가 커짐에 따라 <red>양방향 데이터 흐름</red>을 그림처럼 복잡한 구조를 가지게 된다.</p>
-<p>사용자와 상호작용하는 여러 View가 연결된 여러 Model을 업데이트하고 Model 또한 연결된 View를 업데이트하는 매우 복잡한 상황이 발생하기에 <strong>데이터 흐름을 예측하기란 매우 어려워진다.</strong></p>
-<blockquote>
-<p>사실 위 그림은 전통적인 MVC 패턴이고 Apple의 MVC 패턴은 사진처럼 Model과 View의 양방향 데이터 흐름이 발생하지 않는다. <red>문제는 양방향 데이터 흐름이다.</red></p>
-</blockquote>
-<p><img src="/../../images/flux/appleMVC.png" alt="AppleMVC"></p>
-<h2 id="🦖-Flux-아키텍처"><a href="#🦖-Flux-아키텍처" class="headerlink" title="🦖 Flux 아키텍처"></a>🦖 Flux 아키텍처</h2><p><img src="/../../images/flux/flux.png" alt="flux"></p>
-<p>Flux 패턴은 앱의 단방향 데이터 흐름을 촉진하는 시스템 아키텍처를 말한다.</p>
-<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p><strong>사용자의 요청을 정의한 객체</strong>를 말한다.</p>
-<ul>
-<li>사용자 요청 타입(Type)과 데이터(Payload)를 가진다.</li>
-<li>액션 크리에이터(Action Creator) 함수를 사용하여 디스패처로 전달한다.</li>
-</ul>
-<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p>디스패처는 중앙 데이터 흐름 관리한다. 스토어에 등록된 액션 타입마다 콜백되는 함수가 존재한다.</p>
-<ul>
-<li>사용자 액션으로부터 받은 액션 타입에 맞는 콜백함수를 실행한다.</li>
-<li><strong>스토어 데이터 변경은 디스패처를 통해서만 가능하다.</strong></li>
-</ul>
-<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>스토어는 상태(Model)를 관리하는 저장소이며 상태를 변경할 수 있는 콜백을 가진다. 각 액션을 처리하는 콜백함수는 디스패처에 등록된다.</p>
-<ul>
-<li>상태와 상태를 변경하는 함수를 가진다.</li>
-<li>디스패처에 등록된 콜백함수가 실행되면 스토어의 상태가 변경되며 View에 데이터가 변경되었음을 알린다.(옵저버 패턴 활용)</li>
-</ul>
-<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>뷰는 사용자와 상호작용하는 컴포넌트이다. 스토어에서 상태가 변경되었다는 알림이 오면 뷰는 리렌더링이 발생한다.</p>
-<ul>
-<li>사용자는 View를 조작할 수 있고 상태 변경을 요청하는 액션을 생성할 수 있다.</li>
-<li>생성된 액션은 디스패처에게 전달되고 디스패처는 해당 액션에 연결된 콜백을 실행하여 스토어의 상태를 변경한다.</li>
-<li>상태가 변경되었음을 뷰에게 알리고 뷰는 리렌더링이 발생한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
-                            aria-label=": LifeCycle(라이프사이클)"
-                        >
-                            LifeCycle(라이프사이클)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:23:28+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-LifeCycle이란"><a href="#📌-LifeCycle이란" class="headerlink" title="📌 LifeCycle이란?"></a>📌 LifeCycle이란?</h1><p>라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. <strong>컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다.</strong></p>
-<h2 id="👑-LifeCycle-필요성"><a href="#👑-LifeCycle-필요성" class="headerlink" title="👑 LifeCycle 필요성"></a>👑 LifeCycle 필요성</h2><p>라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 <red>Side Effect(사이드이펙트)를 처리</red>하기 위함이다.</p>
-<p>대표적인 사이드 이펙트는 다음과 같다.</p>
-<ol>
-<li>네트워크 통신 (비동기 통신 요청 및 응답)</li>
-<li>DOM 컨트롤 (RealDOM 접근 및 조작)</li>
-<li>구독&#x2F;취소 (이벤트 핸들링 등)</li>
-<li>오류 감지 (ErrorBoundary 컴포넌트 등)</li>
-</ol>
-<h2 id="✏️-대표적인-LifeCycle-메서드"><a href="#✏️-대표적인-LifeCycle-메서드" class="headerlink" title="✏️ 대표적인 LifeCycle 메서드"></a>✏️ 대표적인 LifeCycle 메서드</h2><ul>
-<li><code>constructor()</code><ul>
-<li>마운트 되기 전에 실행된다.</li>
-</ul>
-</li>
-<li><code>render()</code><ul>
-<li>컴포넌트 렌더링 시점에 호출</li>
-</ul>
-</li>
-<li><code>componentDidMount()</code><ul>
-<li>DOM에 마운트 된 이후 실행된다.</li>
-</ul>
-</li>
-<li><code>componentDidUpdate()</code><ul>
-<li>최초 렌더링 시 실행 ❌</li>
-<li>업데이트 이후 실행</li>
-</ul>
-</li>
-<li><code>componentWillunmount()</code><ul>
-<li>컴포넌트 소멸하기 직전에 실행</li>
-</ul>
-</li>
-</ul>
-<p><img src="/../../images/lifecycle/lifecycle.png" alt="LifeCycle"></p>
-<h2 id="🌈-Render-단계"><a href="#🌈-Render-단계" class="headerlink" title="🌈 Render 단계"></a>🌈 Render 단계</h2><ul>
-<li>render 단계는 virtualDOM을 조작하는 단계이다.<ul>
-<li>성능 최적화를 위한 행동은 render 이전에 해줘야한다.</li>
-<li>render가 끝났다고 해서 실제DOM에 바로 반영되는 것이 아니다.</li>
-</ul>
-</li>
-<li>리액트 업데이트가 되는 경우는 다음 3가지 상황이다.<ol>
-<li><strong>새로운 props가 전달되었을 때,</strong></li>
-<li><strong>해당 컴포넌트의 state가 변경되었을 때,</strong></li>
-<li><strong>강제로 변경시켰을 때만 업데이트가 발생한다.</strong></li>
-</ol>
-</li>
-</ul>
-<h2 id="🔨-Commit-단계"><a href="#🔨-Commit-단계" class="headerlink" title="🔨 Commit 단계"></a>🔨 Commit 단계</h2><p>commit 단계는 RealDOM이므로 명령형이 가능하다.</p>
-<ul>
-<li>DOM을 사용하여 <strong>componentDidMount, DidUpdate, WillUnmount 에서 명령형 코드 작성이 가능하다.</strong></li>
-<li>사이드 이펙트 관련 함수는 여기서 수행해야한다.<aside>
-📌 사이드 이펙트가 나쁜 의미로 부작용이 아니라 리액트가 하는 일이 아닌 부가적인 일을 의미한다.
-</aside></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
-                            aria-label=": 🐍 setState"
-                        >
-                            🐍 setState
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:16:29+09:00">
-	
-		    2022/11/10
+		    2022/11/22
     	
     </time>
     
@@ -873,464 +404,35 @@
                 <div class="postShorten-content">
                     <span id="more"></span>
 
-<h1 id="📌-setState"><a href="#📌-setState" class="headerlink" title="📌 setState"></a>📌 setState</h1><p><code>setState()</code> 메서드는 컴포넌트의 state 객체에 대한 업데이트를 실행합니다. state가 변경되면, 컴포넌트는 리렌더링됩니다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setState</span>(updater[, callback])</span><br></pre></td></tr></table></figure>
+<h1 id="📌-useCallback과-useMemo-사용-이유"><a href="#📌-useCallback과-useMemo-사용-이유" class="headerlink" title="📌 useCallback과 useMemo 사용 이유"></a>📌 useCallback과 useMemo 사용 이유</h1><p>함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 <strong>하위 컴포넌트에게 전달한다.</strong></p>
+<p>이 때 상위 컴포넌트가 다시 실행되면 <red>이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.</red></p>
+<!-- more -->
 
-<p>updater에 컴포넌트의 state 변경사항을 인자로 넘겨주고 React에게 해당 컴포넌트를 재렌더링해야한다고 요청을 보내는 메서드이다.</p>
-<ul>
-<li><code>setState()</code> 호출은 비동기적으로 이뤄진다.</li>
-<li>성능 향상을 위해 <red>즉각적으로 재렌더링을 발생시키지 않는다.</red><ul>
-<li>여러 변경 사항을 일괄적으로 갱신하거나 나중에 미룰 수 있다. 때문에 <code>setState()</code> 호출하자마자 <code>this.state</code>에 접근하는 것은 문제가 될 수 있다.</li>
-<li>대신 <code>componentDidUpdate()</code> 또는 <code>setState(updater, callback)</code>처럼 2번째 인자로 콜백함수를 전달하는 방법을 사용한다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(</span><br><span class="line">  &#123; <span class="attr">message</span>: <span class="string">&quot;상태 변경&quot;</span> &#125;,</span><br><span class="line">  <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback: &quot;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>) <span class="comment">// &#x27;상태 변경&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>); <span class="comment">// &#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="🐸-useCallback"><a href="#🐸-useCallback" class="headerlink" title="🐸 useCallback"></a>🐸 useCallback</h2><p><code>useCallback()</code>은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, <strong>기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">	<span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 1</span></span><br><span class="line">	<span class="keyword">const</span> handleIncrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(<span class="function">(<span class="params">count</span>) =&gt;</span> count + step);</span><br><span class="line">		&#125;, [step]);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2</span></span><br><span class="line">	<span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(count - step);</span><br><span class="line">		&#125;, [count, step]);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>아직 렌더링이 발생하지 않았기 때문에 <code>this.state.message</code>의 값이 갱신되지 않았다.</li>
+<li>기억해야할 데이터 타입이 함수인 경우 사용한다.</li>
+<li>useEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.</li>
+<li>1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. <red>기억되어있는 정보를 가지고 값을 변경하는 것이다.</red></li>
+<li>2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. <red>기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.</red></li>
 </ul>
-<h1 id="🎒-2022-11-12-추가"><a href="#🎒-2022-11-12-추가" class="headerlink" title="🎒 2022.11.12 추가"></a>🎒 2022.11.12 추가</h1><h2 id="setState-첫번째-인수로-콜백함수-올-때"><a href="#setState-첫번째-인수로-콜백함수-올-때" class="headerlink" title="setState() 첫번째 인수로 콜백함수 올 때"></a><code>setState()</code> 첫번째 인수로 콜백함수 올 때</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">BinaryCalcurator</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">buttonStates</span>: <span class="title class_">Array</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">numberOfButtons</span>).<span class="title function_">fill</span>(<span class="literal">false</span>),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleToggleButtonContent = <span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function">(<span class="params">&#123; buttonStates &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">buttonStates</span>: buttonStates.<span class="title function_">map</span>(<span class="function">(<span class="params">buttonState, idx</span>) =&gt;</span></span><br><span class="line">        idx === index ? !buttonState : buttonState</span><br><span class="line">      ),</span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="🐍-useMemo"><a href="#🐍-useMemo" class="headerlink" title="🐍 useMemo"></a>🐍 useMemo</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useCallback</span>(fn, deps) === <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> fn, deps);</span><br></pre></td></tr></table></figure>
+
+<p>useMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useMemo(() =&gt; fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleIncrement = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="function">() =&gt;</span> <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + step),</span><br><span class="line">    [step]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useCallback(fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - step);</span><br><span class="line">  &#125;, [step]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// memoized Components</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DecButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleDecrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">IncButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleIncrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;DecButton&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;IncButton&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>콜백함수는 이전 상태를 받아서 상태 변경을 요청한다.</li>
+<li>useMemo()는 해당 컴포넌트를 기억한다.</li>
+<li>종속성 배열 <code>[count, onDecrement, onIncrement, restProps]</code>이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.</li>
+<li><code>setCount()</code>를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.</li>
 </ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/CS/%F0%9F%8D%AA-Cookie/"
-                            aria-label=": 🍪 Cookie"
-                        >
-                            🍪 Cookie
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T10:36:29+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-Cookie란"><a href="#📌-Cookie란" class="headerlink" title="📌 Cookie란?"></a>📌 Cookie란?</h1><p>서버가 클라이언트에게 전송하는 데이터이다. 서버가 HTTP Response Header의 Set-Cookie에 내용을 넣어 전달하면 브라우저가 이 내용을 자체적으로 브라우저에 저장한다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Reponse Header --&gt;</span><br><span class="line">HTTP/2.0 200 OK</span><br><span class="line">Content-Type: text/html</span><br><span class="line">Set-Cookies: &lt;cookie-name&gt;=&lt;cookie-value&gt;</span><br><span class="line"></span><br><span class="line">// Page Content...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>쿠키는 key,value를 쌍으로 브라우저에 문자열로 저장된다.</li>
-<li>주로 만료 기간을 설정하거나 자동으로 서버로 전송되어야할 작은 용량의 정보를 담는다.<ul>
-<li>Ex) n일 동안 보지 않기, 비로그인 장바구니 기능</li>
-</ul>
-</li>
-<li>쿠키는 주로 <strong>인증</strong>을 위해 사용된다.</li>
-<li>쿠키는 세션쿠키와 퍼머넌트 쿠키가 있다.</li>
-</ul>
-<h2 id="🐶-Session-Cookie"><a href="#🐶-Session-Cookie" class="headerlink" title="🐶 Session Cookie"></a>🐶 Session Cookie</h2><p>세션 쿠키는 클라이언트가 셧다운 되면 사라지는 쿠키이다. 왜냐하면 Expires, Max-Age를 지정해주지 않았기 때문이다.</p>
-<p><code>일부 브라우저는 Session Resorting을 사용하여 세션쿠키를 영구적으로 만들 수 있다.</code></p>
-<ul>
-<li>Expires, Max-Age 설정으로 만료 기한을 정해주지 않은 쿠키</li>
-</ul>
-<h2 id="🐸-Permanent-Cookie"><a href="#🐸-Permanent-Cookie" class="headerlink" title="🐸 Permanent Cookie"></a>🐸 Permanent Cookie</h2><p>클라이언트가 브라우저를 열고 닫거나 새로고침을 하여도 쿠키의 데이터가 보존되는 쿠키이다. Set-Cookie에 몇가지 조건을 추가하여 Permanent Cookie를 설정할 수 있다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: id=a3fWa; Expires=Thu, 10 Nov 2022 15:30:00 GMT;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>만료시간은 클라이언트 시간을 따른다. (서버시간과 상이할 수 있다.)</li>
-</ul>
-<h2 id="✏️-쿠키-접근"><a href="#✏️-쿠키-접근" class="headerlink" title="✏️ 쿠키 접근"></a>✏️ 쿠키 접근</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;yummy_cookie=choco&quot;</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">cookie</span> = <span class="string">&quot;tasty_cookie=strawberry&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">document</span>.<span class="property">cookie</span>);</span><br><span class="line"><span class="comment">// logs &quot;yummy_cookie=choco; tasty_cookie=strawberry&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="🔨-쿠키-보안"><a href="#🔨-쿠키-보안" class="headerlink" title="🔨 쿠키 보안"></a>🔨 쿠키 보안</h2><p>🙅‍♂️ 민감한 정보는 HTTP 쿠키 내에 저장하면 안된다.</p>
-<h3 id="🪜-HttpOnly-Cookie"><a href="#🪜-HttpOnly-Cookie" class="headerlink" title="🪜 HttpOnly Cookie"></a>🪜 HttpOnly Cookie</h3><p>XSS 공격으로부터 사용자의 쿠키 정보가 유출되는 것을 방지하기 위해 등장하였다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: id=a3fWa; Expires=Thu, 10 Nov 2022 15:30:00 GMT; HttpOnly</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>document.cookie API로 접근할 수 없다.</li>
-</ul>
-<h3 id="🔒-Secure-Cookie"><a href="#🔒-Secure-Cookie" class="headerlink" title="🔒 Secure Cookie"></a>🔒 Secure Cookie</h3><p>HTTPS 전송을 보증해주는 역할을 하는 쿠키이다. Secure로 설정된 쿠키는 안전한 전송 프로토콜에만 쿠키 정보를 서버로 보낸다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: id=a3fWa; Expires=Thu, 10 Nov 2022 15:30:00 GMT; Secure; HttpOnly</span><br></pre></td></tr></table></figure>
-
-<h3 id="👿-Cross-site-요청-위조-CSRF-공격"><a href="#👿-Cross-site-요청-위조-CSRF-공격" class="headerlink" title="👿 Cross-site 요청 위조(CSRF) 공격"></a>👿 Cross-site 요청 위조(CSRF) 공격</h3><p>현재 사용자가 은행 사이트에 로그인 되어있다. 송금과 같은 은행 업무를 보고 로그아웃 하지 않고 새 탭을 열어 어떤 사이트를 열었다. 그런데 이 사이트에는 해커에게 송금을 요청하는 form이 있고 이 form은 자동으로 제출되도록 설정되었다.</p>
-<p>form이 해당 사이트를 거쳐 은행 사이트로 전송될 때 인증 쿠키도 함께 전송된다. 은행은 사용자로 착각하여 해커에게 돈을 송금하는 일이 발생한다.</p>
-<p>⇒ 이런 공격을 <strong>크로스 사이트 요청 위조</strong> 라고 부른다.</p>
-<p>🚪 <strong>방어 방법</strong></p>
-<ul>
-<li>XSRF 토큰이라는 특수 필드 넣어줘야한다.</li>
-<li>민감한 동작에 필수로 요구되는 확인 절차가 항상 수행하도록 한다.</li>
-<li>민감한 동작에 사용되는 쿠키는 짧은 수명만 갖도록 한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/CS/%F0%9F%8D%AA-Cookie/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/09/CS/HTTP-%EC%9A%94%EC%B2%AD-%EB%A9%94%EC%84%9C%EB%93%9C-GET-vs-POST/"
-                            aria-label=": HTTP 요청 메서드 GET vs POST"
-                        >
-                            HTTP 요청 메서드 GET vs POST
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-09T17:50:27+09:00">
-	
-		    2022/11/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-GET"><a href="#📌-GET" class="headerlink" title="📌 GET"></a>📌 GET</h1><p>GET 방식은 전송 URL에 입력 데이터를 쿼리 스트링으로 보내는 방식<br>ex) <a target="_blank" rel="noopener" href="http://jsonplaceholder.typicode.com/posts?userId=1&amp;id=1">http://jsonplaceholder.typicode.com/posts?userId=1&amp;id=1</a></p>
-<ul>
-<li>전송 URL 바로 뒤에 ?를 통해 데이터의 시작을 알려주고, Key-value 형태의 데이터 추가한다.</li>
-<li>캐시가 가능하다.</li>
-<li>1개 이상의 전송 데이터는 &amp;로 구분한다.</li>
-<li><strong>URL에 전송 데이터가 모두 노출되어 보안에 문제가 있어 민감한 정보는 사용하지 않는다. 전송할 수 있는 데이터의 한계가 있다. (최대 255자)</strong></li>
-<li>REST API에서 GET 메소드는 모든 또는 특정 리소스의 조회를 요청한다.<br>⇒ <red>GET 요청 보내면 ~ 이거이거 조회할게요~</red></li>
-</ul>
-<h1 id="📌-POST"><a href="#📌-POST" class="headerlink" title="📌 POST"></a>📌 POST</h1><p>POST 방식은 사용자의 요청을 <strong>Request Body에 담아 보내는 방식</strong><br>ex) <a target="_blank" rel="noopener" href="http://jsonplaceholder.typicode.com/posts">http://jsonplaceholder.typicode.com/posts</a></p>
-<ul>
-<li>URL에 전송 데이터가 모두 노출되지 않지만 GET에 비해 속도가 느리다.</li>
-<li>캐시가 불가능하다.</li>
-<li>데이터 길이와 타입의 제한이 없다.</li>
-<li>REST API에서 POST 메소드는 특정 리소스의 생성을 요청한다.<br>⇒ <red>POST 요청 보내면 ~ 이거 생성해주세요~</red></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/09/CS/HTTP-%EC%9A%94%EC%B2%AD-%EB%A9%94%EC%84%9C%EB%93%9C-GET-vs-POST/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/09/CS/HTTP%EC%9D%98-%EC%97%AD%EC%82%AC%EC%99%80-HTTPS/"
-                            aria-label=": HTTP의 역사와 HTTPS"
-                        >
-                            HTTP의 역사와 HTTPS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-09T17:01:41+09:00">
-	
-		    2022/11/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-HTTP"><a href="#📌-HTTP" class="headerlink" title="📌 HTTP"></a>📌 HTTP</h1><p><strong>서버&#x2F;클라이언트 모델을 따라 데이터를 주고받기 위한 프로토콜</strong>이다.</p>
-<p>일반적으로 프로토콜을 이용하여 HTML 파일을 주고받을 수 있는 공간을 의미한다.</p>
-<ul>
-<li>텍스트 교환으로 보안에 취약하다.</li>
-</ul>
-<h2 id="역사"><a href="#역사" class="headerlink" title="역사"></a>역사</h2><p>초기 웹 페이지는 단순한 서버-클라이언트의 구조를 따랐다. 처음부터 TCP &#x2F; IP 위에서 구현되도록 설계되었다. 지금의 TCP는 무겁고 느리다고 까이지만, 이 당시에는 연결 지향적 특성 때문에 안정적이고 신뢰성있는 통신을 제공하여 평이 좋았다.</p>
-<p>초기 HTTP 구조는 매우 간단했다. 요청 메서드도 GET 한가지였고, 헤더나 상태 코드도 없었고 응답은 무조건 HTML 파일 그 자체였다.</p>
-<p>하지만 웹이 인기를 끌다 보니 기존 HTTP 사양만으로는 사용자들의 요구사항을 충족시킬 수 없었고 <strong>명시적으로 약속된 사양이 없어</strong> 여러 브라우저들 간의 혼란이 있어서 HTTP 기본 구조를 그대로 유지하면서 <strong>HTTP를 표준화</strong>하기 위해 HTTP WG 조직이 탄생하고 이 때 <strong>HTTP&#x2F;1.0이 탄생</strong>하게되었다.</p>
-<h1 id="📌-HTTP-x2F-1-0"><a href="#📌-HTTP-x2F-1-0" class="headerlink" title="📌 HTTP&#x2F;1.0"></a>📌 HTTP&#x2F;1.0</h1><ul>
-<li>HTTP Header에 버전정보 명시되어있다.</li>
-<li>요청 메서드 GET, POST, HEAD 3가지</li>
-<li>상태 코드 추가 되어 클라이언트 측에서 요청 결과에 따라 동작하도록 설계 가능</li>
-<li><strong>Content-type의 도움으로 HTML 이외의 파일도 전송</strong>할 수 있게되었다.</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 요청 --&gt;</span><br><span class="line">GET /mypage.html HTTP/1.0</span><br><span class="line">User-Agent: ...</span><br><span class="line"></span><br><span class="line">&lt;!-- 응답 --&gt;</span><br><span class="line">200 OK</span><br><span class="line">...</span><br><span class="line">Content-Type: text/html</span><br><span class="line">&lt;HTML&gt;</span><br><span class="line">  A page with on image</span><br><span class="line">  &lt;img src=&quot;/myimage.jpg&quot; /&gt;</span><br><span class="line">&lt;/HTML&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>HTTP&#x2F;1.0의 간단한 요청과 응답 예시이다.</li>
-</ul>
-<h1 id="📌-HTTP-x2F-1-1"><a href="#📌-HTTP-x2F-1-1" class="headerlink" title="📌 HTTP&#x2F;1.1"></a>📌 HTTP&#x2F;1.1</h1><h2 id="❓-HTTP-x2F-1-0의-문제"><a href="#❓-HTTP-x2F-1-0의-문제" class="headerlink" title="❓ HTTP&#x2F;1.0의 문제"></a>❓ <strong>HTTP&#x2F;1.0의 문제</strong></h2><ul>
-<li>HTTP&#x2F;1.0에서는 요청에 따른 응답이 수신되면 TCP 연결 바로 종료<ul>
-<li>웹 페이지가 복잡해짐에 따라 이러한 TCP 핸드쉐이크 과정을 새로 거쳐야 하여 속도가 느려지는 문제가 있었다.</li>
-</ul>
-</li>
-<li>1개의 요청을 보내면 1개의 응답을 받고 1번의 연결이 종료된다. 만약 10번의 요청을 보내면 TCP 연결을 10번 해야하므로 서버에 부담이 된다.</li>
-</ul>
-<h2 id="❗️-문제-해결책"><a href="#❗️-문제-해결책" class="headerlink" title="❗️ 문제 해결책"></a>❗️ 문제 해결책</h2><p><img src="/../../images/HTTP/pipe.png" alt="pipe"></p>
-<ul>
-<li><strong>연결 상태 유지(Persistent connection)</strong> : 기본적으로 한번 수립한 연결을 재사용 할 수 있도록 설정<ul>
-<li>지정한 시간동안 연결을 끊지 않는 방식</li>
-<li>연결 유지 시간 길어지면 서버 부하 🔺</li>
-</ul>
-</li>
-<li><strong>Pipelining(파이프라이닝)</strong> : 클라이언트가 여러 요청 연달아 보내야할 때, 먼저 보낸 요청의 응답을 기다리는 것이 아니라 <strong>발생한 요청은 일단 전송하는 방식</strong><ul>
-<li>클라이언트에서 여러 요청을 순차적으로 보내면 <strong>서버는 받은 순서에 따라 응답을 제공한다.</strong></li>
-</ul>
-</li>
-</ul>
-<h1 id="📌-HTTP-x2F-2"><a href="#📌-HTTP-x2F-2" class="headerlink" title="📌 HTTP&#x2F;2"></a>📌 HTTP&#x2F;2</h1><h2 id="❓-HTTP-x2F-1-1의-문제"><a href="#❓-HTTP-x2F-1-1의-문제" class="headerlink" title="❓ HTTP&#x2F;1.1의 문제"></a>❓ <strong>HTTP&#x2F;1.1의 문제</strong></h2><ul>
-<li>매 요청마다 <strong>헤더를 중복</strong>해서 전송해야만 하는데 이것이 굉장한 낭비였다.</li>
-<li>서버가 항상 요청받은 순서대로 응답해야하므로 <strong>HOLB(Head-of-Line Blocking)</strong> 방식이었다.</li>
-<li>하나의 연결 내에서 응답 다중화(multiplexing)을 할 수 없어 요청이 순차적으로 처리되어야 했는데, <strong>서버가 응답 작성 중간에 문제가 생기면 후속 요청들이 전송되지 못하고 지연되는 문제가 있었다.</strong></li>
-</ul>
-<h2 id="❗️-문제-해결책-1"><a href="#❗️-문제-해결책-1" class="headerlink" title="❗️ 문제 해결책"></a>❗️ 문제 해결책</h2><p><img src="/../../images/HTTP/SPDY.png" alt="spdy"></p>
-<ul>
-<li>SPDY 프로토콜 기반으로 동작 ⇒ <red>웹 페이지 로드 시간 단축</red><ul>
-<li>이진 프로토콜 : 단순 텍스트를 전송하는 것보다 컴퓨터 입장에서 훨씬 더 효율적으로 데이터 전송 가능</li>
-</ul>
-</li>
-</ul>
-<p><img src="/../../images/HTTP/multiplexing.png" alt="mutiplexing"></p>
-<ul>
-<li>응답 다중화 지원 : 하나의 TCP 연결에서 여러 요청을 동시에 처리할 수 있다. 바이너리 프레이밍으로 TCP 연결을 스트림, 메시지, 프레임으로 세분화하였다. <red>이는 요청 별 순서를 반드시 지켜야 했던 HTTP&#x2F;1.1과 대조적이다.</red><ul>
-<li>스트림 : 요청과 응답이 양방향으로 오가는 연결 단위</li>
-<li>메시지 : 하나의 요청과 응답을 구성하는 단위</li>
-<li>프레임 : 메시지를 구성하는 최소 단위</li>
-</ul>
-</li>
-</ul>
-<p><img src="/../../images/HTTP/multiplexing2.png" alt="mutiplexing2"></p>
-<ul>
-<li>위 사진에서 하나의 TCP 연결에서 3개의 스트림이 존재한다.</li>
-<li>5번 스트림은 클라이언트 측에서 서버로 데이터 전송하고, 1,3번 스트림은 서버 측에서 클라이언트로 데이터를 전송중이다.</li>
-<li>1번 프레임 사이에 3번 스트림의 프레임이 끼워져있다.</li>
-</ul>
-<p>이로써 HTTP&#x2F;1.1에서 발생한 <strong>HOLB 문제 해결할 수 있었다.</strong></p>
-<p><img src="/../../images/HTTP/headerCompressing.png" alt="headerCompressing"></p>
-<ul>
-<li>헤더 필드 압축 지원 : 달라진 부분만 다시 전송하는 코딩 기법 사용</li>
-</ul>
-<h1 id="📌-HTTP-x2F-3"><a href="#📌-HTTP-x2F-3" class="headerlink" title="📌 HTTP&#x2F;3"></a>📌 HTTP&#x2F;3</h1><h2 id="❗️-TCP로-인한-문제점"><a href="#❗️-TCP로-인한-문제점" class="headerlink" title="❗️ TCP로 인한 문제점"></a>❗️ <strong>TCP로 인한 문제점</strong></h2><p>앞서 헤더 필드 압축을 통해 HTTP&#x2F;1.1에서 발생한 HOLB 문제를 해결했다고 하였지만 이와 별개로 <red>TCP로 인해 발생하는 HOLB 문제는 해결할 수 없다는 한계가 있었다.</red></p>
-<ul>
-<li>신뢰성 지향하기에 데이터 손실 발생 시 데이터를 재전송하는데 순서대로 처리해야하기 때문에 HOLB 문제를 해결할 수 없다.</li>
-<li>혼잡제어를 수행하기 때문에 전송 속도를 낮은 상태에서 높이는 방식으로 속도 제어를 하는데 이는 네트워크 상황이 좋을 때 불필요한 지연을 발생시킨다.</li>
-</ul>
-<p>문제를 해결하기 위해 TCP&#x2F;IP기반이 아닌 <red>UDP기반인 QUIC 프로토콜 위에서 동작하는 HTTP&#x2F;3</red>가 나왔다.</p>
-<p>⇒ UDP는 신뢰성을 보장하지 않는데 <strong>QUIC 신뢰성 기능을 직접 구현하여 신뢰성 기능이 제공되는 UDP 기반의 프로토콜</strong>이다.</p>
-<h2 id="👍-HTTP-x2F-3-장점"><a href="#👍-HTTP-x2F-3-장점" class="headerlink" title="👍 HTTP&#x2F;3 장점"></a>👍 HTTP&#x2F;3 장점</h2><p><img src="/../../images/HTTP/RTT.png" alt="RTT"></p>
-<ul>
-<li><strong>0-RTT 기능</strong> : 연결 정보를 캐싱하여 재사용하여 다음 연결때는 바로 연결이 가능</li>
-</ul>
-<p><img src="/../../images/HTTP/UDP.png" alt="UDP"></p>
-<ul>
-<li><strong>연결 다중화 지원</strong> : 각 스트림이 독립적으로 동작한다.<ul>
-<li>HTTP&#x2F;2 방식의 경우 TCP 특성상 데이터 손실이 발생할 경우 <strong>데이터 복구를 우선 처리하여 HOLB가 발생</strong>한다.</li>
-<li>HTTP&#x2F;3는 데이터 손실이 발생해도 연결 내 스트림이 독립적으로 동작하기 때문에 <red>다른 스트림에 영향을 주지 않는다.</red></li>
-</ul>
-</li>
-<li><strong>연결 별 고유 UUID 지원</strong><ul>
-<li>TCP 기반의 통신은 wifi 환경에서 셀룰러 환경으로 이동하는경우 IP주소가 변경되어 연결 재수립 과정을 거쳐야하지만, QUIC는 UUID(Connection ID) 연결 ID 기반으로 식별하여 연결을 유지할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<h1 id="📌-HTTP-Message"><a href="#📌-HTTP-Message" class="headerlink" title="📌 HTTP Message"></a>📌 HTTP Message</h1><p>HTTP 메시지는 서버와 클라이언트 간에 데이터가 교환되는 방식이다. 메시지 타입에는 <strong>요청(Request), 응답(Response)이 있다.</strong></p>
-<p><img src="/../../images/HTTP/httpmsgstructure2.png" alt="request와response"></p>
-<p>요청과 응답의 구조는 유사하다.</p>
-<ol>
-<li><p>실행 되어야 할 요청 또는 요청의 성공, 실패가 기록된 한줄</p>
-</li>
-<li><p>요청에 대한 설명, 메시지 본문에 대한 설명이 포함된 <strong>HTTP Header 세트</strong>(optional)</p>
-</li>
-<li><p>요청에 대한 모든 메타 정보가 전송되었음을 알리는 빈 줄(blank line)</p>
-</li>
-<li><p>요청과 관련된 내용이 옵션으로 들어가거나, 응답과 관련된 문서가 들어간다. 본문의 존재 유무는 첫 줄과 HTTP Header에 명시된다.</p>
-</li>
-</ol>
-<h2 id="✏️-HTTP-Request"><a href="#✏️-HTTP-Request" class="headerlink" title="✏️ HTTP Request"></a>✏️ HTTP Request</h2><p>요청은 클라이언트가 서버로 전달해서 서버의 액션이 일어나게끔 하는 메시지이다.</p>
-<h3 id="1-Start-Line"><a href="#1-Start-Line" class="headerlink" title="1. Start Line"></a>1. Start Line</h3><ol>
-<li>HTTP 메서드</li>
-</ol>
-<p>GET,POST 등의 서버가 수행해야 할 동작을 나타낸다.</p>
-<ol start="2">
-<li>요청 타겟 : URL 또는 (프로토콜,포트, 도메인)</li>
-</ol>
-<p>요청 타겟 포맷은 HTTP 메서드에 따라 달라진다.</p>
-<ul>
-<li>Origin 형식 : 끝에 ‘?’와 쿼리 문자열이 붙는 절대경로이다. 가장 일반적인 형식으로 GET, POST, HEAD, OPTIONS 메서드와 함께 사용한다.</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST / HTTP 1.1</span><br><span class="line">GET /background.png HTTP/1.0</span><br><span class="line">HEAD /test.html?query=alibaba HTTP/1.1</span><br><span class="line">OPTIONS /anypage.html HTTP/1.0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>absolute 형식 : 완전한 URL 형식으로, 프록시에 연결하는 경우 대부분 GET과 사용한다.</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>마지막으로 HTTP 버전이 들어간다.</li>
-</ol>
-<h3 id="2-Header"><a href="#2-Header" class="headerlink" title="2. Header"></a><strong>2. Header</strong></h3><p>대소문자 구분없는 문자열 다음에 콜론(:)이 붙고 그 뒤에 오는 값은 Header에 따라 달라진다.</p>
-<p><img src="/../../images/HTTP/http_request_headers3.png" alt="header"></p>
-<ul>
-<li>HTTP Method</li>
-<li>HTTP Version</li>
-<li>Host</li>
-<li>Content-Type</li>
-</ul>
-<h3 id="3-Body-본문"><a href="#3-Body-본문" class="headerlink" title="3. Body(본문)"></a>3. Body(본문)</h3><p>모든 요청에 본문이 들어가지 않는다. GET, HEAD, DELETE, OPTIONS 처럼 리소스를 가져오는 요청은 본문이 필요 없다.</p>
-<p>보통 POST 요청으로 서버에 데이터를 업데이트 하기 위해 본문이 필요하다.</p>
-<p>본문은 두가지 종류로 나뉜다.</p>
-<ul>
-<li>단일-리소스 본문(single-resource bodies) : Header 2개(Content-Type, Content-Length)로 정의된 단일 파일</li>
-<li>다중-리소스 본문(muliple-resource bodies) : 파트마다 다른 정보를 지닌다.</li>
-</ul>
-<h2 id="✏️-HTTP-Response"><a href="#✏️-HTTP-Response" class="headerlink" title="✏️ HTTP Response"></a>✏️ HTTP Response</h2><p>응답은 요청에 대한 서버의 답변이다.</p>
-<h3 id="1-Start-Line-1"><a href="#1-Start-Line-1" class="headerlink" title="1. Start Line"></a>1. Start Line</h3><ol>
-<li><p>프로토콜 버전 (보통 HTTP&#x2F;1.1)</p>
-</li>
-<li><p>상태 코드 : 요청의 성공 여부를 나타낸다. 200, 404 또는 302</p>
-</li>
-<li><p>상태 텍스트 : 상태 코드에 대한 설명글</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 404 Not Found.</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-Header-1"><a href="#2-Header-1" class="headerlink" title="2. Header"></a><strong>2. Header</strong></h3><p>요청 Header와 동일한 구조이다.</p>
-<p><img src="/../../images/HTTP/http_response_headers3.png" alt="resHeader"></p>
-<ul>
-<li>HTTP Version</li>
-<li>Status</li>
-<li>Content-Type</li>
-<li><strong>Set-Cookie</strong></li>
-</ul>
-<h3 id="3-Body"><a href="#3-Body" class="headerlink" title="3. Body"></a>3. Body</h3><p>모든 응답에 Body가 들어가지는 않는다. 201, 204 상태 코드를 가진 응답은 Body가 없다.</p>
-<h1 id="📌-HTTPS"><a href="#📌-HTTPS" class="headerlink" title="📌 HTTPS"></a>📌 HTTPS</h1><p>기존 프로토콜에서 데이터가 쉽게 도난당하는 것을 방지하기 위해 <strong>SSL(Secure Socket Layer) 또는 TLS(Transport Layer Security) 프로토콜</strong> 을 사용하여 <strong>브라우저와 서버를 암호화하여 연결해준다.</strong></p>
-<p>또한 데이터가 전송중에 손상되거나 수정되는 것을 방지한다.</p>
-<ul>
-<li>구글같은 포털에서 SEO 가산점을 준다.</li>
-</ul>
-<h2 id="✏️-SSL-Secure-Socket-Layer-프로토콜"><a href="#✏️-SSL-Secure-Socket-Layer-프로토콜" class="headerlink" title="✏️ SSL(Secure Socket Layer) 프로토콜"></a>✏️ SSL(Secure Socket Layer) 프로토콜</h2><p>HTTPS 프로토콜이 텍스트를 암호화 할 수 있도록 도와주는 프로토콜이다. 암호화 원리는 <strong>공개키 암호화 방식</strong>이다.</p>
-<blockquote>
-<p>SSL 프로토콜 통제권을 IETF로 넘기면서 TLS로 바뀐 상태인데 현재는 두가지를 혼용해서 사용하고 있다.</p>
-</blockquote>
-<h3 id="공개키-암호화-방식"><a href="#공개키-암호화-방식" class="headerlink" title="공개키 암호화 방식"></a>공개키 암호화 방식</h3><p>공개키 암호화 방식은 공개키와 개인키를 사용하는 방식이다.</p>
-<ul>
-<li>공개키는 모두에게 공개해서 사용하는 키이다.</li>
-<li>개인키는 서버에서만 가지고 있는 키이다.</li>
-</ul>
-<h3 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h3><ol>
-<li>A 서버가 HTTPS 적용하기 위해 공개키와 개인키를 만든다.</li>
-<li>CA 기업을 선택하고 해당 CA 기업에게 공개키 관리를 부탁하며 계약한다.</li>
-<li>CA 기업은 <strong>기업명, A 서버 공개키, 공개키 암호화 방법</strong>을 담은 인증서를 만들고 해당 인증서를 CA 기업의 개인키로 암호화해서 A 서버에게 제공한다.</li>
-<li>A 서버는 CA 기업의 개인키로 암호화된 인증서를 가지고서 클라이언트로부터 HTTPS이 아닌 요청이 오면 암호화된 인증서를 건네준다.</li>
-<li>클라이언트는 예를 들어 <code>main.html</code> 을 서버에 요청했다고 하자. HTTPS 요청이 아니기 때문에 CA기업의 개인키로 암호화된 인증서를 받게된다.<ul>
-<li>CA 기업의 공개키는 모두에게 공개되므로 클라이언트는 인증서를 공개키로 복호화하여 A 서버 공개키를 얻었다.</li>
-</ul>
-</li>
-<li>클라이언트가 A 서버에 요청을 보낼 때 텍스트를 공개키로 암호화하며 HTTPS 요청을 보낸다.</li>
-<li>서버는 개인키로 암호화된 텍스트를 복호화하여 데이터를 해석하고 응답을 개인키로 암호화하여 클라이언트에게 보낸다.</li>
-<li>클라이언트는 다시 공개키로 응답을 해석하여 해당 서버가 인증된 서버임을 알 수 있다.</li>
-</ol>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?</p>
 <aside>
-📌 단, 신뢰받는 CA 기업이 아닌 자체 인증서를 발급한 경우 브라우저에서 `주의 요함`, `안전하지 않는 사이트`같은 주의를 받게된다.
 
+<p>📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.</p>
 </aside>
 
-<h2 id="📚-참고"><a href="#📚-참고" class="headerlink" title="📚 참고"></a>📚 참고</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://velog.io/@jiseung/02-what-is-http#http3-2021">Velog&#x2F;@Jiseung</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/ko/docs/Web/HTTP">[MDN] HTTP</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://gyoogle.dev/blog/computer-science/network/HTTP%20&%20HTTPS.html">Tech Interview</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://yozm.wishket.com/magazine/detail/1686/?utm_source=stibee&utm_medium=email&utm_campaign=newsletter_yozm&utm_content=contents">웹 개발자라면 알고 있어야 할 HTTP의 진화 과정 | 요즘IT</a></p>
-</li>
-</ul>
-
                     
                         
 
@@ -1339,7 +441,7 @@
                     
                         <p>
                             <a
-                                href="/2022/11/09/CS/HTTP%EC%9D%98-%EC%97%AD%EC%82%AC%EC%99%80-HTTPS/#post-footer"
+                                href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -1362,23 +464,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
-                            aria-label=": stateless 컴포넌트와 stateful 컴포넌트"
+                            href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
+                            aria-label=": ⛱ useRef"
                         >
-                            stateless 컴포넌트와 stateful 컴포넌트
+                            ⛱ useRef
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2022-11-09T10:57:01+09:00">
+    <time datetime="2022-11-22T19:27:24+09:00">
 	
-		    2022/11/09
+		    2022/11/22
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/React/">React</a>
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
 
 
     
@@ -1387,32 +489,28 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h1 id="🛤-Class-Component-vs-Function-Component"><a href="#🛤-Class-Component-vs-Function-Component" class="headerlink" title="🛤 Class Component vs Function Component"></a>🛤 Class Component vs Function Component</h1><p>과거의 리액트는 상태를 가지는 컴포넌트는 클래스형으로, 상태를 가지지 않는 컴포넌트는 함수형으로 작성하였다. <strong>왜 그랬을까?</strong></p>
-<p><img src="/../images/stateless/class&function.png" alt="class&amp;function-components"></p>
-<p>Container 컴포넌트는 상태를 가지는데, 함수형 컴포넌트로 생성하게 되면 <red>함수 호출하여 컴포넌트를 생성할 때 마다 상태가 초기화된</red> 값을 가지기 때문에 Container 컴포넌트는 클래스형으로만 작성하였다.</p>
+                    <span id="more"></span>
+
+<h1 id="🐶-useRef"><a href="#🐶-useRef" class="headerlink" title="🐶 useRef()"></a>🐶 useRef()</h1><p>리액트에서 ref는 주로 DOM 노드 참조 목적으로 사용된다. 컴포넌트 렌더링에 영향을 주지 않는 값 참조 목적으로 사용된다.</p>
+<p><code>useRef()</code>는 함수 컴포넌트 내부에서 특정 값을 지속적으로 참조할 때 사용한다. <code>useState()</code>와 달리 <code>useRef()</code>는 <strong>현재 값이 변경되어도 컴포넌트가 다시 렌더링되지 않아 애플리케이션 성능을 최적화 할 수 있다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useRef() 훅을 사용해 카운트 참조 생성</span></span><br><span class="line"><span class="keyword">const</span> countRef = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 카운트 참조의 현재 값이 변경되어도 컴포넌트는 다시 렌더링 되지 않음</span></span><br><span class="line">countRef.<span class="property">current</span> = countRef.<span class="property">current</span> + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>클래스는 자신의 인스턴스 멤버를 사용해 렌더링 상관없이 특정 값을 기억할 수 있는데 반해, 함수는 다시 렌더링 되면 매번 함수 몸체가 초기화 되므로 특정 값을 기억할 때 useRef()를 사용하면 유용하다.</p>
+</blockquote>
+<h2 id="🐥-useRef-사용목적"><a href="#🐥-useRef-사용목적" class="headerlink" title="🐥 useRef() 사용목적"></a>🐥 useRef() 사용목적</h2><h3 id="1-DOM-요소-접근-및-조작"><a href="#1-DOM-요소-접근-및-조작" class="headerlink" title="1. DOM 요소 접근 및 조작"></a>1. DOM 요소 접근 및 조작</h3><p>리액트 render() 단계에서는 DOM이 그려지기 전 단계이므로 <red>DOM에 직접 접근할 수 없다.</red></p>
+<p>하지만 useRef()를 사용하여 컴포넌트가 <strong>mount된 시점 이후 DOM 요소에 접근하여 조작</strong>할 수 있도록 도와준다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">TextInputWithFocusButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> inputEl = <span class="title function_">useRef</span>(<span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onButtonClick</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// `current` points to the mounted text input element</span></span><br><span class="line">    inputEl.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;inputEl&#125;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onButtonClick&#125;</span>&gt;</span>Focus the input<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>this를 사용하기 때문에 <strong>클래스형 컴포넌트가 생성방식이 더 복잡하다.</strong></li>
-<li>클래스형 컴포넌트에는 <code>render()</code> 메서드가 꼭 있어야 한다.</li>
-<li>클래스형 컴포넌트에서 이벤트 등록 시 this 바인딩을 꼭 해줘야만 한다.</li>
+<li>아직 DOM이 그려지기 전이라 DOM 요소에 접근하여 focus()를 활성화 시킬 수 없지만, useRef()를 사용하여 클래스 컴포넌트 생명주기를 고려하여 DOM 요소에 접근할 수 있도록 도와준다.</li>
 </ul>
-<h1 id="📌-stateless-컴포넌트"><a href="#📌-stateless-컴포넌트" class="headerlink" title="📌 stateless 컴포넌트"></a>📌 stateless 컴포넌트</h1><p>stateless 컴포넌트는 말 그대로 상태를 가지지 않는 컴포넌트이다. 이러한 컴포넌트를 stateless 컴포넌트 또는 presentational(프레젠테이셔널) 컴포넌트라고 한다.</p>
-<h2 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h2><ul>
-<li><red>시각적 표현에 중점</red>을 둔 컴포넌트</li>
-<li>시각적 표현을 목적으로 하니 복잡한 비즈니스 로직 필요없다</li>
-<li><red>상태를 가질 필요가 없고</red> 외부에서 전달 받은 데이터를 화면에 그려준다.</li>
+<h3 id="2-함수-컴포넌트-내부에서-특정-값을-기억"><a href="#2-함수-컴포넌트-내부에서-특정-값을-기억" class="headerlink" title="2. 함수 컴포넌트 내부에서 특정 값을 기억"></a>2. 함수 컴포넌트 내부에서 특정 값을 기억</h3><p>함수 컴포넌트 내부에서 특정 값을 기억하면서 값을 변경해도 컴포넌트 렌더링에 영향을 주지 않아야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect, useRef, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> randomcolor <span class="keyword">from</span> <span class="string">&quot;randomcolor&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DoNotReRender</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> colorRef = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> [stateValue, setStateValue] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> [stateHex, setStateHex] = <span class="title function_">useState</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  <span class="keyword">const</span> [refHex, setRefHex] = <span class="title function_">useState</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setStateHex</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  &#125;, [stateValue]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setRefHex</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  &#125;, [colorRef]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">GridItem</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">css</span>=<span class="string">&#123;</span>`</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">background:</span> $&#123;<span class="attr">stateHex</span>&#125;;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        `&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>State<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ChangeColorButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">aria-label</span>=<span class="string">&quot;state 컬러 변경&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setStateValue(stateValue + 1)&#125;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 됩니다.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">GridItem</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">GridItem</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">css</span>=<span class="string">&#123;</span>`</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">background:</span> $&#123;<span class="attr">refHex</span>&#125;;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        `&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">          colorRef.current += 10;</span></span><br><span class="line"><span class="language-xml">          console.log(`colorRef.current = $&#123;colorRef.current&#125;`);</span></span><br><span class="line"><span class="language-xml">        &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Ref<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ChangeColorButton</span> <span class="attr">aria-label</span>=<span class="string">&quot;ref 컬러 변경&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>컬러 변경 버튼을 누르면 컴포넌트가 다시 렌더링 될까요?<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">GridItem</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>useState()</code>의 <code>setStateValue()</code>메서드를 사용하여 값을 변경한 경우 재렌더링이 발생하지만, <code>useRef()</code>의 current 값을 갱신하면 재렌더링이 발생하지 않는다.</li>
 </ul>
-<h2 id="✏️-stateless-컴포넌트는-함수형으로-작성한다"><a href="#✏️-stateless-컴포넌트는-함수형으로-작성한다" class="headerlink" title="✏️ stateless 컴포넌트는 함수형으로 작성한다?"></a>✏️ stateless 컴포넌트는 함수형으로 작성한다?</h2><p>표현을 목적으로 하는 컴포넌트는 복잡한 비즈니스 로직이 필요없고 이를 클래스로 작성할 경우 Babel 컴파일러가 클래스를 컴파일 해줄 때 함수형 컴포넌트일 때 보다 훨씬 더 많은 코드로 컴파일 해주기 때문에 <strong>stateless 컴포넌트를 클래스형으로 작성하는 것은 낭비이다.</strong></p>
-<h1 id="📌-stateful-컴포넌트"><a href="#📌-stateful-컴포넌트" class="headerlink" title="📌 stateful 컴포넌트"></a>📌 stateful 컴포넌트</h1><p>상태를 가지는 컴포넌트를 stateful 컴포넌트 또는 Container(컨테이너) 컴포넌트라고 한다.</p>
-<h2 id="목적-1"><a href="#목적-1" class="headerlink" title="목적"></a>목적</h2><ul>
-<li>비즈니스 로직을 가지고 있다.</li>
-<li><red>state(상태)</red>를 가진다.</li>
-<li>Presentational 컴포넌트에게 Props를 전달하여 UI 렌더링 하도록 한다.</li>
-<li>화면을 그리는 최소한의 스타일 정보를 가진다.</li>
-</ul>
-<h2 id="❓-stateful-컴포넌트는-함수형으로-작성하지-않는다"><a href="#❓-stateful-컴포넌트는-함수형으로-작성하지-않는다" class="headerlink" title="❓ stateful 컴포넌트는 함수형으로 작성하지 않는다?"></a>❓ stateful 컴포넌트는 <red>함수형으로 작성하지 않는다?</red></h2><p>하지만, <strong>React Hook</strong>의 등장으로 함수형 컴포넌트로도 Container 컴포넌트의 역할이 가능해졌다.</p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>클래스형 컴포넌트와 함수형 컴포넌트에 차이에 대해 알게되었다.</p>
-<p>프로젝트를 시작하게 될 때, 컴포넌트를 생성할텐데 이 때, 이 컴포넌트가 상태를 가지는 컴포넌트인지 상태를 갖지 않는 컴포넌트인지 구분을 짓고 컴포넌트를 생성해야겠다.</p>
-<p>오늘날 리액트에서 React Hook이 등장하게 되면서 클래스형으로만 작성되던 stateful Component가 어떻게 함수형 컴포넌트로 바뀌게 되었는지를 배우게 되면 리액트에 대한 이해가 한층 더 깊어질 것 같다.</p>
 
                     
                         
@@ -1422,13 +520,457 @@
                     
                         <p>
                             <a
-                                href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
+                                href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
                                 댓글 공유
                             </a>
                         </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"
+                            aria-label=": 🚧 Literal type과 as const"
+                        >
+                            🚧 Literal type과 as const
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-22T09:46:27+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-Literal-Type"><a href="#📌-Literal-Type" class="headerlink" title="📌 Literal Type"></a>📌 Literal Type</h1><p>타입 지정시 string, number 같은 원시타입만 할당할 수 있는 것이 아니다.</p>
+<p>개발자가 지정한 글자나 숫자 들을 타입으로 지정할 수 있다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">john</span>: <span class="string">&quot;Texas&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">kim</span>: <span class="number">33</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이제 john에는 ‘Texas’라는 글자만 할당될 수 있고 kim에는 33이라는 숫자만 할당될 수 있다.</li>
+</ul>
+                    
+                        <a
+                            href="/2022/11/22/TypeScript/%F0%9F%9A%A7-Literal-type%EA%B3%BC-as-const/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 🚧 Literal type과 as const"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                            aria-label=": type alias(타입별칭)와 타입 합치기"
+                        >
+                            type alias(타입별칭)와 타입 합치기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-22T09:06:56+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-type-alias-타입별칭"><a href="#📌-type-alias-타입별칭" class="headerlink" title="📌 type alias(타입별칭)"></a>📌 type alias(타입별칭)</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Animal</span> = <span class="built_in">string</span> | <span class="built_in">number</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type 타입변수명 &#x3D; 타입종류</li>
+<li>이런 식으로 타입 별칭으로 변수처럼 담아서 재사용할 수 있다.</li>
+<li>관습적으로 대문자 사용</li>
+</ul>
+<h2 id="🏓-function-type-지정하기"><a href="#🏓-function-type-지정하기" class="headerlink" title="🏓 function type 지정하기"></a>🏓 function type 지정하기</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">NumOut</span> = <span class="function">(<span class="params">x: <span class="built_in">number</span>, y: <span class="built_in">number</span></span>) =&gt;</span> <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">ABC</span>: <span class="title class_">NumOut</span> = <span class="keyword">function</span> (<span class="params">x, y</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">removeDash</span>(<span class="params">x: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> result = x.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">parseFloat</span>(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                        <a
+                            href="/2022/11/22/TypeScript/type-alias-%ED%83%80%EC%9E%85%EB%B3%84%EC%B9%AD-%EC%99%80-%ED%83%80%EC%9E%85-%ED%95%A9%EC%B9%98%EA%B8%B0/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": type alias(타입별칭)와 타입 합치기"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
+                            aria-label=": 🐒 useEffect"
+                        >
+                            🐒 useEffect
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:39+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useEffect"><a href="#📌-useEffect" class="headerlink" title="📌 useEffect"></a>📌 useEffect</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(effectCallback);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 발생 가능한 side-effect(부수효과)를 관리하기 위해 사용한다.</p>
+<ul>
+<li>비동기 통신 요청 및 응답</li>
+<li>DOM 조작</li>
+<li>구독&#x2F;취소 등</li>
+</ul>
+<p>리액트가 할 수 없는 작업을 할 때, <code>useEffect()</code>를 사용한다.</p>
+<h2 id="🌈-React-Hook-실행-흐름"><a href="#🌈-React-Hook-실행-흐름" class="headerlink" title="🌈 React Hook 실행 흐름"></a>🌈 React Hook 실행 흐름</h2><p><img src="/../../../images/useEffect/useFetch.png" alt="Hook 실행 흐름"></p>
+<p>리액트 Hook의 실행흐름은 위 사진과 같다.</p>
+<p>함수 컴포넌트에서 클래스 컴포넌트의 생명주기를 구현하기 위해 <code>useEffect()</code>가 <code>componentDidMount()</code>, <code>componentDidUpdate()</code>, <code>componentWillUnmount()</code> 메서드가 발생되는 주기를 대체할 수 있어야한다.</p>
+<blockquote>
+<p>useEffect()가 이들을 100% 대체할 순 없지만 문제없을 정도로 흉내내어 사용하고 있다.</p>
+</blockquote>
+<h2 id="🐥-이펙트-조건-처리"><a href="#🐥-이펙트-조건-처리" class="headerlink" title="🐥 이펙트 조건 처리"></a>🐥 이펙트 조건 처리</h2><h3 id="1-componentDidMount-대체-방법"><a href="#1-componentDidMount-대체-방법" class="headerlink" title="1. componentDidMount() 대체 방법"></a>1. <code>componentDidMount()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// componentDidMount</span></span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열을 주게되면 컴포넌트가 처음 mount 되는 때에 한번만 호출된다.</li>
+</ul>
+<h3 id="2-componentDidUpdate-대체-방법"><a href="#2-componentDidUpdate-대체-방법" class="headerlink" title="2. componentDidUpdate() 대체 방법"></a>2. <code>componentDidUpdate()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(</span><br><span class="line">	<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="comment">// componentDidMount</span></span><br><span class="line">		<span class="comment">// componentDidUpdate</span></span><br><span class="line">	&#125;.</span><br><span class="line">	[...dependencies]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열 대신 관리할 상태가 추가되면 해당 상태가 변경될 때에만 이펙트 함수가 실행된다. 즉, mount될 때는 1번 실행되고, update 될 때 마다 실행된다.</li>
+</ul>
+<h3 id="3-componentWillUnmount-대체-방법"><a href="#3-componentWillUnmount-대체-방법" class="headerlink" title="3. componentWillUnmount() 대체 방법"></a>3. <code>componentWillUnmount()</code> 대체 방법</h3><p>이벤트 구독&#x2F;취소처럼 컴포넌트가 제거될 때 실행되어야 하는 함수의 경우 다음과 같이 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Tester</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> clearId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">count</span>(), <span class="number">500</span>);</span><br><span class="line">    <span class="comment">// 정리 함수(cleanup)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">clearInterval</span>(clearId);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>cleanUp</code> 함수는 메모리 누수 방지를 위해 UI에서 컴포넌트를 제거하기 직전에 수행된다.</li>
+<li><strong>Effect 함수가 실행될 때마다 cleanUp 함수가 먼저 실행되어 정리한다.</strong></li>
+</ul>
+<p>이는 <code>componentWillUnmount()</code>처럼 동작하는 것 같지만, 리액트 팀은 클래스 컴포넌트 생명주기대로 로직을 구현했을 때, 대규모 프로젝트에서 버그를 많이 발견하였다.</p>
+<p>그리하여 리액트 팀에서는 구독취소 후 다시 구독하는 과정을 통해 이를 구현하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleStatusChange</span>(<span class="params">status</span>) &#123;</span><br><span class="line">    <span class="title function_">setIsOnline</span>(status.<span class="property">isOnline</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">ChatAPI</span>.<span class="title function_">subscribeToFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">ChatAPI</span>.<span class="title function_">unsubscribeFromFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.<span class="property">friend</span>.<span class="property">id</span>]); <span class="comment">// props.friend.id가 바뀔 때만 재구독합니다.</span></span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                            aria-label=": 💭 useState"
+                        >
+                            💭 useState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:24+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
+<ul>
+<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
+</ul>
+<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                            aria-label=": ✈️ 리액트 Hooks"
+                        >
+                            ✈️ 리액트 Hooks
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:26:59+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-Hooks"><a href="#📌-Hooks" class="headerlink" title="📌 Hooks"></a>📌 Hooks</h1><p>리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.</p>
+<ul>
+<li>리액트 Hook을 사용하면 <strong>함수 컴포넌트 중심으로 개발</strong>이 가능하다.</li>
+<li>함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 <red>재사용</red> 할 수 있다.</li>
+</ul>
+                    
+                        <a
+                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": ✈️ 리액트 Hooks"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                            aria-label=": 🐥 타마스 러버덕 1일차"
+                        >
+                            🐥 타마스 러버덕 1일차
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-18T11:02:51+09:00">
+	
+		    2022/11/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-TypeScript와-JavaScript-관계"><a href="#📌-TypeScript와-JavaScript-관계" class="headerlink" title="📌 TypeScript와 JavaScript 관계"></a>📌 TypeScript와 JavaScript 관계</h1><p>모든 JavaScript는 TypeScript이지만, <red>모든 TypeScript가 JavaScript는 아니다.</red></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">State</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">capital</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">states</span>: <span class="title class_">State</span>[] = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">capital</span>: <span class="string">&quot;경기도&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;kim&quot;</span>, <span class="attr">capitol</span>: <span class="string">&quot;서울&quot;</span> &#125;,</span><br><span class="line">]; <span class="comment">// Error</span></span><br><span class="line"><span class="comment">// Type &#x27;&#123; name: string; capitol: string; &#125;&#x27; is not assignable to type &#x27;State&#x27;.</span></span><br><span class="line"><span class="comment">//   Object literal may only specify known properties, but &#x27;capitol&#x27; does not exist in type &#x27;State&#x27;. Did you mean to write &#x27;capital&#x27;?</span></span><br></pre></td></tr></table></figure>
+
+<p>위 예시를 설명하면, 앞서 말한 <code>모든 타입스크립트가 자바스크립트다</code> <red>라고 하는 말은 틀렸다.</red></p>
+                    
+                        <a
+                            href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 🐥 타마스 러버덕 1일차"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
+                            aria-label=": 타입스크립트 들어가기 전..."
+                        >
+                            타입스크립트 들어가기 전...
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-18T10:13:46+09:00">
+	
+		    2022/11/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-타입스크립트란"><a href="#📌-타입스크립트란" class="headerlink" title="📌 타입스크립트란?"></a>📌 타입스크립트란?</h1><p>JavaScript는 동적 타입만을 제공하여 예측하기 어려운 타입변환으로 디버깅이 어려워지는 문제점이 있어 이를 해결하고자 TypeScript가 탄생하였다.</p>
+<p>TypeScript는 정적 타입 시스템을 사용하여 <strong>코드가 실행되기 전에 코드에 대하여 예측해준다.</strong></p>
+                    
+                        <a
+                            href="/2022/11/18/TypeScript/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%20%EC%A0%84.../"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 타입스크립트 들어가기 전..."
+                        >
+                            계속 읽기
+                        </a>
+                        
                     
                 </div>
             

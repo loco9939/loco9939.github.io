@@ -327,23 +327,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/01/10/CS/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 객체 불변성에 대해 설명하라"
+                            href="/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                            aria-label=": boj-2156 포도주 시식(JavaScript)"
                         >
-                            객체 불변성에 대해 설명하라
+                            boj-2156 포도주 시식(JavaScript)
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-01-10T16:49:01+09:00">
+    <time datetime="2023-02-13T16:30:46+09:00">
 	
-		    2023/01/10
+		    2023/02/13
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/CS/">CS</a>
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
 
 
     
@@ -352,274 +352,551 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h1 id="객체-불변성에-대해-설명하라"><a href="#객체-불변성에-대해-설명하라" class="headerlink" title="객체 불변성에 대해 설명하라."></a>객체 불변성에 대해 설명하라.</h1><p>자바스크립트에서 데이터는 변경 불가능한 원시값, 변경 가능한 참조값으로 구성된다.</p>
-<p>변경 가능한 참조값이 바로 객체를 말하는데, 객체는 값을 참조값으로 전달하고 전달 받으므로 객체가 참조를 통해 공유되어 있다면 하나를 바꿨을 때, 다른 것들도 바뀔 위험이 있다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">a</span>: <span class="number">10</span>, <span class="attr">b</span>: <span class="number">200</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> c = a;</span><br><span class="line"></span><br><span class="line">c.<span class="property">a</span> = <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c); <span class="comment">// &#123;a: 30, b: 200&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// &#123;a: 30, b: 200&#125;</span></span><br></pre></td></tr></table></figure>
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.</p>
+<p>포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.<br>연속으로 놓여 있는 3잔을 모두 마실 수는 없다.<br>효주는 될 수 있는 대로 많은 양의 포도주를 맛보기 위해서 어떤 포도주 잔을 선택해야 할지 고민하고 있다. 1부터 n까지의 번호가 붙어 있는 n개의 포도주 잔이 순서대로 테이블 위에 놓여 있고, 각 포도주 잔에 들어있는 포도주의 양이 주어졌을 때, 효주를 도와 가장 많은 양의 포도주를 마실 수 있도록 하는 프로그램을 작성하시오.</p>
+<p>예를 들어 6개의 포도주 잔이 있고, 각각의 잔에 순서대로 6, 10, 13, 9, 8, 1 만큼의 포도주가 들어 있을 때, 첫 번째, 두 번째, 네 번째, 다섯 번째 포도주 잔을 선택하면 총 포도주 양이 33으로 최대로 마실 수 있다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">예제 입력 1</span><br><span class="line">6</span><br><span class="line">6</span><br><span class="line">10</span><br><span class="line">13</span><br><span class="line">9</span><br><span class="line">8</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">예제 출력 1</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
 
-<p>위와 같은 문제를 해결하기 위한 방법으로 객체를 불변객체로 만들거나, 참조값을 복사하는 것이 아닌 객체의 값을 복사하여 새로운 객체를 생성하는 방법이 있다.</p>
-<p>객체를 불변 객체로 만드는 방법은 Object.freeze메서드와 Object.seal 메서드를 사용하는 방법이 있다. 두 메서드는 직속 프로퍼티에만 적용된다(얕은 방지).</p>
-<blockquote>
-<p>Object.freeze(), Object.seal()의 차이는 Object.freeze()는 해당 객체에 속성 추가, 기존 속성 변경, 삭제가 모두 불가능하지만 Object.seal()은 새로운 속성 추가및 삭제가 불가능하고 기존 속성 변경은 가능하다.</p>
-</blockquote>
-<p>객체의 값을 복사하는 방법으로는 Object.assign()를 사용하는 방법, ES6 Spread 문법이 있다. 이 두가지 방법 역시 얕은 복사이므로, 깊은 복사를 하려면 라이브러리를 사용하거나 새로 추가된 structedClone() 메서드를 사용하는 방법이 있다.</p>
-<blockquote>
-<p>structedClone() 메서드는 Function 객체, DOM Node, 객체들의 몇몇 파라미터 일부 기능에 제한이 있다.</p>
-</blockquote>
-<h2 id="리액트에서-Props-State를-불변객체로-다루는-이유는"><a href="#리액트에서-Props-State를-불변객체로-다루는-이유는" class="headerlink" title="리액트에서 Props, State를 불변객체로 다루는 이유는?"></a>리액트에서 Props, State를 불변객체로 다루는 이유는?</h2><p>리액트에서는 Props와 State의 변경을 불변성을 이용해 감지하고 리렌더링을 발생시킨다.</p>
-<p>만약 불변 객체를 사용하지 않는다면, 객체의 값이 어디에서 바뀌게 되었는지 예상하기 어렵고 해당 객체도 엉망이 될 것이다.</p>
-<blockquote>
-<p>setState는 비동기적으로 State를 변경시키는데, 불변 객체로 다루지 않고 직접 State를 변경시킨다면 이전의 값이 반환될 수 있다.</p>
-</blockquote>
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> n = input.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="number">0</span>);</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = input[<span class="number">0</span>];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>] = input[<span class="number">0</span>] + input[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[n]);</span><br></pre></td></tr></table></figure>
 
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/10/CS/%EA%B0%9D%EC%B2%B4-%EB%B6%88%EB%B3%80%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/10/CS/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 비동기 함수를 이벤트 루프 관점에서 설명하라"
-                        >
-                            비동기 함수를 이벤트 루프 관점에서 설명하라
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-10T16:30:09+09:00">
-	
-		    2023/01/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라"><a href="#이벤트-루프가-비동기-함수를-어떻게-처리하는지-설명하라" class="headerlink" title="이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라."></a>이벤트 루프가 비동기 함수를 어떻게 처리하는지 설명하라.</h1><p>우선 자바스크립트는 한번에 하나의 일을 처리할 수 있는 싱글 스레드 처리방식을 가진다.</p>
-<p>그러므로 동기적으로 일을 처리할 때에 시간이 오래 걸리는 처리를 할 경우 다음 일에 블로킹이 발생한다.</p>
-<p>이러한 블로킹 현상을 해결하기 위해 비동기식 처리 방식을 사용하고 여러 개의 일이 동시에 처리되는 것처럼 느껴지도록 도와주는 이벤트 루프가 있다.</p>
-<blockquote>
-<p>이벤트 루프는 브라우저에 내장된 기능 중 하나이다.</p>
-</blockquote>
-<p><img src="/../images/../../images/event/eventLoop.png" alt="이벤트 루프"></p>
-<p>위 사진은 이벤트 루프가 동작하는 방식을 보여주는 사진이다.</p>
 <ul>
-<li><strong>콜 스택</strong> : 함수 호출 시 함수 실행 컨텍스트가 콜 스택에 푸시되어 순차적으로 실행된다.</li>
-<li><strong>태스크 큐</strong> : 타이머 함수의 콜백 함수 또는 이벤트 핸들러가 일시적으로 보관되는 영역이다. 태스크 큐와는 별도로 프로미스의 후속처리 메서드의 콜백 함수가 일시적으로 보관되는 마이크로 태스크 큐도 존재한다.</li>
-<li><strong>이벤트 루프 :</strong> 이벤트 루프는 현재 콜 스택에 실행중인 실행 컨텍스트가 있는지, 태스크 큐에 대기중인 함수가 있는지 확인하여 콜 스택이 비어있고 태스크 큐에 대기중인 함수가 있다면 이벤트 루프가 순차적(FIFO)으로 태스크 큐에 대기중인 함수를 콜 스택으로 이동시킨다. 즉, <strong>태스크 큐에 일시 보관된 함수들은 비동기 처리 방식으로 동작한다.</strong></li>
+<li>DP는 N이 0에서 부터 n까지로 마실 수 있는 최대 포도주 양을 담은 배열이다.</li>
+<li>만약 포도주가 1개라고 하면 1잔으로 마실 수 있는 포도주 최대 양을 DP[1]이라고 할 수 있고 그 값은 가장 첫번째 배열의 요소이다. (왜냐하면? 해당 배열에는 한개의 요소밖에 없으니깐)</li>
+<li>만약 포도주가 2개일 때, 2잔으로 마실 수 있는 포도주 최대 양은 DP[2]이고, 그 값은 가장 첫번째 배열과 두번째 배열의 요소의 합이다.</li>
 </ul>
-<blockquote>
-<p>비동기 처리에서 소스코드 평가 및 실행을 제외한 모든 코드는 브라우저 또는 NodeJS가 담당한다. 브라우저는 멀티 스레드로 동작한다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/10/CS/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/"
-                            aria-label=": 모의 면접 2차 회고"
-                        >
-                            모의 면접 2차 회고
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-10T15:45:38+09:00">
-	
-		    2023/01/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-1분-자기소개-파트"><a href="#📌-1분-자기소개-파트" class="headerlink" title="📌 1분 자기소개 파트"></a>📌 1분 자기소개 파트</h1><p>기술면접만 진행하실 줄 알았는데 갑자기 자기소개를 하라하셔서 당황하여 말을 제대로 못했다.</p>
-<ul>
-<li>~ 하는 편입니다. 보다는 ~ 합니다. 라고 명료하게 답변하자</li>
-</ul>
-<h1 id="📚-기술면접-파트"><a href="#📚-기술면접-파트" class="headerlink" title="📚 기술면접 파트"></a>📚 기술면접 파트</h1><h3 id="비동기-함수와-이벤트-루프에-대한-설명해라"><a href="#비동기-함수와-이벤트-루프에-대한-설명해라" class="headerlink" title="비동기 함수와 이벤트 루프에 대한 설명해라"></a>비동기 함수와 이벤트 루프에 대한 설명해라</h3><ul>
-<li>Web API, setTimeout, 이벤트리스너등의 특수한 경우에서 자바스크립트는 멀티스레드로 동작하는 것처럼 보이는 것이다. 실제로 자바스크립트는 싱글 스레드이다.</li>
-<li>일련의 과정을 설명하는데 짜임새가 부족하였다.</li>
-<li>자바스크립트는 원래 싱글 스레드인데, 런타임 이전에서 AJAX나 비동기 코드를 위해 불가피하게 멀티 스레드를 두어 사용하게 되었다 라는 보충 설명 해주면 좋을 것 같다.</li>
-</ul>
-<h3 id="객체-불변성에-대해-설명해라"><a href="#객체-불변성에-대해-설명해라" class="headerlink" title="객체 불변성에 대해 설명해라"></a>객체 불변성에 대해 설명해라</h3><ul>
-<li>리액트와 객체 불변성을 연관짓는 설명이 부족하다.</li>
-<li>~ 한다고 생각합니다 대신 ~ 할 수 있습니다로 바꿔서 말하기</li>
-</ul>
-<h3 id="This-설명하라"><a href="#This-설명하라" class="headerlink" title="This 설명하라"></a>This 설명하라</h3><ul>
-<li>처음에 4가지 분류를 말하였는데 말하다보니 까먹어서 3가지밖에 말하지 못한 부분이 아쉬웠다.</li>
-<li>화살표 함수는 this를 가지고 있지 않으므로, 내부의 this는 상위 스코프의 this에 바인딩된다.</li>
-</ul>
-<h3 id="var-let-const-비교-설명하라"><a href="#var-let-const-비교-설명하라" class="headerlink" title="var, let, const 비교 설명하라"></a>var, let, const 비교 설명하라</h3><ul>
-<li>스코프 설명하면서 함수레벨 스코프, 블록 레벨 스코프가 왜 더 안전한 코드를 짤 수 있도록 하는 지에 대한 설명 보충</li>
-</ul>
-<h3 id="함수가-일급-객체인-이유는"><a href="#함수가-일급-객체인-이유는" class="headerlink" title="함수가 일급 객체인 이유는?"></a>함수가 일급 객체인 이유는?</h3><ul>
-<li>좀 더 자세한 설명이 필요하다.</li>
-<li>특징을 2가지 밖에 말하지 못하여 아쉬웠다.</li>
-</ul>
-<h3 id="클로저-설명-장점-및-주의점"><a href="#클로저-설명-장점-및-주의점" class="headerlink" title="클로저 설명, 장점 및 주의점"></a>클로저 설명, 장점 및 주의점</h3><ul>
-<li>주의점 설명이 부족했다. 클로저는 외부 함수의 실행 컨텍스트가 사라져도 내부 함수에 대한 참조가 유지되고 있기 때문에 메모리 누수에 대한 부분도 고려해줘야한다.</li>
-<li>리액트내에서도 useEffect 함수 내부에서 클린업 함수를 해주어 메모리 누수를 방지하여야 한다.</li>
-</ul>
-<h3 id="CORS-우회-방법-설명하라"><a href="#CORS-우회-방법-설명하라" class="headerlink" title="CORS 우회 방법 설명하라"></a>CORS 우회 방법 설명하라</h3><ul>
-<li>프록시 객체라는 설명이 모호해서 아쉬웠다. 프록시 서버에 대한 설명을 프록시 객체로 잘못 답변하였다.</li>
-</ul>
-<h3 id="제너레이터에-대해-설명하라"><a href="#제너레이터에-대해-설명하라" class="headerlink" title="제너레이터에 대해 설명하라"></a>제너레이터에 대해 설명하라</h3><ul>
-<li>제너레이터 공부하자…</li>
-</ul>
-<h1 id="✏️-총평"><a href="#✏️-총평" class="headerlink" title="✏️ 총평"></a>✏️ 총평</h1><ul>
-<li>정제된 단어로 정리해서 답변을 하면 더 좋을 것 같다.</li>
-<li>객체 변경 불가성 중요하니깐 제대로 알아두자. 상태값을 객체로 주로 저장하기 때문에, 이 자체의 참조값을 바꿔야지만 내부적으로 렌더링이 일어난다.</li>
-<li>클로저의 주의점에 대해서는 클린업 함수, 메모리 누수 설명 보충하자.</li>
-<li>1급 객체에 대한 특징 및 조건 설명을 풍부하게 해보자.</li>
-<li>CORS 해결 방법에 대한 설명을 제대로 답변하지 못하였으니 공부하자.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/10/CS/%EB%AA%A8%EC%9D%98-%EB%A9%B4%EC%A0%91-2%EC%B0%A8-%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": JWT 토큰 방식은 무엇인가요?"
-                        >
-                            JWT 토큰 방식은 무엇인가요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-09T11:31:32+09:00">
-	
-		    2023/01/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🛠-JWT-토큰-방식이란"><a href="#🛠-JWT-토큰-방식이란" class="headerlink" title="🛠 JWT 토큰 방식이란?"></a>🛠 JWT 토큰 방식이란?</h1><p>JWT는 JSON Web Token의 약자로, 인증에 필요한 데이터를 암호화한 JSON으로 이루어진 토큰을 말한다.</p>
-<p>기존의 세션 인증방식은 인증관련 정보를 세션 저장소라는 DB에 저장하여 서버가 과부하 되거나 서버를 확장하기가 어려웠다.</p>
-<p>이러한 문제 때문에 서버자원을 절약하기 위해 사용자 인증에 필요한 정보를 토큰 자체에 담아두는 JWT를 사용하게 되었다.</p>
-<blockquote>
-<p>토큰은 로그인 이후 서버가 만들어주는 문자열이고, 토큰 안에는 사용자의 로그인 정보와 서버의 서명이 들어있다.</p>
-</blockquote>
-<h1 id="JWT-토큰-방식-순서"><a href="#JWT-토큰-방식-순서" class="headerlink" title="JWT 토큰 방식 순서"></a>JWT 토큰 방식 순서</h1><ol>
-<li>사용자가 로그인을 하면 서버는 사용자에게 사용자 로그인 정보 및 서버의 서명이 들어간 토큰을 발급한다.</li>
-<li>사용자는 토큰을 가지고 권한이 필요한 API 작업을 요청한다.</li>
-<li>서버는 토큰의 유효성 검사를 통해 요청에 응답한다.</li>
+<p>하지만 여기서 DP[3]부터는 고려해줘야하는 부분이 생겨난다.</p>
+<p>1번잔, 2번잔, 3번잔이 있을 때, DP[3]으로 올 수 있는 경우의 수는 다음과 같다.</p>
+<ol>
+<li>1번과 2번을 마시는 경우 &#x3D;&gt; DP[2]와 같은 의미이다.</li>
+<li>1번과 3번을 마시는 경우 &#x3D;&gt; DP[1]+input[2]</li>
+<li>2번과 3번을 마시는 경우 &#x3D;&gt; 1번을 제외 하는 것이니 DP[0]+input[1]+input[2]</li>
 </ol>
-<h1 id="JWT-토큰-특징"><a href="#JWT-토큰-특징" class="headerlink" title="JWT 토큰 특징"></a>JWT 토큰 특징</h1><h2 id="👍-장점"><a href="#👍-장점" class="headerlink" title="👍 장점"></a>👍 장점</h2><ul>
-<li>서버에서 사용자 정보를 저장해둘 필요가 없어 서버 스케일링시 큰 문제가 없다.</li>
-<li>별도의 I&#x2F;O 작업 없는 빠른 인증 처리 가능</li>
+<p>위를 토대로 점화식을 세울 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"
+                            aria-label=": useState로 컴포넌트 리셋하기"
+                        >
+                            useState로 컴포넌트 리셋하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-07T23:23:20+09:00">
+	
+		    2023/02/07
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useState란"><a href="#useState란" class="headerlink" title="useState란?"></a>useState란?</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, setState] = <span class="title function_">useState</span>(initialState);</span><br></pre></td></tr></table></figure>
+
+<p>리액트에서 상태 변수를 컴포넌트에 추가할 때 사용하는 리액트 훅이다.</p>
+<p>특징으로는 상태를 변경하기 위해서는 set 함수를 사용하여 변경해야만 하고, set 함수에 새로운 값을 인자로 전달하면 새로운 상태로 렌더링을 일으킨다.</p>
+<h2 id="useState로-컴포넌트-Reset-시키기"><a href="#useState로-컴포넌트-Reset-시키기" class="headerlink" title="useState로 컴포넌트 Reset 시키기"></a>useState로 컴포넌트 Reset 시키기</h2><p>주로 어떤 상태를 reset 시키기 위해 아래와 같은 코드를 작성할 것이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [list, setList] = <span class="title function_">useState</span>([]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">resetList</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setList</span>([]);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">addList</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setList</span>([...list, <span class="number">10</span>]);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;resetList&#125;</span>&gt;</span>Reset Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;addList&#125;</span>&gt;</span>Add 10<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;list.map((num) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;num&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 직접 상태를 초기화 하는 방법도 있지만 <strong>key props에게 변경된 상태를 전달함으로써 해당 컴포넌트는 물론 해당 컴포넌트의 하위 컴포넌트까지 reset할 수 있다.</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [version, setVersion] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleReset</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">setVersion</span>(version + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleReset&#125;</span>&gt;</span>Reset<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Form</span> <span class="attr">key</span>=<span class="string">&#123;version&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Form</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [name, setName] = <span class="title function_">useState</span>(<span class="string">&quot;Taylor&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#123;name&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;(e)</span> =&gt;</span> setName(e.target.value)&#125; /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Hello, &#123;name&#125;.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/"
+                            aria-label=": useEffect로 이전 상태 기반하여 상태 업데이트 하기"
+                        >
+                            useEffect로 이전 상태 기반하여 상태 업데이트 하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-06T16:24:27+09:00">
+	
+		    2023/02/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useEffect란"><a href="#useEffect란" class="headerlink" title="useEffect란?"></a>useEffect란?</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(setup, dependencies?)</span><br></pre></td></tr></table></figure>
+
+<p>외부 시스템과 컴포넌트를 동기화 하는데 사용하는 React Hook이다. <strong>즉, 외부 시스템과 동기화하는 작업이 아니라면 useEffect를 사용하지 않는 것이 좋다.</strong></p>
+<h2 id="params"><a href="#params" class="headerlink" title="params"></a>params</h2><h3 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h3><p>Effect 로직 함수로, 선택적으로 cleanup 함수를 반환할 수 있다.</p>
+<ul>
+<li>컴포넌트가 처음 DOM에 추가 되었을 때, setup 함수가 실행된다.</li>
+<li>의존성이 변경되어 리렌더링이 발생한 이후, <span style='color:red;'>리액트는 이전 값으로 cleanup 함수 먼저 실행하고 새로운 값으로 setup 함수를 실행한다.</span></li>
+<li><strong>컴포넌트가 DOM에서 제거된 후, 리액트는 클린업 함수를 한 번 실행한다.</strong></li>
 </ul>
-<h2 id="👎-단점"><a href="#👎-단점" class="headerlink" title="👎 단점"></a>👎 단점</h2><ul>
-<li>한번 발급된 토큰은 수정 및 폐기가 불가능하다.(클라이언트에게 있으니깐!)<ul>
-<li>그렇기 때문에 유효기간을 짧게 설정해주는것이 중요하다.</li>
+<h3 id="dependencies"><a href="#dependencies" class="headerlink" title="dependencies?"></a>dependencies?</h3><p>setup 함수 코드 내부와 관련된 리액트 값들의 리스트이다. 리액트 값들은 컴포넌트 내부에서 선언된 props, state, 변수, 함수들을 의미한다.</p>
+<ul>
+<li>리액트는 이전 값과 dependencies를 Object.is() 메서드로 비교한다.</li>
+<li>만약 dependencies를 명확히 기재하지 않는다면, 컴포넌트 리렌더링이 발생할 때마다 Effect가 다시 실행된다.</li>
 </ul>
+<h2 id="이전-상태를-기반으로-useEffect로-상태-업데이트-하기"><a href="#이전-상태를-기반으로-useEffect로-상태-업데이트-하기" class="headerlink" title="이전 상태를 기반으로 useEffect로 상태 업데이트 하기"></a>이전 상태를 기반으로 useEffect로 상태 업데이트 하기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slider.js - 의존성 있는 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(index + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, [index]);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 slider 프로젝트를 제작하다가 나온 코드이다. setInterval을 Effect 로직에 사용하였는데, 의존성으로 indexrk 있어 index가 변경될 때마다 해당 Effect 로직이 cleanup되고 setup되고를 반복하게 된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slieder.js - 의존성 빈 배열인 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(<span class="function">(<span class="params">i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 바꿀 경우 코드는 동일하게 동작하지만, 이전 상태를 기반으로 상태를 업데이트할 때에는 이전 값을 직접 넣어주기보단 updater 함수를 콜백함수로 전달해줌으로서 의존성 데이터를 줄일 수 있다.</p>
+<p><strong>그 결과, 처음 컴포넌트가 렌더링되고 한번만 실행되기 때문에 불필요한 setup과 cleanup 과정을 줄일 수 있다.</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"
+                            aria-label=": &lt;Suspense&gt; 컴포넌트는 무엇인가?"
+                        >
+                            &lt;Suspense&gt; 컴포넌트는 무엇인가?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-02T16:29:47+09:00">
+	
+		    2023/02/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="컴포넌트란"><a href="#컴포넌트란" class="headerlink" title=" 컴포넌트란?"></a><Suspense> 컴포넌트란?</h1><p>자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">SomeComponent</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="주의사항"><a href="#주의사항" class="headerlink" title="주의사항"></a>주의사항</h2><ul>
+<li>리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존하지 않는다. 컴포넌트가 로드되면 리액트는 중단된 트리를 처음부터 렌더링을 시도한다.</li>
+<li><Suspense> 컴포넌트는 컴포넌트 내부에서 startTransition이나 useDeferredValue로 인한 업데이트가 아닌 경우라면 fallback이 표시된다.</li>
+<li>컴포넌트가 다시 일시 중단되었기 때문에 이미 보여진 컨텐츠를 감출 필요가 있다면, layout effect를 비운다. 다시 컨텐츠를 보여줄 준비가 됐을 때, 리액트는 layout effect를 발생시킨다. 이는 컨텐츠가 숨겨진 동안 DOM layout을 측정하지 않도록 한다.</li>
+</ul>
+<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><p>컨텐츠가 로딩되는 동안에 fallback을 보여준다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Albums</span> <span class="keyword">from</span> <span class="string">&quot;./Albums.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">ArtistPage</span>(<span class="params">&#123; artist &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;artist.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">Loading</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Loading</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>🌀 Loading...<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="컨텐츠를-한번에-공개"><a href="#컨텐츠를-한번에-공개" class="headerlink" title="컨텐츠를 한번에 공개"></a>컨텐츠를 한번에 공개</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p><Suspense> 내부에 하나의 컴포넌트라도 일시중단 되더라도 <strong>모든 하위 컴포넌트가 대기했다가 한번에 공개된다.</strong></p>
+<h3 id="가장-가까운-의-fallback을-보여준다"><a href="#가장-가까운-의-fallback을-보여준다" class="headerlink" title="가장 가까운 의 fallback을 보여준다."></a>가장 가까운 <Suspense>의 fallback을 보여준다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Details</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Details</span>(<span class="params">&#123; artistId &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Biography</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>때문에 직접적인 자식이 아니더라도 Biography와 Albums와 가장 가까운 부모 <Suspense> 경계를 공유하기 때문에 함께 표시된다.</p>
+<h3 id="로드-될-때-중첩된-컨텐츠-표시한다"><a href="#로드-될-때-중첩된-컨텐츠-표시한다" class="headerlink" title="로드 될 때, 중첩된 컨텐츠 표시한다."></a>로드 될 때, 중첩된 컨텐츠 표시한다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">BigSpinner</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">AlbumsGlimmer</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>처음에 Biography가 로딩이 완료 되지 않았을 때, BigSpinner가 fallback으로 보여지고, 이후 Biography는 로딩이 완료되었기 때문에 보여지고, 아래 Albums이 로딩이 완료되지 않았다면 AlbumsGlimmer를 보여주고 있다가 로딩이 완료되어 Albums를 보여준다.</p>
+<p>핵심은 Biography가 Albums 로딩이 완료될 때까지 기다리지 않는 다는 것이다.</p>
+<h3 id="이미-공개된-컨텐츠가-숨겨지는-것을-방지하기"><a href="#이미-공개된-컨텐츠가-숨겨지는-것을-방지하기" class="headerlink" title="이미 공개된 컨텐츠가 숨겨지는 것을 방지하기"></a>이미 공개된 컨텐츠가 숨겨지는 것을 방지하기</h3><p><a target="_blank" rel="noopener" href="https://codesandbox.io/s/0lgig0?file=/App.js&utm_medium=sandpack">Code Example Link</a></p>
+<ul>
+<li><Suspense> 내부에 startTransition이 사용되었다면, <span style="color:red;">fallback이 보여지지 않는다.</span></li>
+<li>때문에 fallback의 BigSpinner에 의해 이전에 보여진 컨텐츠가 숨겨지는 것을 방지할 수 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/02/CS/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/"
+                            aria-label=": Context API란 무엇이고 Redux와 어떤 차이가 있나요?"
+                        >
+                            Context API란 무엇이고 Redux와 어떤 차이가 있나요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-02T15:35:47+09:00">
+	
+		    2023/02/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Context-API란"><a href="#Context-API란" class="headerlink" title="Context API란?"></a>Context API란?</h1><div style="display:flex">
+    <img src="../../images/contextapi/context.png" width="200" height="300">
+    <p style="padding:0 1rem; line-height:1.5;">앱의 규모가 커지고 복잡해짐에 따라 부모 컴포넌트에서 중첩된 자식 컴포넌트에게 데이터나 데이터 변경함수를 전달해줄 때, 몇단계를 걸쳐서 전달해줌으로서 애플리케이션이 더욱 복잡해지는 문제가 발생하였다.<br />
+    이를 해결하기 위해 context API가 등장하였고, 이로써 props를 단계별로 넘겨주지 않아도 데이터를 제공할 수 있게 되었다. 그 결과 <b>컴포넌트 트리로 묶인 컴포넌트 간 데이터 공유가 수월해졌다.</b> 
+    </p>
+</div>
+
+<ul>
+<li>리액트에서 제공하는 내장 기능이다.</li>
+</ul>
+<blockquote>
+<p>단, Context API를 사용하게 되면 컴포넌트의 재사용이 어려워지므로 꼭 필요한 경우에만 사용한다.</p>
+</blockquote>
+<h1 id="Redux란"><a href="#Redux란" class="headerlink" title="Redux란?"></a>Redux란?</h1><p>Redux는 action이라는 이벤트를 사용하여 데이터를 관리할 수 있는 상태관리 라이브러리이다.</p>
+<p><img src="/../../images/contextapi/Redux.png" alt="redux"></p>
+<h2 id="리덕스의-3원칙"><a href="#리덕스의-3원칙" class="headerlink" title="리덕스의 3원칙"></a>리덕스의 3원칙</h2><ol>
+<li>단 하나의 store에서 모든 상태가 저장된다.</li>
+<li>store의 상태를 변경하는 유일한 방법은 action 객체를 dispatch하는 방법 뿐이다.</li>
+<li>action에 의한 상태 변경은 순수함수를 통해서만 가능하도록 작성해야 한다.</li>
+</ol>
+<h2 id="리덕스-특징"><a href="#리덕스-특징" class="headerlink" title="리덕스 특징"></a>리덕스 특징</h2><ul>
+<li>thunk, saga와 같은 미들웨어를 추가적으로 설정할 수 있다. 비동기 처리를 Util로 처리 가능</li>
+<li>Redux Devtool Extension을 사용하여 디버깅이 용이하다.</li>
+<li>전역 상태 관리 이외도 로컬스토리지에 상태 저장, 버그 리포트 등의 기능을 제공한다.</li>
+</ul>
+<h2 id="Context-API와-Redux의-차이"><a href="#Context-API와-Redux의-차이" class="headerlink" title="Context API와 Redux의 차이"></a>Context API와 Redux의 차이</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>Context API</th>
+<th>Redux</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Learning Curve</td>
+<td>쉬움</td>
+<td>어려움</td>
+</tr>
+<tr>
+<td>알아야 할 것들</td>
+<td>적다</td>
+<td>많다</td>
+</tr>
+<tr>
+<td>유지보수성</td>
+<td>작고 간단한 애플리케이션에 적합</td>
+<td>복잡한 애플리케이션에 적합</td>
+</tr>
+</tbody></table>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/02/CS/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/02/React/React%EC%97%90%EC%84%9C-map-%EB%A9%94%EC%84%9C%EB%93%9C%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%A0-%EB%95%8C-key-%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0%EB%A5%BC-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%B4%EC%95%BC%ED%95%98%EB%82%98%EC%9A%94/"
+                            aria-label=": React에서 map 메서드를 사용할 때, key 프로퍼티를 왜 사용해야하나요?"
+                        >
+                            React에서 map 메서드를 사용할 때, key 프로퍼티를 왜 사용해야하나요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-02T15:20:29+09:00">
+	
+		    2023/02/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="React에서-key를-사용하는-이유"><a href="#React에서-key를-사용하는-이유" class="headerlink" title="React에서 key를 사용하는 이유"></a>React에서 key를 사용하는 이유</h1><p>리액트에서 배열 데이터와 map 메서드를 사용하여 다수의 컴포넌트를 렌더링할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">NumberList</span>(<span class="params">&#123; numbers &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> listItems = numbers.<span class="title function_">map</span>(<span class="function">(<span class="params">number</span>) =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;number&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span>&#123;listItems&#125;<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">NumberList</span> <span class="attr">numbers</span>=<span class="string">&#123;numbers&#125;</span> /&gt;</span></span>,</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;root&quot;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>React 프레임워크는 state, props가 업데이트된 이후의 virtual DOM과 이전의 virtual DOM을 비교하고 변경 사항만 Real DOM에 반영하여 효율적으로 UI를 렌더링한다. <strong>이를 재조정 과정이라고 한다.</strong></p>
+<p>재조정 과정에서 <span style="color:red;">key가 없다면 이전 DOM과 이후 DOM의 요소를 비교하기 어려워지고 O(n^3) 복잡성을 가지는 알고리즘을 사용해야 하기 때문에 성능상 문제가 생길 수 있다.</span></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/02/React/React%EC%97%90%EC%84%9C-map-%EB%A9%94%EC%84%9C%EB%93%9C%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%A0-%EB%95%8C-key-%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0%EB%A5%BC-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%B4%EC%95%BC%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": JavaScript 데이터 타입에 대해 설명하라"
+                        >
+                            JavaScript 데이터 타입에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-02T14:38:32+09:00">
+	
+		    2023/02/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="JavaScript-데이터-타입"><a href="#JavaScript-데이터-타입" class="headerlink" title="JavaScript 데이터 타입"></a>JavaScript 데이터 타입</h1><p>자바스크립트는 크게 2가지의 데이터 타입으로 나뉜다.</p>
+<ol>
+<li><p>원시타입 (Primitive Data Type)</p>
 </li>
-<li>토큰의 길이가 늘어날 수록 네트워크 부하가 심해진다.</li>
+<li><p>객체타입(참조타입) (Object Type, Reference Type)</p>
+</li>
+</ol>
+<p>이 중에서도 원시타입에는 6가지의 타입이 존재하고 그 외의 것들은 모두 객체타입이다.</p>
+<h2 id="Primitive-Data-Type-원시타입"><a href="#Primitive-Data-Type-원시타입" class="headerlink" title="Primitive Data Type (원시타입)"></a>Primitive Data Type (원시타입)</h2><p>원시타입의 종류는 6가지가 있다.</p>
+<ul>
+<li>number (숫자형)</li>
+<li>string (문자형)</li>
+<li>undefined</li>
+<li>null</li>
+<li>boolean (불리언형)</li>
+<li>symbol</li>
 </ul>
+<p><strong>원시 타입의 값은 변경 불가능한 값이며, pass-by-value(값에 의한 전달)이다.</strong></p>
+<h3 id="number"><a href="#number" class="headerlink" title="number"></a>number</h3><p>Javascript에서는 숫자형을 모두 실수로 처리한다. 추가로 아래와 같은 자료도 숫자형이다.</p>
+<ul>
+<li>Infinity : 양의 무한대</li>
+<li>-Infinity : 음의 무한대</li>
+<li>NaN : 산술 연산 불가(Not A Number)</li>
+</ul>
+<blockquote>
+<p>NaN은 자기 자신과 일치하지 않는 유일한 값이다. 그러므로 어떤 값이 NaN인지 판단하기 위해서는 Number.isNaN() 빌트인 함수를 사용하거나 Object.is() 메서드를 사용하여야 한다.</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">NaN</span> === <span class="title class_">NaN</span>; <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Number</span>.<span class="built_in">isNaN</span>(<span class="title class_">NaN</span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">is</span>(<span class="title class_">NaN</span>, <span class="title class_">NaN</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>C언어와 다르게 JavaScript의 문자열은 원시타입으로 변경 불가능하다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">str = <span class="string">&quot;World&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 str 변수에 ‘World’라는 문자열로 데이터를 수정하는 것이 아니다.<br>임의의 메모리 주소를 갖는 메모리 공간에 ‘World’라는 문자열을 저장하고 변수의 식별자인 str이 새로운 메모리 주소를 가리켜 변수를 <b style="color:red">재할당</b>하는 것이다.</p>
+<h3 id="boolean"><a href="#boolean" class="headerlink" title="boolean"></a>boolean</h3><p>참, 거짓을 나타내는 자료형이다. 암묵적 불리언 형변환이 발생하면 해당 값들을 false로 바꿔주는 falsy 값들이 있다.</p>
+<h4 id="falsy"><a href="#falsy" class="headerlink" title="falsy"></a>falsy</h4><ul>
+<li>“” (빈문자열)</li>
+<li>undefined</li>
+<li>null</li>
+<li>0, -0</li>
+<li>NaN</li>
+</ul>
+<h3 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h3><p>변수의 선언 단계는 사실 선언단계와 초기화 단계 두 단계로 나눠서 볼 수 있는데, 초기화 단계에서 컴퓨터가 변수가 할당되기 이전에 undefined값으로 변수의 값을 초기화해준다.</p>
+<p>때문에 이는 개발자의 의도가 담긴 것이 아니다.</p>
+<h3 id="null"><a href="#null" class="headerlink" title="null"></a>null</h3><p>변수의 값이 없다는 것에 개발자의 의도를 담고 싶다면 null을 사용한다. 자바스크립트는 대소문자를 구별하기 때문에 null, Null, NULL 모두 다른 값이다.</p>
+<blockquote>
+<p>함수가 유효한 값을 반환할 수 없는 경우 명시적을 null을 반환하기도 한다.</p>
+</blockquote>
+<p>null 값의 type을 확인하기 위해서는 typeof 연산자를 사용하는 것 대신 일치 연산자(&#x3D;&#x3D;&#x3D;)를 사용한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">null</span>; <span class="comment">// &#x27;object&#x27;</span></span><br><span class="line">foo === <span class="literal">null</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="symbol"><a href="#symbol" class="headerlink" title="symbol"></a>symbol</h3><p>심볼은 이름이 충돌한 위험이 없는 유일무이한 원시타입의 값이다. 주로 객체의 유일한 프로퍼티 키를 만들기 위해 사용한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> key = <span class="title class_">Symbol</span>(<span class="string">&quot;key&quot;</span>);</span><br><span class="line"><span class="keyword">typeof</span> key; <span class="comment">// &#x27;symbol&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">obj[key] = <span class="string">&quot;value&quot;</span>; <span class="comment">// 이름이 충돌할 위험이 없는 유일무이한 값인 심볼을 프로퍼티 키로 사용</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Object-Type-Reference-Type-객체타입"><a href="#Object-Type-Reference-Type-객체타입" class="headerlink" title="Object Type, Reference Type (객체타입)"></a>Object Type, Reference Type (객체타입)</h2><p>객체란, 데이터와 그 데이터에 관련된 동작(절차, 방법, 기능 등)을 모두 포함할 수 있는 개념적 존재이다.</p>
+<p>다시말해 데이터를 의미하는 <strong>프로퍼티</strong>와 동작을 의미하는 <strong>메소드</strong>를 포함할 수 있는 독립적 주체이다.</p>
+<p>원시타입을 제외한 나머지 값(배열, 함수, 정규표현식 등)이 모두 객체이다. 객체는 pass-by-reference (참조에 의한 전달)이다.</p>
+<h3 id="얕은-복사와-깊은-복사"><a href="#얕은-복사와-깊은-복사" class="headerlink" title="얕은 복사와 깊은 복사"></a>얕은 복사와 깊은 복사</h3><p>객체는 참조에 의한 전달을 하기 때문에 복사를 객체 데이터를 복사하였을 때, 서로의 참조값을 공유하고 있으므로 변경 사항도 공유되는 특징이 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">age</span>: <span class="number">29</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> copy_obj = obj;</span><br><span class="line"></span><br><span class="line">copy_obj.<span class="property">name</span> = <span class="string">&quot;loco&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(copy_obj); <span class="comment">// &#123;name: &#x27;loco&#x27;, age: 29&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj); <span class="comment">// &#123;name: &#x27;loco&#x27;, age: 29&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(copy_obj === obj); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>때문에 객체를 복사할 때에는 참조값을 다르게 복사해줘야한다. Object.assign 메서드를 사용하거나 ES6에 등장한 Spread 문법을 사용하여 객체를 복사할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">age</span>: <span class="number">29</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> copy_obj = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj);</span><br><span class="line"><span class="keyword">const</span> copy_obj2 = &#123; ...obj &#125;;</span><br><span class="line"></span><br><span class="line">copy_obj.<span class="property">name</span> = <span class="string">&quot;loco&quot;</span>;</span><br><span class="line">copy_obj2.<span class="property">name</span> = <span class="string">&quot;mac&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj); <span class="comment">// &#123;name: &#x27;yiju&#x27;, age: 29&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(copy_obj); <span class="comment">// &#123;name: &#x27;loco&#x27;, age: 29&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(copy_obj2); <span class="comment">// &#123;name: &#x27;mac&#x27;, age: 29&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 방식을 얕은 복사라고 부른다. <strong>왜냐하면 depth가 1단계 밖에 복사하지 못하기 때문이다.</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">29</span>,</span><br><span class="line">  <span class="attr">school</span>: &#123; <span class="attr">high</span>: <span class="string">&quot;donghwa&quot;</span>, <span class="attr">univ</span>: <span class="string">&quot;kangwon&quot;</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> copy_obj = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj);</span><br><span class="line"></span><br><span class="line">copy_obj.<span class="property">age</span> = <span class="number">40</span>;</span><br><span class="line">copy_obj.<span class="property">school</span>.<span class="property">high</span> = <span class="string">&quot;Yebong&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;name:&#x27;yiju&#x27;, age:40, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(copy_obj);</span><br><span class="line"><span class="comment">// &#123;name:&#x27;yiju&#x27;, age:29, school: &#123;high: &#x27;Yebong&#x27;, univ:&#x27;kangwon&#x27;&#125;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj);</span><br></pre></td></tr></table></figure>
+
+<p>1단계 깊이인 age는 다른 참조값을 공유하지 않지만 2단계 깊이인 school의 객체값은 참조값을 공유하고 있다.</p>
+<p>깊은 복사를 하기 위해서는 재귀적으로 객체 내부를 단계별로 복사를 해줘야 가능하다. 혹은 라이브러리를 사용하여 구현할 수 있다.</p>
+<blockquote>
+<p>JSON.stringify()를 사용할 수 도 있지만 이 방법은 메서드까진 복사할 수 없기 때문에 추천되지 않는다.</p>
+</blockquote>
 
                     
                         
@@ -629,7 +906,7 @@
                     
                         <p>
                             <a
-                                href="/2023/01/09/CS/JWT-%ED%86%A0%ED%81%B0-%EB%B0%A9%EC%8B%9D%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
+                                href="/2023/02/02/CS/JavaScript-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -652,23 +929,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/01/06/CS/SPA%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": SPA는 무엇인가요?"
+                            href="/2023/01/30/React/React-Virtual-DOM%EC%9D%B4%EB%9E%80/"
+                            aria-label=": React Virtual DOM이란?"
                         >
-                            SPA는 무엇인가요?
+                            React Virtual DOM이란?
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-01-06T12:36:24+09:00">
+    <time datetime="2023-01-30T14:00:40+09:00">
 	
-		    2023/01/06
+		    2023/01/30
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/CS/">CS</a>
+    <a class="category-link" href="/categories/React/">React</a>
 
 
     
@@ -677,270 +954,124 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h1 id="✏️-SPA란"><a href="#✏️-SPA란" class="headerlink" title="✏️ SPA란?"></a>✏️ SPA란?</h1><p><strong>Single Page Application의 약자로, 단일 페이지로 구성된 애플리케이션을 말한다.</strong></p>
-<p>전통적으로 브라우저는 서버에서 HTML을 받아 렌더링 해주는 역할을 한다. 즉, 사용자가 다른 URL로 이동하거나 사용자 액션에 의해 화면의 UI가 변경될 때마다 서버에 HTML을 요청하고 응답받는 서버측 렌더링(SSR)을 사용한다.</p>
-<p>하지만 오늘날 최신 SPA에서는 대화형 요소와 동적인 요소가 많아 클라이언트가 작업을 수행하고 작업에 대한 응답을 받을 수 있는 <strong>클라이언트 사이드 렌더링(CSR)을 사용한다.</strong></p>
-<h1 id="🤓-SPA-동작-원리"><a href="#🤓-SPA-동작-원리" class="headerlink" title="🤓 SPA 동작 원리"></a>🤓 SPA 동작 원리</h1><ol>
-<li>브라우저는 웹에 필요한 소스코드 및 스타일 시트를 서버로부터 응답받아 초기 페이지를 렌더링한다.</li>
-<li>대화형 요소, 동적인 요소에 의해 새 페이지가 필요해지면, 새 페이지에 필요한 새 데이터는 서버에게 AJAX 요청을 보낸다. 이후 SPA는 초기 페이지 로드시 다운로드한 JavaScript를 통해 응답받은 데이터를 페이지에 동적으로 업데이트한다.</li>
+                    <h1 id="Virtual-DOM이란"><a href="#Virtual-DOM이란" class="headerlink" title="Virtual DOM이란?"></a>Virtual DOM이란?</h1><p>Virtual DOM은 Real DOM을 효율적으로 조작하기 위해 가상으로 DOM 구조를 흉내낸 자바스크립트 객체이다.</p>
+<p>가상적인 표현을 메모리에 저장하고 React 같은 프레임워크를 통해 Real DOM과 동기화 하기 위해 사용된다.</p>
+<h2 id="Virtual-DOM-사용하는-이유는"><a href="#Virtual-DOM-사용하는-이유는" class="headerlink" title="Virtual DOM 사용하는 이유는?"></a>Virtual DOM 사용하는 이유는?</h2><p>Real DOM을 조작하여 DOM Tree의 배치가 바뀌면 Real DOM의 재렌더링이 발생하기 때문에 컴퓨터에 부담이 되고 속도가 느려지게 될 것이다.</p>
+<p>그래서 Real DOM과 구조가 똑같은 Virtual DOM을 만들고 DOM 조작이 가해진 요소만 찾아 Real DOM에 변화를 가하는 방법을 사용하여 메모리 상에서만 동작하고 실제 렌더링을 하지 않아 연산 비용을 최소화 할 수 있다.</p>
+<h3 id="React에서-Virtual-DOM-작동원리"><a href="#React에서-Virtual-DOM-작동원리" class="headerlink" title="React에서 Virtual DOM 작동원리"></a>React에서 Virtual DOM 작동원리</h3><ol>
+<li>우리가 UI를 조작하면 React는 Virtual DOM을 생성한다.</li>
+<li>diffing 알고리즘을 통해 이전 Virtual DOM과 변경사항을 비교한다.</li>
+<li>이 때 변경된 부분을 파악하여 Real DOM에 반영하여 변경된 부분만 재렌더링이 발생한다.</li>
 </ol>
-<blockquote>
-<p>사용자가 다른 페이지로 이동할 때 새로고침이 발생하지 않는다. 페이지의 URL은 <strong>HTML5 History API</strong>를 통해 업데이트된다.</p>
-</blockquote>
-<h1 id="📚-SPA-특징"><a href="#📚-SPA-특징" class="headerlink" title="📚 SPA 특징"></a>📚 SPA 특징</h1><h3 id="👍-장점"><a href="#👍-장점" class="headerlink" title="👍 장점"></a>👍 장점</h3><ul>
-<li>앱의 반응속도가 빨라지고 새로고침으로 인한 깜빡임 현상이 사라진다.</li>
-<li>페이지 렌더링 시 중복된 데이터를 다시 다운받을 필요가 없어 서버에 대한 HTTP 요청이 줄어든다.</li>
-<li>클라이언트와 서버간의 문제를 명확히 구분할 수 있다. 서버 코드를 수정하지 않고도 다양한 플랫폼을 위한 새로운 클라이언트를 쉽게 구축할 수 있다.</li>
-</ul>
-<h3 id="👎-단점"><a href="#👎-단점" class="headerlink" title="👎 단점"></a>👎 단점</h3><ul>
-<li>초기에 웹에 필요한 모든 데이터를 서버로 부터 로드 받기 때문에 초기 페이지 로드 시간이 길다.</li>
-<li>모든 요청을 단일 진입점으로 라우트하고 클라이언트 측 라우팅이 단일 진입점에서 응답받을 수 있도록 서버를 구성하는 추가 단계가 필요하다.</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 브라우저 새로고침 시 서버는 index.html 파일을 응답하고 클라이언트는 window.location.pathname을 참조해 라우팅</span></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;*&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&quot;public/index.html&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>SPA는 JavaScript에 의존하는데 검색 엔진이 크롤링 중에 JavaScript를 실행하지 않기 때문에 해당 웹이 빈 컨텐츠로 표시될 수 있어 SEO 최적화에 부적합하다.<blockquote>
-<p>이를 해결하기 위해 서버측에서 앱을 렌더링하거나 Prerender 같은 서비스를 사용하여 브라우저에서 JavaScript를 렌더링하고 정적 HTML을 저장한 다음 크롤러에게 반환할 수 있다.</p>
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/30/React/React-Virtual-DOM%EC%9D%B4%EB%9E%80/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/01/26/CS/%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94/"
+                            aria-label=": 실행 컨텍스트에 대해 설명해주세요"
+                        >
+                            실행 컨텍스트에 대해 설명해주세요
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-26T23:23:41+09:00">
+	
+		    2023/01/26
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="실행-컨텍스트란"><a href="#실행-컨텍스트란" class="headerlink" title="실행 컨텍스트란?"></a>실행 컨텍스트란?</h1><p>자바스크립트에서 실행 컨텍스트는 모든 코드의 동작원리를 담고 있는 핵심 개념이다.</p>
+<p>다음 예시를 실행 컨텍스트 관점으로 설명해보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title function_">outer</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> a = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">inner</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> b = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> inner;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> closure = <span class="title function_">outer</span>();</span><br><span class="line"></span><br><span class="line"><span class="title function_">closure</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="소스코드-평가와-실행"><a href="#소스코드-평가와-실행" class="headerlink" title="소스코드 평가와 실행"></a>소스코드 평가와 실행</h2><h3 id="1-전역-코드-평가"><a href="#1-전역-코드-평가" class="headerlink" title="1. 전역 코드 평가"></a>1. 전역 코드 평가</h3><p><img src="/../images/../../images/execution/exec1.png" alt="실행컨텍스트1"></p>
+<ol>
+<li>전역 실행 컨텍스트 생성</li>
+<li>var 키워드로 선언된 전역변수 outer는 전역 객체에 등록</li>
+<li>const 키워드로 선언된 전역변수 closure는 선언적 환경 레코드에 등록</li>
+<li>this는 전역 객체 바인딩</li>
+</ol>
+<h3 id="2-전역-코드-실행-단계"><a href="#2-전역-코드-실행-단계" class="headerlink" title="2. 전역 코드 실행 단계"></a>2. 전역 코드 실행 단계</h3><p><img src="/../images/../../images/execution/exec2.png" alt="실행컨텍스트2"></p>
+<ol>
+<li>outer 우항의 함수를 평가한 뒤, 메모리에 저장한 뒤 전역 객체에서 outer 식별자에 할당</li>
+<li>closure 우항의 outer 함수를 전역 객체에서 찾아 호출</li>
+<li></li>
+</ol>
+<h3 id="3-outer-함수-평가-단계"><a href="#3-outer-함수-평가-단계" class="headerlink" title="3. outer 함수 평가 단계"></a>3. outer 함수 평가 단계</h3><p><img src="/../images/../../images/execution/exec3.png" alt="실행컨텍스트3"></p>
+<ol>
+<li>outer 함수 실행 컨텍스트 생성</li>
+<li>outer 함수에서 선언된 변수 a, inner를 환경 레코드에 등록</li>
+<li>outer 함수의 외부 렉시컬 환경 참조는 outer 변수에 할당된 익명함수 객체의 내부슬롯 [[Environment]]가 가리키는 외부 렉시컬 환경을 가리킨다.</li>
+</ol>
+<h3 id="4-outer-함수-실행-단계"><a href="#4-outer-함수-실행-단계" class="headerlink" title="4. outer 함수 실행 단계"></a>4. outer 함수 실행 단계</h3><p><img src="/../images/../../images/execution/exec4.png" alt="실행컨텍스트4"></p>
+<ol>
+<li>outer 함수 환경 레코드의 변수 a에 값 3이 할당된다.</li>
+<li>변수 inner에 익명 함수 객체의 참조값이 할당되고, 익명 함수 객체의 내부 슬롯 [[Environment]]은 정의된 outer 렉시컬 환경을 가리킨다.</li>
+</ol>
+<h3 id="5-전역-코드-실행-단계-복귀"><a href="#5-전역-코드-실행-단계-복귀" class="headerlink" title="5. 전역 코드 실행 단계 복귀"></a>5. 전역 코드 실행 단계 복귀</h3><p><img src="/../images/../../images/execution/exec5.png" alt="실행컨텍스트5"></p>
+<ol>
+<li>전역 렉시컬 환경의 선언적 환경 레코드에서 closure를 찾는다.</li>
+<li>inner 함수 객체가 closure라는 식별자에 할당된다.</li>
+</ol>
+<h3 id="6-closure-함수-평가-단계"><a href="#6-closure-함수-평가-단계" class="headerlink" title="6. closure 함수 평가 단계"></a>6. closure 함수 평가 단계</h3><p><img src="/../images/../../images/execution/exec6.png" alt="실행컨텍스트6"></p>
+<ol>
+<li>closure() 문이 실행되면서 closure의 실행 컨텍스트가 생성된다.</li>
+<li>closure를 실행하기 위해 inner 함수 객체를 평가한다.<blockquote>
+<p>즉, closure() 평가단계 &#x3D;&#x3D;&#x3D; inner() 평가단계</p>
 </blockquote>
 </li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/06/CS/SPA%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 브라우저 렌더링 과정에 대해 설명하라"
-                        >
-                            브라우저 렌더링 과정에 대해 설명하라
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T15:10:40+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
-<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
-<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html이다.</p>
-<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다.</p>
-<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
-<ol>
-<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
-<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
-<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
+<li>const로 선언된 변수 b가 closure 환경 레코드에 등록된다.</li>
+<li>화살표 함수의 this는 함수가 정의될 때 상위 스코프의 this로 정적으로 결정된다.</li>
 </ol>
-<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
-<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
-<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
-<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
-<ul>
-<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
-<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
-<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
-</ul>
-<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
-<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
-<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
-<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
-<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
-<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 DOM 생성을 재개한다.</p>
-<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
-<blockquote>
-<p>리플로우가 발생하면 성능을 저하시키므로 리플로우가 발생하는 메서드 사용을 최소화 하여야 한다. 일단 가독성 위주로 코딩을 하되 성능 측정하여 렌더링에 2초 이상 걸린다면 리팩터링을 하여 성능을 개선해야한다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 호이스팅에 대해 설명하라"
-                        >
-                            호이스팅에 대해 설명하라
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T14:24:56+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
-<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
-<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
-<blockquote>
-<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
-</blockquote>
-<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
-<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
-                            aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
-                        >
-                            클로저는 무엇이고 언제, 어떻게 사용하나요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T13:25:25+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📚-클로저란-무엇인가요"><a href="#📚-클로저란-무엇인가요" class="headerlink" title="📚 클로저란 무엇인가요?"></a>📚 클로저란 무엇인가요?</h1><p>클로저란, ECMAScript에선 공식 사양으로 등장하진 않지만, 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.</p>
-<h1 id="❓-클로저는-왜-사용-하나요"><a href="#❓-클로저는-왜-사용-하나요" class="headerlink" title="❓ 클로저는 왜 사용 하나요?"></a>❓ 클로저는 왜 사용 하나요?</h1><p>클로저는 함수형 프로그래밍 방식에서 정보 은닉과 캡슐화를 통해 정보를 보다 안전하게 관리하기 위해 사용한다.</p>
-<p>C++과 같은 객체지향 프로그래밍 언어와 달리 <strong>자바스크립트는 private 같은 접근 제한자를 제공하지 않는다.</strong></p>
-<p>때문에 자바스크립트에서 객체 프로퍼티를 안전하게 참조 및 변경하기 위해 클로저를 사용한다.</p>
-<h1 id="❓-클로저는-언제-어떻게-사용하나요"><a href="#❓-클로저는-언제-어떻게-사용하나요" class="headerlink" title="❓ 클로저는 언제, 어떻게 사용하나요?"></a>❓ 클로저는 언제, 어떻게 사용하나요?</h1><p>클로저를 구현하는 방법은 아래 두가지 조건을 만족시켜 구현할 수 있다.</p>
+<h3 id="7-closure-함수-실행-단계"><a href="#7-closure-함수-실행-단계" class="headerlink" title="7. closure 함수 실행 단계"></a>7. closure 함수 실행 단계</h3><p><img src="/../images/../../images/execution/exec7.png" alt="실행컨텍스트7"></p>
 <ol>
-<li>함수 안에 내부함수를 정의하고 내부함수는 외부함수의 식별자를 참조한다.</li>
-<li>외부 함수의 반환값으로 내부함수를 반환하여 변수에 할당한다.</li>
+<li>closure 즉, inner 함수 내부 코드가 실행</li>
+<li>b에 값 5가 할당되고 a+b를 수행하기 위해 스코프 체인에서 a를 찾는다.</li>
+<li>closure 환경 레코드에는 a가 존재하지 않기 때문에 외부 렉시컬 환경 참조를 따라 익명함수 객체로 이동하고, 익명함수 객체의 [[Environment]]내부 슬롯이 가리키는 outer 함수 렉시컬 환경으로 이동된다. 결국 outer 환경 레코드에서 a를 찾을 수 있다.</li>
+<li>a+b 연산을 수행하고 연산값을 반환한다.</li>
 </ol>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 카운트 상태 변수</span></span><br><span class="line">  <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 클로저인 메서드를 갖는 객체를 반환한다.</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">increase</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> ++num;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">decrease</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> num &gt; <span class="number">0</span> ? --num : <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">increase</span>()); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(counter.<span class="title function_">decrease</span>()); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="❗️-주의점"><a href="#❗️-주의점" class="headerlink" title="❗️ 주의점"></a>❗️ 주의점</h1><p>클로저는 외부함수의 실행 컨텍스트가 제거되어도 내부함수가 외부함수의 변수를 기억하고 있는데 이는 추후에 메모리 누수가 발생할 수 있다.</p>
-<p>예를 들어 리액트에서 useEffect 함수를 사용하여 렌더링 이후에 이벤트를 등록하였을 때, 이를 다시 렌더링이 되었을 때, 기존 이벤트를 클린업 해주지 않는 다면 같은 역할을 하는 이벤트가 중복등록이 되고 이는 성능상 문제를 일으킬 수 있으므로 이러한 점을 주의해야한다.</p>
-<h1 id="📌-정리"><a href="#📌-정리" class="headerlink" title="📌 정리"></a>📌 정리</h1><p>클로저는 보다 안전하게 객체를 다루기 위해 사용한다.</p>
-<p>하지만 ES6에서 클래스가 도입되어 다른 객체지향 프로그래밍 언어처럼 private 접근 제한자가 생겨나 객체를 안전하게 관리할 수 있게 되었다.</p>
-<p>예전에 페어프로그래밍을 하면서 DOM 요소를 참조하고 변경하는 클로저함수만 외부로 빼내어 해당 함수로만 DOM 요소를 조작할 수 있도록 코드를 구현해본 경험이 있습니다.</p>
+<h3 id="8-closure-실행-컨텍스트-소멸"><a href="#8-closure-실행-컨텍스트-소멸" class="headerlink" title="8. closure 실행 컨텍스트 소멸"></a>8. closure 실행 컨텍스트 소멸</h3><p><img src="/../images/../../images/execution/exec8.png" alt="실행컨텍스트8"></p>
+<ul>
+<li>closure 함수 코드가 실행을 마치고 closure의 실행 컨텍스트가 pop 되어 더 이상 참조되지 않는 객체들은 Garbage Collector에 의해 메모리가 해제된다.</li>
+</ul>
+<h3 id="9-전역-실행-컨텍스트-소멸"><a href="#9-전역-실행-컨텍스트-소멸" class="headerlink" title="9. 전역 실행 컨텍스트 소멸"></a>9. 전역 실행 컨텍스트 소멸</h3><p><img src="/../images/../../images/execution/exec9.png" alt="실행컨텍스트9"></p>
+<ul>
+<li>마지막으로 전역 실행컨텍스트가 pop 되어 참조될 수 있는 객체가 없기 때문에 모든 객체가 Garbage Collector에 의해 메모리가 해제된다.</li>
+</ul>
 
                     
                         
@@ -950,7 +1081,7 @@
                     
                         <p>
                             <a
-                                href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                href="/2023/01/26/CS/%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -973,17 +1104,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": 프로토타입이란 무엇인가요?"
+                            href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                            aria-label=": 스코프는 무엇인가요?"
                         >
-                            프로토타입이란 무엇인가요?
+                            스코프는 무엇인가요?
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2023-01-04T14:05:09+09:00">
+    <time datetime="2023-01-20T10:30:56+09:00">
 	
-		    2023/01/04
+		    2023/01/20
     	
     </time>
     
@@ -998,141 +1129,123 @@
             </div>
             
                 <div class="postShorten-content">
-                    <h1 id="프로토타입이란"><a href="#프로토타입이란" class="headerlink" title="프로토타입이란?"></a>프로토타입이란?</h1><p>자바스크립트는 프로토타입을 기반으로 상속을 구현하는 언어이다. 프로토타입은 엄밀히 말하면 프로토타입 객체이다.</p>
-<p>프로토타입 객체는 어떤 객체의 상위(부모) 객체의 역할을 한다.</p>
-<h2 id="프로토타입을-왜-사용하나요"><a href="#프로토타입을-왜-사용하나요" class="headerlink" title="프로토타입을 왜 사용하나요?"></a>프로토타입을 왜 사용하나요?</h2><p>객체 간 상속을 구현하기 위해 사용한다. 즉, 프로토타입을 상속 받은 하위(자식) 객체는 상위(부모) 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.</p>
-<h2 id="프로토타입이-어떻게-동작하나요"><a href="#프로토타입이-어떻게-동작하나요" class="headerlink" title="프로토타입이 어떻게 동작하나요?"></a>프로토타입이 어떻게 동작하나요?</h2><p>프로토타입은 객체 생성 방식에 따라 객체가 생성될 때 결정되고 해당 객체의 [[Prototype]] 내부 슬롯에 저장된다.</p>
-<p>__proto__접근자 프로퍼티를 통해서 프로토타입에 간접적으로 접근이 가능하다.</p>
-<p><img src="/../../images/prototype/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-01-04%2014.31.52.png" alt="prototype"></p>
+                    <h1 id="스코프"><a href="#스코프" class="headerlink" title="스코프"></a>스코프</h1><p>스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.</p>
 <ul>
-<li>생성자 함수가 생성한 객체 : __proto__접근자 프로퍼티로 자신의 프로토타입에 간접적 접근 가능</li>
-<li>프로토타입 : 자신의 constructor 프로퍼티로 생성자 함수에 접근 가능</li>
-<li>생성자 함수 : 자신의 prototype 프로퍼티로 프로토타입에 접근 가능</li>
+<li>모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.</li>
+<li>식별자는 어떤 값을 구별하기 위해 유일 해야하므로 <span style="color:red">중복될 수 없다.</span> 단, 스코프가 다르면 중복될 수 있다.</li>
 </ul>
+<h2 id="지역-스코프"><a href="#지역-스코프" class="headerlink" title="지역 스코프"></a>지역 스코프</h2><p>자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.</p>
+<p>즉, 지역 스코프는 함수에 의해서 생성된다.</p>
 <blockquote>
-<p>사실 모든 객체는 __proto__접근자 프로퍼티를 가지고 있다. 그러므로 모든 객체는 __proto__접근자 프로퍼티로 자신의 프로토타입 객체에 간접적으로 접근할 수 있다.</p>
+<p>let, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.</p>
 </blockquote>
-<h2 id="프로토타입-체인이란"><a href="#프로토타입-체인이란" class="headerlink" title="프로토타입 체인이란?"></a>프로토타입 체인이란?</h2><p>자바스크립트의 모든 객체는 프로토타입 기반 상속을 받고 있다. 자바스크립트는 객체의 프로퍼티에 접근할 때 해당 객체에 접근하려는 프로퍼티가 없다면, [[Prototype]] 내부슬롯의 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다.</p>
-<p>이를 프로토타입 체인이라고 한다.</p>
-<p><img src="/../../images/prototype/prototypeChain.png" alt="프로토타입 체인"></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br></pre></td></tr></table></figure>
 
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/04/CS/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/"
-                            aria-label=": this가 어떻게 작동하나요?"
-                        >
-                            this가 어떻게 작동하나요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-03T14:06:06+09:00">
-	
-		    2023/01/03
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="this는-무엇인가"><a href="#this는-무엇인가" class="headerlink" title="this는 무엇인가?"></a>this는 무엇인가?</h1><p>this는 자바스크립트 언어에서 매우 추상적인 부분 중에 하나이다. 그래도 한마디로 단정짓는다면, <strong>this는 자기 자신을 나타내기 위한 키워드이다.</strong></p>
-<p>좀 더 자세히 말하면 <strong>자신이 속한 객체나 자신이 생성할 객체를 가리키는 자기 참조 변수이다.</strong></p>
-<ul>
-<li>this는 자바스크립트 엔진에 의해 암묵적으로 생성된다.</li>
-</ul>
-<p>함수를 호출하면 arguments 객체와 this가 암묵적으로 함수 내부에 전달된다. arguments 객체를 함수 내부에서 지역변수처럼 사용할 수 있듯이 this도 마찬가지이다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// this로 자신이 속한 객체 참조</span></span><br><span class="line"><span class="keyword">const</span> test = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="title function_">getValue</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">value</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(test.<span class="title function_">getValue</span>()); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 자신이 생성할 객체 참조</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Circle</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(circle.<span class="title function_">getDiameter</span>()); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
-
-<p style="color:red;">this에 바인딩될 값은 함수 호출 방식에 의해 동적으로 결정되는 특징이 있다.</p> 
-그러므로 this를 어떻게 호출하느냐에 따라 this 값이 달라지게 된다.
-
-<h1 id="this의-작동원리-in-JavaScript"><a href="#this의-작동원리-in-JavaScript" class="headerlink" title="this의 작동원리 in JavaScript"></a>this의 작동원리 in JavaScript</h1><h2 id="1-일반-함수로-호출"><a href="#1-일반-함수로-호출" class="headerlink" title="1. 일반 함수로 호출"></a>1. 일반 함수로 호출</h2><p>일반 함수로 호출할 경우 해당 함수 내부의 this는 전역 객체에 바인딩된다.</p>
-<p>이 때, 중첩함수, 콜백함수가 일반함수로 호출되는 경우에도 마찬가지이다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 100</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;bar&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메서드 내에서 정의한 중첩 함수도 일반 함수로 호출되면 중첩 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="title function_">bar</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 콜백함수가 일반함수로 호출되는 경우</span></span><br><span class="line">  <span class="title function_">boo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;foo&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// &#123;value: 100, foo: ƒ&#125;</span></span><br><span class="line">    <span class="comment">// 콜백 함수 내부의 this에는 전역 객체가 바인딩된다.</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this: &quot;</span>, <span class="variable language_">this</span>); <span class="comment">// window</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback&#x27;s this.value: &quot;</span>, <span class="variable language_">this</span>.<span class="property">value</span>); <span class="comment">// 1</span></span><br><span class="line">    &#125;, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-new-키워드-사용하여-생성자-함수로-호출"><a href="#2-new-키워드-사용하여-생성자-함수로-호출" class="headerlink" title="2. new 키워드 사용하여 생성자 함수로 호출"></a>2. new 키워드 사용하여 생성자 함수로 호출</h2><p>new 키워드로 함수를 호출할 경우 자바스크립트는 해당 함수를 생성자 함수로 판단하고 암시적으로 다음 행동을 한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Circle</span>(<span class="params">radius</span>) &#123;</span><br><span class="line">  <span class="comment">// 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩된다.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. this에 바인딩되어 있는 인스턴스를 초기화</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">radius</span> = radius;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">getDiameter</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * <span class="variable language_">this</span>.<span class="property">radius</span>;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3. 완성된 인스턴스가 바인딩된 this가 암묵적으로 반환된다.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 인스턴스 생성. Circle 생성자 함수는 암묵적으로 this를 반환한다.</span></span><br><span class="line"><span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="title class_">Circle</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>var 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.</p>
+<h2 id="스코프-체인"><a href="#스코프-체인" class="headerlink" title="스코프 체인"></a>스코프 체인</h2><p>스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>; <span class="comment">// 전역 스코프</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = -<span class="number">100</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 100</span></span><br><span class="line">  <span class="title function_">inner</span>(); <span class="comment">// -100</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">outer</span>();</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li>새로운 객체를 생성하고 this를 바인딩한다.</li>
-<li>this에 바인딩 되어 있는 객체를 초기화한다.</li>
-<li>해당 함수는 return 하는 값이 없다면 this가 암묵적으로 반환된다.</li>
+<li><p>전역 스코프 (최상위 스코프)</p>
+</li>
+<li><p>outer 지역 스코프</p>
+</li>
+<li><p>inner 지역 스코프</p>
+</li>
 </ol>
-<p>생성자 함수는 this가 바인딩된 객체를 암묵적으로 반환하기 때문에, 생성자 함수로 호출 시 생성자 함수 내부의 this는 생성자 함수가 미래에 생성할 객체에 바인딩된다.</p>
+<p>자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 <span style="color:red">상위 스코프 방향</span>으로 이동하며 변수를 검색한다.</p>
 <blockquote>
-<p>new 키워드를 사용한 함수 내부에서 return을 명시적으로 해준다는 것은 this를 암묵적으로 반환하는 생성자 함수 행동을 훼손하므로 이는 안티 패턴이다.</p>
+<p>실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.</p>
 </blockquote>
-<h2 id="3-메서드로-호출"><a href="#3-메서드로-호출" class="headerlink" title="3. 메서드로 호출"></a>3. 메서드로 호출</h2><p>메서드란, 객체의 프로퍼티 값이 함수인 경우를 해당 함수를 메서드라고 부른다.</p>
-<p>메서드로 호출될 경우 메서드 내부의 this는 <span style="color:red;">해당 메서드가 속한 객체가 아닌 메서드를 호출한 객체에 바인딩된다.</span></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 메서드 내부의 this는 메서드를 호출한 객체에 바인딩된다.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> people = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">  <span class="title function_">getName</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="title function_">getName</span>()); <span class="comment">// Lee</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(people.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
-
-<p><code>getName()</code>이라는 메서드가 person 객체 내부에 있으니 메서드로 호출 시 this 바인딩이 메서드를 포함하는 객체인 person에 될 것이라 생각하는 것은 잘못된 생각이다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> anotherPerson = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Kim&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// getName 메서드를 anotherPerson 객체의 메서드로 할당</span></span><br><span class="line">anotherPerson.<span class="property">getName</span> = person.<span class="property">getName</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// getName 메서드를 호출한 객체는 anotherPerson이다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(anotherPerson.<span class="title function_">getName</span>()); <span class="comment">// Kim</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="렉시컬-스코프"><a href="#렉시컬-스코프" class="headerlink" title="렉시컬 스코프"></a>렉시컬 스코프</h2><p>렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.</p>
+<p><span style="color:red">함수 호출이 아닌</span> 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.</p>
+<blockquote>
+<p>즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.</p>
+</blockquote>
+<hr>
+<h1 id="전역변수와-var-키워드"><a href="#전역변수와-var-키워드" class="headerlink" title="전역변수와 var 키워드"></a>전역변수와 var 키워드</h1><p>변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.</p>
 <ul>
-<li>위와 같이 getName 메서드를 <code>anotherPerson</code> 객체의 메서드로 할당한 경우, getName 메서드 내부의 this는 자신을 호출한 객체에 바인딩 되기 때문에 <code>anotherPerson.name</code>을 참조하게 된다.</li>
+<li><p>전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.</p>
+</li>
+<li><p>지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.</p>
+</li>
 </ul>
-<h2 id="4-apply-call-bind-함수에-의한-간접-호출"><a href="#4-apply-call-bind-함수에-의한-간접-호출" class="headerlink" title="4. apply,call,bind 함수에 의한 간접 호출"></a>4. apply,call,bind 함수에 의한 간접 호출</h2><p>이 경우 함수 내부의 this는 인수로 전달된 객체에 바인딩된다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getThisBinding</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this로 사용할 객체</span></span><br><span class="line"><span class="keyword">const</span> thisArg = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">getThisBinding</span>()); <span class="comment">// window</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">apply</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">call</span>(thisArg)); <span class="comment">// &#123;a: 1&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// bind 메서드는 첫 번째 인수로 전달한 thisArg로 this 바인딩이 교체된</span></span><br><span class="line"><span class="comment">// getThisBinding 함수를 새롭게 생성해 반환한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)); <span class="comment">// getThisBinding</span></span><br><span class="line"><span class="comment">// bind 메서드는 함수를 호출하지는 않으므로 명시적으로 호출해야 한다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(getThisBinding.<span class="title function_">bind</span>(thisArg)()); <span class="comment">// &#123;a: 1&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="전역변수의-문제점"><a href="#전역변수의-문제점" class="headerlink" title="전역변수의 문제점"></a>전역변수의 문제점</h2><ol>
+<li><p>암묵적 결합<br>어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.</p>
+</li>
+<li><p>긴 생명주기</p>
+</li>
+</ol>
+<p>메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.</p>
+<ol start="3">
+<li>네임 스페이스 오염</li>
+</ol>
+<p>자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.</p>
+<blockquote>
+<p>그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.</p>
+</blockquote>
+<h2 id="전역변수-사용-억제-방법"><a href="#전역변수-사용-억제-방법" class="headerlink" title="전역변수 사용 억제 방법"></a>전역변수 사용 억제 방법</h2><ol>
+<li><p>즉시실행함수<br>즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.</p>
+</li>
+<li><p>모듈패턴<br>클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.</p>
+</li>
+</ol>
+<p>전역변수 억제와 캡슐화까지 가능하다.</p>
+<blockquote>
+<p>캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)</p>
+</blockquote>
+<h1 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h1><p>var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">x</span>); <span class="comment">// 10;</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>call, apply의 반환값은 호출한 함수의 반환값이다.</li>
-<li>bind는 함수를 호출하지 않고 인수로 전달받은 객체로 this 바인딩이 교체된 함수를 새롭게 생성하여 반환한다.</li>
-</ul>
-<p>과거에는 this를 불일치 문제를 bind 함수를 사용하여 해결하였다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(callback, <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// ② Hi! my name is .</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>var 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  z = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>일반 함수로 호출된 콜백 함수 내부의 this.name은 브라우저 환경에서 window.name과 같다.</li>
-<li>브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 ‘’이다.</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">  <span class="title function_">foo</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(callback.<span class="title function_">bind</span>(<span class="variable language_">this</span>), <span class="number">100</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">person.<span class="title function_">foo</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Hi! my name is <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>.`</span>); <span class="comment">// ② Hi! my name is Lee.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.</p>
+<p>선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.</p>
+<blockquote>
+<p>키워드 없이 선언하는 것은 옳지 않다.</p>
+</blockquote>
+<p><span style="font-size:1.2rem">러버덕하면서 알게된 내용</span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  y = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;x&quot;</span>); <span class="comment">//  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;y&quot;</span>); <span class="comment">// &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="5-화살표-함수로-호출"><a href="#5-화살표-함수로-호출" class="headerlink" title="5. 화살표 함수로 호출"></a>5. 화살표 함수로 호출</h2><p>화살표 함수로 호출할 경우 위의 규칙을 모두 무시하고 화살표 함수가 생성된 시점에서 상위 스코프의 this에 바인딩된다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>; <span class="comment">// Window</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="title function_">far</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">arrow</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> anotherObj = &#123;</span><br><span class="line">  <span class="title function_">baz</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="function">() =&gt;</span> <span class="variable language_">this</span>)();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="title function_">far</span>(); <span class="comment">// Window</span></span><br><span class="line">anotherObj.<span class="title function_">baz</span>(); <span class="comment">// anotherObj</span></span><br></pre></td></tr></table></figure>
+<p>var 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.</p>
+<p>하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.</p>
+<p>따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.</p>
+<hr>
+<h1 id="let-const-키워드"><a href="#let-const-키워드" class="headerlink" title="let, const 키워드"></a>let, const 키워드</h1><p>let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.</p>
+<h2 id="let"><a href="#let" class="headerlink" title="let"></a>let</h2><p>var 키워드와 비교하여 let 키워드를 알아보자.</p>
+<ol>
+<li><p>변수 중복 선언 금지</p>
+</li>
+<li><p>블록 레벨 스코프</p>
+</li>
+</ol>
+<p>let 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.</p>
+<ol start="3">
+<li>변수 호이스팅</li>
+</ol>
+<p>var 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
+<p>선언단계가 자바스크립트 엔진에 의해 실행되고 <span style="color:red">초기화 단계는 변수 선언문에 도달했을 때</span>, 실행된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined</span></span><br><span class="line">a = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// Uncaught ReferenceError: b is not defined</span></span><br><span class="line"><span class="keyword">let</span> b;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/../../images/this/thisExample.png" alt="this 화살표함수 예시"></p>
-<ul>
-<li>arrow 함수는 생성된 시점에서 상위 스코프의 this는 전역객체(Window)이다.</li>
-<li>anotherObj 객체의 baz 메서드 내부의 this는 자신을 호출한 객체에 바인딩된다. 그러므로 화살표 함수 내부의 this는 자신이 생성된 시점에서 상위 스코프인 baz의 this와 일치한다.</li>
-</ul>
+<p>언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.</p>
+<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p>let 키워드와 비교해서 알아보자</p>
+<ol>
+<li>선언과 초기화</li>
+</ol>
+<p>const 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz; <span class="comment">// Uncaught SyntaxError : Unexpected identifier</span></span><br></pre></td></tr></table></figure>
+
+<p>이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.</p>
+<ol start="2">
+<li>재할당 금지</li>
+</ol>
+<p>const 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.</p>
+<ol start="3">
+<li>상수</li>
+</ol>
+<p>변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.</p>
+<p>주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.</p>
 
                     
                         
@@ -1142,7 +1255,7 @@
                     
                         <p>
                             <a
-                                href="/2023/01/03/CS/this%EA%B0%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%82%98%EC%9A%94/#post-footer"
+                                href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -1182,7 +1295,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 8 of 9</li>
+        <li class="pagination-number">page 8 of 10</li>
     </ul>
 </div>
 
