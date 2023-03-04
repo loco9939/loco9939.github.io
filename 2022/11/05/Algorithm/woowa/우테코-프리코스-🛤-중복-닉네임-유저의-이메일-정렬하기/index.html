@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/11/05/algorithm/woowa/우테코-프리코스-🛤-중복-닉네임-유저의-이메일-정렬하기/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"🚀 기능 요구 사항우아한테크코스에서는 교육생(이하 크루) 간 소통 시 닉네임을 사용한다. 간혹 비슷한 닉네임을 정하는 경우가 있는데, 이러할 경우 소통할 때 혼란을 불러일으킬 수 있다.\n혼란을 막기 위해 크루들의 닉네임 중 같은 글자가 연속적으로 포함 될 경우 해당 닉네임 사용을 제한하려 한다. 이를 위해 같은 글자가 연속적으로 포함되는 닉네임을 신청한 크루들에게 알려주는 시스템을 만들려고 한다.\n신청받은 닉네임 중 같은 글자가 연속적으로 포함 되는 닉네임을 작성한 지원자의 이메일 목록을 return 하도록 solution 메서드를 완성하라.\n제한사항\n두 글자 이상의 문자가 연속적으로 순서에 맞추어 포함되어 있는 경우 중복으로 간주한다.\n크루는 1명 이상 10,000명 이하이다.\n이메일은 이메일 형식에 부합하며, 전체 길이는 11자 이상 20자 미만이다.\n신청할 수 있는 이메일은 email.com 도메인으로만 제한한다.\n닉네임은 한글만 가능하고 전체 길이는 1자 이상 20자 미만이다.\nresult는 이메일에 해당하는 부분의 문자열을 오름차순으로 정렬하고 중복은 제거한다.\n\n실행 결과 예시\n\n\nforms\nresult\n\n\n\n[ [“&#106;&#109;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;“, “제이엠”], [“&#106;&#97;&#115;&#x6f;&#110;&#x40;&#101;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;“, “제이슨”], [“&#119;&#x6f;&#x6e;&#x69;&#101;&#x65;&#64;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#x6f;&#x6d;“, “워니”], [“&#109;&#x6a;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;“, “엠제이”], [“&#110;&#111;&#119;&#109;&#x40;&#101;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;“, “이제엠”] ]\n[“&#x6a;&#97;&#115;&#111;&#110;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;“, “&#106;&#x6d;&#64;&#101;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;“, “&#109;&#106;&#x40;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;“]\n\n\n내 코드123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051const getPartialStr = (str) =&gt; &#123;  const res = [];  let limit = 2;  while (limit &lt;= str.length) &#123;    const output = [];    let index = 0;    while (true) &#123;      const seperated = [...str].slice(index, index + limit).join(&quot;&quot;);      index += 1;      if (limit &gt; seperated.length) break;      output.push(seperated);    &#125;    limit += 1;    res.push(...output);  &#125;  return res;&#125;;const getDuplicatedUser = (arr) =&gt; &#123;  let index = 0;  let position = 1;  const res = [];  while (index !== arr.length - 1) &#123;    const set = new Set([...arr[index], ...arr[position]]);    if (set.size !== arr[index].length + arr[position].length) &#123;      res.push(...arr[index].slice(-1), ...arr[position].slice(-1));    &#125;    position += 1;    if (position === arr.length) &#123;      index += 1;      position = index + 1;    &#125;  &#125;  return [...new Set(res)];&#125;;function problem6(forms) &#123;  if (!forms.length || forms.length &gt; 10000)    throw new RangeError(&quot;크루는 1명 이상 10,000명 이하이여야 합니다.&quot;);  const users = &#123;&#125;;  forms.forEach((form) =&gt; &#123;    users[form[1]] = form[0];  &#125;);  const nicknames = forms.map((nickname) =&gt; nickname[1]);  const partialStrs = nicknames.map((nickname) =&gt; getPartialStr(nickname));  const selectedUsers = getDuplicatedUser(partialStrs);  return selectedUsers.map((selectedUser) =&gt; users[selectedUser]).sort();&#125;\n\n\n닉네임의 첫번째 글자부터 2글자 이상으로 만들 수 있는 모든 부분 문자열을 구하였다.\n각 닉네임의 부분 문자열 배열을 비교하여 중복요소가 하나라도 있으면 중복 문자 포함 유저 배열에 등록하였다.\n해당 유저의 이메일을 오름차순으로 정렬한 배열을 반환하였다.\n\n🏓 소감우선 이 문제를 풀면서 가장 큰 성장을 이뤄냈다고 자축하고 싶었다. 왜냐하면 이와 비슷한 부분 문자열 문제를 못풀어서 스트레스를 받았던 적이 있는데 이번 기회에 나름의 방법(?)을 찾아서 구현에 성공하여 기분이 좋았다.\n\n2글자 이상으로 만들 수 있는 부분 문자열을 모두 구했기 때문에 코드가 매우 복잡해졌다. 하지만 2글자 부분 문자열만 구하여 서로 비교하여도 충분히 문제가 없을 상황이기 때문에 이 부분이 좀 아쉬웠다.\nwhile 문을 사용할 경우와 for 문을 사용할 경우가 애매했었는데, 이번에 코드리뷰를 진행하면서 while 문은 특정 조건이 변경되는 상황이라면 사용하도록 하고 for 문은 일정 횟수를 반복해야 하는 상황에서 사용하도록 한다는 것을 알게 되어 상황에 맞게 적절히 사용할 수 있을 것 같다.\n\n","dateCreated":"2022-11-05T19:32:57+09:00","dateModified":"2022-11-05T19:35:25+09:00","datePublished":"2022-11-05T19:32:57+09:00","description":"","headline":"우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"}</script>
+    <meta name="description" content="🚀 기능 요구 사항우아한테크코스에서는 교육생(이하 크루) 간 소통 시 닉네임을 사용한다. 간혹 비슷한 닉네임을 정하는 경우가 있는데, 이러할 경우 소통할 때 혼란을 불러일으킬 수 있다. 혼란을 막기 위해 크루들의 닉네임 중 같은 글자가 연속적으로 포함 될 경우 해당 닉네임 사용을 제한하려 한다. 이를 위해 같은 글자가 연속적으로 포함되는 닉네임을 신청한">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="🚀 기능 요구 사항우아한테크코스에서는 교육생(이하 크루) 간 소통 시 닉네임을 사용한다. 간혹 비슷한 닉네임을 정하는 경우가 있는데, 이러할 경우 소통할 때 혼란을 불러일으킬 수 있다. 혼란을 막기 위해 크루들의 닉네임 중 같은 글자가 연속적으로 포함 될 경우 해당 닉네임 사용을 제한하려 한다. 이를 위해 같은 글자가 연속적으로 포함되는 닉네임을 신청한">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-05T10:32:57.000Z">
+<meta property="article:modified_time" content="2022-11-05T10:35:25.516Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            우테코-프리코스-🛤 중복 닉네임 유저의 이메일 정렬하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-05T19:32:57+09:00">
+	
+		    2022/11/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h2><p>우아한테크코스에서는 교육생(이하 크루) 간 소통 시 닉네임을 사용한다. 간혹 비슷한 닉네임을 정하는 경우가 있는데, 이러할 경우 소통할 때 혼란을 불러일으킬 수 있다.</p>
+<p>혼란을 막기 위해 크루들의 닉네임 중 <strong>같은 글자가 연속적으로 포함</strong> 될 경우 해당 닉네임 사용을 제한하려 한다. 이를 위해 같은 글자가 연속적으로 포함되는 닉네임을 신청한 크루들에게 알려주는 시스템을 만들려고 한다.</p>
+<p>신청받은 닉네임 중 <strong>같은 글자가 연속적으로 포함</strong> 되는 닉네임을 작성한 지원자의 이메일 목록을 return 하도록 solution 메서드를 완성하라.</p>
+<h3 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h3><ul>
+<li>두 글자 이상의 문자가 연속적으로 순서에 맞추어 포함되어 있는 경우 중복으로 간주한다.</li>
+<li>크루는 1명 이상 10,000명 이하이다.</li>
+<li>이메일은 이메일 형식에 부합하며, 전체 길이는 11자 이상 20자 미만이다.</li>
+<li>신청할 수 있는 이메일은 <code>email.com</code> 도메인으로만 제한한다.</li>
+<li>닉네임은 한글만 가능하고 전체 길이는 1자 이상 20자 미만이다.</li>
+<li>result는 이메일에 해당하는 부분의 문자열을 오름차순으로 정렬하고 중복은 제거한다.</li>
+</ul>
+<h3 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h3><table>
+<thead>
+<tr>
+<th>forms</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[ [“<a href="mailto:&#106;&#109;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;">&#106;&#109;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;</a>“, “제이엠”], [“<a href="mailto:&#106;&#97;&#115;&#x6f;&#110;&#x40;&#101;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;">&#106;&#97;&#115;&#x6f;&#110;&#x40;&#101;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;</a>“, “제이슨”], [“<a href="mailto:&#119;&#x6f;&#x6e;&#x69;&#101;&#x65;&#64;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#x6f;&#x6d;">&#119;&#x6f;&#x6e;&#x69;&#101;&#x65;&#64;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#x6f;&#x6d;</a>“, “워니”], [“<a href="mailto:&#109;&#x6a;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;">&#109;&#x6a;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a>“, “엠제이”], [“<a href="mailto:&#110;&#111;&#119;&#109;&#x40;&#101;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;">&#110;&#111;&#119;&#109;&#x40;&#101;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“, “이제엠”] ]</td>
+<td>[“<a href="mailto:&#x6a;&#97;&#115;&#111;&#110;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#x6a;&#97;&#115;&#111;&#110;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a>“, “<a href="mailto:&#106;&#x6d;&#64;&#101;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;">&#106;&#x6d;&#64;&#101;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a>“, “<a href="mailto:&#109;&#106;&#x40;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#109;&#106;&#x40;&#101;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a>“]</td>
+</tr>
+</tbody></table>
+<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getPartialStr</span> = (<span class="params">str</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> res = [];</span><br><span class="line">  <span class="keyword">let</span> limit = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">while</span> (limit &lt;= str.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> output = [];</span><br><span class="line">    <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> seperated = [...str].<span class="title function_">slice</span>(index, index + limit).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">      index += <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">if</span> (limit &gt; seperated.<span class="property">length</span>) <span class="keyword">break</span>;</span><br><span class="line">      output.<span class="title function_">push</span>(seperated);</span><br><span class="line">    &#125;</span><br><span class="line">    limit += <span class="number">1</span>;</span><br><span class="line">    res.<span class="title function_">push</span>(...output);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getDuplicatedUser</span> = (<span class="params">arr</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> position = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">const</span> res = [];</span><br><span class="line">  <span class="keyword">while</span> (index !== arr.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([...arr[index], ...arr[position]]);</span><br><span class="line">    <span class="keyword">if</span> (set.<span class="property">size</span> !== arr[index].<span class="property">length</span> + arr[position].<span class="property">length</span>) &#123;</span><br><span class="line">      res.<span class="title function_">push</span>(...arr[index].<span class="title function_">slice</span>(-<span class="number">1</span>), ...arr[position].<span class="title function_">slice</span>(-<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    position += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (position === arr.<span class="property">length</span>) &#123;</span><br><span class="line">      index += <span class="number">1</span>;</span><br><span class="line">      position = index + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> [...<span class="keyword">new</span> <span class="title class_">Set</span>(res)];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">problem6</span>(<span class="params">forms</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!forms.<span class="property">length</span> || forms.<span class="property">length</span> &gt; <span class="number">10000</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&quot;크루는 1명 이상 10,000명 이하이여야 합니다.&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> users = &#123;&#125;;</span><br><span class="line">  forms.<span class="title function_">forEach</span>(<span class="function">(<span class="params">form</span>) =&gt;</span> &#123;</span><br><span class="line">    users[form[<span class="number">1</span>]] = form[<span class="number">0</span>];</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> nicknames = forms.<span class="title function_">map</span>(<span class="function">(<span class="params">nickname</span>) =&gt;</span> nickname[<span class="number">1</span>]);</span><br><span class="line">  <span class="keyword">const</span> partialStrs = nicknames.<span class="title function_">map</span>(<span class="function">(<span class="params">nickname</span>) =&gt;</span> <span class="title function_">getPartialStr</span>(nickname));</span><br><span class="line">  <span class="keyword">const</span> selectedUsers = <span class="title function_">getDuplicatedUser</span>(partialStrs);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> selectedUsers.<span class="title function_">map</span>(<span class="function">(<span class="params">selectedUser</span>) =&gt;</span> users[selectedUser]).<span class="title function_">sort</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>닉네임의 첫번째 글자부터 2글자 이상으로 만들 수 있는 모든 부분 문자열을 구하였다.</li>
+<li>각 닉네임의 부분 문자열 배열을 비교하여 중복요소가 하나라도 있으면 중복 문자 포함 유저 배열에 등록하였다.</li>
+<li>해당 유저의 이메일을 오름차순으로 정렬한 배열을 반환하였다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>우선 이 문제를 풀면서 가장 큰 성장을 이뤄냈다고 자축하고 싶었다. 왜냐하면 이와 비슷한 부분 문자열 문제를 못풀어서 스트레스를 받았던 적이 있는데 이번 기회에 나름의 방법(?)을 찾아서 구현에 성공하여 기분이 좋았다.</p>
+<ul>
+<li>2글자 이상으로 만들 수 있는 부분 문자열을 모두 구했기 때문에 코드가 매우 복잡해졌다. 하지만 2글자 부분 문자열만 구하여 서로 비교하여도 충분히 문제가 없을 상황이기 때문에 이 부분이 좀 아쉬웠다.</li>
+<li>while 문을 사용할 경우와 for 문을 사용할 경우가 애매했었는데, 이번에 코드리뷰를 진행하면서 while 문은 특정 조건이 변경되는 상황이라면 사용하도록 하고 for 문은 일정 횟수를 반복해야 하는 상황에서 사용하도록 한다는 것을 알게 되어 상황에 맞게 적절히 사용할 수 있을 것 같다.</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"
+                    data-tooltip="우테코-프리코스-😎 추천 친구 점수 정렬"
+                    aria-label="이전: 우테코-프리코스-😎 추천 친구 점수 정렬"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%92%B5-%EC%A7%80%EA%B0%91%EC%9D%98-%EC%A7%80%ED%8F%90-%EA%B5%90%ED%99%98%ED%95%98%EA%B8%B0/"
+                    data-tooltip="우테코-프리코스-💵 지갑의 지폐 교환하기"
+                    aria-label="다음: 우테코-프리코스-💵 지갑의 지폐 교환하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%98%8E%20%EC%B6%94%EC%B2%9C%20%EC%B9%9C%EA%B5%AC%20%EC%A0%90%EC%88%98%20%EC%A0%95%EB%A0%AC/"
+                    data-tooltip="우테코-프리코스-😎 추천 친구 점수 정렬"
+                    aria-label="이전: 우테코-프리코스-😎 추천 친구 점수 정렬"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%92%B5-%EC%A7%80%EA%B0%91%EC%9D%98-%EC%A7%80%ED%8F%90-%EA%B5%90%ED%99%98%ED%95%98%EA%B8%B0/"
+                    data-tooltip="우테코-프리코스-💵 지갑의 지폐 교환하기"
+                    aria-label="다음: 우테코-프리코스-💵 지갑의 지폐 교환하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%9B%A4-%EC%A4%91%EB%B3%B5-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%9C%A0%EC%A0%80%EC%9D%98-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

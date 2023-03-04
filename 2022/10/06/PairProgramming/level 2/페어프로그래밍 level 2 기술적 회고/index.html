@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/10/06/pairprogramming/level 2/페어프로그래밍 level 2 기술적 회고/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>페어프로그래밍 level 2 기술적 회고 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. scrollSide불필요한 서버 요청을 최소화 하자.\n토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다.\n서버에 요청을 최소화하자!\n서버 요청을 최소화하기 위해 localStorage에서 값을 가져올 때는 DOMContentLoaded 이벤트가 발생할 때 가져온다.\nlocalStorage에 값을 저장할 때는 페이지를 나가거나 새로고침했을 때 발생하면 되므로 beforeunload 이벤트 핸들러를 사용하였다.\n\n\n\n2. tictactoe얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다.\ngetWinner 함수는 상태값을 가지고 winner가 있는지? 있다면 누구인지를 반환해준다. state에서만 사용되는 함수이므로 접근자 프로퍼티로 사용하여 응집도를 높이는 것이 좋다고 판단하였다.\n\n하지만, setState에서 newState로 재할당이 이루어지면서 접근자 프로퍼티가 제대로 복사되지 않는 문제가 발생하였기 때문에 다시 원래대로 돌려놓았다.\n아니면 재할당을 할 때, 접근자 프로퍼티를 제외한 즉, key,value 쌍이 있는 값만 재할당을 해주는 방법도 있다.\n\n\n즉시실행함수로 감싸서 정보은닉을 하려고 하였지만 정보 은닉만을 위해서 tictactoe를 전부 즉시실행함수로 만드는 것은 어색하다. 왜냐하면 즉시실행함수가 root 컨테이너를 참조하고 있기 때문에 독립적이라고 할 수 없는데 응집시켜놓은 것으로 보여지기 때문이다.\n\ntictactoe에 Container를 건네주고 컴포넌트로 만들었다.\n\n\n\n3. accordion\ntoggle 함수에서 옵션을 주는 경우와 기본값인 경우를 리팩토링으로 나눠보려고 하였는데 더 나은 방법이 떠오르지 않아 그냥 두었다.\n\n4. drag &amp; drop\ndragleave 이벤트와 dragenter 이벤트가 거의 동시에 발생하는데, draggable 요소의 자식 요소에 마우스 포인터가 될 때도 두 이벤트가 발생하여 over 클래스가 붙혔다 떨어져 깜빡이는 현상 발생\ndragleave 이벤트를 제거하고 dragenter 이벤트에 toggle을 달아주어 querySelectorAll(’li’)로 개선하였다.\ndropzone 바깥에서 drop을했을 때 over 클래스가 제거되지 않는 문제가 발생하였는데 dragleave 이벤트를 제거했기 때문이다. dragend 이벤트로 대신 구현하였다.\ndragleave 와 dragenter 발생시 toggle 메서드로 달아주는 방법도 있다.\n\n\n\n5. analog clock\n숫자배열 하드 코딩하는 것 보다 array.from 을 사용하면 각 요소에게 콜백함수를 줘서 map 함수 사용을 제거할 수 있다.\ntimeToDeg 함수의 return 값을 객체형태로 바꿈\n인자가 많아지면서, 구조분해 할당 할 시 더 안정적임\n\n\n\n6. star rating\nquerySelectorAll을 변수에 미리 담아줌\n렌더링이 한번만 되고 이벤트 발생시마다 DOM API를 호출할 필요가 없기 때문\n\n\narray.from 콜백처리하여 map을 제거\n\n7. calendar\nbackground 클릭시 모든 캘린더를 hidden 하는 역할은 input이나 calendar에 종속된 역할이 아님\n상태들을 state 객체로 묶어서 관리\nstate 변경 함수를 거치지 않고 수정하는등의 부수효과를 막기위해\n\n\n이벤트 핸들러 내의 내용을 함수로 추출함\n이벤트 핸들러는 간단히 흐름을 파악할 수 있게 해주고, 자세한 동작은 함수에 정의하는 것이 가독성이 좋다고 생각함.\n\n\n\n8. newsviewer\nviewport를 줄여서 observer-target이 한 화면에 보이면 intersectionObserver API에 문제를 발생한다. scrolling해도 데이터를 가져오지 못한다.\n뷰포트 크기를 계산하여 window.innerHeight와 observer-target의 Y를 계산하여 나눈 값만큼 데이터를 fetch 시켜줘서 화면 비율이 크든 작든 뷰포트에 맞게 데이터를 가져와야한다. 즉, viewport가 확대된 상태면 Math.floor(window.innerHeight / observer-tagetY) 갯수만큼 fetch를 시켜줘서 화면크기에 맞게 초기 렌더링을 해줘야 한다.\nelement.getBoundingClientRect() 로 element의 뷰포트 위치를 구할 수 있다.\n\n\n\n나의 부족한 점\n어떤 문제가 발생했을 때, 문제의 원인을 찾지 못한다.\n해당 문제가 발생한 원인을 제대로 알지 못하여 어떤 부분을 수정해야할지 찾기 어렵다.\n\n\n가치판단이 잘 서지 않는다. A, B가 있을 때 어떤 방법이 더 나은 것인지 선택하기 어렵다. 기준이 나의 생각이라고는 하는데, 남의 얘기를 들어보면 그것도 맞는 것 같다.\n\n소감내일이면 페어프로그래밍2도 끝난다. 페어1을 할 때보단 그래도 조금 실력이 늘었다고 생각하지만, 아직 전체적인 틀을 생각하는 연습이 필요하다고 생각했다. 또한, 주어진 요구사항에 맞는 한가지일을 구현하려고 하지 않고 다른 환경까지 고려하는 행동때문에 코드 작성하기를 망설이는 행동도 조금 나아져서 다행이다.\n나보다 훨씬 잘하는 짝과 함께 해서 진도도 빠르게 나가고 배운 것이 많아서 좋았다. 서로 의견을 편하게 말하면서 코딩을 하다보니 재미도 경험도 더 많이 쌓을 수 있어서 좋은 경험이라고 생각한다. 다만 내가 새로운 지식을 얻기 위해서는 내가 가진 지식을 100% 이해하고 다른 사람에게 설명할 수 있을 정도로 알고 있어야 하므로, 내가 배운 지식을 기록만 하지말고 최대한 다른 사람과 의견을 공유하는 방향으로도 나가봐야겠다고 생각이 들었다.\n나중에 회사에 취업하게 되어도 이런 개발 환경이 갖춰진 회사에서 열심히 배워서 역량을 키워보고 싶다!\n","dateCreated":"2022-10-06T22:22:54+09:00","dateModified":"2022-11-18T17:19:32+09:00","datePublished":"2022-10-06T22:22:54+09:00","description":"","headline":"페어프로그래밍 level 2 기술적 회고","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"}</script>
+    <meta name="description" content="1. scrollSide불필요한 서버 요청을 최소화 하자. 토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다. 서버에 요청을 최소화하자! 서버 요청을 최소화하기 위해 localStor">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="페어프로그래밍 level 2 기술적 회고">
+<meta property="og:url" content="https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="1. scrollSide불필요한 서버 요청을 최소화 하자. 토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다. 서버에 요청을 최소화하자! 서버 요청을 최소화하기 위해 localStor">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-10-06T13:22:54.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:19:32.863Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            페어프로그래밍 level 2 기술적 회고
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-10-06T22:22:54+09:00">
+	
+		    2022/10/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="1-scrollSide"><a href="#1-scrollSide" class="headerlink" title="1. scrollSide"></a>1. scrollSide</h1><h2 id="불필요한-서버-요청을-최소화-하자"><a href="#불필요한-서버-요청을-최소화-하자" class="headerlink" title="불필요한 서버 요청을 최소화 하자."></a>불필요한 서버 요청을 최소화 하자.</h2><ul>
+<li>토글이 될 때마다 로컬스토리지에 저장되는 것은 서버에 불필요한 요청이므로 사용자가 브라우저를 종료할 때, 로컬에 저장되도록 한다. 이와 마찬가지로 서버에 데이터를 가져올 때도 가져온 데이터를 변수에 담아서 그 변수를 사용한다.<ul>
+<li><span style='color:red'>서버에 요청을 최소화하자!</span></li>
+<li>서버 요청을 최소화하기 위해 localStorage에서 값을 가져올 때는 DOMContentLoaded 이벤트가 발생할 때 가져온다.</li>
+<li>localStorage에 값을 저장할 때는 페이지를 나가거나 새로고침했을 때 발생하면 되므로 <code>beforeunload 이벤트 핸들러</code>를 사용하였다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="2-tictactoe"><a href="#2-tictactoe" class="headerlink" title="2. tictactoe"></a>2. tictactoe</h1><h2 id="얕은-복사를-하게-되면-접근자-프로퍼티가-제대로-복사되지-않는다"><a href="#얕은-복사를-하게-되면-접근자-프로퍼티가-제대로-복사되지-않는다" class="headerlink" title="얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다."></a>얕은 복사를 하게 되면 접근자 프로퍼티가 제대로 복사되지 않는다.</h2><ul>
+<li><p>getWinner 함수는 상태값을 가지고 winner가 있는지? 있다면 누구인지를 반환해준다. state에서만 사용되는 함수이므로 접근자 프로퍼티로 사용하여 응집도를 높이는 것이 좋다고 판단하였다.</p>
+<ul>
+<li>하지만, setState에서 newState로 재할당이 이루어지면서 접근자 프로퍼티가 제대로 복사되지 않는 문제가 발생하였기 때문에 다시 원래대로 돌려놓았다.</li>
+<li>아니면 재할당을 할 때, 접근자 프로퍼티를 제외한 즉, key,value 쌍이 있는 값만 재할당을 해주는 방법도 있다.</li>
+</ul>
+</li>
+<li><p>즉시실행함수로 감싸서 정보은닉을 하려고 하였지만 정보 은닉만을 위해서 tictactoe를 전부 즉시실행함수로 만드는 것은 어색하다. 왜냐하면 즉시실행함수가 root 컨테이너를 참조하고 있기 때문에 독립적이라고 할 수 없는데 응집시켜놓은 것으로 보여지기 때문이다.</p>
+<ul>
+<li>tictactoe에 Container를 건네주고 컴포넌트로 만들었다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="3-accordion"><a href="#3-accordion" class="headerlink" title="3. accordion"></a>3. accordion</h1><ul>
+<li>toggle 함수에서 옵션을 주는 경우와 기본값인 경우를 리팩토링으로 나눠보려고 하였는데 더 나은 방법이 떠오르지 않아 그냥 두었다.</li>
+</ul>
+<h1 id="4-drag-amp-drop"><a href="#4-drag-amp-drop" class="headerlink" title="4. drag &amp; drop"></a>4. drag &amp; drop</h1><ul>
+<li>dragleave 이벤트와 dragenter 이벤트가 거의 동시에 발생하는데, draggable 요소의 자식 요소에 마우스 포인터가 될 때도 두 이벤트가 발생하여 over 클래스가 붙혔다 떨어져 깜빡이는 현상 발생<ul>
+<li>dragleave 이벤트를 제거하고 dragenter 이벤트에 toggle을 달아주어 <code>querySelectorAll(’li’)</code>로 개선하였다.</li>
+<li>dropzone 바깥에서 drop을했을 때 over 클래스가 제거되지 않는 문제가 발생하였는데 dragleave 이벤트를 제거했기 때문이다. dragend 이벤트로 대신 구현하였다.</li>
+<li>dragleave 와 dragenter 발생시 toggle 메서드로 달아주는 방법도 있다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="5-analog-clock"><a href="#5-analog-clock" class="headerlink" title="5. analog clock"></a>5. analog clock</h1><ul>
+<li>숫자배열 하드 코딩하는 것 보다 array.from 을 사용하면 각 요소에게 콜백함수를 줘서 map 함수 사용을 제거할 수 있다.</li>
+<li>timeToDeg 함수의 return 값을 객체형태로 바꿈<ul>
+<li>인자가 많아지면서, 구조분해 할당 할 시 더 안정적임</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-star-rating"><a href="#6-star-rating" class="headerlink" title="6. star rating"></a>6. star rating</h1><ul>
+<li>querySelectorAll을 변수에 미리 담아줌<ul>
+<li>렌더링이 한번만 되고 이벤트 발생시마다 DOM API를 호출할 필요가 없기 때문</li>
+</ul>
+</li>
+<li>array.from 콜백처리하여 map을 제거</li>
+</ul>
+<h1 id="7-calendar"><a href="#7-calendar" class="headerlink" title="7. calendar"></a>7. calendar</h1><ul>
+<li>background 클릭시 모든 캘린더를 hidden 하는 역할은 input이나 calendar에 종속된 역할이 아님</li>
+<li>상태들을 state 객체로 묶어서 관리<ul>
+<li>state 변경 함수를 거치지 않고 수정하는등의 부수효과를 막기위해</li>
+</ul>
+</li>
+<li>이벤트 핸들러 내의 내용을 함수로 추출함<ul>
+<li>이벤트 핸들러는 간단히 흐름을 파악할 수 있게 해주고, 자세한 동작은 함수에 정의하는 것이 가독성이 좋다고 생각함.</li>
+</ul>
+</li>
+</ul>
+<h1 id="8-newsviewer"><a href="#8-newsviewer" class="headerlink" title="8. newsviewer"></a>8. newsviewer</h1><ul>
+<li>viewport를 줄여서 observer-target이 한 화면에 보이면 intersectionObserver API에 문제를 발생한다. scrolling해도 데이터를 가져오지 못한다.<ul>
+<li>뷰포트 크기를 계산하여 <code>window.innerHeight</code>와 observer-target의 Y를 계산하여 나눈 값만큼 데이터를 fetch 시켜줘서 화면 비율이 크든 작든 뷰포트에 맞게 데이터를 가져와야한다. 즉, viewport가 확대된 상태면 <code>Math.floor(window.innerHeight / observer-tagetY)</code> 갯수만큼 fetch를 시켜줘서 화면크기에 맞게 초기 렌더링을 해줘야 한다.</li>
+<li><code>element.getBoundingClientRect()</code> 로 element의 뷰포트 위치를 구할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="나의-부족한-점"><a href="#나의-부족한-점" class="headerlink" title="나의 부족한 점"></a>나의 부족한 점</h1><ul>
+<li>어떤 문제가 발생했을 때, 문제의 원인을 찾지 못한다.<ul>
+<li>해당 문제가 발생한 원인을 제대로 알지 못하여 어떤 부분을 수정해야할지 찾기 어렵다.</li>
+</ul>
+</li>
+<li>가치판단이 잘 서지 않는다. A, B가 있을 때 어떤 방법이 더 나은 것인지 선택하기 어렵다. 기준이 나의 생각이라고는 하는데, 남의 얘기를 들어보면 그것도 맞는 것 같다.</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>내일이면 페어프로그래밍2도 끝난다. 페어1을 할 때보단 그래도 조금 실력이 늘었다고 생각하지만, 아직 전체적인 틀을 생각하는 연습이 필요하다고 생각했다. 또한, 주어진 요구사항에 맞는 한가지일을 구현하려고 하지 않고 다른 환경까지 고려하는 행동때문에 코드 작성하기를 망설이는 행동도 조금 나아져서 다행이다.</p>
+<p>나보다 훨씬 잘하는 짝과 함께 해서 진도도 빠르게 나가고 배운 것이 많아서 좋았다. 서로 의견을 편하게 말하면서 코딩을 하다보니 재미도 경험도 더 많이 쌓을 수 있어서 좋은 경험이라고 생각한다. 다만 내가 새로운 지식을 얻기 위해서는 내가 가진 지식을 100% 이해하고 다른 사람에게 설명할 수 있을 정도로 알고 있어야 하므로, 내가 배운 지식을 기록만 하지말고 최대한 다른 사람과 의견을 공유하는 방향으로도 나가봐야겠다고 생각이 들었다.</p>
+<p>나중에 회사에 취업하게 되어도 이런 개발 환경이 갖춰진 회사에서 열심히 배워서 역량을 키워보고 싶다!</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/07/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="페어프로그래밍 level 2 회고"
+                    aria-label="이전: 페어프로그래밍 level 2 회고"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    data-tooltip="drag이벤트 상태관리"
+                    aria-label="다음: drag이벤트 상태관리"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/07/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%ED%9A%8C%EA%B3%A0/"
+                    data-tooltip="페어프로그래밍 level 2 회고"
+                    aria-label="이전: 페어프로그래밍 level 2 회고"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    data-tooltip="drag이벤트 상태관리"
+                    aria-label="다음: drag이벤트 상태관리"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/06/PairProgramming/level%202/%ED%8E%98%EC%96%B4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20level%202%20%EA%B8%B0%EC%88%A0%EC%A0%81%20%ED%9A%8C%EA%B3%A0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/09/21/pairprogramming/level 1/form validation tip/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>form validation Tip - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state = &#123;  id: &quot;pending&quot;,  pw: &quot;pending&quot;,&#125;;const [$idSuccessIcon, $pwSuccessIcon] = [  ...document.querySelectorAll(&quot;.icon-success&quot;),];const [$idErrorIcon, $pwErrorIcon] = [  ...document.querySelectorAll(&quot;.icon-error&quot;),];const [$idErrorMessage, $pwErrorMessage] = [  ...document.querySelectorAll(&quot;.error&quot;),];const $signinButton = document.querySelector(&quot;.button&quot;);const render = () =&gt; &#123;  $idSuccessIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;success&quot;);  $idErrorIcon.classList.toggle(&quot;hidden&quot;, state.id !== &quot;error&quot;);  $pwSuccessIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;success&quot;);  $pwErrorIcon.classList.toggle(&quot;hidden&quot;, state.pw !== &quot;error&quot;);  $idErrorMessage.textContent =    state.id === &quot;error&quot; ? &quot;이메일 형식에 맞게 입력해 주세요.&quot; : &quot;&quot;;  $pwErrorMessage.textContent =    state.pw === &quot;error&quot; ? &quot;영문 또는 숫자를 6~12자 입력하세요.&quot; : &quot;&quot;;  if (state.id === &quot;success&quot; &amp;&amp; state.pw === &quot;success&quot;)    $signinButton.removeAttribute(&quot;disabled&quot;);  else $signinButton.setAttribute(&quot;disabled&quot;, &quot;&quot;);&#125;;const setState = (newState) =&gt; &#123;  state = &#123; ...state, ...newState &#125;;  render();&#125;;const checkIdValidation = (input) =&gt; &#123;  if (input === &quot;&quot;) &#123;    setState(&#123; id: &quot;pending&quot; &#125;);    return;  &#125;  const regExp =    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/;  setState(&#123; id: regExp.test(input) ? &quot;success&quot; : &quot;error&quot; &#125;);&#125;;const $signIdInput = document.querySelector(&quot;#signin-userid&quot;);$signIdInput.addEventListener(  &quot;keyup&quot;,  _.debounce(() =&gt; &#123;    checkIdValidation($signIdInput.value);  &#125;, 500));\n\n\n위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.\n\n위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.\n\n\n하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 별로 좋지 않는 습관이다.\n왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.\n그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.\n위 코드를 리팩터링한 결과는 다음과 같다.\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455const signinSchema = &#123;  userid: &#123;    value: &quot;&quot;,    get valid() &#123;      return /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]&#123;2,3&#125;$/.test(        this.value      );    &#125;,    message: &quot;이메일 형식에 맞게 입력해 주세요.&quot;,  &#125;,  password: &#123;    value: &quot;&quot;,    get valid() &#123;      return /\\w&#123;6,12&#125;$/.test(this.value);    &#125;,    message: &quot;영문 또는 숫자를 6~12자 입력하세요.&quot;,  &#125;,  get valid() &#123;    return this.userid.valid &amp;&amp; this.password.valid;  &#125;,&#125;;const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.\n\n\n마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.\n\n\nemail과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.\n\ninput에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.\n\n접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.\n\n\n\n각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.\n\n2. DOM API 사용을 줄이자.1234567891011121314151617181920212223242526const checkValidation = (target) =&gt; &#123;  signinSchema[target.name].value = target.value;  if (signinSchema[target.name].value === &quot;&quot;) &#123;    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)      .classList.toggle(&quot;hidden&quot;, true);    document      .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)      .classList.toggle(&quot;hidden&quot;, true);    document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = &quot;&quot;;    return;  &#125;  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-success`)    .classList.toggle(&quot;hidden&quot;, !signinSchema[target.name].valid);  document    .querySelector(`#$&#123;target.id&#125; ~ .icon-error`)    .classList.toggle(&quot;hidden&quot;, signinSchema[target.name].valid);  document.querySelector(`#$&#123;target.id&#125; ~ .error`).textContent = !signinSchema[    target.name  ].valid    ? signinSchema[target.name].message    : &quot;&quot;;&#125;;\n\n\n최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.\n\ndocument.querySelector(`#$&#123;target.id&#125; ~ .icon-success`) 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.\n\n\n\nDOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.\n\n3. input 이벤트 타입123456document.querySelector(&quot;.signin&quot;).addEventListener(  &quot;input&quot;,  _.debounce((e) =&gt; &#123;    checkValidation(e.target);  &#125;, 500));\n\n\n리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.\n\n리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.\n\n또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.\n\ne.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.\n\n\n","dateCreated":"2022-09-21T19:11:05+09:00","dateModified":"2022-11-18T17:19:12+09:00","datePublished":"2022-09-21T19:11:05+09:00","description":"","headline":"form validation Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"}</script>
+    <meta name="description" content="Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state &#x3D; &amp;#123;  id: &quot;pending">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="form validation Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="Form Validation 구현 중 느낀점1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556let state &#x3D; &amp;#123;  id: &quot;pending">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-09-21T10:11:05.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:19:12.922Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            form validation Tip
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-09-21T19:11:05+09:00">
+	
+		    2022/09/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="Form-Validation-구현-중-느낀점"><a href="#Form-Validation-구현-중-느낀점" class="headerlink" title="Form Validation 구현 중 느낀점"></a>Form Validation 구현 중 느낀점</h1><h2 id="1-모든-코드를-setState로-틀을-고정하여-생각하지-말자"><a href="#1-모든-코드를-setState로-틀을-고정하여-생각하지-말자" class="headerlink" title="1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자."></a>1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">  <span class="attr">pw</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [$idSuccessIcon, $pwSuccessIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-success&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorIcon, $pwErrorIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorMessage, $pwErrorMessage] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> $signinButton = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.button&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  $idSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $idErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $pwSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $pwErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $idErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">id</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line">  $pwErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">pw</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">id</span> === <span class="string">&quot;success&quot;</span> &amp;&amp; state.<span class="property">pw</span> === <span class="string">&quot;success&quot;</span>)</span><br><span class="line">    $signinButton.<span class="title function_">removeAttribute</span>(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span> $signinButton.<span class="title function_">setAttribute</span>(<span class="string">&quot;disabled&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkIdValidation</span> = (<span class="params">input</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (input === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span> &#125;);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> regExp =</span><br><span class="line">    <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: regExp.<span class="title function_">test</span>(input) ? <span class="string">&quot;success&quot;</span> : <span class="string">&quot;error&quot;</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> $signIdInput = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#signin-userid&quot;</span>);</span><br><span class="line"></span><br><span class="line">$signIdInput.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;keyup&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkIdValidation</span>($signIdInput.<span class="property">value</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.</p>
+</li>
+<li><p>위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.</p>
+</li>
+</ul>
+<p>하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 <span style='color:red'>별로 좋지 않는 습관이다.</span></p>
+<p>왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.</p>
+<p>그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.</p>
+<p>위 코드를 리팩터링한 결과는 다음과 같다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> signinSchema = &#123;</span><br><span class="line">  <span class="attr">userid</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>.<span class="title function_">test</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">value</span></span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">password</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/\w&#123;6,12&#125;$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">userid</span>.<span class="property">valid</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">password</span>.<span class="property">valid</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.</li>
+</ul>
+<blockquote>
+<p>마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.</p>
+</blockquote>
+<ul>
+<li><p>email과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.</p>
+</li>
+<li><p>input에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.</p>
+</li>
+<li><p>접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.</p>
+</li>
+</ul>
+<blockquote>
+<p>각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.</p>
+</blockquote>
+<h2 id="2-DOM-API-사용을-줄이자"><a href="#2-DOM-API-사용을-줄이자" class="headerlink" title="2. DOM API 사용을 줄이자."></a>2. DOM API 사용을 줄이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.</p>
+</li>
+<li><p><code>document.querySelector(`#$&#123;target.id&#125; ~ .icon-success`)</code> 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.</p>
+</li>
+</ul>
+<blockquote>
+<p>DOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.</p>
+</blockquote>
+<h2 id="3-input-이벤트-타입"><a href="#3-input-이벤트-타입" class="headerlink" title="3. input 이벤트 타입"></a>3. input 이벤트 타입</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.</p>
+</li>
+<li><p>리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.</p>
+</li>
+<li><p>또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.</p>
+</li>
+<li><p>e.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.</p>
+</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"
+                    data-tooltip="scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
+                    aria-label="이전: scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    data-tooltip="toaster, autocomplete, carousel Tip"
+                    aria-label="다음: toaster, autocomplete, carousel Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"
+                    data-tooltip="scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
+                    aria-label="이전: scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
+                    data-tooltip="toaster, autocomplete, carousel Tip"
+                    aria-label="다음: toaster, autocomplete, carousel Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,614 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/10/04/pairprogramming/level 2/trello tip/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>trello Tip - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. trello 상태관리12345678910111213141516171819202122232425262728let state = &#123;  lists: [    &#123; id: 1, title: &quot;Frameworks&quot; &#125;,    &#123; id: 2, title: &quot;OS&quot; &#125;,  ],  cards: [    &#123;      id: 1,      content: &quot;React&quot;,      boardId: 1,    &#125;,    &#123;      id: 2,      content: &quot;Vue&quot;,      boardId: 1,    &#125;,    &#123;      id: 3,      content: &quot;Windows&quot;,      boardId: 2,    &#125;,    &#123;      id: 4,      content: &quot;MacOS&quot;,      boardId: 2,    &#125;,  ],&#125;;\n\n\n처음에는 위와 같은 방식으로 상태를 관리해주려 하였다.trello cards를 드래그하여 다른 list로 옮겼을 경우도 있기 때문에, trello list에 cards가 종속되어 있지 않다고 생각했기 때문이다.\n\n하지만 리스트 내의 cards가 순서대로 등록되기 때문에 list 별로 cards를 배열로 관리하는 것이 좋다고 판단하여 다음과 같이 상태를 변경해주었다.\n\n\n123456789101112131415161718192021222324252627282930313233343536let state = &#123;  listOriginId: null,  isListMakerOpen: false,  lists: [    &#123;      id: 1,      title: &quot;Frameworks&quot;,      isOpen: false,      cards: [        &#123;          id: 1,          content: &quot;React&quot;,        &#125;,        &#123;          id: 2,          content: &quot;Vue&quot;,        &#125;,      ],    &#125;,    &#123;      id: 2,      title: &quot;OS&quot;,      isOpen: false,      cards: [        &#123;          id: 3,          content: &quot;Windows&quot;,        &#125;,        &#123;          id: 4,          content: &quot;MacOS&quot;,        &#125;,      ],    &#125;,  ],&#125;;\n\n\n추가로 렌더링에 영향을 끼치는 데이터는 모두 상태로 관리해주는 것이 DOM API를 적게 사용하고 동적 HTML에 선언적으로 style을 주거나 데이터를 바인딩해줄 수 있어 훨씬 가독성이 높아진다.\n\n때문에, DOM API 사용을 자제하고 만약 DOM API를 사용해야 하는 경우라면 꼭 한번 고민해보고 사용하도록 하자.\n2. diff 알고리즘은 프로퍼티까지 비교해줘야한다.이전에 diff 알고리즘을 구현하였을 때, attribute 값만 서로 비교해주고 property 값은 비교해주지 않았다. textarea의 value 값을 빈값으로 바꿔주고 싶어서 이를 상태로 관리해야하나? 생각이 들어 상태로 관리해보려했다.\n하지만, textarea의 attribute인 value는 처음부터 빈값이였고 input 이벤트가 발생하고 이 때의 value값(property 값)을 상태에 등록해주더라도 diff 알고리즘이 attribute만 비교해주기 때문에 처음과 input이벤트 발생한 후의 textarea는 변한게 없는 것으로 간주하였다.\n그러므로 diff 알고리즘에서 property까지 비교하여 바뀐 부분이 렌더링 되도록 알고리즘을 개선해주었다.\n1234567891011121314151617181920// property 비교 추가const diff = ($new, $old) =&gt; &#123;  const newNodes = [...$new.childNodes];  const oldNodes = [...$old.childNodes];  ...  newNodes.forEach(($n, i) =&gt; &#123;    ...// 원래는 프로퍼티를 전부 비교해줘야하지만, 사정상 value, checked만 확인해주겠다.    const $o = oldNodes[i];    if ($n.value !== $o.value) &#123;      $o.value = $n.value;    &#125;    if ($n.checked !== $o.checked) &#123;      $o.checked = $n.checked;    &#125;  &#125;);&#125;;\n\n\n그 결과 textarea가 변경될 때마다 textarea의 value property가 변경되므로 재렌더링이 발생하므로 요구사항에 맞게 구현할 수 있다.\n\n3. drag &amp; drop 기능 완벽하게 이해하기요구사항에서 drag한 list를 드래그 한체로 다른 list 위로 올렸을 때, 상태가 변경되지 않고 DOM을 직접 변경하여 list가 서로 swap 되도록 하고 drop한 이후에 state를 변경하라고 적혀있다.\n각자의 이벤트 핸들러는 서로의 event target을 알 수 없으므로 상태로 관리해줘야만 한다.\n123456789101112131415161718192021222324let state = &#123;  listOriginId: null,  targetId:null,  ...&#125;window.addEventListener(&#x27;dragstart&#x27;, e =&gt; &#123;  state.listOriginId = &quot;drag 시작한 list의 id&quot;&#125;)window.addEventListener(&#x27;dragenter&#x27;, e =&gt; &#123;  state.targetId = &quot;dragenter 발생한 list의 id&quot;  swapList(e.target.id) // DOM 직접 변경하여 dragstart 이벤트 발생한 노드와 dragenter 이벤트 발생한 노드를 변경&#125;)window.addEventListener(&#x27;dragend&#x27;, e =&gt; &#123;  setState(&#123;...&#125;) // listOriginId, targetId를 가지고 lists의 배열 요소 위치를 서로 바꿔준다.&#125;)// drop 이벤트 발생시키기 위해서 dragover 이벤트 핸들러에 e.preventDefault()window.addEventListener(&#x27;dragover&#x27;, e =&gt; &#123;  e.preventDefault();&#125;)\n\n\n사실 drop 이벤트를 발생시키기 위해서 dragover 이벤트에서 e.preventDefault()를 호출하였는데, drop 이벤트를 사용하지 않아도 구현이 가능하여서 제거해도 될까 했지만, 제거하게 되면 dragend가 발생했을 때, dragstart한 요소가 제자리로 돌아오는 트랜지션(?)이 제거되지 않으므로 남겨두었다.\n\ndrop 이벤트를 사용하지 않은 이유는 drop 이벤트는 draggable인 요소에서만 drop 이벤트가 발생한다. 즉, dragenter로 새로운 list랑 이전 list의 DOM을 변경해주었는데, drop을 list 요소 바깥에서 발생시키면 drop 이벤트가 발생하지 않는 문제점이 있어서 drop 이벤트 대신에 dragend 이벤트를 사용하였다.\n\n\n소감\nif문은 어렵다. input 값이 빈칸일 때, a조건 또는 b조건 만족해야지 실행하는 예제를 한줄로 줄여보려 했지만 복잡해서 일단 따로 사용했다.\n\nstate는 객체이고 그 안에 여러 상태 데이터를 관리하는데, lists를 배열로 관리해주고 있고, lists 배열의 요소를 list라고 한다면 list는 객체로 관리되고 list 안에 또 cards라는 배열이 있고 cards 배열의 요소는 card라는 객체이다. 이런 복잡한 구조의 state를 가지고 고차함수를 사용하는데 어려움이 있었다.\n\n\n","dateCreated":"2022-10-04T21:23:45+09:00","dateModified":"2022-11-18T17:20:07+09:00","datePublished":"2022-10-04T21:23:45+09:00","description":"","headline":"trello Tip","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"}</script>
+    <meta name="description" content="1. trello 상태관리12345678910111213141516171819202122232425262728let state &#x3D; &amp;#123;  lists: [    &amp;#123; id: 1, title: &quot;Frameworks&quot; &amp;#125;,    &amp;#123; id: 2, title: &quot;OS&quot; &amp;#125;,  ],  car">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="trello Tip">
+<meta property="og:url" content="https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="1. trello 상태관리12345678910111213141516171819202122232425262728let state &#x3D; &amp;#123;  lists: [    &amp;#123; id: 1, title: &quot;Frameworks&quot; &amp;#125;,    &amp;#123; id: 2, title: &quot;OS&quot; &amp;#125;,  ],  car">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-10-04T12:23:45.000Z">
+<meta property="article:modified_time" content="2022-11-18T08:20:07.754Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            trello Tip
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-10-04T21:23:45+09:00">
+	
+		    2022/10/04
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="1-trello-상태관리"><a href="#1-trello-상태관리" class="headerlink" title="1. trello 상태관리"></a>1. trello 상태관리</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">lists</span>: [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&quot;Frameworks&quot;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&quot;OS&quot;</span> &#125;,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">cards</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;React&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;Vue&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;Windows&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">2</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="attr">content</span>: <span class="string">&quot;MacOS&quot;</span>,</span><br><span class="line">      <span class="attr">boardId</span>: <span class="number">2</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>처음에는 위와 같은 방식으로 상태를 관리해주려 하였다.trello cards를 드래그하여 다른 list로 옮겼을 경우도 있기 때문에, trello list에 cards가 종속되어 있지 않다고 생각했기 때문이다.</p>
+</li>
+<li><p>하지만 리스트 내의 cards가 순서대로 등록되기 때문에 list 별로 cards를 배열로 관리하는 것이 좋다고 판단하여 다음과 같이 상태를 변경해주었다.</p>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">listOriginId</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">isListMakerOpen</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">lists</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&quot;Frameworks&quot;</span>,</span><br><span class="line">      <span class="attr">isOpen</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">cards</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;React&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;Vue&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&quot;OS&quot;</span>,</span><br><span class="line">      <span class="attr">isOpen</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">cards</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;Windows&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">id</span>: <span class="number">4</span>,</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&quot;MacOS&quot;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>추가로 렌더링에 영향을 끼치는 데이터는 모두 상태로 관리해주는 것이 DOM API를 적게 사용하고 동적 HTML에 선언적으로 style을 주거나 데이터를 바인딩해줄 수 있어 훨씬 가독성이 높아진다.</li>
+</ul>
+<p>때문에, <strong>DOM API 사용을 자제하고 만약 DOM API를 사용해야 하는 경우라면 꼭 한번 고민해보고 사용</strong>하도록 하자.</p>
+<h1 id="2-diff-알고리즘은-프로퍼티까지-비교해줘야한다"><a href="#2-diff-알고리즘은-프로퍼티까지-비교해줘야한다" class="headerlink" title="2. diff 알고리즘은 프로퍼티까지 비교해줘야한다."></a>2. diff 알고리즘은 프로퍼티까지 비교해줘야한다.</h1><p>이전에 diff 알고리즘을 구현하였을 때, attribute 값만 서로 비교해주고 property 값은 비교해주지 않았다. textarea의 value 값을 빈값으로 바꿔주고 싶어서 이를 상태로 관리해야하나? 생각이 들어 상태로 관리해보려했다.</p>
+<p>하지만, textarea의 attribute인 value는 처음부터 빈값이였고 input 이벤트가 발생하고 이 때의 value값(property 값)을 상태에 등록해주더라도 diff 알고리즘이 attribute만 비교해주기 때문에 처음과 input이벤트 발생한 후의 textarea는 변한게 없는 것으로 간주하였다.</p>
+<p>그러므로 diff 알고리즘에서 property까지 비교하여 바뀐 부분이 렌더링 되도록 알고리즘을 개선해주었다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// property 비교 추가</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">diff</span> = (<span class="params">$new, $old</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newNodes = [...$new.<span class="property">childNodes</span>];</span><br><span class="line">  <span class="keyword">const</span> oldNodes = [...$old.<span class="property">childNodes</span>];</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  newNodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">$n, i</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"><span class="comment">// 원래는 프로퍼티를 전부 비교해줘야하지만, 사정상 value, checked만 확인해주겠다.</span></span><br><span class="line">    <span class="keyword">const</span> $o = oldNodes[i];</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">value</span> !== $o.<span class="property">value</span>) &#123;</span><br><span class="line">      $o.<span class="property">value</span> = $n.<span class="property">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($n.<span class="property">checked</span> !== $o.<span class="property">checked</span>) &#123;</span><br><span class="line">      $o.<span class="property">checked</span> = $n.<span class="property">checked</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>그 결과 textarea가 변경될 때마다 textarea의 value property가 변경되므로 재렌더링이 발생하므로 요구사항에 맞게 구현할 수 있다.</li>
+</ul>
+<h1 id="3-drag-amp-drop-기능-완벽하게-이해하기"><a href="#3-drag-amp-drop-기능-완벽하게-이해하기" class="headerlink" title="3. drag &amp; drop 기능 완벽하게 이해하기"></a>3. drag &amp; drop 기능 완벽하게 이해하기</h1><p>요구사항에서 drag한 list를 드래그 한체로 다른 list 위로 올렸을 때, 상태가 변경되지 않고 DOM을 직접 변경하여 list가 서로 swap 되도록 하고 drop한 이후에 state를 변경하라고 적혀있다.</p>
+<p>각자의 이벤트 핸들러는 서로의 event target을 알 수 없으므로 상태로 관리해줘야만 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">listOriginId</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">targetId</span>:<span class="literal">null</span>,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragstart&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">listOriginId</span> = <span class="string">&quot;drag 시작한 list의 id&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragenter&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">targetId</span> = <span class="string">&quot;dragenter 발생한 list의 id&quot;</span></span><br><span class="line">  <span class="title function_">swapList</span>(e.<span class="property">target</span>.<span class="property">id</span>) <span class="comment">// DOM 직접 변경하여 dragstart 이벤트 발생한 노드와 dragenter 이벤트 발생한 노드를 변경</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragend&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setState</span>(&#123;...&#125;) <span class="comment">// listOriginId, targetId를 가지고 lists의 배열 요소 위치를 서로 바꿔준다.</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// drop 이벤트 발생시키기 위해서 dragover 이벤트 핸들러에 e.preventDefault()</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dragover&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  e.<span class="title function_">preventDefault</span>();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>사실 drop 이벤트를 발생시키기 위해서 dragover 이벤트에서 e.preventDefault()를 호출하였는데, drop 이벤트를 사용하지 않아도 구현이 가능하여서 제거해도 될까 했지만, 제거하게 되면 dragend가 발생했을 때, dragstart한 요소가 제자리로 돌아오는 트랜지션(?)이 제거되지 않으므로 남겨두었다.</p>
+</li>
+<li><p>drop 이벤트를 사용하지 않은 이유는 drop 이벤트는 draggable인 요소에서만 drop 이벤트가 발생한다. 즉, dragenter로 새로운 list랑 이전 list의 DOM을 변경해주었는데, drop을 list 요소 바깥에서 발생시키면 drop 이벤트가 발생하지 않는 문제점이 있어서 drop 이벤트 대신에 dragend 이벤트를 사용하였다.</p>
+</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><ul>
+<li><p>if문은 어렵다. input 값이 빈칸일 때, a조건 또는 b조건 만족해야지 실행하는 예제를 한줄로 줄여보려 했지만 복잡해서 일단 따로 사용했다.</p>
+</li>
+<li><p>state는 객체이고 그 안에 여러 상태 데이터를 관리하는데, lists를 배열로 관리해주고 있고, lists 배열의 요소를 list라고 한다면 list는 객체로 관리되고 list 안에 또 cards라는 배열이 있고 cards 배열의 요소는 card라는 객체이다. 이런 복잡한 구조의 state를 가지고 고차함수를 사용하는데 어려움이 있었다.</p>
+</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    data-tooltip="drag이벤트 상태관리"
+                    aria-label="이전: drag이벤트 상태관리"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/"
+                    data-tooltip="tictactoe, drag 이벤트 Tip"
+                    aria-label="다음: tictactoe, drag 이벤트 Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/05/PairProgramming/level%202/drag%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC/"
+                    data-tooltip="drag이벤트 상태관리"
+                    aria-label="이전: drag이벤트 상태관리"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/"
+                    data-tooltip="tictactoe, drag 이벤트 Tip"
+                    aria-label="다음: tictactoe, drag 이벤트 Tip"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/04/PairProgramming/level%202/trello%20Tip/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/10/29/settings/babel/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>Babel - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 babelBabel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.\n\n구문 변환\n대상 환경에 누락된 폴리필 기능\n소스 코드 변환\n\n\n\n\nPolyfill이란, 구멍난 벽을 충전해주는 솜을 말한다. 프로그래밍에서는 babel이 globalThis와 같이 모든 것을 컴파일 해주지 못하므로 이 때, core-js라는 폴리필 기능을 사용한다.\n\n컴파일러 vs 트랜스파일러\n컴파일러\n\n한 언어로 작성된 코드를 다른 언어로 변환해주는 역할을 한다.\n\n트랜스파일러\n\n한 언어로 작성된 코드를 비슷한 수준의 추상화를 가진 다른 언어로 변환해주는 역할을 한다.\n위키피디아에 따르면, 컴파일러가 트랜스파일러보다 큰 범주에 속해있다고 한다.\n사용\n별도의 build 시스템이 없기 때문에 built-in을 사용하여 패키지를 설치한다.\n\n$npm i -D @babel/core @babel/cli @babel/preset-env\n\nbabel 구성파일 설정\n\n12345678910111213// babel.config.jsmodule.exports = &#123;  comments: false,  presets: [    [      &quot;@babel/preset-env&quot;,      &#123;        useBuiltIns: &quot;usage&quot;,        corejs: &quot;3.26.0&quot;,      &#125;,    ],  ],&#125;;\n\nuseBuiltIns 옵션은 폴리필을 처리하는 방법을 구성한다. usage 옵션값을 사용하기 위해 core-js 3버전을 설치해야한다.\n$npm i core-js@3\nbabel 구성파일에 target을 설정해줄 수 있는데, 이 때 target은 어떤 브라우저까지 호환되도록 할지 범위를 정해주는 기준이 된다.\n12345// .browserslistrc&gt; 0.25% in KRlast 2 versionsnode &gt; 16ie 9-11\n\ntarget은 .browserslistrc 파일로 관리하는 것이 편리하다.\n\nie 11 : 인터넷 익스플로러 11만\nlast 2 versions : 최신 브라우저와 그 이전버전까지\nlast 2 node versions : node 최신버전과 그 이전버전까지\nnot dead : 업데이트가 종료되지 않은\n\n자세한 정보를 아래 사이트를 참고\nhttps://browsersl.ist/\n\npackage.json에 명령어 등록\n\n123456789// package.json&#123;    &quot;scripts&quot;: &#123;        ...        &quot;compile&quot;: &quot;cross-var babel $npm_package_config_file_input -o $npm_package_config_file_output&quot;,        &quot;compile:dir&quot;: &quot;cross-var babel $npm_package_config_folder_input -d $npm_package_config_folder_output&quot;,        &quot;watch:compile&quot;: &quot;npm run compile -- --watch&quot;,    &#125;&#125;\n\n파일을 compile 해줄 수 있고 폴더를 compile 해줄 수 있다.watch 옵션 추가하면 파일이 변경되어 저장될 때마다 compile 자동 수행한다.\n🏓 소감babel, webpack은 자주 사용하지 않으니 제대로 알아두면 편할 것 같다. 자세한 설정들은 babel 공식문서를 참고하도록 하자.\n","dateCreated":"2022-10-29T19:35:46+09:00","dateModified":"2022-11-23T20:16:51+09:00","datePublished":"2022-10-29T19:35:46+09:00","description":"📌 babelBabel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.\n\n구문 변환\n대상 환경에 누락된 폴리필 기능\n소스 코드 변환\n","headline":"Babel","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/10/29/Settings/Babel/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/10/29/Settings/Babel/"}</script>
+    <meta name="description" content="📌 babelBabel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.  구문 변환 대상 환경에 누락된 폴리필 기능 소스 코드 변환">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Babel">
+<meta property="og:url" content="https://loco9939.github.io/2022/10/29/Settings/Babel/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 babelBabel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.  구문 변환 대상 환경에 누락된 폴리필 기능 소스 코드 변환">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-10-29T10:35:46.000Z">
+<meta property="article:modified_time" content="2022-11-23T11:16:51.348Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Babel
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-10-29T19:35:46+09:00">
+	
+		    2022/10/29
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Settings/">Settings</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-babel"><a href="#📌-babel" class="headerlink" title="📌 babel"></a>📌 babel</h1><p>Babel은 자바스크립트 컴파일러로 아래의 역할을 하여 브라우저 호환 문제를 해결한다.</p>
+<ul>
+<li>구문 변환</li>
+<li>대상 환경에 누락된 폴리필 기능</li>
+<li>소스 코드 변환</li>
+</ul>
+<span id="more"></span>
+
+<blockquote>
+<p>Polyfill이란, 구멍난 벽을 충전해주는 솜을 말한다. 프로그래밍에서는 babel이 globalThis와 같이 모든 것을 컴파일 해주지 못하므로 이 때, core-js라는 폴리필 기능을 사용한다.</p>
+</blockquote>
+<h2 id="컴파일러-vs-트랜스파일러"><a href="#컴파일러-vs-트랜스파일러" class="headerlink" title="컴파일러 vs 트랜스파일러"></a>컴파일러 vs 트랜스파일러</h2><ol>
+<li>컴파일러</li>
+</ol>
+<p>한 언어로 작성된 코드를 다른 언어로 변환해주는 역할을 한다.</p>
+<ol start="2">
+<li>트랜스파일러</li>
+</ol>
+<p>한 언어로 작성된 코드를 비슷한 수준의 추상화를 가진 다른 언어로 변환해주는 역할을 한다.</p>
+<p>위키피디아에 따르면, 컴파일러가 트랜스파일러보다 큰 범주에 속해있다고 한다.</p>
+<h2 id="사용"><a href="#사용" class="headerlink" title="사용"></a>사용</h2><ol>
+<li>별도의 build 시스템이 없기 때문에 built-in을 사용하여 패키지를 설치한다.</li>
+</ol>
+<p><code>$npm i -D @babel/core @babel/cli @babel/preset-env</code></p>
+<ol start="2">
+<li>babel 구성파일 설정</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">comments</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">presets</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">useBuiltIns</span>: <span class="string">&quot;usage&quot;</span>,</span><br><span class="line">        <span class="attr">corejs</span>: <span class="string">&quot;3.26.0&quot;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>useBuiltIns 옵션은 폴리필을 처리하는 방법을 구성한다. usage 옵션값을 사용하기 위해 core-js 3버전을 설치해야한다.</p>
+<p><code>$npm i core-js@3</code></p>
+<p>babel 구성파일에 target을 설정해줄 수 있는데, 이 때 target은 어떤 브라우저까지 호환되도록 할지 범위를 정해주는 기준이 된다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .browserslistrc</span></span><br><span class="line">&gt; <span class="number">0.25</span>% <span class="keyword">in</span> <span class="variable constant_">KR</span></span><br><span class="line">last <span class="number">2</span> versions</span><br><span class="line">node &gt; <span class="number">16</span></span><br><span class="line">ie <span class="number">9</span>-<span class="number">11</span></span><br></pre></td></tr></table></figure>
+
+<p>target은 .browserslistrc 파일로 관리하는 것이 편리하다.</p>
+<ul>
+<li>ie 11 : 인터넷 익스플로러 11만</li>
+<li>last 2 versions : 최신 브라우저와 그 이전버전까지</li>
+<li>last 2 node versions : node 최신버전과 그 이전버전까지</li>
+<li>not dead : 업데이트가 종료되지 않은</li>
+</ul>
+<p>자세한 정보를 아래 사이트를 참고</p>
+<p><a target="_blank" rel="noopener" href="https://browsersl.ist/">https://browsersl.ist/</a></p>
+<ol start="3">
+<li>package.json에 명령어 등록</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="string">&quot;compile&quot;</span>: <span class="string">&quot;cross-var babel $npm_package_config_file_input -o $npm_package_config_file_output&quot;</span>,</span><br><span class="line">        <span class="string">&quot;compile:dir&quot;</span>: <span class="string">&quot;cross-var babel $npm_package_config_folder_input -d $npm_package_config_folder_output&quot;</span>,</span><br><span class="line">        <span class="string">&quot;watch:compile&quot;</span>: <span class="string">&quot;npm run compile -- --watch&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>파일을 compile 해줄 수 있고 폴더를 compile 해줄 수 있다.<br>watch 옵션 추가하면 파일이 변경되어 저장될 때마다 compile 자동 수행한다.</p>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>babel, webpack은 자주 사용하지 않으니 제대로 알아두면 편할 것 같다. 자세한 설정들은 babel 공식문서를 참고하도록 하자.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/"
+                    data-tooltip="22년 10월 29일 하루일기"
+                    aria-label="이전: 22년 10월 29일 하루일기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/29/Settings/homebrew/"
+                    data-tooltip="homebrew"
+                    aria-label="다음: homebrew"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/29/Diary/22%EB%85%84%2010%EC%9B%94%2029%EC%9D%BC%20%ED%95%98%EB%A3%A8%EC%9D%BC%EA%B8%B0/"
+                    data-tooltip="22년 10월 29일 하루일기"
+                    aria-label="이전: 22년 10월 29일 하루일기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/10/29/Settings/homebrew/"
+                    data-tooltip="homebrew"
+                    aria-label="다음: homebrew"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/10/29/Settings/Babel/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

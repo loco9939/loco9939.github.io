@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/11/22/react/hooks/🏰-usecallback과-usememo/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>🏰 useCallback과 useMemo - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"\n\n📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다.\n이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.\n\n\n🐸 useCallbackuseCallback()은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, 기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.\n1234567891011121314151617181920export function Counter(&#123; count: initialCount, step &#125;) &#123;\tconst [count, setCount] = useState(initialCount);\t// 1\tconst handleIncrement = useCallback(() =&gt; &#123;\t\tsetCount((count) =&gt; count + step);\t\t&#125;, [step]);\t// 2\tconst handleDecrement = useCallback(() =&gt; &#123;\t\tsetCount(count - step);\t\t&#125;, [count, step]);\treturn (\t\t&lt;div&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;\t\t\t&lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;\t\t\t&lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;        &lt;/div&gt;    )\n\n\n기억해야할 데이터 타입이 함수인 경우 사용한다.\nuseEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.\n1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. 기억되어있는 정보를 가지고 값을 변경하는 것이다.\n2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. 기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.\n\n🐍 useMemo1useCallback(fn, deps) === useMemo(() =&gt; fn, deps);\n\nuseMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.\n123456789101112131415161718192021222324252627282930313233export function Counter(&#123; count: initialCount, step &#125;) &#123;  const [count, setCount] = useState(initialCount);  // useMemo(() =&gt; fn, deps)  const handleIncrement = useMemo(    () =&gt; () =&gt; setCount((prevCount) =&gt; prevCount + step),    [step]  );  // useCallback(fn, deps)  const handleDecrement = useCallback(() =&gt; &#123;    setCount((prevCount) =&gt; prevCount - step);  &#125;, [step]);  // memoized Components  const DecButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleDecrement&#125;&gt;-&lt;/Counter.Button&gt;,    [handleDecrement]  );  const IncButton = useMemo(    () =&gt; &lt;Counter.Button onClick=&#123;handleIncrement&#125;&gt;+&lt;/Counter.Button&gt;,    [handleIncrement]  );  return (    &lt;div&gt;      &#123;DecButton&#125;      &lt;Counter.Display&gt;&#123;count&#125;&lt;/Counter.Display&gt;      &#123;IncButton&#125;    &lt;/div&gt;  );&#125;\n\n\nuseMemo()는 해당 컴포넌트를 기억한다.\n종속성 배열 [count, onDecrement, onIncrement, restProps]이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.\nsetCount()를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.\n\n🏓 소감값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?\n\n\n📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.\n\n","dateCreated":"2022-11-22T19:46:22+09:00","dateModified":"2022-11-23T20:20:51+09:00","datePublished":"2022-11-22T19:46:22+09:00","description":"","headline":"🏰 useCallback과 useMemo","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"}</script>
+    <meta name="description" content="📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다. 이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.   🐸 us">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="🏰 useCallback과 useMemo">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 useCallback과 useMemo 사용 이유함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 하위 컴포넌트에게 전달한다. 이 때 상위 컴포넌트가 다시 실행되면 이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.   🐸 us">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2022-11-22T10:46:22.000Z">
+<meta property="article:modified_time" content="2022-11-23T11:20:51.075Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            🏰 useCallback과 useMemo
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-22T19:46:22+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <span id="more"></span>
+
+<h1 id="📌-useCallback과-useMemo-사용-이유"><a href="#📌-useCallback과-useMemo-사용-이유" class="headerlink" title="📌 useCallback과 useMemo 사용 이유"></a>📌 useCallback과 useMemo 사용 이유</h1><p>함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 <strong>하위 컴포넌트에게 전달한다.</strong></p>
+<p>이 때 상위 컴포넌트가 다시 실행되면 <red>이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.</red></p>
+<!-- more -->
+
+<h2 id="🐸-useCallback"><a href="#🐸-useCallback" class="headerlink" title="🐸 useCallback"></a>🐸 useCallback</h2><p><code>useCallback()</code>은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, <strong>기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">	<span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 1</span></span><br><span class="line">	<span class="keyword">const</span> handleIncrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(<span class="function">(<span class="params">count</span>) =&gt;</span> count + step);</span><br><span class="line">		&#125;, [step]);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2</span></span><br><span class="line">	<span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(count - step);</span><br><span class="line">		&#125;, [count, step]);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기억해야할 데이터 타입이 함수인 경우 사용한다.</li>
+<li>useEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.</li>
+<li>1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. <red>기억되어있는 정보를 가지고 값을 변경하는 것이다.</red></li>
+<li>2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. <red>기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.</red></li>
+</ul>
+<h2 id="🐍-useMemo"><a href="#🐍-useMemo" class="headerlink" title="🐍 useMemo"></a>🐍 useMemo</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useCallback</span>(fn, deps) === <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> fn, deps);</span><br></pre></td></tr></table></figure>
+
+<p>useMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useMemo(() =&gt; fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleIncrement = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="function">() =&gt;</span> <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + step),</span><br><span class="line">    [step]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useCallback(fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - step);</span><br><span class="line">  &#125;, [step]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// memoized Components</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DecButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleDecrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">IncButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleIncrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;DecButton&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;IncButton&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useMemo()는 해당 컴포넌트를 기억한다.</li>
+<li>종속성 배열 <code>[count, onDecrement, onIncrement, restProps]</code>이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.</li>
+<li><code>setCount()</code>를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?</p>
+<aside>
+
+<p>📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.</p>
+</aside>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"
+                    data-tooltip="HTMLElement 조작과 타입 좁히기"
+                    aria-label="이전: HTMLElement 조작과 타입 좁히기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
+                    data-tooltip="⛱ useRef"
+                    aria-label="다음: ⛱ useRef"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/TypeScript/HTMLElement-%EC%A1%B0%EC%9E%91%EA%B3%BC-%ED%83%80%EC%9E%85-%EC%A2%81%ED%9E%88%EA%B8%B0/"
+                    data-tooltip="HTMLElement 조작과 타입 좁히기"
+                    aria-label="이전: HTMLElement 조작과 타입 좁히기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
+                    data-tooltip="⛱ useRef"
+                    aria-label="다음: ⛱ useRef"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

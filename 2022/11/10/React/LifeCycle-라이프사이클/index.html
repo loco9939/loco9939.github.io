@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2022/11/10/react/lifecycle-라이프사이클/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>LifeCycle(라이프사이클) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"📌 LifeCycle이란?라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. 컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다.\n👑 LifeCycle 필요성라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 Side Effect(사이드이펙트)를 처리하기 위함이다.\n대표적인 사이드 이펙트는 다음과 같다.\n\n네트워크 통신 (비동기 통신 요청 및 응답)\nDOM 컨트롤 (RealDOM 접근 및 조작)\n구독&#x2F;취소 (이벤트 핸들링 등)\n오류 감지 (ErrorBoundary 컴포넌트 등)\n\n✏️ 대표적인 LifeCycle 메서드\nconstructor()\n마운트 되기 전에 실행된다.\n\n\nrender()\n컴포넌트 렌더링 시점에 호출\n\n\ncomponentDidMount()\nDOM에 마운트 된 이후 실행된다.\n\n\ncomponentDidUpdate()\n최초 렌더링 시 실행 ❌\n업데이트 이후 실행\n\n\ncomponentWillunmount()\n컴포넌트 소멸하기 직전에 실행\n\n\n\n\n🌈 Render 단계\nrender 단계는 virtualDOM을 조작하는 단계이다.\n성능 최적화를 위한 행동은 render 이전에 해줘야한다.\nrender가 끝났다고 해서 실제DOM에 바로 반영되는 것이 아니다.\n\n\n리액트 업데이트가 되는 경우는 다음 3가지 상황이다.\n새로운 props가 전달되었을 때,\n해당 컴포넌트의 state가 변경되었을 때,\n강제로 변경시켰을 때만 업데이트가 발생한다.\n\n\n\n🔨 Commit 단계commit 단계는 RealDOM이므로 명령형이 가능하다.\n\nDOM을 사용하여 componentDidMount, DidUpdate, WillUnmount 에서 명령형 코드 작성이 가능하다.\n사이드 이펙트 관련 함수는 여기서 수행해야한다.\n📌 사이드 이펙트가 나쁜 의미로 부작용이 아니라 리액트가 하는 일이 아닌 부가적인 일을 의미한다.\n\n\n","dateCreated":"2022-11-10T20:23:28+09:00","dateModified":"2022-11-12T16:55:58+09:00","datePublished":"2022-11-10T20:23:28+09:00","description":"","headline":"LifeCycle(라이프사이클)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"}</script>
+    <meta name="description" content="📌 LifeCycle이란?라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. 컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다. 👑 LifeCycle 필요성라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 Side Effect(사이드이펙트)를 처리하기 위">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="LifeCycle(라이프사이클)">
+<meta property="og:url" content="https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="📌 LifeCycle이란?라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. 컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다. 👑 LifeCycle 필요성라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 Side Effect(사이드이펙트)를 처리하기 위">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/lifecycle/lifecycle.png">
+<meta property="article:published_time" content="2022-11-10T11:23:28.000Z">
+<meta property="article:modified_time" content="2022-11-12T07:55:58.700Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/lifecycle/lifecycle.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            LifeCycle(라이프사이클)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-11-10T20:23:28+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="📌-LifeCycle이란"><a href="#📌-LifeCycle이란" class="headerlink" title="📌 LifeCycle이란?"></a>📌 LifeCycle이란?</h1><p>라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. <strong>컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다.</strong></p>
+<h2 id="👑-LifeCycle-필요성"><a href="#👑-LifeCycle-필요성" class="headerlink" title="👑 LifeCycle 필요성"></a>👑 LifeCycle 필요성</h2><p>라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 <red>Side Effect(사이드이펙트)를 처리</red>하기 위함이다.</p>
+<p>대표적인 사이드 이펙트는 다음과 같다.</p>
+<ol>
+<li>네트워크 통신 (비동기 통신 요청 및 응답)</li>
+<li>DOM 컨트롤 (RealDOM 접근 및 조작)</li>
+<li>구독&#x2F;취소 (이벤트 핸들링 등)</li>
+<li>오류 감지 (ErrorBoundary 컴포넌트 등)</li>
+</ol>
+<h2 id="✏️-대표적인-LifeCycle-메서드"><a href="#✏️-대표적인-LifeCycle-메서드" class="headerlink" title="✏️ 대표적인 LifeCycle 메서드"></a>✏️ 대표적인 LifeCycle 메서드</h2><ul>
+<li><code>constructor()</code><ul>
+<li>마운트 되기 전에 실행된다.</li>
+</ul>
+</li>
+<li><code>render()</code><ul>
+<li>컴포넌트 렌더링 시점에 호출</li>
+</ul>
+</li>
+<li><code>componentDidMount()</code><ul>
+<li>DOM에 마운트 된 이후 실행된다.</li>
+</ul>
+</li>
+<li><code>componentDidUpdate()</code><ul>
+<li>최초 렌더링 시 실행 ❌</li>
+<li>업데이트 이후 실행</li>
+</ul>
+</li>
+<li><code>componentWillunmount()</code><ul>
+<li>컴포넌트 소멸하기 직전에 실행</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../images/lifecycle/lifecycle.png" alt="LifeCycle"></p>
+<h2 id="🌈-Render-단계"><a href="#🌈-Render-단계" class="headerlink" title="🌈 Render 단계"></a>🌈 Render 단계</h2><ul>
+<li>render 단계는 virtualDOM을 조작하는 단계이다.<ul>
+<li>성능 최적화를 위한 행동은 render 이전에 해줘야한다.</li>
+<li>render가 끝났다고 해서 실제DOM에 바로 반영되는 것이 아니다.</li>
+</ul>
+</li>
+<li>리액트 업데이트가 되는 경우는 다음 3가지 상황이다.<ol>
+<li><strong>새로운 props가 전달되었을 때,</strong></li>
+<li><strong>해당 컴포넌트의 state가 변경되었을 때,</strong></li>
+<li><strong>강제로 변경시켰을 때만 업데이트가 발생한다.</strong></li>
+</ol>
+</li>
+</ul>
+<h2 id="🔨-Commit-단계"><a href="#🔨-Commit-단계" class="headerlink" title="🔨 Commit 단계"></a>🔨 Commit 단계</h2><p>commit 단계는 RealDOM이므로 명령형이 가능하다.</p>
+<ul>
+<li>DOM을 사용하여 <strong>componentDidMount, DidUpdate, WillUnmount 에서 명령형 코드 작성이 가능하다.</strong></li>
+<li>사이드 이펙트 관련 함수는 여기서 수행해야한다.<aside>
+📌 사이드 이펙트가 나쁜 의미로 부작용이 아니라 리액트가 하는 일이 아닌 부가적인 일을 의미한다.
+</aside></li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/"
+                    data-tooltip="🎡 Flux 패턴"
+                    aria-label="이전: 🎡 Flux 패턴"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
+                    data-tooltip="🐍 setState"
+                    aria-label="다음: 🐍 setState"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/"
+                    data-tooltip="🎡 Flux 패턴"
+                    aria-label="이전: 🎡 Flux 패턴"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
+                    data-tooltip="🐍 setState"
+                    aria-label="다음: 🐍 setState"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
