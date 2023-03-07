@@ -225,6 +225,189 @@
     <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                            aria-label=": 💭 useState"
+                        >
+                            💭 useState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:24+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
+<ul>
+<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
+</ul>
+<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                            aria-label=": ✈️ 리액트 Hooks"
+                        >
+                            ✈️ 리액트 Hooks
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:26:59+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-Hooks"><a href="#📌-Hooks" class="headerlink" title="📌 Hooks"></a>📌 Hooks</h1><p>리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.</p>
+<ul>
+<li>리액트 Hook을 사용하면 <strong>함수 컴포넌트 중심으로 개발</strong>이 가능하다.</li>
+<li>함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 <red>재사용</red> 할 수 있다.</li>
+</ul>
+                    
+                        <a
+                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": ✈️ 리액트 Hooks"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                            aria-label=": 🐥 타마스 러버덕 1일차"
+                        >
+                            🐥 타마스 러버덕 1일차
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-18T11:02:51+09:00">
+	
+		    2022/11/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/TypeScript/">TypeScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h1 id="📌-TypeScript와-JavaScript-관계"><a href="#📌-TypeScript와-JavaScript-관계" class="headerlink" title="📌 TypeScript와 JavaScript 관계"></a>📌 TypeScript와 JavaScript 관계</h1><p>모든 JavaScript는 TypeScript이지만, <red>모든 TypeScript가 JavaScript는 아니다.</red></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">State</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">capital</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">states</span>: <span class="title class_">State</span>[] = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>, <span class="attr">capital</span>: <span class="string">&quot;경기도&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;kim&quot;</span>, <span class="attr">capitol</span>: <span class="string">&quot;서울&quot;</span> &#125;,</span><br><span class="line">]; <span class="comment">// Error</span></span><br><span class="line"><span class="comment">// Type &#x27;&#123; name: string; capitol: string; &#125;&#x27; is not assignable to type &#x27;State&#x27;.</span></span><br><span class="line"><span class="comment">//   Object literal may only specify known properties, but &#x27;capitol&#x27; does not exist in type &#x27;State&#x27;. Did you mean to write &#x27;capital&#x27;?</span></span><br></pre></td></tr></table></figure>
+
+<p>위 예시를 설명하면, 앞서 말한 <code>모든 타입스크립트가 자바스크립트다</code> <red>라고 하는 말은 틀렸다.</red></p>
+                    
+                        <a
+                            href="/2022/11/18/TypeScript/%F0%9F%90%A5%20%ED%83%80%EB%A7%88%EC%8A%A4%20%EB%9F%AC%EB%B2%84%EB%8D%95%201%EC%9D%BC%EC%B0%A8/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 🐥 타마스 러버덕 1일차"
+                        >
+                            계속 읽기
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -958,334 +1141,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/11/CS/%F0%9F%A5%81-CORS/"
-                            aria-label=": 🥁 CORS"
-                        >
-                            🥁 CORS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-11T21:00:28+09:00">
-	
-		    2022/11/11
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-CORS란"><a href="#📌-CORS란" class="headerlink" title="📌 CORS란?"></a>📌 CORS란?</h1><p>교차 출처 리소스 공유(Cross-Origin Resource Sharing)는 추가 HTTP Header를 사용하여 한 출처에서 실행 중인 애플리케이션이 다른 출처의 선택한 자원에 접근할 수 있는 권한을 부여하도록 <red>브라우저에게 알려준다.</red></p>
-<p><strong>웹 애플리케이션은 리소스가 자신의 출처(도메인, 프로토콜, 포트)와 다를 때, 교차 출처 HTTP 요청을 실행한다.</strong></p>
-<p>ex) <code>https://domain-a.com</code>의 프론트 엔드 JavaScript 코드가 XMLHttpRequest를 사용하여 <code>https://domain-b.com/data.json</code>을 요청하는 경우 보안 상의 이유로 <red>브라우저는 HTTP 요청을 제한한다.</red></p>
-<ul>
-<li>CORS 체제는 브라우저와 서버 간의 안전한 교차 출처 요청 및 데이터 전송을 지원한다.</li>
-<li>CORS 표준에 맞춘다는 것은 서버에서도 새로운 요청과 응답 Header를 처리해야한다.</li>
-</ul>
-<h2 id="🤿-DeepDive"><a href="#🤿-DeepDive" class="headerlink" title="🤿 DeepDive"></a>🤿 DeepDive</h2><p>CORS 표준은 웹 브라우저에서 허용된 출처를 서버에서 새로운 HTTP Header에 추가함으로써 동작한다.</p>
-<h3 id="📮-Simple-Request"><a href="#📮-Simple-Request" class="headerlink" title="📮 Simple Request"></a>📮 Simple Request</h3><p>HTTP 요청 메서드가 GET, POST 일 때 사용한다.</p>
-<ol>
-<li><p>다른 출처끼리 요청을 보낼 때, 요청에 Origin이라는 Header를 추가한다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://loco9939.com:5000</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Origin은 요청하는 쪽의 Scheme, 도메인, 포트가 담겨있다.</strong></li>
-<li>scheme : https</li>
-<li>도메인 : loco9939.com</li>
-<li>포트 : :5000</li>
-</ul>
-</li>
-<li><p>요청 받은 서버는 응답 Header에 지정된 ACAO(Access Control Allow Origin) 정보를 실어서 보낸다.</p>
-</li>
-<li><p>브라우저가 ACAO 정보가 담긴 응답과 요청의 Origin을 비교하여 동일하면 허락한다.</p>
-</li>
-</ol>
-<h3 id="✈️-Preflight"><a href="#✈️-Preflight" class="headerlink" title="✈️ Preflight"></a>✈️ Preflight</h3><p>브라우저가 사전요청을 먼저 보낸 후 서버의 응답을 보고 안전한지 확인한 후 본 요청을 보내는 방식이다. 본 요청은 Simple Request 방식과 동일하다.</p>
-<h2 id="🌈-CORS-오류-해결-방법"><a href="#🌈-CORS-오류-해결-방법" class="headerlink" title="🌈 CORS 오류 해결 방법"></a>🌈 CORS 오류 해결 방법</h2><h3 id="🔨-서버-측"><a href="#🔨-서버-측" class="headerlink" title="🔨 서버 측"></a>🔨 서버 측</h3><ul>
-<li>ACAO(Access Control Allow Origin) 설정하기<ul>
-<li>구체적인 출처 명시하기</li>
-<li>Credentials: <strong>include 옵션 사용한 경우 * 사용한 경우 CORS 에러발생</strong></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PORT</span> = process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = http.<span class="title function_">createServer</span>(<span class="keyword">function</span> (<span class="params">request, response</span>) &#123;</span><br><span class="line">  <span class="comment">// Setting up Headers</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-origin&quot;</span>, <span class="string">&quot;*&quot;</span>); <span class="comment">// 모든 출처(orogin)을 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(</span><br><span class="line">    <span class="string">&quot;Access-Control-Allow-Methods&quot;</span>,</span><br><span class="line">    <span class="string">&quot;GET, POST, OPTIONS, PUT, PATCH, DELETE&quot;</span></span><br><span class="line">  ); <span class="comment">// 모든 HTTP 메서드 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>, <span class="string">&quot;true&quot;</span>); <span class="comment">// 클라이언트와 서버 간에 쿠키 주고받기 허용</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  response.<span class="title function_">writeHead</span>(<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;text/plain&quot;</span> &#125;);</span><br><span class="line">  response.<span class="title function_">end</span>(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">httpServer.<span class="title function_">listen</span>(<span class="variable constant_">PORT</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Server is running at port 3000...&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Access-Control-Allow-origin 헤더 값으로 * 을 사용하면 모든 Origin에서 오는 요청을 허용한다는 의미이므로 당장은 편할 수 있겠지만, 바꿔서 생각하면 정체도 모르는 이상한 출처에서 오는 요청까지 모두 허용하기 때문에 보안은 더 허술해진다. 그러니 가급적이면 귀찮더라도 다음과 같이 출처를 직접 명시해주도록 하자.</p>
-</blockquote>
-<h3 id="👑-클라이언트-측"><a href="#👑-클라이언트-측" class="headerlink" title="👑 클라이언트 측"></a>👑 클라이언트 측</h3><ul>
-<li>Proxy 설정<ul>
-<li>브라우저 요청을 Proxy에서 설정한 주소로 우회하여 전송하는 방법</li>
-<li>라이브러리 사용한다</li>
-<li>개발단계에서만 사용하고 <red>Production 환경에서는 Proxy 처리가 되지 않는다.</red></li>
-</ul>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/11/CS/%F0%9F%A5%81-CORS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/"
-                            aria-label=": ⛳️ MVC, MVP, MVVM 패턴"
-                        >
-                            ⛳️ MVC, MVP, MVVM 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:59:49+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-디자인-패턴이란"><a href="#📌-디자인-패턴이란" class="headerlink" title="📌 디자인 패턴이란?"></a>📌 디자인 패턴이란?</h1><p>디자인 패턴은 애플리케이션내에서 각자 역할에 맞는 코드끼리 분리하여 유지보수성을 높이고 탄탄한 구조를 가진 애플리케이션을 설계할 수 있다.</p>
-<h2 id="✏️-디자인-패턴-장점"><a href="#✏️-디자인-패턴-장점" class="headerlink" title="✏️ 디자인 패턴 장점"></a>✏️ 디자인 패턴 장점</h2><ol>
-<li>검증된 해결책</li>
-</ol>
-<p>디자인 패턴은 소프트웨어 개발의 문제를 해결하는 확실한 접근 방식을 제공한다.</p>
-<ol start="2">
-<li>쉬운 재사용</li>
-</ol>
-<p>일반적으로 필요에 따라 조정가능하며 즉시 사용가능한 솔루션을 반영한다.</p>
-<p><red>다만, 디자인 패턴이 모든 문제의 해결책은 아니다.</red> 패턴의 역할은 솔루션 체계를 제공하고 이를 지원하는 역할을 한다.</p>
-<p>이외의 사소한 문제를 예방할 수 있고 반복을 피하여 파일 크기를 줄일 수 있으며, 개발자간의 소통을 원할하게 하는 장점이 있다.</p>
-<h2 id="🛤-MVC-패턴"><a href="#🛤-MVC-패턴" class="headerlink" title="🛤 MVC 패턴"></a>🛤 MVC 패턴</h2><p>Model + View + Controller를 합친 용어이다.</p>
-<p><img src="/../../images/design/mvc.png" alt="mvc"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>Controller : 사용자의 입력을 받고 처리하는 부분</li>
-</ul>
-<h3 id="동작"><a href="#동작" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션이 들어오면 컨트롤러가 액션 확인하고 모델을 업데이트한다.</li>
-<li>컨트롤러는 모델을 나타낼 뷰를 선택한다.</li>
-<li>뷰는 모델을 이용하여 화면에 나타낸다.</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">참고 - MVC에서 View가 업데이트 되는 방법</span><br><span class="line">- 뷰가 모델을 이용하여 직접 업데이트</span><br><span class="line">- 모델이 뷰에게 알림을 주어 업데이트</span><br><span class="line">- 뷰가 Polling으로 모델의 변경을 주기적으로 감지하여 업데이트</span><br></pre></td></tr></table></figure>
-
-<p><code>polling이란?</code></p>
-<p>하나의 장치가 충돌 회피 또는 동기화를 목적으로 다른 장치의 상태를 주기적으로 검사하여 일정 조건을 만족할 때, 송수신 자료를 처리하는 방식</p>
-<hr>
-<h3 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>컨트롤러는 여러 개의 뷰를 선택할 수 있는 1:n 구조</li>
-<li>보편적이며 단순하다.</li>
-<li>뷰와 모델 사이의 의존성이 높다. (bad~👎)</li>
-</ul>
-<h2 id="🏸-MVP-패턴"><a href="#🏸-MVP-패턴" class="headerlink" title="🏸 MVP 패턴"></a>🏸 MVP 패턴</h2><p>Model + View + Presenter를 합친 용어이다.</p>
-<p><img src="/../../images/design/mvp.png" alt="mvp"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>Presenter : 뷰에서 요청한 정보로 모델을 가공하여 뷰에게 전달해주는 부분(<strong>View, Model을 붙여주는 접착제역할</strong>)</li>
-</ul>
-<h3 id="동작-1"><a href="#동작-1" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션은 뷰를 통해 들어온다.</li>
-<li>뷰는 프레젠터에게 데이터를 요청한다.</li>
-<li>프레젠터는 모델에게 데이터 요청한다.</li>
-<li>모델은 프레젠터에게 요청받은 데이터를 응답한다.</li>
-<li>프레젠터는 뷰에게 데이터를 응답한다.</li>
-<li>뷰가 응답받은 데이터를 화면에 나타낸다.</li>
-</ol>
-<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>프레젠터는 뷰와 모델의 인스턴스를 가지고 있어 둘을 연결하는 접착제 역할</li>
-<li>프레젠터와 뷰는 1:1</li>
-<li>뷰와 모델간의 의존성이 없다. (Good~👍)</li>
-<li>하지만 뷰와 프레젠터의 의존성 높다.</li>
-</ul>
-<h2 id="👑-MVVM-패턴"><a href="#👑-MVVM-패턴" class="headerlink" title="👑 MVVM 패턴"></a>👑 MVVM 패턴</h2><p>Model + View + View Model을 합친 용어이다.</p>
-<p><img src="/../../images/design/mvvm.png" alt="mvvm"></p>
-<ul>
-<li>Model : 데이터와 데이터 변경 함수 관리하는 부분</li>
-<li>View : 사용자에게 보여지는 UI</li>
-<li>View Model : 뷰를 표현하기 위해 만든 뷰를 위한 모델</li>
-</ul>
-<h3 id="동작-2"><a href="#동작-2" class="headerlink" title="동작"></a>동작</h3><ol>
-<li>사용자 액션이 뷰를 통해 들어온다.</li>
-<li>뷰에 액션이 들어오면 Command 패턴으로 뷰 모델에 액션을 전달한다.</li>
-<li>뷰 모델은 모델에게 데이터를 요청한다.</li>
-<li>모델은 뷰 모델에게 요청받은 데이터를 응답한다.</li>
-<li>뷰 모델은 응답받은 데이터를 가공하여 저장한다.</li>
-<li>뷰는 뷰 모델과 데이터 바인딩하여 화면에 나타낸다.</li>
-</ol>
-<h3 id="특징-2"><a href="#특징-2" class="headerlink" title="특징"></a>특징</h3><ul>
-<li>Command 패턴과 데이터 바인딩 두가지 패턴을 사용(<strong>뷰와 뷰 모델 사이의 의존성 제거</strong>)</li>
-<li>뷰 모델과 뷰는 1:n</li>
-<li>뷰와 모델사이의 의존성도 없으므로 각 부분은 독립적으로 모듈화하여 개발할 수 있다.</li>
-<li>뷰 모델 설계가 어렵다.</li>
-</ul>
-<p><code>Command패턴이란?</code></p>
-<p>요청을 객체 형태로 캡슐화하여 사용자가 보낸 요청을 나중에 사용할 수 있도록 메서드명, 매개변수 등 요청에 필요한 정보를 저장,로깅, 취소하는 패턴이다.</p>
-<hr>
-<p>참고</p>
-<p><a target="_blank" rel="noopener" href="https://beomy.tistory.com/43">[디자인패턴]MVC,MVP,MVVM 패턴 비교</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/CS/%E2%9B%B3%EF%B8%8F-MVC-MVP-MVVM-%ED%8C%A8%ED%84%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/"
-                            aria-label=": 🎡 Flux 패턴"
-                        >
-                            🎡 Flux 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:29:55+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-Flux-패턴"><a href="#📌-Flux-패턴" class="headerlink" title="📌 Flux 패턴"></a>📌 Flux 패턴</h1><p>페이스북이 전통적인 MVC 디자인 패턴이 복잡한 애플리케이션에서 적합하지 않다고 판단하여 새로운 디자인 패턴을 소개한 것이 바로 <red>단방향 데이터 흐름을 갖는 Flux 패턴이다.</red></p>
-<h2 id="🔥-문제점"><a href="#🔥-문제점" class="headerlink" title="🔥 문제점"></a>🔥 문제점</h2><p><img src="/../../images/flux/complicated%20MVC.png" alt="Complicated MVC"></p>
-<p>애플리케이션 규모가 커짐에 따라 <red>양방향 데이터 흐름</red>을 그림처럼 복잡한 구조를 가지게 된다.</p>
-<p>사용자와 상호작용하는 여러 View가 연결된 여러 Model을 업데이트하고 Model 또한 연결된 View를 업데이트하는 매우 복잡한 상황이 발생하기에 <strong>데이터 흐름을 예측하기란 매우 어려워진다.</strong></p>
-<blockquote>
-<p>사실 위 그림은 전통적인 MVC 패턴이고 Apple의 MVC 패턴은 사진처럼 Model과 View의 양방향 데이터 흐름이 발생하지 않는다. <red>문제는 양방향 데이터 흐름이다.</red></p>
-</blockquote>
-<p><img src="/../../images/flux/appleMVC.png" alt="AppleMVC"></p>
-<h2 id="🦖-Flux-아키텍처"><a href="#🦖-Flux-아키텍처" class="headerlink" title="🦖 Flux 아키텍처"></a>🦖 Flux 아키텍처</h2><p><img src="/../../images/flux/flux.png" alt="flux"></p>
-<p>Flux 패턴은 앱의 단방향 데이터 흐름을 촉진하는 시스템 아키텍처를 말한다.</p>
-<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p><strong>사용자의 요청을 정의한 객체</strong>를 말한다.</p>
-<ul>
-<li>사용자 요청 타입(Type)과 데이터(Payload)를 가진다.</li>
-<li>액션 크리에이터(Action Creator) 함수를 사용하여 디스패처로 전달한다.</li>
-</ul>
-<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p>디스패처는 중앙 데이터 흐름 관리한다. 스토어에 등록된 액션 타입마다 콜백되는 함수가 존재한다.</p>
-<ul>
-<li>사용자 액션으로부터 받은 액션 타입에 맞는 콜백함수를 실행한다.</li>
-<li><strong>스토어 데이터 변경은 디스패처를 통해서만 가능하다.</strong></li>
-</ul>
-<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>스토어는 상태(Model)를 관리하는 저장소이며 상태를 변경할 수 있는 콜백을 가진다. 각 액션을 처리하는 콜백함수는 디스패처에 등록된다.</p>
-<ul>
-<li>상태와 상태를 변경하는 함수를 가진다.</li>
-<li>디스패처에 등록된 콜백함수가 실행되면 스토어의 상태가 변경되며 View에 데이터가 변경되었음을 알린다.(옵저버 패턴 활용)</li>
-</ul>
-<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>뷰는 사용자와 상호작용하는 컴포넌트이다. 스토어에서 상태가 변경되었다는 알림이 오면 뷰는 리렌더링이 발생한다.</p>
-<ul>
-<li>사용자는 View를 조작할 수 있고 상태 변경을 요청하는 액션을 생성할 수 있다.</li>
-<li>생성된 액션은 디스패처에게 전달되고 디스패처는 해당 액션에 연결된 콜백을 실행하여 스토어의 상태를 변경한다.</li>
-<li>상태가 변경되었음을 뷰에게 알리고 뷰는 리렌더링이 발생한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/CS/%F0%9F%8E%A1-Flux-%ED%8C%A8%ED%84%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1312,7 +1167,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 12 of 19</li>
+        <li class="pagination-number">page 12 of 20</li>
     </ul>
 </div>
 
