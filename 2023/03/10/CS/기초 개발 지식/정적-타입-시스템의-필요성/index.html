@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/10/cs/기초 개발 지식/정적-타입-시스템의-필요성/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>정적 타입 시스템의 필요성 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"개발자는 사용자에게 안정적인 서비스를 제공하기 위해 여러가지 방법을 사용한다.\n정적 타입 시스템도 그 중 하나다.\n타입 시스템타입 시스템은 개발자가 정의한 타입을 기반으로 해당 타입을 언어와 연관시키는 메커니즘이다.\n\n동등: 두 타입이 동일할 때 적용 (number:number)\n호환: 두가지 타입이 정확히 일치하지 않더라도 어느정도 호환이 되는지를 나타내는 규칙(any: number)\n추론: 타입이 정의되어 있지 않지만 주변 문맥에 따라 타입이 결정되는 규칙(a&#x3D;3 일 때, a는 number)\n\n모든 언어는 타입시스템이 존재하고 동적 타입과 정적 타입으로 나뉜다.\n동적 타입과 정적 타입 차이동적 타입런타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.\nex) PHP, JS, Python\n정적 타입컴파일 타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.\nex) C, C++, Java\n정적 타입 시스템의 필요성\n타입을 명시하여 나중에 다른 개발자가 보더라도 어떤 매개변수를 넣고 이 함수가 어떤 값을 반환하는지 명시적으로 파악 가능\n\n어떤 함수 또는 API에 대해 여러가지의 타입으로 이루어진 값이 발생될 수 있는데, 해당 값들에 대한 대처를 “미리” 할 수 있다.\n\n매개변수 잘못입력하거나 등의 개발자 잔실수 줄여준다.\n\n\n","dateCreated":"2023-03-10T11:53:52+09:00","dateModified":"2023-03-10T12:25:46+09:00","datePublished":"2023-03-10T11:53:52+09:00","description":"","headline":"정적 타입 시스템의 필요성","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"}</script>
+    <meta name="description" content="개발자는 사용자에게 안정적인 서비스를 제공하기 위해 여러가지 방법을 사용한다. 정적 타입 시스템도 그 중 하나다. 타입 시스템타입 시스템은 개발자가 정의한 타입을 기반으로 해당 타입을 언어와 연관시키는 메커니즘이다.  동등: 두 타입이 동일할 때 적용 (number:number) 호환: 두가지 타입이 정확히 일치하지 않더라도 어느정도 호환이 되는지를 나타내">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="정적 타입 시스템의 필요성">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="개발자는 사용자에게 안정적인 서비스를 제공하기 위해 여러가지 방법을 사용한다. 정적 타입 시스템도 그 중 하나다. 타입 시스템타입 시스템은 개발자가 정의한 타입을 기반으로 해당 타입을 언어와 연관시키는 메커니즘이다.  동등: 두 타입이 동일할 때 적용 (number:number) 호환: 두가지 타입이 정확히 일치하지 않더라도 어느정도 호환이 되는지를 나타내">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-03-10T02:53:52.000Z">
+<meta property="article:modified_time" content="2023-03-10T03:25:46.205Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            정적 타입 시스템의 필요성
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-10T11:53:52+09:00">
+	
+		    2023/03/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EA%B8%B0%EC%B4%88-%EA%B0%9C%EB%B0%9C-%EC%A7%80%EC%8B%9D/">기초 개발 지식</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>개발자는 사용자에게 안정적인 서비스를 제공하기 위해 여러가지 방법을 사용한다.</p>
+<p>정적 타입 시스템도 그 중 하나다.</p>
+<h2 id="타입-시스템"><a href="#타입-시스템" class="headerlink" title="타입 시스템"></a>타입 시스템</h2><p>타입 시스템은 개발자가 정의한 타입을 기반으로 해당 타입을 언어와 연관시키는 메커니즘이다.</p>
+<ul>
+<li>동등: 두 타입이 동일할 때 적용 (number:number)</li>
+<li>호환: 두가지 타입이 정확히 일치하지 않더라도 어느정도 호환이 되는지를 나타내는 규칙(any: number)</li>
+<li>추론: 타입이 정의되어 있지 않지만 주변 문맥에 따라 타입이 결정되는 규칙(a&#x3D;3 일 때, a는 number)</li>
+</ul>
+<p>모든 언어는 타입시스템이 존재하고 동적 타입과 정적 타입으로 나뉜다.</p>
+<h2 id="동적-타입과-정적-타입-차이"><a href="#동적-타입과-정적-타입-차이" class="headerlink" title="동적 타입과 정적 타입 차이"></a>동적 타입과 정적 타입 차이</h2><h3 id="동적-타입"><a href="#동적-타입" class="headerlink" title="동적 타입"></a>동적 타입</h3><p>런타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.</p>
+<p>ex) PHP, JS, Python</p>
+<h3 id="정적-타입"><a href="#정적-타입" class="headerlink" title="정적 타입"></a>정적 타입</h3><p>컴파일 타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.</p>
+<p>ex) C, C++, Java</p>
+<h2 id="정적-타입-시스템의-필요성"><a href="#정적-타입-시스템의-필요성" class="headerlink" title="정적 타입 시스템의 필요성"></a>정적 타입 시스템의 필요성</h2><ol>
+<li><p>타입을 명시하여 나중에 다른 개발자가 보더라도 어떤 매개변수를 넣고 이 함수가 어떤 값을 반환하는지 명시적으로 파악 가능</p>
+</li>
+<li><p>어떤 함수 또는 API에 대해 여러가지의 타입으로 이루어진 값이 발생될 수 있는데, 해당 값들에 대한 대처를 “미리” 할 수 있다.</p>
+</li>
+<li><p>매개변수 잘못입력하거나 등의 개발자 잔실수 줄여준다.</p>
+</li>
+</ol>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/"
+                    data-tooltip="시간복잡도 연습하기"
+                    aria-label="이전: 시간복잡도 연습하기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/09/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-17%EC%9D%BC%EC%B0%A8-attribute-selector/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 17일차&gt; attribute selector"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 17일차&gt; attribute selector"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/"
+                    data-tooltip="시간복잡도 연습하기"
+                    aria-label="이전: 시간복잡도 연습하기"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/09/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-17%EC%9D%BC%EC%B0%A8-attribute-selector/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 17일차&gt; attribute selector"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 17일차&gt; attribute selector"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

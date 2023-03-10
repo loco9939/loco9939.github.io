@@ -232,6 +232,181 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/"
+                            aria-label=": 브라우저 렌더링 과정"
+                        >
+                            브라우저 렌더링 과정
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-03T11:37:14+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="브라우저란"><a href="#브라우저란" class="headerlink" title="브라우저란?"></a>브라우저란?</h1><p>브라우저는 HTML, CSS, Javascript로 작성된 텍스트 문서를 서버에게 요청하여 응답을 받아 의미있는 단위인 토큰으로 파싱하여 시각적으로 렌더링 해주는 역할을 담당한다.</p>
+<h1 id="브라우저-렌더링-과정"><a href="#브라우저-렌더링-과정" class="headerlink" title="브라우저 렌더링 과정"></a>브라우저 렌더링 과정</h1><h2 id="1-요청과-응답"><a href="#1-요청과-응답" class="headerlink" title="1. 요청과 응답"></a>1. 요청과 응답</h2><p>서버에 요청하기 위해 브라우저는 주소창을 제공한다. 주소창에 URL을 입력하면 URL의 호스트 이름이 DNS를 통해 IP주소로 변환되고 IP 주소를 갖는 서버에게 요청을 전송한다.</p>
+<p>이렇게 요청을 보내면 서버는 서버의 루트 폴더에 존재하는 정적파일로 응답을 보낸다. 기본적으로 index.html</p>
+<h2 id="2-HTML-파싱과-DOM-생성"><a href="#2-HTML-파싱과-DOM-생성" class="headerlink" title="2. HTML 파싱과 DOM 생성"></a>2. HTML 파싱과 DOM 생성</h2><p>브라우저 요청에 의해 서버가 응답한 HTML 문서는 문자열로 이루어진 순수한 텍스트이다. 의미없는 문자열 데이터를 브라우저가 이해할 수 있는 자료구조(객체)로 변환하여 메모리에 저장해야한다.</p>
+<p><strong>그래서 HTML 문서를 파싱하여 <span style="color:red">브라우저가 이해할 수 있는 자료구조인 DOM을 생성</span>한다.</strong></p>
+<ol>
+<li>서버는 요청의 응답하기 위해 요청한 HTML 파일을 읽어 메모리에 저장한 뒤 메모리에 저장된 바이트(2진수)를 인터넷을 경유하여 응답한다.</li>
+<li>브라우저는 이를 받아 meta 태그의 charset 방식에 따라(UTF-8) 문자열로 변환한다.</li>
+<li>문자열로 변환된 HTML문서를 토큰화한다.</li>
+<li>각 토큰을 객체로 변환하여 노드를 생성한다. 노드는 DOM을 구성하는 기본 요소이다. ex) 문서 노드, 요소 노드 등</li>
+<li>HTML 문서는 중첩관계를 통해 부자관계가 형성된다. 이러한 부자관계를 반영하여 <strong>모든 노드들을 트리 자료구조로 구성한다. 이러한 노드들로 구성된 트리 자료구조를 DOM이라 부른다.</strong></li>
+</ol>
+<h2 id="3-CSS-파싱과-CSSOM-생성"><a href="#3-CSS-파싱과-CSSOM-생성" class="headerlink" title="3. CSS 파싱과 CSSOM 생성"></a>3. CSS 파싱과 CSSOM 생성</h2><p>렌더링 엔진은 HTML을 한줄씩 읽어나가며 순차적으로 파싱하여 DOM을 생성해 나간다. <strong>DOM을 생성하다가 CSS를 로드하는 link 태그나 style 태그를 만나면 <span style="color:red">DOM 생성을 일시중단</span>한다.</strong></p>
+<p>그 결과 CSS 파일을 서버에 요청하여 응답받은 CSS 파일이나 style 태그 내의 CSS를 HTML과 동일한 과정으로 토큰화 생성 → CSSOM 생성 과정을 거친다. 이후 파싱이 완료되면 HTML 파싱이 중단된 지점부터 다시 HTML을 파싱하기 시작한다.</p>
+<h2 id="4-렌더-트리-생성"><a href="#4-렌더-트리-생성" class="headerlink" title="4. 렌더 트리 생성"></a>4. 렌더 트리 생성</h2><p>앞선 과정에서 생성된 DOM과 CSSOM은 렌더링을 위해 렌더 트리로 결합된다. 이 때 <strong>브라우저 화면에 렌더링되지 않는 노드<span style="color:red">(meta태그, script 태그 등)</span>와 CSS에 의해 표시되지 않는<span style="color:red">(display:none)</span> 노드들은 포함하지 않는다.</strong></p>
+<p>지금까지의 렌더링 과정은 여러번 반복되서 실행될 수 있다. <strong>렌더링이 반복 실행되는 원인은 다음과 같다.</strong></p>
+<ul>
+<li>자바스크립트에 의한 노드 추가 또는 삭제</li>
+<li>브라우저 창의 리사이징에 의한 viewport 크기 변경</li>
+<li>HTML 요소의 레이아웃(위치와 크기)을 변경시키는 width, height, margin, padding, border, display, position 등의 스타일 변경</li>
+</ul>
+<p><strong>이러한 리렌더링은 비용이 많이 들고 성능에 악영향을 주므로 <span style="color:red">리렌더링이 적게 발생하도록 하여야한다.</span></strong></p>
+<h2 id="5-자바스크립트-파싱과-실행"><a href="#5-자바스크립트-파싱과-실행" class="headerlink" title="5. 자바스크립트 파싱과 실행"></a>5. 자바스크립트 파싱과 실행</h2><p>HTML 파싱의 결과물 DOM은 HTML 문서의 구조와 정보뿐 아니라 HTML 요소와 스타일을 변경할 수 있는 프로그래밍 인터페이스로서 DOM API를 제공한다.</p>
+<p>즉, DOM API를 사용하여 이미 생성된 DOM을 동적으로 조작할 수 있다.</p>
+<p>CSS 파싱과정과 마찬가지로 script 태그 만나면 DOM 생성을 일시 중단한다.</p>
+<p>이후 자바스크립트 파일을 서버에 요청하여 응답받은 파일이나 script 태그내의 코드를 파싱하기 위해 <strong>자바스크립트 엔진에 제어권을 넘긴다. <span style="color:red">(렌더링 엔진 → 자바스크립트 엔진으로 제어권 이동)</span></strong></p>
+<p>이후 자바스크립트 파싱과 실행이 종료되면 렌더링 엔진으로 다시 제어권 넘겨 HTML 파싱 중단된 시점부터 다시 DOM 생성을 재개한다.</p>
+<p>자바스크립트 엔진은 자바스크립트 코드를 파싱하기 시작한다. 자바스크립트를 해석하여 <strong>AST(추상적 구문 트리)를 생성</strong>한다. 그리고 <strong>AST를 기반으로</strong> 인터프리터가 실행할 수 있는 중간 코드인 <strong>바이트 코드를 생성</strong>하여 실행한다.</p>
+<h2 id="6-리플로우와-리페인트"><a href="#6-리플로우와-리페인트" class="headerlink" title="6. 리플로우와 리페인트"></a>6. 리플로우와 리페인트</h2><p>만약 자바스크립트 코드에 DOM, CSSOM을 변경하는 DOM API가 사용된 경우 DOM, CSSOM이 변경되고 변경된 DOM, CSSOM으로 다시 렌더트리로 결합되고 레이아웃과 페인트 과정을 거쳐 브라우저 화면에 다시 렌더링한다. 이를 리플로우, 리페인트라고 한다.</p>
+<h1 id="자바스크립트-파싱에-의한-HTML-파싱중단"><a href="#자바스크립트-파싱에-의한-HTML-파싱중단" class="headerlink" title="자바스크립트 파싱에 의한 HTML 파싱중단"></a>자바스크립트 파싱에 의한 HTML 파싱중단</h1><p>렌더링 엔진과 자바스크립트 엔진은 서로 제어권을 이동시키면서 병렬적으로 파싱하지 않고 <strong>직렬적으로 파싱을 수행한다.</strong> 브라우저는 이처럼 <strong>동기적</strong>으로, 즉 순차적으로 HTML, CSS, 자바스크립트를 파싱하고 실행한다.</p>
+<p>script 태그를 만나면 제어권이 이동하기 때문에 HTML 문서 내의 script 태그의 위치는 중요한 의미를 갖는다.</p>
+<p>대표적인 문제로는 HTML이 생성되기 전에 자바스크립트 코드가 HTML요소를 동적으로 조작하려고 하면 <strong>정상적으로 동작하지 않을 수 있다.</strong> 이에 대한 해결책으로는 아래와 같다.</p>
+<ul>
+<li>body 태그 제일 하단에 script 태그(자바스크립트)를 위치 시키는 것</li>
+</ul>
+<h2 id="script-태그의-async-x2F-defer-어트리뷰트"><a href="#script-태그의-async-x2F-defer-어트리뷰트" class="headerlink" title="script 태그의 async&#x2F;defer 어트리뷰트"></a>script 태그의 async&#x2F;defer 어트리뷰트</h2><p>앞서 알아본 문제를 근본적으로 해결하기 위해서 HTML5부터 script 태그에 <strong>async</strong>와 <strong>defer 어트리뷰트</strong>가 추가되었다.</p>
+<p>두 어트리뷰트는 src 어트리뷰트를 통해 외부의 자바스크립트 파일을 로드하는 경우에만 사용할 수 있다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;extern.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">defer</span> <span class="attr">src</span>=<span class="string">&quot;extern.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>이 둘을 사용하면 HTML 파싱과 외부 자바스크립트 파일의 로드가 비동기적으로 진행된다. 단 두 어트리뷰트의 실행 시점의 차이가 있다.</p>
+<ol>
+<li>async 어트리뷰트</li>
+</ol>
+<p>자바스크립트의 파싱과 실행은 <strong>자바스크립트 파일의 로드가 완료된 직후 진행</strong>된다. 이 때 HTML 파싱이 중단된다.</p>
+<p>여러개의 script 태그에 async 어트리뷰트를 지정하면 script 태그의 순서와는 상관없이 <strong>로드가 완료된 자바스크립트부터 먼저 실행되므로 순서가 보장되지 않는다.</strong></p>
+<p>즉, 순서보장이 필요한 script 태그는 async 어트리뷰트 지정하지 않아야 한다.</p>
+<ol start="2">
+<li>defer 어트리뷰트</li>
+</ol>
+<p>자바스크립트의 파싱과 실행은 <strong>HTML 파싱이 완료된 직후, 즉 DOM 생성이 완료된 직후</strong>(DOMContentLoaded 이벤트가 발생한다) 진행된다.</p>
+<blockquote>
+<p>모듈은 기본적으로 defer이다. async는 잘 사용하지 않지만 폰트의 경우 용량도 크고 순서가 크게 상관이 없으니 최대한 빨리 가져오기 위해 async를 사용하기도 한다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/03/JavaScript/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/03/03/JavaScript/%EB%AA%A8%EB%93%88-%EB%8B%A4%EC%8B%9C%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0/"
+                            aria-label=": 모듈 다시내보내기"
+                        >
+                            모듈 다시내보내기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-03T11:36:41+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-모듈-다시-내보내기-기능"><a href="#📌-모듈-다시-내보내기-기능" class="headerlink" title="📌 모듈 다시 내보내기 기능"></a>📌 모듈 다시 내보내기 기능</h1><p>import한 모듈을 즉시 다시 내보내기 기능을 구현할 수 있다.</p>
+<h2 id="사용하는-이유"><a href="#사용하는-이유" class="headerlink" title="사용하는 이유"></a>사용하는 이유</h2><p>진입점인 index.js 파일이 있다고 가정하자. 이 진입점을 내보내서 다른 개발자들이 안의 모듈들을 사용하려고 할 때, 다른 개발자가 모듈의 내부 구조를 건드리게 하면 안된다.</p>
+<p>그러기 위해서 공개할 모듈만 index.js 파일에 넣어 내보내기를 하고 나머지는 숨기는 것이 현명하다.</p>
+<p>때문에 내보낼 기능들을 분산하여 구현한 뒤 index.js에서 해당 기능들을 가져와서 다시 내보내기 하면 원하는 목적을 이룰 수 있다.</p>
+<h2 id="사용방법"><a href="#사용방법" class="headerlink" title="사용방법"></a>사용방법</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="comment">// currency, currencyKR 모듈을 다시 내보냅니다.</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./currency/currency.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// fetchBooks 모듈을 다시 내보냅니다.</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./fetchBooks.js&quot;</span>;</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line"><span class="keyword">import</span>, <span class="keyword">export</span> 할 때 <span class="keyword">as</span> 라는 문법을 사용할 수 있다.</span><br><span class="line"></span><br><span class="line"><span class="keyword">as</span>를 사용하면 이름을 바꿔서 모듈을 가져올 수 있다.</span><br><span class="line"></span><br><span class="line"><span class="comment">// module.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; currencyKR <span class="keyword">as</span> currency &#125; <span class="keyword">from</span> <span class="string">&quot;../../utils/index.js&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>currencyKR 기능을 currency 라는 이름으로 바꿔서 import 해주었다.</p>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>module에 대해서는 쓸 때마다 헷갈렸었는데, 이렇게 모르는 것이 생길 때마다 공부하여 정리하다보면 익숙해지면서 알게 될 것 같다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/03/JavaScript/%EB%AA%A8%EB%93%88-%EB%8B%A4%EC%8B%9C%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/03/JavaScript/%EC%9D%B4%ED%84%B0%EB%9F%AC%EB%B8%94%EA%B3%BC-%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0/"
                             aria-label=": 이터러블과 이터레이터"
                         >
@@ -1236,161 +1411,6 @@
                         <p>
                             <a
                                 href="/2023/03/03/JavaScript/%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/02/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-13%EC%9D%BC%EC%B0%A8-Opacity/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 13일차&gt; Opacity"
-                        >
-                            &lt;오늘부터 CSS 마스터 13일차&gt; Opacity
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-02T22:46:31+09:00">
-	
-		    2023/03/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="opacity"><a href="#opacity" class="headerlink" title="opacity"></a>opacity</h1><p>요소의 투명도를 설정하는 속성이다.</p>
-<p>0 ~ 1.0 사이의 값을 가질 수 있으며 기본값은 1이다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/opacity/exam.png" alt="exam"></p>
-<h2 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h2><p>내부의 자식 요소들에게도 상속이 된다. 그러므로 내부의 텍스트가 있다면 가독성이 떨어질 수 있으므로 조심해야한다.</p>
-<p><strong>또한, RGBA를 사용하여 투명도를 설정할 수 있다.</strong></p>
-<p><img src="/../../images/CSS/opacity/exam2.png" alt="exam2"></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">76</span>, <span class="number">175</span>, <span class="number">80</span>, <span class="number">0.3</span>); <span class="comment">/* Green background with 30% opacity */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/02/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-13%EC%9D%BC%EC%B0%A8-Opacity/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/"
-                            aria-label=": boj-17404 RGB 거리2(JavaScript)"
-                        >
-                            boj-17404 RGB 거리2(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-02T20:44:13+09:00">
-	
-		    2023/03/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>RGB거리에는 집이 N개 있다. 거리는 선분으로 나타낼 수 있고, 1번 집부터 N번 집이 순서대로 있다.</p>
-<p>집은 빨강, 초록, 파랑 중 하나의 색으로 칠해야 한다. 각각의 집을 빨강, 초록, 파랑으로 칠하는 비용이 주어졌을 때, 아래 규칙을 만족하면서 모든 집을 칠하는 비용의 최솟값을 구해보자.</p>
-<p>1번 집의 색은 2번, N번 집의 색과 같지 않아야 한다.<br>N번 집의 색은 N-1번, 1번 집의 색과 같지 않아야 한다.<br>i(2 ≤ i ≤ N-1)번 집의 색은 i-1, i+1번 집의 색과 같지 않아야 한다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 집의 수 N(2 ≤ N ≤ 1,000)이 주어진다. 둘째 줄부터 N개의 줄에는 각 집을 빨강, 초록, 파랑으로 칠하는 비용이 1번 집부터 한 줄에 하나씩 주어진다. 집을 칠하는 비용은 1,000보다 작거나 같은 자연수이다.</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 모든 집을 칠하는 비용의 최솟값을 출력한다.</p>
-<h3 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">26 40 83</span><br><span class="line">49 60 57</span><br><span class="line">13 89 99</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">110</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">1 100 100</span><br><span class="line">100 1 100</span><br><span class="line">100 100 1</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">1 100 100</span><br><span class="line">100 100 100</span><br><span class="line">1 100 100</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">201</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-입력-4"><a href="#예제-입력-4" class="headerlink" title="예제 입력 4"></a>예제 입력 4</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">30 19 5</span><br><span class="line">64 77 64</span><br><span class="line">15 19 97</span><br><span class="line">4 71 57</span><br><span class="line">90 86 84</span><br><span class="line">93 32 91</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-4"><a href="#예제-출력-4" class="headerlink" title="예제 출력 4"></a>예제 출력 4</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">208</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-입력-5"><a href="#예제-입력-5" class="headerlink" title="예제 입력 5"></a>예제 입력 5</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">8</span><br><span class="line">71 39 44</span><br><span class="line">32 83 55</span><br><span class="line">51 37 63</span><br><span class="line">89 29 100</span><br><span class="line">83 58 11</span><br><span class="line">65 13 15</span><br><span class="line">47 25 29</span><br><span class="line">60 66 19</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-5"><a href="#예제-출력-5" class="headerlink" title="예제 출력 5"></a>예제 출력 5</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">253</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, ...input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> n = +N;</span><br><span class="line"><span class="keyword">const</span> costs = input.<span class="title function_">map</span>(<span class="function">(<span class="params">elem</span>) =&gt;</span> elem.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">MAX</span> = <span class="number">100001</span>;</span><br><span class="line"><span class="keyword">let</span> answer = <span class="variable constant_">MAX</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> dp = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i === j) dp[<span class="number">0</span>][j] = costs[<span class="number">0</span>][j];</span><br><span class="line">    <span class="keyword">else</span> dp[<span class="number">0</span>][j] = <span class="variable constant_">MAX</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">    dp[j][<span class="number">0</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[j - <span class="number">1</span>][<span class="number">1</span>], dp[j - <span class="number">1</span>][<span class="number">2</span>]) + costs[j][<span class="number">0</span>];</span><br><span class="line">    dp[j][<span class="number">1</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[j - <span class="number">1</span>][<span class="number">0</span>], dp[j - <span class="number">1</span>][<span class="number">2</span>]) + costs[j][<span class="number">1</span>];</span><br><span class="line">    dp[j][<span class="number">2</span>] = <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[j - <span class="number">1</span>][<span class="number">0</span>], dp[j - <span class="number">1</span>][<span class="number">1</span>]) + costs[j][<span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i === j) <span class="keyword">continue</span>;</span><br><span class="line">    answer = <span class="title class_">Math</span>.<span class="title function_">min</span>(answer, dp[n - <span class="number">1</span>][j]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(answer);</span><br></pre></td></tr></table></figure>
-
-<h2 id="해설"><a href="#해설" class="headerlink" title="해설"></a>해설</h2><p>RGB 거리 문제와는 다르게 첫번째 선택한 색상을 마지막에서도 선택하면 안되므로 첫번째 선택한 색상을 기억해두도록 접근하자.</p>
-<p>예를 들어 첫번째 색상을 R로 선택했다고 하면 나머지 G,B 색상은 선택하지 못하도록 최대값으로 설정해준다.</p>
-<p>이후에 다음 집에서는 R을 제외한 나머지 2가지 색상 중 작은 값을 선택하고 해당 집의 색상 비용을 더해줘서 DP 배열을 완성 시켜나간다.</p>
-<p>그리하여 DP 배열이 완성되고 나면 DP 배열의 최종 인덱스에 위치한 배열 중 가장 작은 값을 answer 변수에 저장해둔다.</p>
-<p>이렇게 첫번째 집을 R로 설정한 경우, G로 설정한 경우, B로 설정한 경우 총 3번을 진행하고 나서 최종적으로 answer 값을 출력해주면 된다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/02/Algorithm/boj/DP/boj-17404-RGB-%EA%B1%B0%EB%A6%AC2-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
