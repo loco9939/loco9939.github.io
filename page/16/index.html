@@ -232,6 +232,95 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
+                            aria-label=": 우테코 프리코스 - 🐶 중복 문자 제거"
+                        >
+                            우테코 프리코스 - 🐶 중복 문자 제거
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-01T22:24:44+09:00">
+	
+		    2022/11/01
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>암호문을 좋아하는 괴짜 개발자 브라운이 이번에는 중복 문자를 이용한 새로운 암호를 만들었다. 예를 들어 “browoanoommnaon”이라는 암호문은 다음과 같은 순서로 해독할 수 있다.</p>
+<ol>
+<li>“browoanoommnaon”</li>
+<li>“browoannaon”</li>
+<li>“browoaaon”</li>
+<li>“browoon”</li>
+<li>“brown”</li>
+</ol>
+<p>임의의 문자열 cryptogram이 매개변수로 주어질 때, 연속하는 중복 문자들을 삭제한 결과를 return 하도록 solution 메서드를 완성하라.</p>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a><strong>제한사항</strong></h2><ul>
+<li>cryptogram은 길이가 1 이상 1000 이하인 문자열이다.</li>
+<li>cryptogram은 알파벳 소문자로만 이루어져 있다.</li>
+</ul>
+<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a><strong>실행 결과 예시</strong></h2><h2 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem2</span>(<span class="params">cryptogram</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cryptogram !== cryptogram.<span class="title function_">toLowerCase</span>()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 소문자만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (!cryptogram.<span class="property">length</span> || cryptogram.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1자 이상 1000자 이하만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> strArr = [...cryptogram];</span><br><span class="line">  <span class="keyword">let</span> duplicatedStrPosition = [];</span><br><span class="line">  <span class="keyword">let</span> hasDuplicatedStr = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(hasDuplicatedStr) &#123;</span><br><span class="line">    strArr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_, i, init</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (init[i] === init[i+<span class="number">1</span>]) duplicatedStrPosition = [i, ...duplicatedStrPosition];</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    hasDuplicatedStr = !duplicatedStrPosition.<span class="property">length</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    duplicatedStrPosition = duplicatedStrPosition.<span class="title function_">filter</span>(<span class="function"><span class="params">elem</span> =&gt;</span> &#123;</span><br><span class="line">      strArr = [...strArr.<span class="title function_">slice</span>(<span class="number">0</span>, elem), ...strArr.<span class="title function_">slice</span>(elem + <span class="number">2</span>)];</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strArr.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>strArr로 문자열을 배열로 관리</li>
+<li>strArr 배열이 더 이상 중복이 없을 때 까지 반복해야하고, 문자열의 순회하며 중복을 확인해야 하므로 시간 복잡도 $n^2$</li>
+<li>Spread문법으로 원본 배열의 변형을 최소화하는 방향으로 배열을 관리</li>
+<li>for문 대신 배열 메서드 forEach문 사용</li>
+<li>원본 배열을 변형시키는 splice 메서드 대신 slice 메서드 사용</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
+<li>내가 코드를 처음 보는 사람의 입장으로 변수명부터 잘 이해할 수 있는지 고려하여 리팩터링을 하였다.</li>
+<li>처음에는 while 조건식을 단순히 true라고 하였는데, 의미를 부여하여 코드의 가독성을 높이기 위해 변수에 할당해주었다.</li>
+<li>배열을 다루기 때문에 for문 대신 forEach문을 사용하였다.</li>
+<li>splice 메서드 같이 원본을 변형시키는 메서드 대신 spread 문법과 slice 메서드를 사용하였다.</li>
+<li>리팩터링 전에는 duplicatedStrPosition 배열을 직접 빈 배열로 초기화해주었지만, 리팩터링을 하면서 filter 메서드를 사용하여 좀 더 배열을 다루는 의미를 부여하였다.</li>
+</ul>
+<p>하나 걸리는 부분은 제한사항을 에러처리를 해주어야 하나 고민을 하였다. 사용자가 제한사항에 벗어나는 입력을 할 수도 있으므로 이에 대한 에러를 발생시켜주는 것이 사용성에 더 옳다고 생각하여 if 조건문을 통해 에러처리를 해주었습니다.</p>
+<p>에러처리에 대해서는 깊게 생각해보지 못했는데, 제한사항에 대해 한번 더 깊이 생각해보면서 에러처리의 필요성을 느낄 수 있었던 문제여서 즐거웠다.</p>
+<p>또한 stack 자료구조를 생각하면서 문제를 해석하면 지금의 코드보다 훨씬 더 간결하고 가독성있는 코드를 구현할 수 있다는 것을 오늘 코드리뷰를 통해 깨닫게 되었다. stack으로 구현해보는 것은 다음 시간에 해보도록 하자.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/"
                             aria-label=": React(리액트)는 어떻게 작동하는가?"
                         >
@@ -1127,110 +1216,6 @@
                         <p>
                             <a
                                 href="/2022/10/20/Project/holymoly/holymoly%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/"
-                            aria-label=": Software Development Life Cycle (SDLC)와 협업 모델"
-                        >
-                            Software Development Life Cycle (SDLC)와 협업 모델
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-18T22:38:09+09:00">
-	
-		    2022/10/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-Software-Development-Life-Cycle-SDLC"><a href="#1-Software-Development-Life-Cycle-SDLC" class="headerlink" title="1. Software Development Life Cycle (SDLC)"></a>1. Software Development Life Cycle (SDLC)</h1><p>소프트웨어 개발의 전체적인 라이프 사이클을 이해하여 개발 과정에서 발생하는 일을 정략적으로 관리하자.</p>
-<p><strong>해야할 일</strong></p>
-<ol>
-<li><p>요구사항 분석</p>
-</li>
-<li><p>설계</p>
-</li>
-<li><p>구현</p>
-</li>
-<li><p>테스트</p>
-</li>
-<li><p>유지보수</p>
-</li>
-</ol>
-<p>위 과정을 진행하기 위한 대표적인 모델은 다음과 같다.</p>
-<h2 id="1-1-Waterfall"><a href="#1-1-Waterfall" class="headerlink" title="1.1. Waterfall"></a>1.1. Waterfall</h2><p>SDLC 일련의 단계를 모든 팀원들이 참여한다. 심각한 문제라면 다시 이전단계로 돌아가야하겠지만, 작은 문제라면 일단 다음 단계로 넘어간다.(작은 문제를 지금 고친다 하더라도 사이드 이펙트 발생까지 생각하기 어렵다.)</p>
-<p><strong>장점</strong></p>
-<ul>
-<li><p>팀을 관리하기가 편하여 대규모 팀에 적합</p>
-</li>
-<li><p>어떤 단계가 마무리되면 결과가 뚜렷함</p>
-</li>
-</ul>
-<h2 id="1-2-Agile"><a href="#1-2-Agile" class="headerlink" title="1.2. Agile"></a>1.2. Agile</h2><p>작은 기능들의 성공을 반복시켜서 프로젝트 완성, 너무 많은 플랜을 지양하고 요구사항에 맞는 코드를 작성한다.</p>
-<p><strong>커뮤니케이션 중요(daily scrum, 코드리뷰, 회고)</strong></p>
-<h2 id="Daily-scrum"><a href="#Daily-scrum" class="headerlink" title="Daily scrum"></a>Daily scrum</h2><p>매일 15분간 회의를 진행하여 본인이 진행할 기능, 수정사항에 대해 우선순위를 부여하고 순서대로 진행한다.</p>
-<ul>
-<li>Product Backlog: 제품 전체의 요구사항</li>
-<li>Sprint Backlog : 프로덕트 기능 하나하나에 대해서 적어 놓음</li>
-</ul>
-<h2 id="Sprint"><a href="#Sprint" class="headerlink" title="Sprint"></a>Sprint</h2><p>Sprint는 2주 단위로 진행을 한다. 첫날에 planning meeting을 진행하여 2주간 일정을 세세하게 세운다.</p>
-<p>ex) 10월 25일 HTML설계, 10월 26일 컴포넌트 구조 설계 …</p>
-<h2 id="회고"><a href="#회고" class="headerlink" title="회고"></a>회고</h2><p>2주간의 Sprint가 끝나면 회고를 진행한다.</p>
-<ul>
-<li>3L 전략(Liked, Learned, Lacked)</li>
-</ul>
-<h2 id="Sprint-전-준비사항"><a href="#Sprint-전-준비사항" class="headerlink" title="Sprint 전 준비사항"></a>Sprint 전 준비사항</h2><ol>
-<li>UseCase 작성하기</li>
-</ol>
-<p>UseCase는 flowchart와 다르니 flowchart화 되고 있다면 재고해봐야한다.</p>
-<p>UseCase는 사용자가 어떤 행동을 할 수 있는지를 나열하고 이들간의 관계를 연결한 구조로 작성한다.</p>
-<blockquote>
-<p>flowchart가 아니므로 순서를 따를 필요가 없다.</p>
-</blockquote>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>점점 막히는 부분도 많아지고 이전에 제대로 구조를 설계하지 않고 회피하고 구현에만 집중하다보니 리팩터링을 어떻게 시작해야할지 막막하다…</p>
-<p>프로젝트 막바지에 다가오니 의욕도 떨어지는 것 같다. 재충전이 필요하다.</p>
-<p>그래도 이틀남았으니 내일 하루는 리팩터링에 시간을 쏟고 목요일은 배포와 회고, 발표준비를 하면 프로젝트를 잘 마무리 할 수 있을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

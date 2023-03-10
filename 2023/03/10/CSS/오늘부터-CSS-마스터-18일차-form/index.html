@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/10/css/오늘부터-css-마스터-18일차-form/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>&lt;오늘부터 CSS 마스터 18일차&gt; form - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"기본적인 HTML구조와 CSS로 다음과 같은 form을 만들 수 있다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768&lt;!DOCTYPE html&gt;&lt;html&gt;  &lt;style&gt;    input[type=&quot;text&quot;],    select &#123;      width: 100%;      padding: 12px 20px;      margin: 8px 0;      display: inline-block;      border: 1px solid #ccc;      border-radius: 4px;      box-sizing: border-box;    &#125;    input[type=&quot;submit&quot;] &#123;      width: 100%;      background-color: #4caf50;      color: white;      padding: 14px 20px;      margin: 8px 0;      border: none;      border-radius: 4px;      cursor: pointer;    &#125;    input[type=&quot;submit&quot;]:hover &#123;      background-color: #45a049;    &#125;    div &#123;      border-radius: 5px;      background-color: #f2f2f2;      padding: 20px;    &#125;  &lt;/style&gt;  &lt;body&gt;    &lt;h3&gt;Using CSS to style an HTML Form&lt;/h3&gt;    &lt;div&gt;      &lt;form action=&quot;/action_page.php&quot;&gt;        &lt;label for=&quot;fname&quot;&gt;First Name&lt;/label&gt;        &lt;input          type=&quot;text&quot;          id=&quot;fname&quot;          name=&quot;firstname&quot;          placeholder=&quot;Your name..&quot;        /&gt;        &lt;label for=&quot;lname&quot;&gt;Last Name&lt;/label&gt;        &lt;input          type=&quot;text&quot;          id=&quot;lname&quot;          name=&quot;lastname&quot;          placeholder=&quot;Your last name..&quot;        /&gt;        &lt;label for=&quot;country&quot;&gt;Country&lt;/label&gt;        &lt;select id=&quot;country&quot; name=&quot;country&quot;&gt;          &lt;option value=&quot;australia&quot;&gt;Australia&lt;/option&gt;          &lt;option value=&quot;canada&quot;&gt;Canada&lt;/option&gt;          &lt;option value=&quot;usa&quot;&gt;USA&lt;/option&gt;        &lt;/select&gt;        &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;      &lt;/form&gt;    &lt;/div&gt;  &lt;/body&gt;&lt;/html&gt;\n\n\nfocused Inputs123input[type=&quot;text&quot;]:focus &#123;  background-color: lightblue;&#125;\n\nicon&#x2F;image 삽입하기123456789101112input[type=&quot;text&quot;] &#123;  width: 100%;  box-sizing: border-box;  border: 2px solid #ccc;  border-radius: 4px;  font-size: 16px;  background-color: white;  background-image: url(&quot;searchicon.png&quot;);  background-position: 10px 10px;  background-repeat: no-repeat;  padding: 12px 20px 12px 40px;&#125;\n\n\nanimated Search Input1234567input[type=&quot;text&quot;] &#123;  transition: width 0.4s ease-in-out;&#125;input[type=&quot;text&quot;]:focus &#123;  width: 100%;&#125;\n\ntextarea 사이즈 재조정 방지하기1234567891011textarea &#123;  width: 100%;  height: 150px;  padding: 12px 20px;  box-sizing: border-box;  border: 2px solid #ccc;  border-radius: 4px;  background-color: #f8f8f8;  font-size: 16px;  resize: none;&#125;\n\n\nresize 속성을 none으로 주어 사이즈 재조정을 막는다.\n\n반응형 form 만들기12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667* &#123;  box-sizing: border-box;&#125;input[type=&quot;text&quot;],select,textarea &#123;  width: 100%;  padding: 12px;  border: 1px solid #ccc;  border-radius: 4px;  resize: vertical;&#125;label &#123;  padding: 12px 12px 12px 0;  display: inline-block;&#125;input[type=&quot;submit&quot;] &#123;  background-color: #04aa6d;  color: white;  padding: 12px 20px;  border: none;  border-radius: 4px;  cursor: pointer;  float: right;&#125;input[type=&quot;submit&quot;]:hover &#123;  background-color: #45a049;&#125;.container &#123;  border-radius: 5px;  background-color: #f2f2f2;  padding: 20px;&#125;.col-25 &#123;  float: left;  width: 25%;  margin-top: 6px;&#125;.col-75 &#123;  float: left;  width: 75%;  margin-top: 6px;&#125;/* Clear floats after the columns */.row::after &#123;  content: &quot;&quot;;  display: table;  clear: both;&#125;/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */@media screen and (max-width: 600px) &#123;  .col-25,  .col-75,  input[type=&quot;submit&quot;] &#123;    width: 100%;    margin-top: 0;  &#125;&#125;\n\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566&lt;h2&gt;Responsive Form&lt;/h2&gt;&lt;p&gt;  Resize the browser window to see the effect. When the screen is less than  600px wide, make the two columns stack on top of each other instead of next to  each other.&lt;/p&gt;&lt;div class=&quot;container&quot;&gt;  &lt;form action=&quot;/action_page.php&quot;&gt;    &lt;div class=&quot;row&quot;&gt;      &lt;div class=&quot;col-25&quot;&gt;        &lt;label for=&quot;fname&quot;&gt;First Name&lt;/label&gt;      &lt;/div&gt;      &lt;div class=&quot;col-75&quot;&gt;        &lt;input          type=&quot;text&quot;          id=&quot;fname&quot;          name=&quot;firstname&quot;          placeholder=&quot;Your name..&quot;        /&gt;      &lt;/div&gt;    &lt;/div&gt;    &lt;div class=&quot;row&quot;&gt;      &lt;div class=&quot;col-25&quot;&gt;        &lt;label for=&quot;lname&quot;&gt;Last Name&lt;/label&gt;      &lt;/div&gt;      &lt;div class=&quot;col-75&quot;&gt;        &lt;input          type=&quot;text&quot;          id=&quot;lname&quot;          name=&quot;lastname&quot;          placeholder=&quot;Your last name..&quot;        /&gt;      &lt;/div&gt;    &lt;/div&gt;    &lt;div class=&quot;row&quot;&gt;      &lt;div class=&quot;col-25&quot;&gt;        &lt;label for=&quot;country&quot;&gt;Country&lt;/label&gt;      &lt;/div&gt;      &lt;div class=&quot;col-75&quot;&gt;        &lt;select id=&quot;country&quot; name=&quot;country&quot;&gt;          &lt;option value=&quot;australia&quot;&gt;Australia&lt;/option&gt;          &lt;option value=&quot;canada&quot;&gt;Canada&lt;/option&gt;          &lt;option value=&quot;usa&quot;&gt;USA&lt;/option&gt;        &lt;/select&gt;      &lt;/div&gt;    &lt;/div&gt;    &lt;div class=&quot;row&quot;&gt;      &lt;div class=&quot;col-25&quot;&gt;        &lt;label for=&quot;subject&quot;&gt;Subject&lt;/label&gt;      &lt;/div&gt;      &lt;div class=&quot;col-75&quot;&gt;        &lt;textarea          id=&quot;subject&quot;          name=&quot;subject&quot;          placeholder=&quot;Write something..&quot;          style=&quot;height:200px&quot;        &gt;&lt;/textarea&gt;      &lt;/div&gt;    &lt;/div&gt;    &lt;br /&gt;    &lt;div class=&quot;row&quot;&gt;      &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;    &lt;/div&gt;  &lt;/form&gt;&lt;/div&gt;\n","dateCreated":"2023-03-10T20:10:58+09:00","dateModified":"2023-03-10T20:26:28+09:00","datePublished":"2023-03-10T20:10:58+09:00","description":"","headline":"<오늘부터 CSS 마스터 18일차> form","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/","keywords":"form"}</script>
+    <meta name="description" content="기본적인 HTML구조와 CSS로 다음과 같은 form을 만들 수 있다. 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768&lt;!DOCTYPE html&gt;&lt;html&gt;">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="&lt;오늘부터 CSS 마스터 18일차&gt; form">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="기본적인 HTML구조와 CSS로 다음과 같은 form을 만들 수 있다. 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768&lt;!DOCTYPE html&gt;&lt;html&gt;">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/form/common.png">
+<meta property="og:image" content="https://loco9939.github.io/images/CSS/form/icon.png">
+<meta property="article:published_time" content="2023-03-10T11:10:58.000Z">
+<meta property="article:modified_time" content="2023-03-10T11:26:28.493Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="form">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/CSS/form/common.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            &lt;오늘부터 CSS 마스터 18일차&gt; form
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-10T20:10:58+09:00">
+	
+		    2023/03/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CSS/">CSS</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>기본적인 HTML구조와 CSS로 다음과 같은 form을 만들 수 있다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span>,</span></span><br><span class="line"><span class="language-css">    select &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">margin</span>: <span class="number">8px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">display</span>: inline-block;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">box-sizing</span>: border-box;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">background-color</span>: <span class="number">#4caf50</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">padding</span>: <span class="number">14px</span> <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">margin</span>: <span class="number">8px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">border</span>: none;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">cursor</span>: pointer;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span><span class="selector-pseudo">:hover</span> &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">background-color</span>: <span class="number">#45a049</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">background-color</span>: <span class="number">#f2f2f2</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Using CSS to style an HTML Form<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/action_page.php&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;fname&quot;</span>&gt;</span>First Name<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">id</span>=<span class="string">&quot;fname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">&quot;firstname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">&quot;Your name..&quot;</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;lname&quot;</span>&gt;</span>Last Name<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">id</span>=<span class="string">&quot;lname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">&quot;lastname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">&quot;Your last name..&quot;</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;country&quot;</span>&gt;</span>Country<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;country&quot;</span> <span class="attr">name</span>=<span class="string">&quot;country&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;australia&quot;</span>&gt;</span>Australia<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;canada&quot;</span>&gt;</span>Canada<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;usa&quot;</span>&gt;</span>USA<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/form/common.png" alt="commonForm"></p>
+<h2 id="focused-Inputs"><a href="#focused-Inputs" class="headerlink" title="focused Inputs"></a>focused Inputs</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span><span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: lightblue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="icon-x2F-image-삽입하기"><a href="#icon-x2F-image-삽입하기" class="headerlink" title="icon&#x2F;image 삽입하기"></a>icon&#x2F;image 삽입하기</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">2px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: white;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;searchicon.png&quot;</span>);</span><br><span class="line">  <span class="attribute">background-position</span>: <span class="number">10px</span> <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">20px</span> <span class="number">12px</span> <span class="number">40px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/CSS/form/icon.png" alt="icon"></p>
+<h2 id="animated-Search-Input"><a href="#animated-Search-Input" class="headerlink" title="animated Search Input"></a>animated Search Input</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">transition</span>: width <span class="number">0.4s</span> ease-in-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span><span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="textarea-사이즈-재조정-방지하기"><a href="#textarea-사이즈-재조정-방지하기" class="headerlink" title="textarea 사이즈 재조정 방지하기"></a>textarea 사이즈 재조정 방지하기</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">textarea</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">150px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">2px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f8f8f8</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">resize</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>resize</strong> 속성을 none으로 주어 사이즈 재조정을 막는다.</li>
+</ul>
+<h2 id="반응형-form-만들기"><a href="#반응형-form-만들기" class="headerlink" title="반응형 form 만들기"></a>반응형 form 만들기</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span>,</span><br><span class="line">select,</span><br><span class="line"><span class="selector-tag">textarea</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">resize</span>: vertical;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">label</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">12px</span> <span class="number">12px</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#04aa6d</span>;</span><br><span class="line">  <span class="attribute">color</span>: white;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">cursor</span>: pointer;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#45a049</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f2f2f2</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.col-25</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">25%</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">6px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.col-75</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">75%</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">6px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Clear floats after the columns */</span></span><br><span class="line"><span class="selector-class">.row</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">600px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.col-25</span>,</span><br><span class="line">  <span class="selector-class">.col-75</span>,</span><br><span class="line">  <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>Responsive Form<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">  Resize the browser window to see the effect. When the screen is less than</span><br><span class="line">  600px wide, make the two columns stack on top of each other instead of next to</span><br><span class="line">  each other.</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/action_page.php&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-25&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;fname&quot;</span>&gt;</span>First Name<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-75&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">id</span>=<span class="string">&quot;fname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">&quot;firstname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">&quot;Your name..&quot;</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-25&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;lname&quot;</span>&gt;</span>Last Name<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-75&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">id</span>=<span class="string">&quot;lname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">&quot;lastname&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">&quot;Your last name..&quot;</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-25&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;country&quot;</span>&gt;</span>Country<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-75&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;country&quot;</span> <span class="attr">name</span>=<span class="string">&quot;country&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;australia&quot;</span>&gt;</span>Australia<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;canada&quot;</span>&gt;</span>Canada<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;usa&quot;</span>&gt;</span>USA<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-25&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;subject&quot;</span>&gt;</span>Subject<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-75&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">textarea</span></span></span><br><span class="line"><span class="tag">          <span class="attr">id</span>=<span class="string">&quot;subject&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">&quot;subject&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">&quot;Write something..&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">style</span>=<span class="string">&quot;height:200px&quot;</span></span></span><br><span class="line"><span class="tag">        &gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/form/" rel="tag">form</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/"
+                    data-tooltip="시간복잡도 연습하기"
+                    aria-label="다음: 시간복잡도 연습하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/"
+                    data-tooltip="시간복잡도 연습하기"
+                    aria-label="다음: 시간복잡도 연습하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
