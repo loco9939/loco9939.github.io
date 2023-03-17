@@ -9854,4 +9854,62 @@
         <tag>form</tag>
       </tags>
   </entry>
+  <entry>
+    <title>&lt;오늘부터 CSS 마스터 19일차&gt; Accordion</title>
+    <url>/2023/03/17/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-19%EC%9D%BC%EC%B0%A8-Accordion/</url>
+    <content><![CDATA[<h1 id="Accordion"><a href="#Accordion" class="headerlink" title="Accordion"></a>Accordion</h1><p><img src="/../../images/CSS/accordion/default.png" alt="default"></p>
+<p><img src="/../../images/CSS/accordion/active.png" alt="active"></p>
+<h2 id="1-HTML-마크업-설계"><a href="#1-HTML-마크업-설계" class="headerlink" title="1. HTML 마크업 설계"></a>1. HTML 마크업 설계</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;accordion&quot;</span>&gt;</span>Section 1<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;panel&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;accordion&quot;</span>&gt;</span>Section 2<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;panel&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;accordion&quot;</span>&gt;</span>Section 3<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;panel&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-CSS-스타일링"><a href="#2-CSS-스타일링" class="headerlink" title="2. CSS 스타일링"></a>2. CSS 스타일링</h2><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.accordion</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#444</span>;</span><br><span class="line">  <span class="attribute">cursor</span>: pointer;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">18px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: left;</span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">  <span class="attribute">outline</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */</span></span><br><span class="line"><span class="selector-class">.accordion</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#ccc</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Style the accordion panel. <span class="doctag">Note:</span> hidden by default */</span></span><br><span class="line"><span class="selector-class">.panel</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">18px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: white;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">transition</span>: max-height <span class="number">0.4s</span> ease-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.active</span> &#123;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">100vh</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-React-로직"><a href="#3-React-로직" class="headerlink" title="3. React 로직"></a>3. React 로직</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Accordion.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;./styles/main.css&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Accordion</span>(<span class="params">&#123; title, info &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [showInfo, setShowInfo] = <span class="title function_">useState</span>(<span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&quot;accordion&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setShowInfo(!showInfo)&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        &#123;title&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;</span>`<span class="attr">panel</span> $&#123;<span class="attr">showInfo</span> ? &quot;<span class="attr">active</span>&quot; <span class="attr">:</span> &quot;&quot;&#125;`&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;info&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Accordion</span>;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>CSS</category>
+      </categories>
+      <tags>
+        <tag>accordion</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VSCode Remote SSH로 원격으로 코딩</title>
+    <url>/2023/03/17/Daily/VSCode-Remote-SSH%EB%A1%9C-%EC%9B%90%EA%B2%A9%EC%9C%BC%EB%A1%9C-%EC%BD%94%EB%94%A9/</url>
+    <content><![CDATA[<h1 id="Remote-SSH로-원격-코딩하기"><a href="#Remote-SSH로-원격-코딩하기" class="headerlink" title="Remote SSH로 원격 코딩하기"></a>Remote SSH로 원격 코딩하기</h1><p>우리가 로컬에서 개발한 프로젝트를 서버 컴퓨터에서 실행하고 싶으면 어떻게 해야할까?</p>
+<p>방법은 서버 컴퓨터에서 해당 프로젝트를 실행해주면 된다.</p>
+<p>말로는 정말 쉬워보이지만 막상 하려고 하면 뭐부터 해야할지 모르겠다.</p>
+<p>그래서 단계를 나눠서 도전해보자.</p>
+<h2 id="과정"><a href="#과정" class="headerlink" title="과정"></a>과정</h2><p><img src="/../../images/Daily/remotessh/remotessh.png" alt="remotessh"></p>
+<ol>
+<li>우선 VSCode에서 “Remote - SSH”라는 익스텐션을 다운받는다. 해당 extension을 사용하여 서버 컴퓨터에서 원격으로 프로젝트를 실행할 것이다.</li>
+</ol>
+<p><img src="/../../images/Daily/remotessh/sshsetting1.png" alt="sshSettings1"></p>
+<ol start="2">
+<li><p>톱니바퀴를 눌러서 config 파일을 연다.</p>
+</li>
+<li><p>config 파일 설정은 다음과 같다.</p>
+</li>
+</ol>
+<p><img src="/../../images/Daily/remotessh/sshsetting2.png" alt="sshSetting2"></p>
+<ul>
+<li>Host는 원격 서버의 이름을 나타낸다.</li>
+<li>User는 계정 이름으로 보통 “ubuntu”</li>
+<li>ssh 파일 경로는 SSH키가 담긴 .pem 파일의 경로</li>
+</ul>
+<ol start="4">
+<li>이제 VSCode를 사용하여 서버를 원격으로 조종할 수 있다.</li>
+</ol>
+<p><img src="/../../images/Daily/remotessh/sshsettting3.png" alt="sshSetting3"></p>
+<p>우측에 새창으로 열기를 클릭하면 서버환경에서 VSCode가 열리게 될 것이다.</p>
+<p>이 후 VSCode에서 터미널을 켜서 git clone을 하여 github 레포지토리를 클론한 다음</p>
+<p>프로젝트를 실행하면 원격으로 서버 컴퓨터에서 프로젝트를 실행할 수 있게된다.</p>
+]]></content>
+      <categories>
+        <category>Daily</category>
+      </categories>
+      <tags>
+        <tag>remote</tag>
+        <tag>ssh</tag>
+      </tags>
+  </entry>
 </search>
