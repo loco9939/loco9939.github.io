@@ -233,6 +233,100 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/"
+                            aria-label=": 🐒 useEffect"
+                        >
+                            🐒 useEffect
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:39+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useEffect"><a href="#📌-useEffect" class="headerlink" title="📌 useEffect"></a>📌 useEffect</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(effectCallback);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 발생 가능한 side-effect(부수효과)를 관리하기 위해 사용한다.</p>
+<ul>
+<li>비동기 통신 요청 및 응답</li>
+<li>DOM 조작</li>
+<li>구독&#x2F;취소 등</li>
+</ul>
+<p>리액트가 할 수 없는 작업을 할 때, <code>useEffect()</code>를 사용한다.</p>
+<h2 id="🌈-React-Hook-실행-흐름"><a href="#🌈-React-Hook-실행-흐름" class="headerlink" title="🌈 React Hook 실행 흐름"></a>🌈 React Hook 실행 흐름</h2><p><img src="/../../../images/useEffect/useFetch.png" alt="Hook 실행 흐름"></p>
+<p>리액트 Hook의 실행흐름은 위 사진과 같다.</p>
+<p>함수 컴포넌트에서 클래스 컴포넌트의 생명주기를 구현하기 위해 <code>useEffect()</code>가 <code>componentDidMount()</code>, <code>componentDidUpdate()</code>, <code>componentWillUnmount()</code> 메서드가 발생되는 주기를 대체할 수 있어야한다.</p>
+<blockquote>
+<p>useEffect()가 이들을 100% 대체할 순 없지만 문제없을 정도로 흉내내어 사용하고 있다.</p>
+</blockquote>
+<h2 id="🐥-이펙트-조건-처리"><a href="#🐥-이펙트-조건-처리" class="headerlink" title="🐥 이펙트 조건 처리"></a>🐥 이펙트 조건 처리</h2><h3 id="1-componentDidMount-대체-방법"><a href="#1-componentDidMount-대체-방법" class="headerlink" title="1. componentDidMount() 대체 방법"></a>1. <code>componentDidMount()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// componentDidMount</span></span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열을 주게되면 컴포넌트가 처음 mount 되는 때에 한번만 호출된다.</li>
+</ul>
+<h3 id="2-componentDidUpdate-대체-방법"><a href="#2-componentDidUpdate-대체-방법" class="headerlink" title="2. componentDidUpdate() 대체 방법"></a>2. <code>componentDidUpdate()</code> 대체 방법</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(</span><br><span class="line">	<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="comment">// componentDidMount</span></span><br><span class="line">		<span class="comment">// componentDidUpdate</span></span><br><span class="line">	&#125;.</span><br><span class="line">	[...dependencies]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useEffect 2번째 인자로 빈 배열 대신 관리할 상태가 추가되면 해당 상태가 변경될 때에만 이펙트 함수가 실행된다. 즉, mount될 때는 1번 실행되고, update 될 때 마다 실행된다.</li>
+</ul>
+<h3 id="3-componentWillUnmount-대체-방법"><a href="#3-componentWillUnmount-대체-방법" class="headerlink" title="3. componentWillUnmount() 대체 방법"></a>3. <code>componentWillUnmount()</code> 대체 방법</h3><p>이벤트 구독&#x2F;취소처럼 컴포넌트가 제거될 때 실행되어야 하는 함수의 경우 다음과 같이 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Tester</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> clearId = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">count</span>(), <span class="number">500</span>);</span><br><span class="line">    <span class="comment">// 정리 함수(cleanup)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">clearInterval</span>(clearId);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>cleanUp</code> 함수는 메모리 누수 방지를 위해 UI에서 컴포넌트를 제거하기 직전에 수행된다.</li>
+<li><strong>Effect 함수가 실행될 때마다 cleanUp 함수가 먼저 실행되어 정리한다.</strong></li>
+</ul>
+<p>이는 <code>componentWillUnmount()</code>처럼 동작하는 것 같지만, 리액트 팀은 클래스 컴포넌트 생명주기대로 로직을 구현했을 때, 대규모 프로젝트에서 버그를 많이 발견하였다.</p>
+<p>그리하여 리액트 팀에서는 구독취소 후 다시 구독하는 과정을 통해 이를 구현하였다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleStatusChange</span>(<span class="params">status</span>) &#123;</span><br><span class="line">    <span class="title function_">setIsOnline</span>(status.<span class="property">isOnline</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">ChatAPI</span>.<span class="title function_">subscribeToFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">ChatAPI</span>.<span class="title function_">unsubscribeFromFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.<span class="property">friend</span>.<span class="property">id</span>]); <span class="comment">// props.friend.id가 바뀔 때만 재구독합니다.</span></span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%90%92-useEffect/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
                             aria-label=": 💭 useState"
                         >
@@ -987,89 +1081,6 @@
                         <p>
                             <a
                                 href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
-                            aria-label=": stateless 컴포넌트와 stateful 컴포넌트"
-                        >
-                            stateless 컴포넌트와 stateful 컴포넌트
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-09T10:57:01+09:00">
-	
-		    2022/11/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🛤-Class-Component-vs-Function-Component"><a href="#🛤-Class-Component-vs-Function-Component" class="headerlink" title="🛤 Class Component vs Function Component"></a>🛤 Class Component vs Function Component</h1><p>과거의 리액트는 상태를 가지는 컴포넌트는 클래스형으로, 상태를 가지지 않는 컴포넌트는 함수형으로 작성하였다. <strong>왜 그랬을까?</strong></p>
-<p><img src="/../images/stateless/class&function.png" alt="class&amp;function-components"></p>
-<p>Container 컴포넌트는 상태를 가지는데, 함수형 컴포넌트로 생성하게 되면 <red>함수 호출하여 컴포넌트를 생성할 때 마다 상태가 초기화된</red> 값을 가지기 때문에 Container 컴포넌트는 클래스형으로만 작성하였다.</p>
-<ul>
-<li>this를 사용하기 때문에 <strong>클래스형 컴포넌트가 생성방식이 더 복잡하다.</strong></li>
-<li>클래스형 컴포넌트에는 <code>render()</code> 메서드가 꼭 있어야 한다.</li>
-<li>클래스형 컴포넌트에서 이벤트 등록 시 this 바인딩을 꼭 해줘야만 한다.</li>
-</ul>
-<h1 id="📌-stateless-컴포넌트"><a href="#📌-stateless-컴포넌트" class="headerlink" title="📌 stateless 컴포넌트"></a>📌 stateless 컴포넌트</h1><p>stateless 컴포넌트는 말 그대로 상태를 가지지 않는 컴포넌트이다. 이러한 컴포넌트를 stateless 컴포넌트 또는 presentational(프레젠테이셔널) 컴포넌트라고 한다.</p>
-<h2 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h2><ul>
-<li><red>시각적 표현에 중점</red>을 둔 컴포넌트</li>
-<li>시각적 표현을 목적으로 하니 복잡한 비즈니스 로직 필요없다</li>
-<li><red>상태를 가질 필요가 없고</red> 외부에서 전달 받은 데이터를 화면에 그려준다.</li>
-</ul>
-<h2 id="✏️-stateless-컴포넌트는-함수형으로-작성한다"><a href="#✏️-stateless-컴포넌트는-함수형으로-작성한다" class="headerlink" title="✏️ stateless 컴포넌트는 함수형으로 작성한다?"></a>✏️ stateless 컴포넌트는 함수형으로 작성한다?</h2><p>표현을 목적으로 하는 컴포넌트는 복잡한 비즈니스 로직이 필요없고 이를 클래스로 작성할 경우 Babel 컴파일러가 클래스를 컴파일 해줄 때 함수형 컴포넌트일 때 보다 훨씬 더 많은 코드로 컴파일 해주기 때문에 <strong>stateless 컴포넌트를 클래스형으로 작성하는 것은 낭비이다.</strong></p>
-<h1 id="📌-stateful-컴포넌트"><a href="#📌-stateful-컴포넌트" class="headerlink" title="📌 stateful 컴포넌트"></a>📌 stateful 컴포넌트</h1><p>상태를 가지는 컴포넌트를 stateful 컴포넌트 또는 Container(컨테이너) 컴포넌트라고 한다.</p>
-<h2 id="목적-1"><a href="#목적-1" class="headerlink" title="목적"></a>목적</h2><ul>
-<li>비즈니스 로직을 가지고 있다.</li>
-<li><red>state(상태)</red>를 가진다.</li>
-<li>Presentational 컴포넌트에게 Props를 전달하여 UI 렌더링 하도록 한다.</li>
-<li>화면을 그리는 최소한의 스타일 정보를 가진다.</li>
-</ul>
-<h2 id="❓-stateful-컴포넌트는-함수형으로-작성하지-않는다"><a href="#❓-stateful-컴포넌트는-함수형으로-작성하지-않는다" class="headerlink" title="❓ stateful 컴포넌트는 함수형으로 작성하지 않는다?"></a>❓ stateful 컴포넌트는 <red>함수형으로 작성하지 않는다?</red></h2><p>하지만, <strong>React Hook</strong>의 등장으로 함수형 컴포넌트로도 Container 컴포넌트의 역할이 가능해졌다.</p>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>클래스형 컴포넌트와 함수형 컴포넌트에 차이에 대해 알게되었다.</p>
-<p>프로젝트를 시작하게 될 때, 컴포넌트를 생성할텐데 이 때, 이 컴포넌트가 상태를 가지는 컴포넌트인지 상태를 갖지 않는 컴포넌트인지 구분을 짓고 컴포넌트를 생성해야겠다.</p>
-<p>오늘날 리액트에서 React Hook이 등장하게 되면서 클래스형으로만 작성되던 stateful Component가 어떻게 함수형 컴포넌트로 바뀌게 되었는지를 배우게 되면 리액트에 대한 이해가 한층 더 깊어질 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

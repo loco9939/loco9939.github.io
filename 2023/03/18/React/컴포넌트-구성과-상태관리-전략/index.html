@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/18/react/컴포넌트-구성과-상태관리-전략/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>컴포넌트 구성과 상태관리 전략 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"데이터와 디자인을 컴포넌트로 구성하기12345678[  &#123; &quot;category&quot;: &quot;과일&quot;, &quot;price&quot;: 1920, &quot;stocked&quot;: true, &quot;name&quot;: &quot;사과&quot; &#125;,  &#123; &quot;category&quot;: &quot;과일&quot;, &quot;price&quot;: 1640, &quot;stocked&quot;: true, &quot;name&quot;: &quot;두리안&quot; &#125;,  &#123; &quot;category&quot;: &quot;과일&quot;, &quot;price&quot;: 2480, &quot;stocked&quot;: false, &quot;name&quot;: &quot;아보카도&quot; &#125;,  &#123; &quot;category&quot;: &quot;채소&quot;, &quot;price&quot;: 1700, &quot;stocked&quot;: true, &quot;name&quot;: &quot;시금치&quot; &#125;,  &#123; &quot;category&quot;: &quot;채소&quot;, &quot;price&quot;: 2800, &quot;stocked&quot;: false, &quot;name&quot;: &quot;호박&quot; &#125;,  &#123; &quot;category&quot;: &quot;채소&quot;, &quot;price&quot;: 1330, &quot;stocked&quot;: true, &quot;name&quot;: &quot;완도콩&quot; &#125;]\n\n\n위와 같이 데이터와 디자인 시안이 제시되었을 때, 컴포넌트를 어떻게 구성하는 것이 좋을지 생각해본다.\nUI와 데이터는 주로 동일한 모양을 갖기 때문에 데이터 구조와 컴포넌트 구조가 자연스럽게 매핑된다.\n그러므로 다음과 같이 컴포넌트를 구성할 수 있을 것이다.\n\n12345FilterableProductTable ├── SearchBar └── ProductTable      ├── ProductCategoryRow      └── ProductRow\n\n폴더 구조는 위와 같이 구성할 수 있을 것이다.\n\n이상적인 컴포넌트 설계는 한가지만 책임하는 것이다. 만약 한가지 이상의 처리가 필요하다면 컴포넌트를 더 작은 컴포넌트로 나눠야한다.\n\nReact 정적 컴포넌트 구성컴포넌트에 대한 구상이 끝났으므로 React로 앱을 빌드해보자.\n이 때 가장 간단한 접근법은 사용자와의 상호작용은 고려하지 않고 데이터 모델에서 UI를 렌더링 하는 버전으로 작성하는 것이다.\n데이터 모델을 렌더링하는 앱을 만들고자 한다면 props와 state를 사용하고 싶을 것이다. 하지만 현재 단계에서는 state를 사용하지 않는다.왜냐하면 state는 사용자와 상호작용할 때 사용하기 때문에 아직 단계가 아니다.\n1234567891011121314import PRODUCTS from &quot;../../api/products.json&quot;;function FilterableProductTable() &#123;  const products = [...PRODUCTS];  return (    &lt;div className=&quot;filterableProductTable&quot;&gt;      &lt;SearchBar /&gt;      &lt;ProductTable products=&#123;products&#125; /&gt;    &lt;/div&gt;  );&#125;export default FilterableProductTable;\n\n\n정적 빌드된 컴포넌트는 JSX만을 반환한다. 그리고 컴포넌트 트리 최상위 컴포넌트에서 데이터 모델을 하위 props로 전달하는 “단방향 데이터 흐름”을 구현한다.\n\n컴포넌트 UI 대화형으로 만들기UI를 대화형으로 만들려면 사용자가 기본 데이터를 변경할 수 있도록 해야한다. 이러한 상호작용이 필요할 때, state를 사용한다.\nstate는 앱이 기억하고 변경해야 할 데이터의 최소 집합이라고 생각할 수 있다.\n이 때 상태를 구성하는 가장 중요한 원칙은 DRY(Don’t Repeat Yourself)이다. state는 최소한으로만 필요해야하며 나머지는 필요할 때 다시 고민한다.\n그렇다면 위 컴포넌트에서는 state는 무엇이 될 수 있을까?\nstate와 props 구분하기1. 시간이 지남에도 변경이 없다면?&#x3D;&gt; 이는 state가 아니다. state는 사용자와 상호작용해야하는 요소이기 때문이다.\n2. props를 통해 상위 컴포넌트로 부터 전달될 수 있다면?&#x3D;&gt; 이는 state가 아니다.\n3. 컴포넌트의 기존 state 또는 props를 기반으로 계산할 수 있다면?&#x3D;&gt; 이는 state가 아니다.\n그러므로 위 예시에서 state는 검색 텍스트 값과 체크박스 값이 될 수 있다.\n앱 상태 관리 하기자 이제 앱이 가지는 최소한의 state를 파악했다. 그러면 이 state를 변경하고 소유하는 컴포넌트는 누가 할 것인지를 정해줘야한다.\nReact는 단방향 데이터 흐름을 사용하기 때문에 상위 컴포넌트에서 하위 컴포넌트로 데이터가 전달된다.\n컴포넌트 상태 관리 전략\nstate를 기반으로 무언가를 렌더링하는 모든 컴포넌트 확인한다.\n해당 컴포넌트와 가장 가까운 공통 상위 컴포넌트를 찾는다.\n\n이제 state를 어디서 관리할지 정해줘야한다. 경우의 수는 3가지가 있다.\n\nstate를 공통 상위 컴포넌트에서 관리\nstate를 공통 상위 컴포넌트보다 상위에서 관리\nstate를 소유하는 것이 타당한 컴포넌트를 찾지 못한 경우, state를 유지하기 위한 새로운 컴포넌트 만들고 공통 상위 컴포넌트 보다 위 어딘가에 추가하여 관리\n\n위 예시에서 검색 텍스트 값과 체크박스 값이 state라고 하였다.\n컴포넌트 상태 관리 단계\n상태를 사용하는 컴포넌트 식별\n\n\nSearchBar - 검색 텍스트 state 관리\nProductTable - 체크박스 유무 state 관리\n\n\n공통 상위 컴포넌트 찾기\n\nSearchBar, ProductTable 의 공통 상위 컴포넌트는 FilterableProductTable 컴포넌트이다.\n\nstate가 있는 위치 결정\n\n공통 상위 컴포넌트인 FilterableProductTable 컴포넌트에서 관리한다.\n1234567891011121314151617181920212223242526272829303132333435import PRODUCTS from &quot;../../api/products.json&quot;;import SearchBar from &quot;./SearchBar/SearchBar&quot;;import ProductTable from &quot;./ProductTable/ProductTable&quot;;import &#123; useState &#125; from &quot;react&quot;;function FilterableProductTable() &#123;  const products = [...PRODUCTS];  const [searchText, setSearchText] = useState(&quot;&quot;);  const [inStockOnly, setInStockOnly] = useState(false);  const handeChangeSearchText = (newSearchText: string) =&gt;    setSearchText(newSearchText);  const handeChangeInStockOnly = (inStockOnlyState: boolean) =&gt;    setInStockOnly(inStockOnlyState);  return (    &lt;div className=&quot;filterableProductTable&quot;&gt;      &lt;SearchBar        searchText=&#123;searchText&#125;        inStockOnly=&#123;inStockOnly&#125;        onChangeSearchText=&#123;handeChangeSearchText&#125;        onChangeInStockOnly=&#123;handeChangeInStockOnly&#125;      /&gt;      &lt;ProductTable        products=&#123;products&#125;        searchText=&#123;searchText&#125;        inStockOnly=&#123;inStockOnly&#125;      /&gt;    &lt;/div&gt;  );&#125;export default FilterableProductTable;\n\n해당 컴포넌트에서 state를 관리하고 props로 전달하는 것은 완료했으니 state를 관리하는 컴포넌트에서 state 변경함수까지 props 전달하여 사용자가 UI를 업데이트 할 수 있도록 구현해주면 완성이다.\n","dateCreated":"2023-03-18T09:16:28+09:00","dateModified":"2023-03-18T09:48:55+09:00","datePublished":"2023-03-18T09:16:28+09:00","description":"","headline":"컴포넌트 구성과 상태관리 전략","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/","keywords":"상태관리전략"}</script>
+    <meta name="description" content="데이터와 디자인을 컴포넌트로 구성하기12345678[  &amp;#123; &quot;category&quot;: &quot;과일&quot;, &quot;price&quot;: 1920, &quot;stocked&quot;: true, &quot;name&quot;: &quot;사과&quot; &amp;#125;,  &amp;#123; &quot;category&quot;: &amp;">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="컴포넌트 구성과 상태관리 전략">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="데이터와 디자인을 컴포넌트로 구성하기12345678[  &amp;#123; &quot;category&quot;: &quot;과일&quot;, &quot;price&quot;: 1920, &quot;stocked&quot;: true, &quot;name&quot;: &quot;사과&quot; &amp;#125;,  &amp;#123; &quot;category&quot;: &amp;">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/comp/design.png">
+<meta property="og:image" content="https://loco9939.github.io/images/comp/components.png">
+<meta property="article:published_time" content="2023-03-18T00:16:28.000Z">
+<meta property="article:modified_time" content="2023-03-18T00:48:55.882Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="상태관리전략">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/comp/design.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            컴포넌트 구성과 상태관리 전략
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-18T09:16:28+09:00">
+	
+		    2023/03/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="데이터와-디자인을-컴포넌트로-구성하기"><a href="#데이터와-디자인을-컴포넌트로-구성하기" class="headerlink" title="데이터와 디자인을 컴포넌트로 구성하기"></a>데이터와 디자인을 컴포넌트로 구성하기</h1><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1920</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;사과&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1640</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;두리안&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">2480</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;아보카도&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1700</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;시금치&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">2800</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;호박&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1330</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;완도콩&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/comp/design.png" alt="design"></p>
+<p>위와 같이 데이터와 디자인 시안이 제시되었을 때, 컴포넌트를 어떻게 구성하는 것이 좋을지 생각해본다.</p>
+<p><strong>UI와 데이터는 주로 동일한 모양을 갖기 때문에 데이터 구조와 컴포넌트 구조가 자연스럽게 매핑된다.</strong></p>
+<p>그러므로 다음과 같이 컴포넌트를 구성할 수 있을 것이다.</p>
+<p><img src="/../../images/comp/components.png" alt="component"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FilterableProductTable</span><br><span class="line"> ├── SearchBar</span><br><span class="line"> └── ProductTable</span><br><span class="line">      ├── ProductCategoryRow</span><br><span class="line">      └── ProductRow</span><br></pre></td></tr></table></figure>
+
+<p>폴더 구조는 위와 같이 구성할 수 있을 것이다.</p>
+<blockquote>
+<p>이상적인 컴포넌트 설계는 한가지만 책임하는 것이다. 만약 한가지 이상의 처리가 필요하다면 컴포넌트를 더 작은 컴포넌트로 나눠야한다.</p>
+</blockquote>
+<h2 id="React-정적-컴포넌트-구성"><a href="#React-정적-컴포넌트-구성" class="headerlink" title="React 정적 컴포넌트 구성"></a>React 정적 컴포넌트 구성</h2><p>컴포넌트에 대한 구상이 끝났으므로 React로 앱을 빌드해보자.</p>
+<p>이 때 가장 간단한 접근법은 사용자와의 상호작용은 고려하지 않고 데이터 모델에서 UI를 렌더링 하는 버전으로 작성하는 것이다.</p>
+<p>데이터 모델을 렌더링하는 앱을 만들고자 한다면 props와 state를 사용하고 싶을 것이다. 하지만 <span style="color:red;">현재 단계에서는 state를 사용하지 않는다.</span><br>왜냐하면 state는 사용자와 상호작용할 때 사용하기 때문에 아직 단계가 아니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="variable constant_">PRODUCTS</span> <span class="keyword">from</span> <span class="string">&quot;../../api/products.json&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FilterableProductTable</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> products = [...<span class="variable constant_">PRODUCTS</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;filterableProductTable&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">SearchBar</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ProductTable</span> <span class="attr">products</span>=<span class="string">&#123;products&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">FilterableProductTable</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>정적 빌드된 컴포넌트는 JSX만을 반환한다. 그리고 컴포넌트 트리 최상위 컴포넌트에서 데이터 모델을 하위 props로 전달하는 “단방향 데이터 흐름”을 구현한다.</p>
+</blockquote>
+<h2 id="컴포넌트-UI-대화형으로-만들기"><a href="#컴포넌트-UI-대화형으로-만들기" class="headerlink" title="컴포넌트 UI 대화형으로 만들기"></a>컴포넌트 UI 대화형으로 만들기</h2><p>UI를 대화형으로 만들려면 사용자가 기본 데이터를 변경할 수 있도록 해야한다. 이러한 상호작용이 필요할 때, state를 사용한다.</p>
+<p><strong>state는 앱이 기억하고 변경해야 할 데이터의 최소 집합이라고 생각할 수 있다.</strong></p>
+<p>이 때 상태를 구성하는 가장 중요한 원칙은 DRY(Don’t Repeat Yourself)이다. state는 최소한으로만 필요해야하며 나머지는 필요할 때 다시 고민한다.</p>
+<p>그렇다면 위 컴포넌트에서는 state는 무엇이 될 수 있을까?</p>
+<h3 id="state와-props-구분하기"><a href="#state와-props-구분하기" class="headerlink" title="state와 props 구분하기"></a>state와 props 구분하기</h3><h4 id="1-시간이-지남에도-변경이-없다면"><a href="#1-시간이-지남에도-변경이-없다면" class="headerlink" title="1. 시간이 지남에도 변경이 없다면?"></a>1. 시간이 지남에도 변경이 없다면?</h4><p>&#x3D;&gt; 이는 state가 아니다. state는 사용자와 상호작용해야하는 요소이기 때문이다.</p>
+<h4 id="2-props를-통해-상위-컴포넌트로-부터-전달될-수-있다면"><a href="#2-props를-통해-상위-컴포넌트로-부터-전달될-수-있다면" class="headerlink" title="2. props를 통해 상위 컴포넌트로 부터 전달될 수 있다면?"></a>2. props를 통해 상위 컴포넌트로 부터 전달될 수 있다면?</h4><p>&#x3D;&gt; 이는 state가 아니다.</p>
+<h4 id="3-컴포넌트의-기존-state-또는-props를-기반으로-계산할-수-있다면"><a href="#3-컴포넌트의-기존-state-또는-props를-기반으로-계산할-수-있다면" class="headerlink" title="3. 컴포넌트의 기존 state 또는 props를 기반으로 계산할 수 있다면?"></a>3. 컴포넌트의 기존 state 또는 props를 기반으로 계산할 수 있다면?</h4><p>&#x3D;&gt; 이는 state가 아니다.</p>
+<p>그러므로 위 예시에서 state는 검색 텍스트 값과 체크박스 값이 될 수 있다.</p>
+<h2 id="앱-상태-관리-하기"><a href="#앱-상태-관리-하기" class="headerlink" title="앱 상태 관리 하기"></a>앱 상태 관리 하기</h2><p>자 이제 앱이 가지는 최소한의 state를 파악했다. 그러면 이 state를 변경하고 소유하는 컴포넌트는 누가 할 것인지를 정해줘야한다.</p>
+<p>React는 단방향 데이터 흐름을 사용하기 때문에 상위 컴포넌트에서 하위 컴포넌트로 데이터가 전달된다.</p>
+<h3 id="컴포넌트-상태-관리-전략"><a href="#컴포넌트-상태-관리-전략" class="headerlink" title="컴포넌트 상태 관리 전략"></a>컴포넌트 상태 관리 전략</h3><ol>
+<li>state를 기반으로 무언가를 렌더링하는 모든 컴포넌트 확인한다.</li>
+<li>해당 컴포넌트와 가장 가까운 공통 상위 컴포넌트를 찾는다.</li>
+</ol>
+<p>이제 state를 어디서 관리할지 정해줘야한다. 경우의 수는 3가지가 있다.</p>
+<ul>
+<li>state를 공통 상위 컴포넌트에서 관리</li>
+<li>state를 공통 상위 컴포넌트보다 상위에서 관리</li>
+<li>state를 소유하는 것이 타당한 컴포넌트를 찾지 못한 경우, state를 유지하기 위한 새로운 컴포넌트 만들고 공통 상위 컴포넌트 보다 위 어딘가에 추가하여 관리</li>
+</ul>
+<p>위 예시에서 검색 텍스트 값과 체크박스 값이 state라고 하였다.</p>
+<h3 id="컴포넌트-상태-관리-단계"><a href="#컴포넌트-상태-관리-단계" class="headerlink" title="컴포넌트 상태 관리 단계"></a>컴포넌트 상태 관리 단계</h3><ol>
+<li>상태를 사용하는 컴포넌트 식별</li>
+</ol>
+<ul>
+<li>SearchBar - 검색 텍스트 state 관리</li>
+<li>ProductTable - 체크박스 유무 state 관리</li>
+</ul>
+<ol start="2">
+<li>공통 상위 컴포넌트 찾기</li>
+</ol>
+<p>SearchBar, ProductTable 의 공통 상위 컴포넌트는 FilterableProductTable 컴포넌트이다.</p>
+<ol start="3">
+<li>state가 있는 위치 결정</li>
+</ol>
+<p>공통 상위 컴포넌트인 FilterableProductTable 컴포넌트에서 관리한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="variable constant_">PRODUCTS</span> <span class="keyword">from</span> <span class="string">&quot;../../api/products.json&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">SearchBar</span> <span class="keyword">from</span> <span class="string">&quot;./SearchBar/SearchBar&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ProductTable</span> <span class="keyword">from</span> <span class="string">&quot;./ProductTable/ProductTable&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FilterableProductTable</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> products = [...<span class="variable constant_">PRODUCTS</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [searchText, setSearchText] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> [inStockOnly, setInStockOnly] = <span class="title function_">useState</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handeChangeSearchText</span> = (<span class="params">newSearchText: string</span>) =&gt;</span><br><span class="line">    <span class="title function_">setSearchText</span>(newSearchText);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handeChangeInStockOnly</span> = (<span class="params">inStockOnlyState: boolean</span>) =&gt;</span><br><span class="line">    <span class="title function_">setInStockOnly</span>(inStockOnlyState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;filterableProductTable&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">SearchBar</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">searchText</span>=<span class="string">&#123;searchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">inStockOnly</span>=<span class="string">&#123;inStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChangeSearchText</span>=<span class="string">&#123;handeChangeSearchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChangeInStockOnly</span>=<span class="string">&#123;handeChangeInStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ProductTable</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">products</span>=<span class="string">&#123;products&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">searchText</span>=<span class="string">&#123;searchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">inStockOnly</span>=<span class="string">&#123;inStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">FilterableProductTable</span>;</span><br></pre></td></tr></table></figure>
+
+<p>해당 컴포넌트에서 state를 관리하고 props로 전달하는 것은 완료했으니 state를 관리하는 컴포넌트에서 state 변경함수까지 props 전달하여 사용자가 UI를 업데이트 할 수 있도록 구현해주면 완성이다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC%EC%A0%84%EB%9E%B5/" rel="tag">상태관리전략</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/17/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-19%EC%9D%BC%EC%B0%A8-Accordion/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 19일차&gt; Accordion"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 19일차&gt; Accordion"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/17/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-19%EC%9D%BC%EC%B0%A8-Accordion/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 19일차&gt; Accordion"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 19일차&gt; Accordion"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%EC%84%B1%EA%B3%BC-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
