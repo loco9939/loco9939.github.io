@@ -233,6 +233,87 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/"
+                            aria-label=": 🐍 setState"
+                        >
+                            🐍 setState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-10T20:16:29+09:00">
+	
+		    2022/11/10
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-setState"><a href="#📌-setState" class="headerlink" title="📌 setState"></a>📌 setState</h1><p><code>setState()</code> 메서드는 컴포넌트의 state 객체에 대한 업데이트를 실행합니다. state가 변경되면, 컴포넌트는 리렌더링됩니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setState</span>(updater[, callback])</span><br></pre></td></tr></table></figure>
+
+<p>updater에 컴포넌트의 state 변경사항을 인자로 넘겨주고 React에게 해당 컴포넌트를 재렌더링해야한다고 요청을 보내는 메서드이다.</p>
+<ul>
+<li><code>setState()</code> 호출은 비동기적으로 이뤄진다.</li>
+<li>성능 향상을 위해 <red>즉각적으로 재렌더링을 발생시키지 않는다.</red><ul>
+<li>여러 변경 사항을 일괄적으로 갱신하거나 나중에 미룰 수 있다. 때문에 <code>setState()</code> 호출하자마자 <code>this.state</code>에 접근하는 것은 문제가 될 수 있다.</li>
+<li>대신 <code>componentDidUpdate()</code> 또는 <code>setState(updater, callback)</code>처럼 2번째 인자로 콜백함수를 전달하는 방법을 사용한다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(</span><br><span class="line">  &#123; <span class="attr">message</span>: <span class="string">&quot;상태 변경&quot;</span> &#125;,</span><br><span class="line">  <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;callback: &quot;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>) <span class="comment">// &#x27;상태 변경&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">message</span>); <span class="comment">// &#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>아직 렌더링이 발생하지 않았기 때문에 <code>this.state.message</code>의 값이 갱신되지 않았다.</li>
+</ul>
+<h1 id="🎒-2022-11-12-추가"><a href="#🎒-2022-11-12-추가" class="headerlink" title="🎒 2022.11.12 추가"></a>🎒 2022.11.12 추가</h1><h2 id="setState-첫번째-인수로-콜백함수-올-때"><a href="#setState-첫번째-인수로-콜백함수-올-때" class="headerlink" title="setState() 첫번째 인수로 콜백함수 올 때"></a><code>setState()</code> 첫번째 인수로 콜백함수 올 때</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">BinaryCalcurator</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">buttonStates</span>: <span class="title class_">Array</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">numberOfButtons</span>).<span class="title function_">fill</span>(<span class="literal">false</span>),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleToggleButtonContent = <span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function">(<span class="params">&#123; buttonStates &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">buttonStates</span>: buttonStates.<span class="title function_">map</span>(<span class="function">(<span class="params">buttonState, idx</span>) =&gt;</span></span><br><span class="line">        idx === index ? !buttonState : buttonState</span><br><span class="line">      ),</span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>콜백함수는 이전 상태를 받아서 상태 변경을 요청한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/10/React/Hooks/%F0%9F%90%8D-setState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/09/React/stateless-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-stateful-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
                             aria-label=": stateless 컴포넌트와 stateful 컴포넌트"
                         >
