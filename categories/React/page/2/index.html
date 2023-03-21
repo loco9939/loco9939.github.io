@@ -233,6 +233,93 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
+                            aria-label=": 🏰 useCallback과 useMemo"
+                        >
+                            🏰 useCallback과 useMemo
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-22T19:46:22+09:00">
+	
+		    2022/11/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useCallback과-useMemo-사용-이유"><a href="#📌-useCallback과-useMemo-사용-이유" class="headerlink" title="📌 useCallback과 useMemo 사용 이유"></a>📌 useCallback과 useMemo 사용 이유</h1><p>함수 컴포넌트는 렌더링 될 때 마다 몸체가 다시 실행되므로 컨텍스트를 기억하기 위해 Hook을 사용한다. 그리고 상위 컴포넌트는 기억된 상태 또는 업데이트 함수를 <strong>하위 컴포넌트에게 전달한다.</strong></p>
+<p>이 때 상위 컴포넌트가 다시 실행되면 <red>이벤트 핸들러 함수들도 새로 그려지므로 동일참조를 벗어난다.</red></p>
+<!-- more -->
+
+<h2 id="🐸-useCallback"><a href="#🐸-useCallback" class="headerlink" title="🐸 useCallback"></a>🐸 useCallback</h2><p><code>useCallback()</code>은 하위 컴포넌트에 전달되는 함수를 기억해두고 이를 이용하여 컴포넌트 업데이트 시 리렌더링이 발생할 때, <strong>기억된 함수를 사용해 불필요한 리렌더링을 줄여 성능을 높이기 위해 사용한다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">	<span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 1</span></span><br><span class="line">	<span class="keyword">const</span> handleIncrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(<span class="function">(<span class="params">count</span>) =&gt;</span> count + step);</span><br><span class="line">		&#125;, [step]);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2</span></span><br><span class="line">	<span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="title function_">setCount</span>(count - step);</span><br><span class="line">		&#125;, [count, step]);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기억해야할 데이터 타입이 함수인 경우 사용한다.</li>
+<li>useEffect()처럼 종속성 배열을 통해 조건에 따라 기억 여부를 재설정할 수 있다.</li>
+<li>1번처럼 콜백함수로 전달해주는 경우는 reduce처럼 함수를 기억하고 있는다. <red>기억되어있는 정보를 가지고 값을 변경하는 것이다.</red></li>
+<li>2번처럼 값을 전달해주면 newState로 받아들여져서 종속성 배열이 바뀌면 렌더링이 발생하게된다. <red>기억하지 않고 새로운 값을 전달해주고 그 값으로 렌더링해준다.</red></li>
+</ul>
+<h2 id="🐍-useMemo"><a href="#🐍-useMemo" class="headerlink" title="🐍 useMemo"></a>🐍 useMemo</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useCallback</span>(fn, deps) === <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> fn, deps);</span><br></pre></td></tr></table></figure>
+
+<p>useMemo()는 JavaScript 데이터 타입을 기억해야 할 때 사용합니다. 만약 기억해야할 타입이 함수라면 useCallback을 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">&#123; count: initialCount, step &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(initialCount);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useMemo(() =&gt; fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleIncrement = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="function">() =&gt;</span> <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + step),</span><br><span class="line">    [step]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// useCallback(fn, deps)</span></span><br><span class="line">  <span class="keyword">const</span> handleDecrement = <span class="title function_">useCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - step);</span><br><span class="line">  &#125;, [step]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// memoized Components</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DecButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleDecrement&#125;</span>&gt;</span>-<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleDecrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">IncButton</span> = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Counter.Button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleIncrement&#125;</span>&gt;</span>+<span class="tag">&lt;/<span class="name">Counter.Button</span>&gt;</span></span>,</span><br><span class="line">    [handleIncrement]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;DecButton&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Counter.Display</span>&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">Counter.Display</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;IncButton&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>useMemo()는 해당 컴포넌트를 기억한다.</li>
+<li>종속성 배열 <code>[count, onDecrement, onIncrement, restProps]</code>이 변경되면 useMemo가 반환하는 값을 기억하고 실행한다.</li>
+<li><code>setCount()</code>를 기억하고 있어 동일참조를 하므로 count 값을 기억하고 있다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>값을 기억하는 목적으로 좋지만… 굳이 이것을 사용하려고 복잡하게 또 많은 시간을 할애할 필요가 있을까 ?</p>
+<aside>
+
+<p>📌 회고할 때, profiler의 성능을 조금이나마 개선해보려고 노력해봤다라는 것을 해본 것을 인터뷰때 어필해보자.</p>
+</aside>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/22/React/Hooks/%E2%9B%B1-useRef/"
                             aria-label=": ⛱ useRef"
                         >
@@ -969,116 +1056,6 @@
                         <p>
                             <a
                                 href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/"
-                            aria-label=": LifeCycle(라이프사이클)"
-                        >
-                            LifeCycle(라이프사이클)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-10T20:23:28+09:00">
-	
-		    2022/11/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-LifeCycle이란"><a href="#📌-LifeCycle이란" class="headerlink" title="📌 LifeCycle이란?"></a>📌 LifeCycle이란?</h1><p>라이프 사이클은 함수 컴포넌트와 달리 클래스 컴포넌트에서만 라이프 사이클이 제공된다. <strong>컴포넌트 생성, 마운트, 업데이트, 언마운트 등 특정 시점에서 실행되는 콜백함수를 말한다.</strong></p>
-<h2 id="👑-LifeCycle-필요성"><a href="#👑-LifeCycle-필요성" class="headerlink" title="👑 LifeCycle 필요성"></a>👑 LifeCycle 필요성</h2><p>라이프 사이클은 React의 성능을 최적화하고 React가 컨트롤할 수 없는 <red>Side Effect(사이드이펙트)를 처리</red>하기 위함이다.</p>
-<p>대표적인 사이드 이펙트는 다음과 같다.</p>
-<ol>
-<li>네트워크 통신 (비동기 통신 요청 및 응답)</li>
-<li>DOM 컨트롤 (RealDOM 접근 및 조작)</li>
-<li>구독&#x2F;취소 (이벤트 핸들링 등)</li>
-<li>오류 감지 (ErrorBoundary 컴포넌트 등)</li>
-</ol>
-<h2 id="✏️-대표적인-LifeCycle-메서드"><a href="#✏️-대표적인-LifeCycle-메서드" class="headerlink" title="✏️ 대표적인 LifeCycle 메서드"></a>✏️ 대표적인 LifeCycle 메서드</h2><ul>
-<li><code>constructor()</code><ul>
-<li>마운트 되기 전에 실행된다.</li>
-</ul>
-</li>
-<li><code>render()</code><ul>
-<li>컴포넌트 렌더링 시점에 호출</li>
-</ul>
-</li>
-<li><code>componentDidMount()</code><ul>
-<li>DOM에 마운트 된 이후 실행된다.</li>
-</ul>
-</li>
-<li><code>componentDidUpdate()</code><ul>
-<li>최초 렌더링 시 실행 ❌</li>
-<li>업데이트 이후 실행</li>
-</ul>
-</li>
-<li><code>componentWillunmount()</code><ul>
-<li>컴포넌트 소멸하기 직전에 실행</li>
-</ul>
-</li>
-</ul>
-<p><img src="/../../images/lifecycle/lifecycle.png" alt="LifeCycle"></p>
-<h2 id="🌈-Render-단계"><a href="#🌈-Render-단계" class="headerlink" title="🌈 Render 단계"></a>🌈 Render 단계</h2><ul>
-<li>render 단계는 virtualDOM을 조작하는 단계이다.<ul>
-<li>성능 최적화를 위한 행동은 render 이전에 해줘야한다.</li>
-<li>render가 끝났다고 해서 실제DOM에 바로 반영되는 것이 아니다.</li>
-</ul>
-</li>
-<li>리액트 업데이트가 되는 경우는 다음 3가지 상황이다.<ol>
-<li><strong>새로운 props가 전달되었을 때,</strong></li>
-<li><strong>해당 컴포넌트의 state가 변경되었을 때,</strong></li>
-<li><strong>강제로 변경시켰을 때만 업데이트가 발생한다.</strong></li>
-</ol>
-</li>
-</ul>
-<h2 id="🔨-Commit-단계"><a href="#🔨-Commit-단계" class="headerlink" title="🔨 Commit 단계"></a>🔨 Commit 단계</h2><p>commit 단계는 RealDOM이므로 명령형이 가능하다.</p>
-<ul>
-<li>DOM을 사용하여 <strong>componentDidMount, DidUpdate, WillUnmount 에서 명령형 코드 작성이 가능하다.</strong></li>
-<li>사이드 이펙트 관련 함수는 여기서 수행해야한다.<aside>
-📌 사이드 이펙트가 나쁜 의미로 부작용이 아니라 리액트가 하는 일이 아닌 부가적인 일을 의미한다.
-</aside></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/10/React/LifeCycle-%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
