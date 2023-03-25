@@ -233,6 +233,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": 호이스팅에 대해 설명하라"
+                        >
+                            호이스팅에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-05T14:24:56+09:00">
+	
+		    2023/01/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
+<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
+<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
+<blockquote>
+<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
+</blockquote>
+<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
+<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/05/CS/%ED%81%B4%EB%A1%9C%EC%A0%80%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%96%B8%EC%A0%9C-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%82%98%EC%9A%94/"
                             aria-label=": 클로저는 무엇이고 언제, 어떻게 사용하나요?"
                         >

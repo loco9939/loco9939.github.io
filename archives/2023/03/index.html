@@ -233,6 +233,83 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                            aria-label=": Vite 배포 후 이미지가 안 불러와진 경우"
+                        >
+                            Vite 배포 후 이미지가 안 불러와진 경우
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-25T23:40:24+09:00">
+	
+		    2023/03/25
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번에 프로젝트를 진행하다가 아이콘을 사용하기 위해 svg 파일을 css <code>background:url()</code>로 불러와서 사용한 적이 있다.</p>
+<p>그런데 로컬환경에서는 제대로 불러와지던 svg 파일들이 build를 하고 난 후, 확인해보니 불러와지지 않는 것을 확인하였다.</p>
+<p>그래서 찾아보니 Vite에서는 다음 asset을 가져오기 위해 2가지 방법을 사용한다고 한다.</p>
+<h1 id="Vite에서-assets-가져오기"><a href="#Vite에서-assets-가져오기" class="headerlink" title="Vite에서 assets 가져오기"></a>Vite에서 assets 가져오기</h1><h2 id="1-URL을-통해-가져오기"><a href="#1-URL을-통해-가져오기" class="headerlink" title="1. URL을 통해 가져오기"></a>1. URL을 통해 가져오기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> imgUrl <span class="keyword">from</span> <span class="string">&quot;./img.png&quot;</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;hero-img&quot;</span>).<span class="property">src</span> = imgUrl;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Webpack의 file-loader와 비슷한데, 차이점이 있다면 Vite는 절대경로와 상대 경로 둘 다 사용가능하다.</li>
+<li>일반적인 이미지, 미디어, 폰트 파일 타입은 자동으로 asset 목록에 포함된다.</li>
+</ul>
+<h2 id="2-public-디렉터리에서-가져오기"><a href="#2-public-디렉터리에서-가져오기" class="headerlink" title="2. public 디렉터리에서 가져오기"></a>2. public 디렉터리에서 가져오기</h2><ul>
+<li>robots.txt 같이 소스 코드에서 참조하지 않는 asset</li>
+<li>해싱 없이 항상 같은 이름을 갖는 asset</li>
+<li>URL을 얻기 위해 굳이 import 할 필요가 없는 asset</li>
+</ul>
+<p>위 3가지의 경우에는 public 디렉터리에 asset을 위치시킨다. 이곳에 위치한 asset은 개발 시 <code>/</code> 경로에, 배포시에는 <code>dist</code> 디렉터리에 위치한다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.arrowDown</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;/assets/img/Arrow.svg&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>public 디렉터리에 있는 asset을 가져올 경우에는 항상 루트 기준으로 하는 절대경로에서 가져와야한다. (public&#x2F;Arrow.svg asset은 소스 코드에서는 &#x2F;Arrow.svg으로 접근 가능하다.)</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/23/Daily/Recoil%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84/"
                             aria-label=": Recoil에 들어가기 전..."
                         >
@@ -949,95 +1026,6 @@
                         <p>
                             <a
                                 href="/2023/03/10/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-18%EC%9D%BC%EC%B0%A8-form/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/"
-                            aria-label=": 시간복잡도 연습하기"
-                        >
-                            시간복잡도 연습하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-10T12:54:49+09:00">
-	
-		    2023/03/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">자료구조</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="반복문-시간-복잡도"><a href="#반복문-시간-복잡도" class="headerlink" title="반복문 시간 복잡도"></a>반복문 시간 복잡도</h1><p>다음 코드의 시간 복잡도를 구해보자.</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n, cnt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)&#123;</span><br><span class="line">            a += i+j;</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; a &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot; cnt : &quot;</span> &lt;&lt; cnt &lt;&lt; <span class="string">&#x27;\n&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>처음에는 하나씩 콘솔을 찍어보면서 계산해보자.</p>
-<ol>
-<li>i &#x3D; 0, j는 무시;</li>
-<li>i &#x3D; 1, j &#x3D; 0</li>
-<li>i &#x3D; 2, j &#x3D; 0,1</li>
-<li>i &#x3D; 3, j &#x3D; 0,1,2</li>
-</ol>
-<p>정사각형의 한 변의 길이가 n일 때, 정사각형의 넓이는 n^2이다.</p>
-<p>이와 마찬가지로 시간복잡도도 해당 도형의 넓이로 구할 수 있다.</p>
-<p>위 식을 넓이로 나타내면 j는 i를 포함하지 않고 있기 때문에 <code>n * (n - 1) % 2</code>로 나타낼 수 있다.</p>
-<h1 id="재귀함수-시간-복잡도"><a href="#재귀함수-시간-복잡도" class="headerlink" title="재귀함수 시간 복잡도"></a>재귀함수 시간 복잡도</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n, a[<span class="number">1004</span>], cnt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">go</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span></span>&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    <span class="keyword">if</span>(l == r) <span class="keyword">return</span> a[l];</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="type">int</span> sum = <span class="built_in">go</span>(l, mid) + <span class="built_in">go</span>(mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)&#123;</span><br><span class="line">        a[i - <span class="number">1</span>] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> sum = <span class="built_in">go</span>(<span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">    cout &lt;&lt; sum &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&#x27;cnt: &#x27;</span> &lt;&lt; cnt &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>시간복잡도는 어떤 로직이 몇 번 반복되었는지를 식으로 만들고 빅오표기법으로 표현하는 것이다.</strong></p>
-<p>좀 더 자세히 말하면 <code>재귀함수의 메인로직 * 몇번 호출</code>되는지이다.</p>
-<p>그래서 해당 go 함수가 몇번 호출되는지 직접 손코딩으로 그려보며 세어보았다.</p>
-<p>n &#x3D; 5일 때, 9가 나오고 n &#x3D; 10일 때, 19, n &#x3D; 20일 때, 39가 나오는 것을 보고 아 시간 복잡도가 <code>2n - 1</code>이구나라는 것을 알게되었다.</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; <span class="type">int</span> N, cnt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> N)</span></span>&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    cout &lt;&lt; cnt &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">if</span>(N == <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">solve</span>(N - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; N;</span><br><span class="line">    <span class="built_in">solve</span>(N);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>예를 들어 n &#x3D; 3일 때, 처음 1회 실행되고 함수가 3번씩 호출되는데 만약 N이 0이아니면 또 3번씩 호출되므로 공비가 3인 등비수열로 생각할 수 있다.</p>
-<p>따라서 등비수열의 합식이 성립한다.</p>
-<p><img src="/../../../images/CS/DataStructure/BiOQuiz/time.png" alt="time complexity"></p>
-<h3 id="📌-Tip"><a href="#📌-Tip" class="headerlink" title="📌 Tip"></a>📌 Tip</h3><p>함수 하나가 호출될 때 이 함수가 4번 호출된다면 &#x3D;&gt; <code>4^n</code></p>
-<p>함수 하나가 호출될 때, 이 함수가 2번 호출된다면 &#x3D;&gt; <code>2^n</code></p>
-<h1 id="로그-지수-역함수의-시간-복잡도"><a href="#로그-지수-역함수의-시간-복잡도" class="headerlink" title="로그 지수 역함수의 시간 복잡도"></a>로그 지수 역함수의 시간 복잡도</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; <span class="type">int</span> N;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> N)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, i = N;</span><br><span class="line">    <span class="keyword">while</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        a += i;</span><br><span class="line">        i /= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; a &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; N;</span><br><span class="line">    <span class="built_in">solve</span>(N);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>위 식에서 while문은 <code>log N + 1</code>의 시간복잡도를 가지고 빅오표기법으로 나타내면 <code>log N</code>이다.</p>
-<blockquote>
-<p><code>log N</code>은 2를 몇번 곱해서 N의 값이 될 수 있는지를 나타낸 수이다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
