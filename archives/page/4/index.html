@@ -233,6 +233,213 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/03/JavaScript/Event/"
+                            aria-label=": Event"
+                        >
+                            Event
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-03T11:38:57+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="이벤트-드리븐-프로그래밍"><a href="#이벤트-드리븐-프로그래밍" class="headerlink" title="이벤트 드리븐 프로그래밍"></a>이벤트 드리븐 프로그래밍</h1><p>브라우저는 처리해야할 특정 사건이 발생하면 이를 감지하여 **이벤트(event)를 발생(trigger)**시킨다. 사용자가 어떤 행동을 하였을 때 브라우저가 이를 감지하여 함수를 호출하고 싶을 때 이벤트 드리븐 프로그래밍 방식을 사용한다.</p>
+<p>즉, 이벤트란? 브라우저가 특정 사건이 발생한 것을 감지하고 함수를 호출하기 위해 필요한 것이다.</p>
+<p><strong>즉, 함수를 언제 호출할지 알 수 없으므로 개발자가 명시적으로 함수를 호출하는 것이 아니라 브라우저에게 함수 호출을 위임하는 것이다.</strong></p>
+<ul>
+<li>이벤트 발생시 호출될 함수 ⇒ <strong>이벤트 핸들러</strong></li>
+<li>이벤트 발생시 브라우저에게 이벤트 핸들러의 호출을 위임 ⇒ <strong>이벤트 핸들러 등록</strong></li>
+</ul>
+<p>Window, Document, HTMLElement 타입의 객체는 onclick과 같이 특정 이벤트에 대응하는 다양한 이벤트 핸들러 프로퍼티를 가지고 있다. 이 이벤트 핸들러 프로퍼티에 함수를 할당하면 해당 이벤트가 발생했을 때, <strong>할당한 함수가 브라우저에 의해 호출된다.</strong></p>
+<p>이와 같이 프로그램의 흐름을 이벤트 중심으로 제어하는 프로그래밍 방식을 이벤트 드리븐 프로그래밍이라고 한다.</p>
+<h1 id="이벤트-타입"><a href="#이벤트-타입" class="headerlink" title="이벤트 타입"></a>이벤트 타입</h1><p>이벤트 타입은 이벤트의 종류를 나타내는 문자열이다. 대표적으로 마우스 이벤트(click, mouseup, mousemove, mouseover…), 키보드 이벤트(keydown, keypress…), 포커스 이벤트(focus, focusin…) 등 다양한 이벤트가 있다.</p>
+<aside>
+💡 mousedown은 클릭후 손가락 떼지 않은 상태, click은 클릭하고 마우스에서 뗀 것
+
+</aside>
+
+<ul>
+<li>이벤트 핸들러 프로퍼티 방식과 addEventListener 메서드 방식으로 등록할 수 있다.</li>
+</ul>
+<h1 id="이벤트-핸들러-등록-방식"><a href="#이벤트-핸들러-등록-방식" class="headerlink" title="이벤트 핸들러 등록 방식"></a>이벤트 핸들러 등록 방식</h1><h2 id="이벤트-핸들러-프로퍼티-방식"><a href="#이벤트-핸들러-프로퍼티-방식" class="headerlink" title="이벤트 핸들러 프로퍼티 방식"></a>이벤트 핸들러 프로퍼티 방식</h2><p>이벤트 핸들러 프로퍼티에 함수를 바인딩하면 이벤트 핸들러가 등록된다.</p>
+<ul>
+<li>이벤트 핸들러는 대부분 이벤트를 발생시킬 이벤트 타깃에 바인딩한다. <strong>하지만 반드시 이벤트 타깃에 이벤트 핸들러를 바인딩해야하는 것은 아니다.</strong></li>
+<li>이벤트 핸들러 프로퍼티에 하나의 이벤트 핸들러만 바인딩할 수 있다는 단점이 있다.</li>
+</ul>
+<h2 id="addEventListener-메서드-방식"><a href="#addEventListener-메서드-방식" class="headerlink" title="addEventListener 메서드 방식"></a>addEventListener 메서드 방식</h2><p>EventTarget.prototype.addEventListener 메서드를 사용하여 이벤트 핸들러를 등록할 수 있다.</p>
+<ul>
+<li>이벤트 타입을 전달시 on 접두사를 붙이지 않는다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">button</span>&gt;</span>Click me!<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $button = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;button&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 이벤트 핸들러 프로퍼티 방식</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">		$button.<span class="property">onclick</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">		<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;button click&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">		&#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// addEventListener 메서드 방식</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;button click&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이벤트 핸들러 프로퍼티 방식과 달리 <code>addEventListener</code> 메서드에는 이벤트 핸들러를 인수로 전달한다.</li>
+<li>위 예제대로 두가지 방식을 같이 사용하여도 서로에게 영향을 주지 않으므로 클릭 이벤트 발생 시 2개의 이벤트 핸들러가 모두 호출된다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">button</span>&gt;</span>Click me!<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $button = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;button&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// addEventListener 메서드는 동일한 요소에서 발생한 동일한 이벤트에 대해</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 하나 이상의 이벤트 핸들러를 등록할 수 있다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;[1]button click&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;[2]button click&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>동일한 HTML 요소에서 발생한 동일한 이벤트에 대해 이벤트 핸들러 프로퍼티 방식은 하나 이상의 이벤트 핸들러를 등록할 수 없지만, <code>addEventListener</code> 메서드는 <strong>하나 이상의 이벤트 핸들러를 등록</strong>할 수 있다.</li>
+</ul>
+<h1 id="이벤트-핸들러-제거"><a href="#이벤트-핸들러-제거" class="headerlink" title="이벤트 핸들러 제거"></a>이벤트 핸들러 제거</h1><p>addEventListener 메서드로 등록된 이벤트를 제거하기 위해 removeEventListener 메서드를 사용한다.</p>
+<ul>
+<li>단, addEventListener 메서드에게 전달한 인수와 removeEventListener 메서드에게 전달한 인수가 같아야 한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">button</span>&gt;</span>Click me!<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $button = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;button&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;button click&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 이벤트 핸들러 등록</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, handleClick);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 이벤트 핸들러 제거</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// addEventListener 메서드에 전달한 인수와 removeEventListener 메서드에</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 전달한 인수가 일치하지 않으면 이벤트 핸들러가 제거되지 않는다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;click&#x27;</span>, handleClick, <span class="literal">true</span>); <span class="comment">// 실패</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $button.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;click&#x27;</span>, handleClick); <span class="comment">// 성공</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이벤트 핸들러로 전달한 등록 이벤트 핸들러가 동일해야 하므로 <strong>무명 함수를 이벤트 핸들러로 등록한 경우 제거할 수 없다.</strong> 이 경우 이벤트 핸들러를 제거하기 위해서는 이벤트 핸들러 참조를 변수나 자료구조에 저장하고 있어야 한다.</li>
+</ul>
+<aside>
+💡 이벤트 핸들러 프로퍼티 방식으로 등록한 이벤트 핸들러를 제거하는 방식은 null을 할당하는 것이다.
+
+</aside>
+
+<h1 id="이벤트-객체"><a href="#이벤트-객체" class="headerlink" title="이벤트 객체"></a>이벤트 객체</h1><p><strong>이벤트 발생 시</strong> 이벤트에 관련한 다양한 정보를 담고 있는 이벤트 객체가 동적으로 생성된다. <strong>생성된 이벤트 객체는 이벤트 핸들러의 첫번째 인수로 전달된다.</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>클릭하세요. 클릭한 곳의 좌표가 표시됩니다.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">em</span> <span class="attr">class</span>=<span class="string">&quot;message&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">em</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $msg = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.message&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 클릭 이벤트에 의해 생성된 이벤트 객체는 이벤트 핸들러의 첫 번째 인수로 전달된다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">function</span> <span class="title function_">showCoords</span>(<span class="params">e</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $msg.<span class="property">textContent</span> = <span class="string">`clientX: <span class="subst">$&#123;e.clientX&#125;</span>, clientY: <span class="subst">$&#123;e.clientY&#125;</span>`</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="property">onclick</span> = showCoords;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이벤트 객체는 이벤트 핸들러의 첫번째 인수로 전달되어 매개변수 e에 암묵적으로 할당된다. 이는 브라우저가 이벤트 핸들러 호출할 때, 이벤트 객체를 인수로 전달하기 때문이다.</li>
+</ul>
+<blockquote>
+<p>이벤트 타입에 따라 생성되는 이벤트 객체의 고유한 프로퍼티가 달라진다.</p>
+</blockquote>
+<h2 id="이벤트-객체의-공통-프로퍼티"><a href="#이벤트-객체의-공통-프로퍼티" class="headerlink" title="이벤트 객체의 공통 프로퍼티"></a>이벤트 객체의 공통 프로퍼티</h2><table>
+<thead>
+<tr>
+<th>공통 프로퍼티</th>
+<th>설명</th>
+<th>타입</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>type</td>
+<td>이벤트 타입</td>
+<td>string</td>
+</tr>
+<tr>
+<td>target</td>
+<td>이벤트를 발생시킨 DOM 요소</td>
+<td>DOM 요소 노드</td>
+</tr>
+<tr>
+<td>currentTarget</td>
+<td>이벤트 핸들러가 바인딩된 DOM 요소</td>
+<td>DOM 요소 노드</td>
+</tr>
+<tr>
+<td>eventPhase</td>
+<td>이벤트 전파 단계 (0: 이벤트없음, 1: 캡처링 단계, 2: 타깃 단계, 3: 버블링 단계)</td>
+<td>number</td>
+</tr>
+<tr>
+<td>bubbles</td>
+<td>false면 버블링하지 않는다.</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>cancelable</td>
+<td>preventDefault 메서드 호출하여 이벤트 기본 동작 취소 가능한지 여부 false면 취소할 수 없다.</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>defaultPrevented</td>
+<td>preventDefault 메서드 호출하여 이벤트 취소했는지 여부</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>isTrusted</td>
+<td>사용자 행위에 의해 발생한 이벤트인지 여부, click메서드, dispatchEvent 메서드를 통해 인위적으로 발생시킨 이벤트인 경우 false</td>
+<td>boolean</td>
+</tr>
+</tbody></table>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">em</span> <span class="attr">class</span>=<span class="string">&quot;message&quot;</span>&gt;</span>off<span class="tag">&lt;/<span class="name">em</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $checkbox = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;input[type=checkbox]&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $msg = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.message&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// change 이벤트가 발생하면 Event 타입의 이벤트 객체가 생성된다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $checkbox.<span class="property">onchange</span> = <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(e) === <span class="title class_">Event</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// e.target은 change 이벤트를 발생시킨 DOM 요소 $checkbox를 가리키고</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// e.target.checked는 체크박스 요소의 현재 체크 상태를 나타낸다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      $msg.<span class="property">textContent</span> = e.<span class="property">target</span>.<span class="property">checked</span> ? <span class="string">&#x27;on&#x27;</span> : <span class="string">&#x27;off&#x27;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>사용자 입력에 의해 checked 프로퍼티 값 변경되면 change 이벤트 발생하고 Event 타입의 이벤트 객체가 생성된다.</li>
+<li>이벤트 객체의 <strong>target 프로퍼티</strong>는 이벤트를 발생시킨 객체를 나타낸다. 즉, <strong>change 이벤트를 발생시킨 DOM 요소인 $checkbox</strong> 이다.</li>
+<li>이벤트 객체의 currentTarget 프로퍼티는 이벤트 핸들러가 바인딩된 DOM 요소를 가리킨다.</li>
+<li>일반적으로 이벤트 객체의 target 프로퍼티와 currentTarget 프로퍼티는 동일한 객체를 가리키지만 나중에 이벤트 위임에서는 서로 다른 객체를 가리킬 수 도 있다.</li>
+</ul>
+<h1 id="이벤트-전파"><a href="#이벤트-전파" class="headerlink" title="이벤트 전파"></a>이벤트 전파</h1><p>DOM 트리 상에 존재하는 DOM 요소 노드에서 발생한 이벤트는 DOM 트리를 통해 전파된다.</p>
+<ul>
+<li>생성된 이벤트 객체는 이벤트를 발생시킨 DOM 요소인 이벤트 타깃을 중심으로 DOM 트리를 통해 전파된다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;fruits&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;apple&quot;</span>&gt;</span>Apple<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;banana&quot;</span>&gt;</span>Banana<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;orange&quot;</span>&gt;</span>Orange<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $fruits = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;fruits&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// #fruits 요소의 하위 요소인 li 요소를 클릭한 경우</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $fruits.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function"><span class="params">e</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`이벤트 단계: <span class="subst">$&#123;e.eventPhase&#125;</span>`</span>); <span class="comment">// 3: 버블링 단계</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`이벤트 타깃: <span class="subst">$&#123;e.target&#125;</span>`</span>); <span class="comment">// [object HTMLLIElement]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`커런트 타깃: <span class="subst">$&#123;e.currentTarget&#125;</span>`</span>); <span class="comment">// [object HTMLUListElement]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>위 예제는 ul 요소에 이벤트 핸들러 바인딩하고 ul 요소의 하위 요소인 li 요소를 클릭하여 이벤트를 발생 시켜보자. <strong>event.target은 li 요소이고, event.currentTarget은 ul 요소이다.</strong></li>
+</ul>
+<h2 id="과정"><a href="#과정" class="headerlink" title="과정"></a>과정</h2><ol>
+<li>li 요소 클릭시 클릭 이벤트 발생하여 <strong>클릭 이벤트 객체를 생성</strong>한다. <strong>클릭된 li 요소가 이벤트 타깃</strong>이 된다. 이 때 이벤트 객체는 window에서 시작해서 이벤트 타깃 방향으로 전파된다. <strong>(캡처링 단계)</strong></li>
+<li>이벤트 객체는 이벤트를 발생시킨 이벤트 타깃에 도달한다. <strong>(타깃 단계)</strong></li>
+<li>이벤트 객체는 이벤트 타깃에서 시작해서 window 방향으로 전파된다. <strong>(버블링 단계)</strong></li>
+</ol>
+<ul>
+<li>이벤트 핸들러 어트리뷰트&#x2F;프로퍼티 방식으로 등록한 이벤트 핸들러는 타깃단계와 버블링 단계의 이벤트만 캐치할 수 있지만, <strong>addEventListener 메소드로 등록한 이벤트 핸들러는 타깃단계, 버블링단계, 캡처링 단계의 이벤트도 선별적으로 캐치</strong>할 수 있다. 캡처링 단계의 이벤트 캐치하려면 addEventListener 메소드의 3번째 인수로 true를 전달해야한다.</li>
+</ul>
+<p><strong>즉, 이벤트는 이벤트를 발생시킨 이벤트 타깃을 물론 상위 DOM 요소에서도 캐치할 수 있다.</strong></p>
+<p>다음 이벤트들은 버블링을 통해 전파되지 않는다. 왜냐하면 event.bubbles 값이 false</p>
+<ul>
+<li>focus&#x2F;blur</li>
+<li>load&#x2F;unload&#x2F;abort&#x2F;error</li>
+<li>mouseenter&#x2F;mouseleave</li>
+</ul>
+<p>이러한 이벤트를 사용하여 캡처링으로 이벤트를 캐치하는 것보다 대안의 이벤트들을 사용하여 버블링을 통해 캐치하는 것이 더 합리적이다.</p>
+<h1 id="이벤트-위임"><a href="#이벤트-위임" class="headerlink" title="이벤트 위임"></a>이벤트 위임</h1><p>이벤트 위임은 여러 개의 <strong>하위 DOM 요소에 각각 이벤트 핸들러를 등록하는 대신 하나의 상위 DOM 요소에 이벤트 핸들러를 등록하는 방법</strong>을 말한다. 이벤트 위임을 통해 상위 DOM 요소에 이벤트 핸들러 등록하면 여러 개의 하위 DOM 요소에 이벤트 핸들러를 등록할 필요가 없다. 또한 동적으로 하위 DOM 요소 추가하더라도 일일이 추가된 DOM 요소에 이벤트 핸들러를 등록할 필요가 없다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    <span class="selector-id">#fruits</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">display</span>: flex;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">list-style-type</span>: none;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">padding</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    <span class="selector-id">#fruits</span> <span class="selector-tag">li</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">width</span>: <span class="number">100px</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">cursor</span>: pointer;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    <span class="selector-id">#fruits</span> <span class="selector-class">.active</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">color</span>: red;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">      <span class="attribute">text-decoration</span>: underline;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">nav</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;fruits&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;apple&quot;</span> <span class="attr">class</span>=<span class="string">&quot;active&quot;</span>&gt;</span>Apple<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;banana&quot;</span>&gt;</span>Banana<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;orange&quot;</span>&gt;</span>Orange<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>선택된 내비게이션 아이템: <span class="tag">&lt;<span class="name">em</span> <span class="attr">class</span>=<span class="string">&quot;msg&quot;</span>&gt;</span>apple<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $fruits = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;fruits&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">const</span> $msg = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.msg&#x27;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 사용자 클릭에 의해 선택된 내비게이션 아이템(li 요소)에 active 클래스를 추가하고</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 그 외의 모든 내비게이션 아이템의 active 클래스를 제거한다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">function</span> <span class="title function_">activate</span>(<span class="params">&#123; target &#125;</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// 이벤트를 발생시킨 요소(target)가 ul#fruits의 자식 요소가 아니라면 무시한다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">if</span> (!target.<span class="title function_">matches</span>(<span class="string">&#x27;#fruits &gt; li&#x27;</span>)) <span class="keyword">return</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      [...$fruits.<span class="property">children</span>].<span class="title function_">forEach</span>($fruit =&gt; &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        $fruit.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&#x27;active&#x27;</span>, $fruit === target);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        $msg.<span class="property">textContent</span> = target.<span class="property">id</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// 이벤트 위임: 상위 요소(ul#fruits)는 하위 요소의 이벤트를 캐치할 수 있다.</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    $fruits.<span class="property">onclick</span> = activate;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이벤트 객체의 currentTarget 프로퍼티는 언제나 $fruits 요소를 가리키지만 이벤트 객체의 target 프로퍼티는 실제로 이벤트를 발생시킨 DOM 요소를 가리킨다.</li>
+</ul>
+<p>만약 $fruits 요소의 하위 요소에서 클릭 이벤트가 발생했다면 이벤트 객체의 currentTarget 프로퍼티와 target 프로퍼티는 다른 DOM 요소를 가리킨다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/03/JavaScript/Event/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/03/JavaScript/DOM%EA%B3%BC-NODE-attribute-vs-property/"
                             aria-label=": DOM과 NODE(attribute vs property)"
                         >
@@ -1292,117 +1499,6 @@
                         <p>
                             <a
                                 href="/2023/03/03/JavaScript/%ED%95%A8%EC%88%98/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
-                            aria-label=": 원시타입과 객체타입"
-                        >
-                            원시타입과 객체타입
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-03T10:50:04+09:00">
-	
-		    2023/03/03
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자.</p>
-<h1 id="원시타입과-객체타입"><a href="#원시타입과-객체타입" class="headerlink" title="원시타입과 객체타입"></a>원시타입과 객체타입</h1><hr>
-<h2 id="원시타입"><a href="#원시타입" class="headerlink" title="원시타입"></a>원시타입</h2><h3 id="1-원시타입의-값"><a href="#1-원시타입의-값" class="headerlink" title="1. 원시타입의 값"></a>1. 원시타입의 값</h3><p>원시타입의 값은 변경 불가능한 값이다. 읽기전용이다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"></span><br><span class="line">str[<span class="number">0</span>] = <span class="string">&quot;H&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str); <span class="comment">// hello</span></span><br></pre></td></tr></table></figure>
-
-<p>변수 str의 첫번째 문자열을 인덱스로 접근하여 직접 바꾸려했지만 변경불가능하여 바꿀 수 없다.</p>
-<h3 id="2-원시타입의-메모리-공간"><a href="#2-원시타입의-메모리-공간" class="headerlink" title="2. 원시타입의 메모리 공간"></a>2. 원시타입의 메모리 공간</h3><p>원시타입은 변수 할당 시 메모리 공간에 실제 값을 저장한다.</p>
-<p>변수와 메모리에 대해 자세히 언급하면 사실 변수라는 식별자가 <span style="color:red">값을 저장하는 게 아닌</span> 값이 저장된 메모리 공간에 대한 <strong>메모리 주소</strong>를 저장하고 있다.</p>
-<blockquote>
-<p>즉, 메모리 공간에는 값이 저장되어 있고 변수라는 식별자는 메모리 공간의 메모리 주소를 저장한다.</p>
-</blockquote>
-<h3 id="3-원시타입-값의-전달"><a href="#3-원시타입-값의-전달" class="headerlink" title="3. 원시타입 값의 전달"></a>3. 원시타입 값의 전달</h3><p>원시값을 갖는 변수를 다른 변수에 할당하면 <s>원시값이 복사되어 전달된다.</s></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> greeting = str;</span><br><span class="line"></span><br><span class="line">greeting = <span class="string">&quot;hi&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str); <span class="comment">// hello</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greeting); <span class="comment">// hi</span></span><br></pre></td></tr></table></figure>
-
-<p>사실 값이 복사되어 전달되는 것이 아니고 동일한 값을 <strong>새로운 메모리 저장공간</strong>에 저장한 뒤 해당 메모리 공간의 메모리 주소를 copy라는 변수에 할당하는 것이다.</p>
-<hr>
-<h2 id="객체타입"><a href="#객체타입" class="headerlink" title="객체타입"></a>객체타입</h2><h3 id="1-객체타입의-값"><a href="#1-객체타입의-값" class="headerlink" title="1. 객체타입의 값"></a>1. 객체타입의 값</h3><p>객체타입의 값은 변경가능한 값이다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">28</span>,</span><br><span class="line">  <span class="title function_">smoke</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;no-smoking&quot;</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;jangoon&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj); <span class="comment">// &#123;name: &#x27;jangoon&#x27;, age: 28, smoke: ƒ&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-객체타입의-메모리-공간"><a href="#2-객체타입의-메모리-공간" class="headerlink" title="2. 객체타입의 메모리 공간"></a>2. 객체타입의 메모리 공간</h3><p>객체타입은 변수 할당 시 메모리 공간에 참조값(주소값)이 저장된다.</p>
-<p>원시타입에서는 메모리 공간에 값이 저장되고 변수 식별자에 해당 메모리 공간을 가리키는 주소가 저장되어 있다.</p>
-<p>하지만, 객체타입에서는 <span style="color:red">메모리 공간에 다른 메모리 공간을 가리키는 메모리 주소</span>가 담겨있다. 다시말해서, 객체타입의 메모리는 원시타입의 메모리보다 과정이 한번 더 일어나게 되는 것이다.</p>
-<h3 id="3-객체타입-값의-전달"><a href="#3-객체타입-값의-전달" class="headerlink" title="3. 객체타입 값의 전달"></a>3. 객체타입 값의 전달</h3><p>객체를 가리키는 변수를 다른 변수에 할당하면 원본의 참조값(주소값)이 복사되어 전달된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> copy = person;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person === copy); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>변수 person과 copy는 {name:’Lee’} 객체 프로퍼티들의 주소가 담겨있는 메모리 공간의 메모리 주소를 저장한다. 그러므로 같은 참조값(주소값)을 비교하고 있기 때문에 일치 비교 연산자가 true가 나왔다.</p>
-<hr>
-<h2 id="객체타입의-얕은복사"><a href="#객체타입의-얕은복사" class="headerlink" title="객체타입의 얕은복사"></a>객체타입의 얕은복사</h2><p>객체를 spread 문법을 사용하여 얕은복사를 해보자.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">fruit</span>: &#123;</span><br><span class="line">    <span class="number">1</span>: <span class="string">&quot;peach&quot;</span>,</span><br><span class="line">    <span class="number">2</span>: <span class="string">&quot;strawberry&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> someone = &#123; ...person &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 두 객체가 같은지 비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person === someone); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 객체의 프로퍼티 비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">name</span> === someone.<span class="property">name</span>); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">fruit</span> === someone.<span class="property">fruit</span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 원시타입의 값을 변경했을 경우</span></span><br><span class="line">person.<span class="property">name</span> = <span class="string">&quot;minseok&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person); <span class="comment">// &#123;name: &#x27;minseok&#x27;, fruit: &#123;…&#125;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(someone); <span class="comment">// &#123;name: &#x27;yiju&#x27;, fruit: &#123;…&#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 객체타입의 값을 변경했을 경우</span></span><br><span class="line">person.<span class="property">fruit</span>[<span class="string">&quot;1&quot;</span>] = <span class="string">&quot;watermelon&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person); <span class="comment">// fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(someone); <span class="comment">// fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>변수 person의 원시타입의 값을 수정하였을 때, 서로의 원시타입의 값은 공유하지 않는다. 하지만 객체타입의 값을 바꾼 경우 서로의 객체타입의 값을 공유하는 모습을 볼 수 있다.</p>
-<blockquote>
-<p>왜 그럴까? 앞서 언급한 내용으로 깊게 파헤쳐보자.</p>
-</blockquote>
-<ol>
-<li>person, someone은 일치하지 않으니 서로 다른 주소값을 갖는다. 각각의 주소는 <code>javascript &#123;name:&#39;yiju&#39;,fruit:&#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;&#125; </code> 객체 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다.</li>
-</ol>
-<p>예를 들면 name 식별자가 가리키는 주소, fruit 식별자가 가리키는 주소 이런식으로 프로퍼티의 주소들을 담고 있다.</p>
-<p>여기서 name 식별자는 원시타입의 값을 가리키는 메모리 주소를 저장한다. <code>javascript person.name = &#39;minseok&#39;</code> 을 실행하면 person.name과 someone.name이 서로 다른 주소값을 갖게된다.</p>
-<ol start="2">
-<li>fruit의 식별자 주소는 <code>javascript &#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;</code> 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다. person.fruit와 someone.fruit가 서로 같다(메모리 주소가 같다). 즉, fruit 프로퍼티들의 주소가 담긴 메모리 공간을 가리키는 메모리 주소가 같다.</li>
-</ol>
-<p>그리하여 <code>javascript fruit[&#39;1&#39;] = &#39;watermelon&#39; </code> 로 fruit 프로퍼티인 1을 수정하면 식별자인 1이 가리키는 메모리 주소가 바뀌게 되고 person과 someone 식별자가 식별자 1을 포함하는 프로퍼티들의 주소를 담은 메모리 공간을 가리키는 메모리 주소는 변하지 않으므로 서로 공유하게 된다.</p>
-<hr>
-<h2 id="객체타입의-깊은복사"><a href="#객체타입의-깊은복사" class="headerlink" title="객체타입의 깊은복사"></a>객체타입의 깊은복사</h2><p>객체타입의 깊은복사는 JSON.parse, JSON.stringify 메서드를 사용하여 구현할 수도 있고 lodash 라는 라이브러리를 사용한다.</p>
-<blockquote>
-<p>하지만 JSON.stringify 방식으로는 함수(메서드)를 복사할 수 없기 때문에 재귀를 사용하거나 실무에선 라이브러리를 사용한다.</p>
-</blockquote>
-<h3 id="lodash-방법"><a href="#lodash-방법" class="headerlink" title="lodash 방법"></a>lodash 방법</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> o = &#123; <span class="attr">x</span>: &#123; <span class="attr">y</span>: <span class="number">1</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">&quot;lodash&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> c2 = _.<span class="title function_">cloneDeep</span>(o);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 객체비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c2 === o); <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c2.<span class="property">x</span> === o.<span class="property">x</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="JSON-방법"><a href="#JSON-방법" class="headerlink" title="JSON 방법"></a>JSON 방법</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  <span class="attr">b</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">c</span>: &#123;</span><br><span class="line">    <span class="attr">d</span>: <span class="number">2</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> b = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(a));</span><br><span class="line">b.<span class="property">c</span>.<span class="property">d</span> = <span class="number">4</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// &#123; b: 1, c: &#123; d: 2 &#125; &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// &#123; b: 1, c: &#123; d: 4 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h2><p>자바스크립트 DeepDive 책을 읽으면서 팀원들과 각자 공부한 내용을 말로 풀어서 설명하다보니 내가 무엇이 부족한지 알 수 있었고 내가 모르거나 제대로 알지 못하던 부분을 확실히 알고 이렇게 TIL까지 작성하면서 정리하니 기억에 오래 남을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

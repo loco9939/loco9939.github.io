@@ -233,6 +233,124 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/29/React/%ED%99%95%EC%9E%A5%EC%84%B1-%EC%9E%88%EB%8A%94-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-with-TypeScript/"
+                            aria-label=": 확장성 있는 컴포넌트 만들기 with TypeScript"
+                        >
+                            확장성 있는 컴포넌트 만들기 with TypeScript
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-29T23:31:52+09:00">
+	
+		    2023/03/29
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="확장성-있는-Text-컴포넌트"><a href="#확장성-있는-Text-컴포넌트" class="headerlink" title="확장성 있는 Text 컴포넌트"></a>확장성 있는 Text 컴포넌트</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Text</span> typography=<span class="string">&quot;h1&quot;</span>&gt;나는 머릿말 <span class="number">1</span>이야&lt;/<span class="title class_">Text</span>&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Text</span> <span class="attr">typography</span>=<span class="string">&quot;content&quot;</span>&gt;</span>나는 콘텐츠야<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 컴포넌트를 만들기 위한 작업을 시작해보자.</p>
+<p>컴포넌트 재사용을 높이기 위해서는 누구나 이해하기 쉽게 작성하는 것이 좋다. 그러기 위해서는 선언형 코드인 HTML 방식을 따르는 것이 이득이다.</p>
+<h2 id="HTML-처럼-만든-컴포넌트"><a href="#HTML-처럼-만든-컴포넌트" class="headerlink" title="HTML 처럼 만든 컴포넌트"></a>HTML 처럼 만든 컴포넌트</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Props</span> = <span class="title class_">HTMLAttributes</span>&lt;<span class="string">&quot;span&quot;</span>&gt;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Text</span> = (<span class="params">props: Props</span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>이런식으로만 사용해도 HTML Element를 똑같이 따라할 수 있다.</p>
+<p>하지만 HTML 속성은 <span style="color:red">ref, key 같은 리액트 속성들을 없다.</span></p>
+<p>이 때 사용하는 것이 forwardRef 함수로 ref 값은 전달해준다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Text</span> = <span class="title function_">forwardRef</span>(<span class="keyword">function</span> <span class="title function_">Text</span>(<span class="params"></span></span><br><span class="line"><span class="params">  props: ComponentPropsWithoutRef&lt;<span class="string">&quot;span&quot;</span>&gt;,</span></span><br><span class="line"><span class="params">  ref: Ref&lt;HTMLSpanElement&gt;</span></span><br><span class="line"><span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">ref</span>=<span class="string">&#123;ref&#125;</span>&gt;</span>&#123;props.children&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ComponentPropsWithoutRef&lt;&quot;span&quot;&gt;</code>은 ref만 제외한 나머지 리액트 프로퍼티를 모두 포함한다.</li>
+</ul>
+<h2 id="커스텀-프로퍼티-추가하기"><a href="#커스텀-프로퍼티-추가하기" class="headerlink" title="커스텀 프로퍼티 추가하기"></a>커스텀 프로퍼티 추가하기</h2><p>지금까지의 컴포넌트는 그저 span element와 동일하다. 다른 커스텀 프로퍼티도 받을 수 있도록 타입스크립트의 &amp; (intersection)을 사용하여 타입을 확장해보자.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span> = &#123;</span><br><span class="line">  typography?: <span class="built_in">string</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">ComponentPropsWithoutRef</span>&lt;<span class="string">&quot;span&quot;</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Text</span> = <span class="title function_">forwardRef</span>(<span class="keyword">function</span> <span class="title function_">Text</span>(<span class="params"></span></span><br><span class="line"><span class="params">  &#123; typography, ...props &#125;: Props,</span></span><br><span class="line"><span class="params">  ref: Ref&lt;HTMLSpanElement&gt;</span></span><br><span class="line"><span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>하지만, <code>ComponentPropsWithoutRef&lt;&quot;span&quot;&gt;</code>가 이미 갖고 있는 프로퍼티와 커스텀 프로퍼티가 동일한 경우 대응하기 어렵다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span> = &#123;</span><br><span class="line">  customId?: <span class="built_in">number</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">ComponentPropsWithoutRef</span>&lt;<span class="string">&quot;span&quot;</span>&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>예를 들어 위와 같은 커스텀 프로퍼티는 <code>ComponentPropsWithoutRef&lt;&quot;span&quot;&gt;</code>와 동일한 프로퍼티가 없기 때문에 제대로 타입이 추론된다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span> = &#123;</span><br><span class="line">  id?: <span class="built_in">number</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">ComponentPropsWithoutRef</span>&lt;<span class="string">&quot;span&quot;</span>&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>하지만 id 프로퍼티는 <code>ComponentPropsWithoutRef&lt;&quot;span&quot;&gt;</code>가 소유하고 있어 동일한 프로퍼티 2개가 생기게 되므로 타입스크립트가 제대로 추론하지 못하고 <code>undefined</code>로 추론된다.</p>
+<p>이를 해결하기 위해서는 <strong>Omit 타입을 사용하여 오버라이딩하려는 프로퍼티를 먼저 제거한 후 병합해야지만 문제가 없다.</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Combine</span>&lt;T, K&gt; = T &amp; <span class="title class_">Omit</span>&lt;K, keyof T&gt;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Combine 유틸타입은 2개의 타입을 받은 후 K타입에서 T 타입이 가진 프로퍼티와 중복되는 프로퍼티를 제거한 후 &amp; (intersection)으로 병합한다.</li>
+</ul>
+<blockquote>
+<p>이런식으로 타입을 병합하려면 상당히 귀찮기 때문에 유틸 타입을 하나 만들어둔다.</p>
+</blockquote>
+<h2 id="원하는-요소로-렌더링-하기"><a href="#원하는-요소로-렌더링-하기" class="headerlink" title="원하는 요소로 렌더링 하기"></a>원하는 요소로 렌더링 하기</h2><p>지금까지는 span 요소로만 작동하기 때문에 확장성을 위해 <code>ComponentPropsWithoutRef&lt;&quot;span&quot;&gt;</code> 에서 span 위치에 변수를 할당하도록 구현한다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Text 컴포넌트의 커스텀 프로퍼티 선언</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextBaseProps</span>&lt;T&gt; = &#123;</span><br><span class="line">  typography?: <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">as</span>?: T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Props&lt;T&gt;는 ComponentPropsWithoutRef&lt;T&gt;에 이 값을 그대로 넘겨준다.</span></span><br><span class="line"><span class="comment">// 그리고 커스텀 프로퍼티 내부의 as에도 T 타입을 바인딩해준다.</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span>&lt;T&gt; = <span class="title class_">Combine</span>&lt;<span class="title class_">TextBaseProps</span>&lt;T&gt;, <span class="title class_">ComponentPropsWithoutRef</span>&lt;T&gt;&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>하지만, 이는 오류를 발생시킨다. <code>ComponentPropsWithoutRef</code>가 받을 수 있는 제네릭 타입이 <code>ElementType</code>으로 정해져 있기 때문이다.</p>
+<p>그래서 <code>type T</code>는 <code>ElementType</code>을 상속한 타입이여야 한다고 명시해야한다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TextBaseProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>&gt; = &#123;</span><br><span class="line">  typography?: <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">as</span>?: T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>&gt; = <span class="title class_">Combine</span>&lt;</span><br><span class="line">  <span class="title class_">TextBaseProps</span>&lt;T&gt;,</span><br><span class="line">  <span class="title class_">ComponentPropsWithoutRef</span>&lt;T&gt;</span><br><span class="line">&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title class_">Text</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>&gt;(<span class="attr">props</span>: <span class="title class_">TextProps</span>&lt;T&gt;) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이제 모든 <code>type T</code>가 동일하다는 것을 보장할 수 있다.</p>
+<ol>
+<li><code>Text&lt;T&gt;</code>의 타입 변수 T</li>
+<li><code>TextProps&lt;T&gt;</code>의 타입 변수 T</li>
+<li><code>TextBaseProps&lt;T&gt;</code>의 타입 변수 T</li>
+<li>as 프로퍼티에 바인딩 된 타입 변수 T</li>
+<li><code>ComponentPropsWithoutRef&lt;T&gt;</code>의 타입 변수 T</li>
+</ol>
+<p><strong>즉, 이 중 한곳이라도 T에 대해서 명확하게 알 수 있다면 나머지 부분에서도 자연스럽게 추론이 가능하다.</strong></p>
+<h2 id="as-프로퍼티로-타이핑-추상화-하기"><a href="#as-프로퍼티로-타이핑-추상화-하기" class="headerlink" title="as 프로퍼티로 타이핑 추상화 하기"></a>as 프로퍼티로 타이핑 추상화 하기</h2><p><code>as</code>라는 프로퍼티는 Text 컴포넌트 뿐만 아니라 다양한 컴포넌트에서도 사용될 수 있기에 이 부분을 최대한 추상화 해둘 필요가 있다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 텍스트 컴포넌트의 프로퍼티</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextBaseProps</span> = &#123;</span><br><span class="line">  typography?: <span class="built_in">string</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// T 타입을 추론할 수 있는 as 프로퍼티를 자동으로 포함하고</span></span><br><span class="line"><span class="comment">// T 타입으로 HTML 엘리먼트 속성까지 타이핑 해주는 OverridableProps!</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>&gt; = <span class="title class_">OverridableProps</span>&lt;T, <span class="title class_">TextBaseProps</span>&gt;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>OverridableProps</code> 타입은 특정 컴포넌트가 <code>as</code> 프로퍼티를 사용하여 HTML 요소 이름을 받고 내부적으로 해당 요소의 속성 타입을 찾아 바인딩해주는 함수이다.</li>
+</ul>
+<blockquote>
+<p>이렇게 필요한 부분을 추상화해두면 필자가 아닌 다른 개발자는 <code>ComponentPropsWithoutRef</code>을 사용해야한다던가 <code>Combine</code> 타입을 사용할 때 타입 변수 <code>T</code>를 <code>ElementType</code>으로 제한해야한다던가 하는 귀찮은 부분을 생각하지 않고도 <code>as</code> 프로퍼티를 쉽고 빠르게 추가할 수 있을 것이다.</p>
+</blockquote>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 전체 코드</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">Combine</span>&lt;T, K&gt; = T &amp; <span class="title class_">Omit</span>&lt;K, keyof T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">CombineElementProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>, K = <span class="built_in">unknown</span>&gt; = <span class="title class_">Combine</span>&lt;</span><br><span class="line">  K,</span><br><span class="line">  <span class="title class_">ComponentPropsWithoutRef</span>&lt;T&gt;</span><br><span class="line">&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">OverridableProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>, K = <span class="built_in">unknown</span>&gt; = &#123;</span><br><span class="line">  <span class="keyword">as</span>?: T;</span><br><span class="line">&#125; &amp; <span class="title class_">CombineElementProps</span>&lt;T, K&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextBaseProps</span> = &#123;</span><br><span class="line">  typography?: <span class="built_in">string</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TextProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span>&gt; = <span class="title class_">OverridableProps</span>&lt;T, <span class="title class_">TextBaseProps</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title class_">Text</span>&lt;T <span class="keyword">extends</span> <span class="title class_">ElementType</span> = <span class="string">&quot;span&quot;</span>&gt;(</span><br><span class="line">  &#123; typography = <span class="string">&quot;content&quot;</span>, <span class="keyword">as</span>, ...props &#125;: <span class="title class_">TextProps</span>&lt;T&gt;,</span><br><span class="line">  <span class="attr">ref</span>: <span class="title class_">Ref</span>&lt;<span class="built_in">any</span>&gt;</span><br><span class="line">) &#123;</span><br><span class="line">  <span class="keyword">const</span> target = <span class="keyword">as</span> ?? <span class="string">&quot;span&quot;</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">Component</span> = target;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Component</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">ref</span>=<span class="string">&#123;ref&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      // <span class="attr">대충</span> <span class="attr">타이포그래피</span> <span class="attr">클래스</span> <span class="attr">렌더하는</span> <span class="attr">로직</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...props</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">forwardRef</span>(<span class="title class_">Text</span>) <span class="keyword">as</span> <span class="keyword">typeof</span> <span class="title class_">Text</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><p><a target="_blank" rel="noopener" href="https://evan-moon.github.io/2020/11/28/making-your-components-extensible-with-typescript/">Evans Library Blog - “타입스크립트와 함께 컴포넌트 단계별로 추상화하기”</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/29/React/%ED%99%95%EC%9E%A5%EC%84%B1-%EC%9E%88%EB%8A%94-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-with-TypeScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/21/React/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%A0%91%EA%B7%BC%EC%84%B1-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%AA%A8%EB%8B%AC-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"
                             aria-label=": 리액트 접근성 높이는 모달 구현하기"
                         >
@@ -930,76 +1048,6 @@
                         <p>
                             <a
                                 href="/2023/01/30/React/React-Virtual-DOM%EC%9D%B4%EB%9E%80/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"
-                            aria-label=": AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기"
-                        >
-                            AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-02T23:02:32+09:00">
-	
-		    2023/01/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Emotion-Styled-Component-Cascading-문제"><a href="#Emotion-Styled-Component-Cascading-문제" class="headerlink" title="Emotion Styled Component Cascading 문제"></a>Emotion Styled Component Cascading 문제</h1><p>Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>styled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.</p>
-<p><img src="/../../../images/TRST/emotionStyled/emotionStyled.png" alt="emotion styled component"></p>
-<h1 id="TypeScript-오류-사용량-덮어씜"><a href="#TypeScript-오류-사용량-덮어씜" class="headerlink" title="TypeScript 오류 - 사용량 덮어씜"></a>TypeScript 오류 - 사용량 덮어씜</h1><p><img src="/../../../images/TRST/emotionStyled/tsduplicated.png" alt="ts덮어씜"></p>
-<p>props를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Component</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  className?: <span class="built_in">string</span>;</span><br><span class="line">  children?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">React</span>.<span class="property">ComponentPropsWithRef</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TabPanelProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  dataIndex?: <span class="title class_">TabsContextValue</span>[<span class="string">&quot;selected&quot;</span>];</span><br><span class="line">&#125; &amp; <span class="title class_">Component</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.</li>
-<li>styled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

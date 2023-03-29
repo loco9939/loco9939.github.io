@@ -233,6 +233,76 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"
+                            aria-label=": AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기"
+                        >
+                            AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-02T23:02:32+09:00">
+	
+		    2023/01/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Emotion-Styled-Component-Cascading-문제"><a href="#Emotion-Styled-Component-Cascading-문제" class="headerlink" title="Emotion Styled Component Cascading 문제"></a>Emotion Styled Component Cascading 문제</h1><p>Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>styled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.</p>
+<p><img src="/../../../images/TRST/emotionStyled/emotionStyled.png" alt="emotion styled component"></p>
+<h1 id="TypeScript-오류-사용량-덮어씜"><a href="#TypeScript-오류-사용량-덮어씜" class="headerlink" title="TypeScript 오류 - 사용량 덮어씜"></a>TypeScript 오류 - 사용량 덮어씜</h1><p><img src="/../../../images/TRST/emotionStyled/tsduplicated.png" alt="ts덮어씜"></p>
+<p>props를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Component</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  className?: <span class="built_in">string</span>;</span><br><span class="line">  children?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">React</span>.<span class="property">ComponentPropsWithRef</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TabPanelProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  dataIndex?: <span class="title class_">TabsContextValue</span>[<span class="string">&quot;selected&quot;</span>];</span><br><span class="line">&#125; &amp; <span class="title class_">Component</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.</li>
+<li>styled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/22/React/Hooks/%F0%9F%8F%B0-useCallback%EA%B3%BC-useMemo/"
                             aria-label=": 🏰 useCallback과 useMemo"
                         >
@@ -974,88 +1044,6 @@
                         <p>
                             <a
                                 href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/"
-                            aria-label=": DOM 컨트롤(ref)"
-                        >
-                            DOM 컨트롤(ref)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-12T16:59:38+09:00">
-	
-		    2022/11/12
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🕹-리액트-DOM-컨트롤"><a href="#🕹-리액트-DOM-컨트롤" class="headerlink" title="🕹 리액트 DOM 컨트롤"></a>🕹 리액트 DOM 컨트롤</h1><p>리액트 앱은 대부분 리액트에 의해 컨트롤되지만 <strong>예외인 상황이 있다.</strong> 리액트는 virtualDOM을 가지고 동작하기 때문에 RealDOM 요소에 접근하거나 조작해야할 경우 이는 <strong>리액트가 할 수 없는 일이다.</strong></p>
-<p>이러한 일을 <red>리액트 사이드 이펙트</red>라고 부른다. 흔히들 사이드 이펙트를 부작용이라고 오인하는 경우가 있지만 여기서는 순수하지 않거나 역할에 맞는 일을 하지 않는 경우를 말한다.</p>
-<p>사이드 이펙트를 처리하기 위해서는 다음과 같은 React API를 사용하여야한다.</p>
-<ul>
-<li>ref(참조 설정)<ul>
-<li><strong>값이 변경되어도 리액트가 재렌더링하지 않는다.</strong></li>
-</ul>
-</li>
-<li>callback ref(ref 속성에 연결된 함수)</li>
-<li>React.createRef(참조 객체 생성)</li>
-<li>React.forwardRef(참조 객체 전달)<ul>
-<li>범용적으로 누구나 사용할 수 있는 컴포넌트를 만들기 위해서 꼭 필요하다.</li>
-<li>외부 컴포넌트가 내부 컴포넌트를 전달받아서 컴포넌트를 내보낸다.</li>
-<li>domRef를 통해서 전달할 수도 있다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="💭-예시"><a href="#💭-예시" class="headerlink" title="💭 예시"></a>💭 예시</h2><p>컴포넌트 생성 시점에 이벤트를 구독한 경우, 컴포넌트 제거 시점에 구독한 이벤트를 취소해야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">TiltCard</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="comment">// DOM 요소 참조를 목적으로 Ref를 생성합니다.</span></span><br><span class="line">  tiltRef = <span class="title class_">React</span>.<span class="title function_">createRef</span>(<span class="literal">null</span>); <span class="comment">// &#123; current:null &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// DOM 요소 참조를 위한 목적의 클래스 인스턴스 멤버</span></span><br><span class="line">  #cardDomElement = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 최초 마운트 시점 이후 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement = <span class="variable language_">this</span>.<span class="property">tiltRef</span>.<span class="property">current</span>;</span><br><span class="line">    <span class="title class_">VanillaTilt</span>.<span class="title function_">init</span>(<span class="variable language_">this</span>.#cardDomElement);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">addEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 마운트 해제 직전에 처리할 로직을 작성합니다.</span></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="property">vanillaTilt</span>.<span class="title function_">destroy</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 이벤트 구독 해지</span></span><br><span class="line">    <span class="variable language_">this</span>.#cardDomElement.<span class="title function_">removeEventListener</span>(</span><br><span class="line">      <span class="string">&quot;tiltChange&quot;</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handleChangeTilt</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; children &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="comment">// 생성된 Ref를 참조하도록 설정합니다.</span></span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.tiltRef&#125;</span> <span class="attr">className</span>=<span class="string">&quot;tiltCard&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>tiltRef에 <strong>DOM 요소를 저장하기 위해 ref를 생성하였다.</strong></li>
-<li>tiltRef DOM 요소 얻기 위해 <strong>“current” 프로퍼티</strong>에 접근하였다.</li>
-<li>tiltRef DOM 요소에 컴포넌트 생성주기에 맞게 이벤트를 등록하고 제거해주었고 ref를 참조하도록 설정해주었다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/12/React/DOM-%EC%BB%A8%ED%8A%B8%EB%A1%A4-ref/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
