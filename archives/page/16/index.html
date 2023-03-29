@@ -233,6 +233,93 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%92%B5-%EC%A7%80%EA%B0%91%EC%9D%98-%EC%A7%80%ED%8F%90-%EA%B5%90%ED%99%98%ED%95%98%EA%B8%B0/"
+                            aria-label=": 우테코-프리코스-💵 지갑의 지폐 교환하기"
+                        >
+                            우테코-프리코스-💵 지갑의 지폐 교환하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-05T19:30:20+09:00">
+	
+		    2022/11/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h2><p>계좌에 들어있는 돈 일부를 은행에서 출금하고자 한다. 돈 담을 지갑이 최대한 가볍도록 큰 금액의 화폐 위주로 받는다.</p>
+<p>돈의 액수 money가 매개변수로 주어질 때, 오만 원권, 만 원권, 오천 원권, 천 원권, 오백원 동전, 백원 동전, 오십원 동전, 십원 동전, 일원 동전 각 몇 개로 변환되는지 금액이 큰 순서대로 배열에 담아 return 하도록 solution 메서드를 완성하라.</p>
+<h3 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h3><ul>
+<li>money는 1 이상 1,000,000 이하인 자연수이다.</li>
+</ul>
+<h3 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a>실행 결과 예시</h3><table>
+<thead>
+<tr>
+<th>money</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>50237</td>
+<td>[1, 0, 0, 0, 0, 2, 0, 3, 7]</td>
+</tr>
+<tr>
+<td>15000</td>
+<td>[0, 1, 1, 0, 0, 0, 0, 0, 0]</td>
+</tr>
+</tbody></table>
+<h1 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem5</span>(<span class="params">money</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!money || money &gt; <span class="number">1000000</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(</span><br><span class="line">      <span class="string">&quot;매개변수는 1 이상 1,000,000 이하의 자연수여야 합니다.&quot;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> papers = [<span class="number">50000</span>, <span class="number">10000</span>, <span class="number">5000</span>, <span class="number">1000</span>, <span class="number">500</span>, <span class="number">100</span>, <span class="number">50</span>, <span class="number">10</span>, <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">let</span> paperCount = [];</span><br><span class="line"></span><br><span class="line">  papers.<span class="title function_">forEach</span>(<span class="function">(<span class="params">paper</span>) =&gt;</span> &#123;</span><br><span class="line">    paperCount = [...paperCount, <span class="title class_">Math</span>.<span class="title function_">floor</span>(money / paper)];</span><br><span class="line">    money %= paper;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> paperCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>나머지와 몫을 이용해 반복문을 통해 구현하였다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
+<li>map 메서드는 배열의 요소에 콜백함수를 호출하여 그 반환값으로 새로운 배열을 만드는 메서드라고만 생각하고 처음에 papers 배열을 map 메서드를 사용하여 map 메서드 내부에서 money를 변형시켜 비순수한 함수로 구현하였다. 하지만 함수는 외부 변수를 변경하지 않고 순수하도록 작성해야하므로 이를 forEach 메서드로 변경하였다.</li>
+<li>여기서는 <code>parseInt</code> 대신에 <code>Math.floor()</code> 메서드를 사용하여 정수로 변형시켜주었다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/05/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%92%B5-%EC%A7%80%EA%B0%91%EC%9D%98-%EC%A7%80%ED%8F%90-%EA%B5%90%ED%99%98%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/05/Settings/ESLint%EC%99%80-Prettier-%EC%84%A4%EC%A0%95/"
                             aria-label=": ESLint와 Prettier 설정"
                         >
@@ -1088,95 +1175,6 @@
                         <p>
                             <a
                                 href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/"
-                            aria-label=": 우테코 프리코스 - 🐶 중복 문자 제거"
-                        >
-                            우테코 프리코스 - 🐶 중복 문자 제거
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-01T22:24:44+09:00">
-	
-		    2022/11/01
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/woowa/">woowa</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="🚀-기능-요구-사항"><a href="#🚀-기능-요구-사항" class="headerlink" title="🚀 기능 요구 사항"></a>🚀 기능 요구 사항</h1><p>암호문을 좋아하는 괴짜 개발자 브라운이 이번에는 중복 문자를 이용한 새로운 암호를 만들었다. 예를 들어 “browoanoommnaon”이라는 암호문은 다음과 같은 순서로 해독할 수 있다.</p>
-<ol>
-<li>“browoanoommnaon”</li>
-<li>“browoannaon”</li>
-<li>“browoaaon”</li>
-<li>“browoon”</li>
-<li>“brown”</li>
-</ol>
-<p>임의의 문자열 cryptogram이 매개변수로 주어질 때, 연속하는 중복 문자들을 삭제한 결과를 return 하도록 solution 메서드를 완성하라.</p>
-<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a><strong>제한사항</strong></h2><ul>
-<li>cryptogram은 길이가 1 이상 1000 이하인 문자열이다.</li>
-<li>cryptogram은 알파벳 소문자로만 이루어져 있다.</li>
-</ul>
-<h2 id="실행-결과-예시"><a href="#실행-결과-예시" class="headerlink" title="실행 결과 예시"></a><strong>실행 결과 예시</strong></h2><h2 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem2</span>(<span class="params">cryptogram</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cryptogram !== cryptogram.<span class="title function_">toLowerCase</span>()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;매개변수는 소문자만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (!cryptogram.<span class="property">length</span> || cryptogram.<span class="property">length</span> &gt; <span class="number">1000</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RangeError</span>(<span class="string">&#x27;매개변수는 1자 이상 1000자 이하만 입력할 수 있습니다.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> strArr = [...cryptogram];</span><br><span class="line">  <span class="keyword">let</span> duplicatedStrPosition = [];</span><br><span class="line">  <span class="keyword">let</span> hasDuplicatedStr = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(hasDuplicatedStr) &#123;</span><br><span class="line">    strArr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_, i, init</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (init[i] === init[i+<span class="number">1</span>]) duplicatedStrPosition = [i, ...duplicatedStrPosition];</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    hasDuplicatedStr = !duplicatedStrPosition.<span class="property">length</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    duplicatedStrPosition = duplicatedStrPosition.<span class="title function_">filter</span>(<span class="function"><span class="params">elem</span> =&gt;</span> &#123;</span><br><span class="line">      strArr = [...strArr.<span class="title function_">slice</span>(<span class="number">0</span>, elem), ...strArr.<span class="title function_">slice</span>(elem + <span class="number">2</span>)];</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strArr.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>strArr로 문자열을 배열로 관리</li>
-<li>strArr 배열이 더 이상 중복이 없을 때 까지 반복해야하고, 문자열의 순회하며 중복을 확인해야 하므로 시간 복잡도 $n^2$</li>
-<li>Spread문법으로 원본 배열의 변형을 최소화하는 방향으로 배열을 관리</li>
-<li>for문 대신 배열 메서드 forEach문 사용</li>
-<li>원본 배열을 변형시키는 splice 메서드 대신 slice 메서드 사용</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><ul>
-<li>내가 코드를 처음 보는 사람의 입장으로 변수명부터 잘 이해할 수 있는지 고려하여 리팩터링을 하였다.</li>
-<li>처음에는 while 조건식을 단순히 true라고 하였는데, 의미를 부여하여 코드의 가독성을 높이기 위해 변수에 할당해주었다.</li>
-<li>배열을 다루기 때문에 for문 대신 forEach문을 사용하였다.</li>
-<li>splice 메서드 같이 원본을 변형시키는 메서드 대신 spread 문법과 slice 메서드를 사용하였다.</li>
-<li>리팩터링 전에는 duplicatedStrPosition 배열을 직접 빈 배열로 초기화해주었지만, 리팩터링을 하면서 filter 메서드를 사용하여 좀 더 배열을 다루는 의미를 부여하였다.</li>
-</ul>
-<p>하나 걸리는 부분은 제한사항을 에러처리를 해주어야 하나 고민을 하였다. 사용자가 제한사항에 벗어나는 입력을 할 수도 있으므로 이에 대한 에러를 발생시켜주는 것이 사용성에 더 옳다고 생각하여 if 조건문을 통해 에러처리를 해주었습니다.</p>
-<p>에러처리에 대해서는 깊게 생각해보지 못했는데, 제한사항에 대해 한번 더 깊이 생각해보면서 에러처리의 필요성을 느낄 수 있었던 문제여서 즐거웠다.</p>
-<p>또한 stack 자료구조를 생각하면서 문제를 해석하면 지금의 코드보다 훨씬 더 간결하고 가독성있는 코드를 구현할 수 있다는 것을 오늘 코드리뷰를 통해 깨닫게 되었다. stack으로 구현해보는 것은 다음 시간에 해보도록 하자.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/01/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94-%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%90%B6-%EC%A4%91%EB%B3%B5-%EB%AC%B8%EC%9E%90-%EC%A0%9C%EA%B1%B0.md/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

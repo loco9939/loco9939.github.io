@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2023/03/25/daily/vite-배포-후-이미지가-안-불러와진-경우/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/03/27/daily/sticky-잘-사용하기/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>Vite 배포 후 이미지가 안 불러와진 경우 - Loco&#39;s Dev Blog</title>
+    <title>sticky 잘 사용하기 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -19,18 +19,18 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"이번에 프로젝트를 진행하다가 아이콘을 사용하기 위해 svg 파일을 css background:url()로 불러와서 사용한 적이 있다.\n그런데 로컬환경에서는 제대로 불러와지던 svg 파일들이 build를 하고 난 후, 확인해보니 불러와지지 않는 것을 확인하였다.\n그래서 찾아보니 Vite에서는 다음 asset을 가져오기 위해 2가지 방법을 사용한다고 한다.\nVite에서 assets 가져오기1. URL을 통해 가져오기12import imgUrl from &quot;./img.png&quot;;document.getElementById(&quot;hero-img&quot;).src = imgUrl;\n\n\nWebpack의 file-loader와 비슷한데, 차이점이 있다면 Vite는 절대경로와 상대 경로 둘 다 사용가능하다.\n일반적인 이미지, 미디어, 폰트 파일 타입은 자동으로 asset 목록에 포함된다.\n\n2. public 디렉터리에서 가져오기\nrobots.txt 같이 소스 코드에서 참조하지 않는 asset\n해싱 없이 항상 같은 이름을 갖는 asset\nURL을 얻기 위해 굳이 import 할 필요가 없는 asset\n\n위 3가지의 경우에는 public 디렉터리에 asset을 위치시킨다. 이곳에 위치한 asset은 개발 시 / 경로에, 배포시에는 dist 디렉터리에 위치한다.\n123.arrowDown &#123;  background-image: url(&quot;/assets/img/Arrow.svg&quot;);&#125;\n\n\npublic 디렉터리에 있는 asset을 가져올 경우에는 항상 루트 기준으로 하는 절대경로에서 가져와야한다. (public/Arrow.svg asset은 소스 코드에서는 /Arrow.svg으로 접근 가능하다.)\npublic 디렉터리에 있는 asset은 JavaScript로 가져올 수 없다.\n\n가급적 import를 사용하자.React Router를 사용하여 중첩 라우팅을 구현하였다.\n/mypage/history 라우팅에서 Header 컴포넌트를 불러왔다.\nHeader 컴포넌트에는 public 폴더에서 불러온 logo가 있다.\n하지만 이 때의 경로는 /img/logo.svg 였기 때문에 /mypage/history 라우팅에서는 해당 경로의 파일을 찾을 수 없다.\n해당 경로의 파일을 찾기 위해서는 /mypage/history/img/logo.svg 로 경로를 바꿔줘야 한다.\n즉, public 폴더에서 이미지를 가져올 경우, 라우팅이 바뀔 때마다 경로를 생각해줘야한다.\n그러므로 import 구문을 사용하여 src 폴더 안에 이미지를 가져오도록 하자.\n","dateCreated":"2023-03-25T23:40:24+09:00","dateModified":"2023-03-27T23:34:56+09:00","datePublished":"2023-03-25T23:40:24+09:00","description":"","headline":"Vite 배포 후 이미지가 안 불러와진 경우","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/","keywords":"vite"}</script>
-    <meta name="description" content="이번에 프로젝트를 진행하다가 아이콘을 사용하기 위해 svg 파일을 css background:url()로 불러와서 사용한 적이 있다. 그런데 로컬환경에서는 제대로 불러와지던 svg 파일들이 build를 하고 난 후, 확인해보니 불러와지지 않는 것을 확인하였다. 그래서 찾아보니 Vite에서는 다음 asset을 가져오기 위해 2가지 방법을 사용한다고 한다. V">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"sticky 잘 알고 사용하기position:sticky는 position:static 처럼 일반적인 흐름을 따르지만, 일정 스크롤을 내렸을 때 해당 임계점에 도달하였을 때, position:fixed 처럼 구현하기 위한 속성이다.\n123456.sticky &#123;  position: -webkit-sticky; /* 사파리 브라우저 지원 */  position: sticky;  top: 4px;  background: red;&#125;\n\n\nsticky 속성을 설정하면 top, bottom, right, left 속성 중 하나는 반드시 설정해줘야한다.\n\n\n또한 sticky가 기준으로 하는 임계점은 overflow:auto, overflow:scroll 속성을 가진 가장 가까운 조상 컨테이너 박스이다.\n\n예시1234567891011&lt;div class=&quot;scroll&quot;&gt;  &lt;div class=&quot;parent&quot;&gt;    &lt;b class=&quot;static&quot;&gt;.static&lt;/b&gt;    &lt;b class=&quot;sticky&quot;&gt;.sticky&lt;/b&gt;    &lt;b class=&quot;fixed&quot;&gt;.fixed&lt;/b&gt;  &lt;/div&gt;  &lt;div class=&quot;parent&quot;&gt;    &lt;b class=&quot;static&quot;&gt;.static&lt;/b&gt;    &lt;b class=&quot;sticky&quot;&gt;.sticky&lt;/b&gt;  &lt;/div&gt;&lt;/div&gt;\n\n123456789101112131415161718.scroll &#123;  display: inline-block;  width: 200px;  height: 400px;  overflow: auto;  padding: 0 4px;  vertical-align: middle;  border: 4px solid #000;&#125;.parent &#123;  height: 300px;  margin: 4px 0 200px;  border: 4px solid #666;&#125;.static &#123;  position: static;  background: gray;&#125;\n\n\n위 코드에서 sticky가 fixed로 고정되는 임계기준점은 scroll 클래스를 가진 div 박스이다.\nscroll 클래스가 있는 박스는 스크롤이 할 수 있을 만큼 길이가 길어서 스크롤 하여 해당 임계점에 도달하는 순간 fixed로 변하게 된다.\n\n\n처음에 헷갈린 점은 overflow:auto 속성을 parent 클래스를 가진 박스로 옮겼는데 아무런 일도 일어나지 않아서 당황했다. 그 이유는 parent 클래스를 가진 박스 내부가 스크롤이 되었을 때 해당 박스를 기준으로 고정되는 것인데, parent 클래스를 가진 박스는 스크롤이 될만한 높이를 가지고 있지 않아서 아무런 일도 발생하지 않았던 것이다.\n\n","dateCreated":"2023-03-27T23:36:52+09:00","dateModified":"2023-03-29T23:01:29+09:00","datePublished":"2023-03-27T23:36:52+09:00","description":"","headline":"sticky 잘 사용하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/","keywords":"sticky"}</script>
+    <meta name="description" content="sticky 잘 알고 사용하기position:sticky는 position:static 처럼 일반적인 흐름을 따르지만, 일정 스크롤을 내렸을 때 해당 임계점에 도달하였을 때, position:fixed 처럼 구현하기 위한 속성이다. 123456.sticky &amp;#123;  position: -webkit-sticky; &#x2F;* 사파리 브라우저 지원 *&#x2F;  pos">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Vite 배포 후 이미지가 안 불러와진 경우">
-<meta property="og:url" content="https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/index.html">
+<meta property="og:title" content="sticky 잘 사용하기">
+<meta property="og:url" content="https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="이번에 프로젝트를 진행하다가 아이콘을 사용하기 위해 svg 파일을 css background:url()로 불러와서 사용한 적이 있다. 그런데 로컬환경에서는 제대로 불러와지던 svg 파일들이 build를 하고 난 후, 확인해보니 불러와지지 않는 것을 확인하였다. 그래서 찾아보니 Vite에서는 다음 asset을 가져오기 위해 2가지 방법을 사용한다고 한다. V">
+<meta property="og:description" content="sticky 잘 알고 사용하기position:sticky는 position:static 처럼 일반적인 흐름을 따르지만, 일정 스크롤을 내렸을 때 해당 임계점에 도달하였을 때, position:fixed 처럼 구현하기 위한 속성이다. 123456.sticky &amp;#123;  position: -webkit-sticky; &#x2F;* 사파리 브라우저 지원 *&#x2F;  pos">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-03-25T14:40:24.000Z">
-<meta property="article:modified_time" content="2023-03-27T14:34:56.705Z">
+<meta property="article:published_time" content="2023-03-27T14:36:52.000Z">
+<meta property="article:modified_time" content="2023-03-29T14:01:29.979Z">
 <meta property="article:author" content="loco9939">
-<meta property="article:tag" content="vite">
+<meta property="article:tag" content="sticky">
 <meta name="twitter:card" content="summary">
     
     
@@ -233,14 +233,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Vite 배포 후 이미지가 안 불러와진 경우
+            sticky 잘 사용하기
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-03-25T23:40:24+09:00">
+    <time datetime="2023-03-27T23:36:52+09:00">
 	
-		    2023/03/25
+		    2023/03/27
     	
     </time>
     
@@ -258,34 +258,26 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>이번에 프로젝트를 진행하다가 아이콘을 사용하기 위해 svg 파일을 css <code>background:url()</code>로 불러와서 사용한 적이 있다.</p>
-<p>그런데 로컬환경에서는 제대로 불러와지던 svg 파일들이 build를 하고 난 후, 확인해보니 불러와지지 않는 것을 확인하였다.</p>
-<p>그래서 찾아보니 Vite에서는 다음 asset을 가져오기 위해 2가지 방법을 사용한다고 한다.</p>
-<h1 id="Vite에서-assets-가져오기"><a href="#Vite에서-assets-가져오기" class="headerlink" title="Vite에서 assets 가져오기"></a>Vite에서 assets 가져오기</h1><h2 id="1-URL을-통해-가져오기"><a href="#1-URL을-통해-가져오기" class="headerlink" title="1. URL을 통해 가져오기"></a>1. URL을 통해 가져오기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> imgUrl <span class="keyword">from</span> <span class="string">&quot;./img.png&quot;</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;hero-img&quot;</span>).<span class="property">src</span> = imgUrl;</span><br></pre></td></tr></table></figure>
+            <h1 id="sticky-잘-알고-사용하기"><a href="#sticky-잘-알고-사용하기" class="headerlink" title="sticky 잘 알고 사용하기"></a>sticky 잘 알고 사용하기</h1><p><code>position:sticky</code>는 <code>position:static</code> 처럼 일반적인 흐름을 따르지만, 일정 스크롤을 내렸을 때 해당 임계점에 도달하였을 때, <code>position:fixed</code> 처럼 구현하기 위한 속성이다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.sticky</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: -webkit-sticky; <span class="comment">/* 사파리 브라우저 지원 */</span></span><br><span class="line">  <span class="attribute">position</span>: sticky;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">background</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>Webpack의 file-loader와 비슷한데, 차이점이 있다면 Vite는 절대경로와 상대 경로 둘 다 사용가능하다.</li>
-<li>일반적인 이미지, 미디어, 폰트 파일 타입은 자동으로 asset 목록에 포함된다.</li>
+<li>sticky 속성을 설정하면 top, bottom, right, left 속성 중 하나는 반드시 설정해줘야한다.</li>
 </ul>
-<h2 id="2-public-디렉터리에서-가져오기"><a href="#2-public-디렉터리에서-가져오기" class="headerlink" title="2. public 디렉터리에서 가져오기"></a>2. public 디렉터리에서 가져오기</h2><ul>
-<li>robots.txt 같이 소스 코드에서 참조하지 않는 asset</li>
-<li>해싱 없이 항상 같은 이름을 갖는 asset</li>
-<li>URL을 얻기 위해 굳이 import 할 필요가 없는 asset</li>
-</ul>
-<p>위 3가지의 경우에는 public 디렉터리에 asset을 위치시킨다. 이곳에 위치한 asset은 개발 시 <code>/</code> 경로에, 배포시에는 <code>dist</code> 디렉터리에 위치한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.arrowDown</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&quot;/assets/img/Arrow.svg&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>또한 sticky가 기준으로 하는 임계점은 <code>overflow:auto</code>, <code>overflow:scroll</code> 속성을 가진 가장 가까운 조상 컨테이너 박스이다.</p>
+</blockquote>
+<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;scroll&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;parent&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;static&quot;</span>&gt;</span>.static<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;sticky&quot;</span>&gt;</span>.sticky<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;fixed&quot;</span>&gt;</span>.fixed<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;parent&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;static&quot;</span>&gt;</span>.static<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;sticky&quot;</span>&gt;</span>.sticky<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.scroll</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">4px</span> solid <span class="number">#000</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">4px</span> <span class="number">0</span> <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">4px</span> solid <span class="number">#666</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.static</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: static;</span><br><span class="line">  <span class="attribute">background</span>: gray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><code>public</code> 디렉터리에 있는 asset을 가져올 경우에는 항상 루트 기준으로 하는 절대경로에서 가져와야한다. <code>(public/Arrow.svg</code> asset은 소스 코드에서는 <code>/Arrow.svg</code>으로 접근 가능하다.)</li>
-<li><code>public</code> 디렉터리에 있는 asset은 JavaScript로 가져올 수 없다.</li>
+<li>위 코드에서 sticky가 fixed로 고정되는 임계기준점은 scroll 클래스를 가진 div 박스이다.</li>
+<li>scroll 클래스가 있는 박스는 스크롤이 할 수 있을 만큼 길이가 길어서 스크롤 하여 해당 임계점에 도달하는 순간 fixed로 변하게 된다.</li>
 </ul>
-<h3 id="가급적-import를-사용하자"><a href="#가급적-import를-사용하자" class="headerlink" title="가급적 import를 사용하자."></a>가급적 import를 사용하자.</h3><p>React Router를 사용하여 중첩 라우팅을 구현하였다.</p>
-<p><code>/mypage/history</code> 라우팅에서 Header 컴포넌트를 불러왔다.</p>
-<p>Header 컴포넌트에는 public 폴더에서 불러온 logo가 있다.</p>
-<p>하지만 이 때의 경로는 <code>/img/logo.svg</code> 였기 때문에 <code>/mypage/history</code> 라우팅에서는 해당 경로의 파일을 찾을 수 없다.</p>
-<p>해당 경로의 파일을 찾기 위해서는 <code>/mypage/history/img/logo.svg</code> 로 경로를 바꿔줘야 한다.</p>
-<p>즉, public 폴더에서 이미지를 가져올 경우, 라우팅이 바뀔 때마다 경로를 생각해줘야한다.</p>
-<p><strong>그러므로 import 구문을 사용하여 src 폴더 안에 이미지를 가져오도록 하자.</strong></p>
+<blockquote>
+<p>처음에 헷갈린 점은 <code>overflow:auto</code> 속성을 parent 클래스를 가진 박스로 옮겼는데 아무런 일도 일어나지 않아서 당황했다. 그 이유는 parent 클래스를 가진 박스 내부가 스크롤이 되었을 때 해당 박스를 기준으로 고정되는 것인데, parent 클래스를 가진 박스는 스크롤이 될만한 높이를 가지고 있지 않아서 아무런 일도 발생하지 않았던 것이다.</p>
+</blockquote>
 
             
 
@@ -297,7 +289,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">태그</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/vite/" rel="tag">vite</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/sticky/" rel="tag">sticky</a>
 
             </div>
         
@@ -307,14 +299,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
-                    data-tooltip="sticky 잘 사용하기"
-                    aria-label="이전: sticky 잘 사용하기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -324,9 +313,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/03/23/Daily/Recoil%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84/"
-                    data-tooltip="Recoil에 들어가기 전..."
-                    aria-label="다음: Recoil에 들어가기 전..."
+                    href="/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    data-tooltip="Vite 배포 후 이미지가 안 불러와진 경우"
+                    aria-label="다음: Vite 배포 후 이미지가 안 불러와진 경우"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -351,7 +340,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -364,7 +353,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -377,7 +366,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -422,14 +411,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
-                    data-tooltip="sticky 잘 사용하기"
-                    aria-label="이전: sticky 잘 사용하기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -439,9 +425,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/03/23/Daily/Recoil%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84/"
-                    data-tooltip="Recoil에 들어가기 전..."
-                    aria-label="다음: Recoil에 들어가기 전..."
+                    href="/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    data-tooltip="Vite 배포 후 이미지가 안 불러와진 경우"
+                    aria-label="다음: Vite 배포 후 이미지가 안 불러와진 경우"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -466,7 +452,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -479,7 +465,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -492,7 +478,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -526,7 +512,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -539,7 +525,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -552,7 +538,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/25/Daily/Vite-%EB%B0%B0%ED%8F%AC-%ED%9B%84-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%EC%95%88-%EB%B6%88%EB%9F%AC%EC%99%80%EC%A7%84-%EA%B2%BD%EC%9A%B0/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
