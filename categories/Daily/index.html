@@ -233,6 +233,74 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                            aria-label=": 여러 input값 상태 관리 하기"
+                        >
+                            여러 input값 상태 관리 하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-04-06T22:52:05+09:00">
+	
+		    2023/04/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="여러-input-값-상태-관리하기"><a href="#여러-input-값-상태-관리하기" class="headerlink" title="여러 input 값 상태 관리하기"></a>여러 input 값 상태 관리하기</h1><p>이번 프로젝트를 하다가 한 페이지에 3가지 케이스의 멀티 input을 가지는 화면이 렌더링되는 부분이 있었다.</p>
+<p>가령 코드 구조는 다음과 같다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Backtest.tsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ChangeEvent</span>, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useRecoilState &#125; <span class="keyword">from</span> <span class="string">&quot;recoil&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; backtestState &#125; <span class="keyword">from</span> <span class="string">&quot;../atom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">BacktestInputs</span> <span class="keyword">from</span> <span class="string">&quot;../components/BacktestInputs/BacktestInputs&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Backtest</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [backtest, setBacktest] = <span class="title function_">useRecoilState</span>(backtestState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [backtestInputs, setBacktestInputs] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">    <span class="attr">invest</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">port</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">dol</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onChange</span> = (<span class="params">e: ChangeEvent&lt;HTMLInputElement&gt;</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; value, name &#125; = e.<span class="property">target</span>;</span><br><span class="line">    <span class="title function_">setBacktestInputs</span>(&#123; ...backtestInputs, [name]: value &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onSave</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setBacktest</span>(backtestInputs);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onReset</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setBacktestInputs</span>(&#123; <span class="attr">invest</span>: <span class="string">&quot;&quot;</span>, <span class="attr">port</span>: <span class="string">&quot;&quot;</span>, <span class="attr">dol</span>: <span class="string">&quot;&quot;</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onSave&#125;</span>&gt;</span>저장<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">BacktestInputs</span> <span class="attr">value</span>=<span class="string">&#123;backtestInputs&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onReset&#125;</span>&gt;</span>input 값 리셋<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>전역상태<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>invest: &#123;backtest[&quot;invest&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>port: &#123;backtest[&quot;port&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>dol: &#123;backtest[&quot;dol&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Backtest</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BacktestInputs.tsx</span></span><br><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;@emotion/styled&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ChangeEvent</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line">interface <span class="title class_">Props</span> &#123;</span><br><span class="line">  <span class="attr">value</span>: &#123; <span class="attr">invest</span>: string, <span class="attr">port</span>: string, <span class="attr">dol</span>: string &#125;;</span><br><span class="line">  <span class="attr">onChange</span>: <span class="function">(<span class="params">e: ChangeEvent&lt;HTMLInputElement&gt;</span>) =&gt;</span> <span class="keyword">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">BacktestInputs</span>(<span class="params">&#123; value, onChange &#125;: Props</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; invest, port, dol &#125; = value;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Backtest<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;invest&quot;</span>&gt;</span>Investment: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;invest&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;invest&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;invest&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;port&quot;</span>&gt;</span>Port: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;port&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;port&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;port&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;dol&quot;</span>&gt;</span>Dual: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;dol&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;dol&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;dol&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">BacktestInputs</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">InputWrap</span> = styled.<span class="property">div</span><span class="string">`</span></span><br><span class="line"><span class="string">  height: 50px;</span></span><br><span class="line"><span class="string">`</span>;</span><br></pre></td></tr></table></figure>
+
+<p>나는 고민을 하였다. Backtest 페이지에서 Input을 감싸고 있는 컴포넌트가 3종류가 있고, 3종류의 컴포넌트 내부에는 다수의 input 값을 가지고 있을 때, 어떻게 input을 관리하면 좋을지 고민했다.</p>
+<p>그렇게 하다가 생각해낸 방법이 각 컴포넌트의 input 값의 name을 가지는 객체로 input들의 상태를 관리하기로 했다.</p>
+<h3 id="전역상태와-input-상태"><a href="#전역상태와-input-상태" class="headerlink" title="전역상태와 input 상태"></a>전역상태와 input 상태</h3><p>나는 전역상태를 직접 onChange 이벤트가 일어날 때 마다 바꿔주는 코드를 작성했었다. 전역상태는 최소한으로 조작을 해야지만 에러가 덜 발생하기 때문에 최종적으로 저장 버튼을 클릭했을 때만 전역상태에 저장하기로 했다.</p>
+<p>그래서 input 상태를 객체로 가지고 저장 버튼을 클릭했을 때, 전역 상태 update 함수에게 input 상태를 파라미터로 전달하도록 구현하였다.</p>
+<h2 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h2><p>처음에는 그 많은 input을 직접 전달해줘야하나 … 걱정을 했었다. 하지만 객체로 input을 관리하고, input 마다 name 속성을 사용하여 onChange 이벤트로 controlled input을 다룰 수 있다는 것을 알게되어서 앞으로 다중 input 상태관리는 이러한 방법으로 접근하면 된다는 것을 알게되었다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/04/06/Daily/React-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0/"
                             aria-label=": React 카카오 로그인 연동하기"
                         >
@@ -1011,96 +1079,22 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/17/Daily/VSCode-Remote-SSH%EB%A1%9C-%EC%9B%90%EA%B2%A9%EC%9C%BC%EB%A1%9C-%EC%BD%94%EB%94%A9/"
-                            aria-label=": VSCode Remote SSH로 원격으로 코딩"
-                        >
-                            VSCode Remote SSH로 원격으로 코딩
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-17T21:02:53+09:00">
-	
-		    2023/03/17
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Remote-SSH로-원격-코딩하기"><a href="#Remote-SSH로-원격-코딩하기" class="headerlink" title="Remote SSH로 원격 코딩하기"></a>Remote SSH로 원격 코딩하기</h1><p>우리가 로컬에서 개발한 프로젝트를 서버 컴퓨터에서 실행하고 싶으면 어떻게 해야할까?</p>
-<p>방법은 서버 컴퓨터에서 해당 프로젝트를 실행해주면 된다.</p>
-<p>말로는 정말 쉬워보이지만 막상 하려고 하면 뭐부터 해야할지 모르겠다.</p>
-<p>그래서 단계를 나눠서 도전해보자.</p>
-<h2 id="과정"><a href="#과정" class="headerlink" title="과정"></a>과정</h2><p><img src="/../../images/Daily/remotessh/remotessh.png" alt="remotessh"></p>
-<ol>
-<li>우선 VSCode에서 “Remote - SSH”라는 익스텐션을 다운받는다. 해당 extension을 사용하여 서버 컴퓨터에서 원격으로 프로젝트를 실행할 것이다.</li>
-</ol>
-<p><img src="/../../images/Daily/remotessh/sshsetting1.png" alt="sshSettings1"></p>
-<ol start="2">
-<li><p>톱니바퀴를 눌러서 config 파일을 연다.</p>
-</li>
-<li><p>config 파일 설정은 다음과 같다.</p>
-</li>
-</ol>
-<p><img src="/../../images/Daily/remotessh/sshsetting2.png" alt="sshSetting2"></p>
-<ul>
-<li>Host는 원격 서버의 이름을 나타낸다.</li>
-<li>User는 계정 이름으로 보통 “ubuntu”</li>
-<li>ssh 파일 경로는 SSH키가 담긴 .pem 파일의 경로</li>
-</ul>
-<ol start="4">
-<li>이제 VSCode를 사용하여 서버를 원격으로 조종할 수 있다.</li>
-</ol>
-<p><img src="/../../images/Daily/remotessh/sshsettting3.png" alt="sshSetting3"></p>
-<p>우측에 새창으로 열기를 클릭하면 서버환경에서 VSCode가 열리게 될 것이다.</p>
-<p>이 후 VSCode에서 터미널을 켜서 git clone을 하여 github 레포지토리를 클론한 다음</p>
-<p>프로젝트를 실행하면 원격으로 서버 컴퓨터에서 프로젝트를 실행할 수 있게된다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/17/Daily/VSCode-Remote-SSH%EB%A1%9C-%EC%9B%90%EA%B2%A9%EC%9C%BC%EB%A1%9C-%EC%BD%94%EB%94%A9/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
         
-        <li class="pagination-number">page 1 of 1</li>
+          <li class="pagination-next">
+            <a
+                class="btn btn--default btn--small"
+                href="/categories/Daily/page/2/"
+                aria-label="이전 포스트"
+            >
+              <span>이전 포스트</span>
+              <i class="fa fa-angle-right text-base icon-ml"></i>
+            </a>
+          </li>
+        
+        <li class="pagination-number">page 1 of 2</li>
     </ul>
 </div>
 

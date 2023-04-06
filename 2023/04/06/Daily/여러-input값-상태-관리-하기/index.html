@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/04/06/daily/여러-input값-상태-관리-하기/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>여러 input값 상태 관리 하기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"여러 input 값 상태 관리하기이번 프로젝트를 하다가 한 페이지에 3가지 케이스의 멀티 input을 가지는 화면이 렌더링되는 부분이 있었다.\n가령 코드 구조는 다음과 같다.\n12345678910111213141516171819202122232425262728293031323334353637383940414243// Backtest.tsximport &#123; ChangeEvent, useState &#125; from &quot;react&quot;;import &#123; useRecoilState &#125; from &quot;recoil&quot;;import &#123; backtestState &#125; from &quot;../atom&quot;;import BacktestInputs from &quot;../components/BacktestInputs/BacktestInputs&quot;;function Backtest() &#123;  const [backtest, setBacktest] = useRecoilState(backtestState);  const [backtestInputs, setBacktestInputs] = useState(&#123;    invest: &quot;&quot;,    port: &quot;&quot;,    dol: &quot;&quot;,  &#125;);  const onChange = (e: ChangeEvent&lt;HTMLInputElement&gt;) =&gt; &#123;    const &#123; value, name &#125; = e.target;    setBacktestInputs(&#123; ...backtestInputs, [name]: value &#125;);  &#125;;  const onSave = () =&gt; &#123;    setBacktest(backtestInputs);  &#125;;  const onReset = () =&gt; &#123;    setBacktestInputs(&#123; invest: &quot;&quot;, port: &quot;&quot;, dol: &quot;&quot; &#125;);  &#125;;  return (    &lt;&gt;      &lt;button onClick=&#123;onSave&#125;&gt;저장&lt;/button&gt;      &lt;BacktestInputs value=&#123;backtestInputs&#125; onChange=&#123;onChange&#125; /&gt;      &lt;button onClick=&#123;onReset&#125;&gt;input 값 리셋&lt;/button&gt;      &lt;h2&gt;전역상태&lt;/h2&gt;      &lt;ul&gt;        &lt;li&gt;invest: &#123;backtest[&quot;invest&quot;]&#125;&lt;/li&gt;        &lt;li&gt;port: &#123;backtest[&quot;port&quot;]&#125;&lt;/li&gt;        &lt;li&gt;dol: &#123;backtest[&quot;dol&quot;]&#125;&lt;/li&gt;      &lt;/ul&gt;    &lt;/&gt;  );&#125;export default Backtest;\n\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354// BacktestInputs.tsximport styled from &quot;@emotion/styled&quot;;import &#123; ChangeEvent &#125; from &quot;react&quot;;interface Props &#123;  value: &#123; invest: string, port: string, dol: string &#125;;  onChange: (e: ChangeEvent&lt;HTMLInputElement&gt;) =&gt; void;&#125;function BacktestInputs(&#123; value, onChange &#125;: Props) &#123;  const &#123; invest, port, dol &#125; = value;  return (    &lt;&gt;      &lt;h1&gt;Backtest&lt;/h1&gt;      &lt;InputWrap&gt;        &lt;label htmlFor=&quot;invest&quot;&gt;Investment: &lt;/label&gt;        &lt;input          type=&quot;text&quot;          name=&quot;invest&quot;          value=&#123;invest&#125;          onChange=&#123;onChange&#125;          id=&quot;invest&quot;        /&gt;      &lt;/InputWrap&gt;      &lt;InputWrap&gt;        &lt;label htmlFor=&quot;port&quot;&gt;Port: &lt;/label&gt;        &lt;input          type=&quot;text&quot;          name=&quot;port&quot;          value=&#123;port&#125;          onChange=&#123;onChange&#125;          id=&quot;port&quot;        /&gt;      &lt;/InputWrap&gt;      &lt;InputWrap&gt;        &lt;label htmlFor=&quot;dol&quot;&gt;Dual: &lt;/label&gt;        &lt;input          type=&quot;text&quot;          name=&quot;dol&quot;          value=&#123;dol&#125;          onChange=&#123;onChange&#125;          id=&quot;dol&quot;        /&gt;      &lt;/InputWrap&gt;    &lt;/&gt;  );&#125;export default BacktestInputs;const InputWrap = styled.div`  height: 50px;`;\n\n나는 고민을 하였다. Backtest 페이지에서 Input을 감싸고 있는 컴포넌트가 3종류가 있고, 3종류의 컴포넌트 내부에는 다수의 input 값을 가지고 있을 때, 어떻게 input을 관리하면 좋을지 고민했다.\n그렇게 하다가 생각해낸 방법이 각 컴포넌트의 input 값의 name을 가지는 객체로 input들의 상태를 관리하기로 했다.\n전역상태와 input 상태나는 전역상태를 직접 onChange 이벤트가 일어날 때 마다 바꿔주는 코드를 작성했었다. 전역상태는 최소한으로 조작을 해야지만 에러가 덜 발생하기 때문에 최종적으로 저장 버튼을 클릭했을 때만 전역상태에 저장하기로 했다.\n그래서 input 상태를 객체로 가지고 저장 버튼을 클릭했을 때, 전역 상태 update 함수에게 input 상태를 파라미터로 전달하도록 구현하였다.\n소감처음에는 그 많은 input을 직접 전달해줘야하나 … 걱정을 했었다. 하지만 객체로 input을 관리하고, input 마다 name 속성을 사용하여 onChange 이벤트로 controlled input을 다룰 수 있다는 것을 알게되어서 앞으로 다중 input 상태관리는 이러한 방법으로 접근하면 된다는 것을 알게되었다.\n","dateCreated":"2023-04-06T22:52:05+09:00","dateModified":"2023-04-06T23:53:03+09:00","datePublished":"2023-04-06T22:52:05+09:00","description":"","headline":"여러 input값 상태 관리 하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"}</script>
+    <meta name="description" content="여러 input 값 상태 관리하기이번 프로젝트를 하다가 한 페이지에 3가지 케이스의 멀티 input을 가지는 화면이 렌더링되는 부분이 있었다. 가령 코드 구조는 다음과 같다. 12345678910111213141516171819202122232425262728293031323334353637383940414243&#x2F;&#x2F; Backtest.tsximport &amp;#1">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="여러 input값 상태 관리 하기">
+<meta property="og:url" content="https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="여러 input 값 상태 관리하기이번 프로젝트를 하다가 한 페이지에 3가지 케이스의 멀티 input을 가지는 화면이 렌더링되는 부분이 있었다. 가령 코드 구조는 다음과 같다. 12345678910111213141516171819202122232425262728293031323334353637383940414243&#x2F;&#x2F; Backtest.tsximport &amp;#1">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-04-06T13:52:05.000Z">
+<meta property="article:modified_time" content="2023-04-06T14:53:03.061Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            여러 input값 상태 관리 하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-04-06T22:52:05+09:00">
+	
+		    2023/04/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="여러-input-값-상태-관리하기"><a href="#여러-input-값-상태-관리하기" class="headerlink" title="여러 input 값 상태 관리하기"></a>여러 input 값 상태 관리하기</h1><p>이번 프로젝트를 하다가 한 페이지에 3가지 케이스의 멀티 input을 가지는 화면이 렌더링되는 부분이 있었다.</p>
+<p>가령 코드 구조는 다음과 같다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Backtest.tsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ChangeEvent</span>, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useRecoilState &#125; <span class="keyword">from</span> <span class="string">&quot;recoil&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; backtestState &#125; <span class="keyword">from</span> <span class="string">&quot;../atom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">BacktestInputs</span> <span class="keyword">from</span> <span class="string">&quot;../components/BacktestInputs/BacktestInputs&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Backtest</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [backtest, setBacktest] = <span class="title function_">useRecoilState</span>(backtestState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [backtestInputs, setBacktestInputs] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">    <span class="attr">invest</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">port</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">dol</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onChange</span> = (<span class="params">e: ChangeEvent&lt;HTMLInputElement&gt;</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; value, name &#125; = e.<span class="property">target</span>;</span><br><span class="line">    <span class="title function_">setBacktestInputs</span>(&#123; ...backtestInputs, [name]: value &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onSave</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setBacktest</span>(backtestInputs);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onReset</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setBacktestInputs</span>(&#123; <span class="attr">invest</span>: <span class="string">&quot;&quot;</span>, <span class="attr">port</span>: <span class="string">&quot;&quot;</span>, <span class="attr">dol</span>: <span class="string">&quot;&quot;</span> &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onSave&#125;</span>&gt;</span>저장<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">BacktestInputs</span> <span class="attr">value</span>=<span class="string">&#123;backtestInputs&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;onReset&#125;</span>&gt;</span>input 값 리셋<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>전역상태<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>invest: &#123;backtest[&quot;invest&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>port: &#123;backtest[&quot;port&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>dol: &#123;backtest[&quot;dol&quot;]&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Backtest</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BacktestInputs.tsx</span></span><br><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;@emotion/styled&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ChangeEvent</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line">interface <span class="title class_">Props</span> &#123;</span><br><span class="line">  <span class="attr">value</span>: &#123; <span class="attr">invest</span>: string, <span class="attr">port</span>: string, <span class="attr">dol</span>: string &#125;;</span><br><span class="line">  <span class="attr">onChange</span>: <span class="function">(<span class="params">e: ChangeEvent&lt;HTMLInputElement&gt;</span>) =&gt;</span> <span class="keyword">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">BacktestInputs</span>(<span class="params">&#123; value, onChange &#125;: Props</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; invest, port, dol &#125; = value;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Backtest<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;invest&quot;</span>&gt;</span>Investment: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;invest&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;invest&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;invest&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;port&quot;</span>&gt;</span>Port: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;port&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;port&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;port&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">htmlFor</span>=<span class="string">&quot;dol&quot;</span>&gt;</span>Dual: <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">name</span>=<span class="string">&quot;dol&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;dol&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;dol&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">InputWrap</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">BacktestInputs</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">InputWrap</span> = styled.<span class="property">div</span><span class="string">`</span></span><br><span class="line"><span class="string">  height: 50px;</span></span><br><span class="line"><span class="string">`</span>;</span><br></pre></td></tr></table></figure>
+
+<p>나는 고민을 하였다. Backtest 페이지에서 Input을 감싸고 있는 컴포넌트가 3종류가 있고, 3종류의 컴포넌트 내부에는 다수의 input 값을 가지고 있을 때, 어떻게 input을 관리하면 좋을지 고민했다.</p>
+<p>그렇게 하다가 생각해낸 방법이 각 컴포넌트의 input 값의 name을 가지는 객체로 input들의 상태를 관리하기로 했다.</p>
+<h3 id="전역상태와-input-상태"><a href="#전역상태와-input-상태" class="headerlink" title="전역상태와 input 상태"></a>전역상태와 input 상태</h3><p>나는 전역상태를 직접 onChange 이벤트가 일어날 때 마다 바꿔주는 코드를 작성했었다. 전역상태는 최소한으로 조작을 해야지만 에러가 덜 발생하기 때문에 최종적으로 저장 버튼을 클릭했을 때만 전역상태에 저장하기로 했다.</p>
+<p>그래서 input 상태를 객체로 가지고 저장 버튼을 클릭했을 때, 전역 상태 update 함수에게 input 상태를 파라미터로 전달하도록 구현하였다.</p>
+<h2 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h2><p>처음에는 그 많은 input을 직접 전달해줘야하나 … 걱정을 했었다. 하지만 객체로 input을 관리하고, input 마다 name 속성을 사용하여 onChange 이벤트로 controlled input을 다룰 수 있다는 것을 알게되어서 앞으로 다중 input 상태관리는 이러한 방법으로 접근하면 된다는 것을 알게되었다.</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/04/06/Daily/React-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0/"
+                    data-tooltip="React 카카오 로그인 연동하기"
+                    aria-label="다음: React 카카오 로그인 연동하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/04/06/Daily/React-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0/"
+                    data-tooltip="React 카카오 로그인 연동하기"
+                    aria-label="다음: React 카카오 로그인 연동하기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/06/Daily/%EC%97%AC%EB%9F%AC-input%EA%B0%92-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%ED%95%98%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
