@@ -233,6 +233,85 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/"
+                            aria-label=": boj-2745 진법 변환(JavaScript)"
+                        >
+                            boj-2745 진법 변환(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:31:52+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>B진법 수 N이 주어진다. 이 수를 10진법으로 바꿔 출력하는 프로그램을 작성하시오.</p>
+<p>10진법을 넘어가는 진법은 숫자로 표시할 수 없는 자리가 있다. 이런 경우에는 다음과 같이 알파벳 대문자를 사용한다.</p>
+<p>A: 10, B: 11, …, F: 15, …, Y: 34, Z: 35</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 N과 B가 주어진다. (2 ≤ B ≤ 36)</p>
+<p>B진법 수 N을 10진법으로 바꾸면, 항상 10억보다 작거나 같다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 B진법 수 N을 10진법으로 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZZZZZ 36</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">60466175</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> [N, B] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">ALPHABET_CODE</span> = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">UPPER_A_CODE</span> = <span class="number">65</span>;</span><br><span class="line"><span class="keyword">const</span> alphabets = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> alphabet = <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="variable constant_">UPPER_A_CODE</span> + i);</span><br><span class="line">  alphabets[alphabet] = <span class="variable constant_">ALPHABET_CODE</span> + i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> answer = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> pow = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (N.<span class="property">length</span> !== <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> newN = alphabets[N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>)]</span><br><span class="line">    ? +alphabets[N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>)]</span><br><span class="line">    : +N.<span class="title function_">slice</span>(N.<span class="property">length</span> - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">let</span> d = B ** pow;</span><br><span class="line">  answer = d * newN + answer;</span><br><span class="line">  N = N.<span class="title function_">slice</span>(<span class="number">0</span>, N.<span class="property">length</span> - <span class="number">1</span>);</span><br><span class="line">  index++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(answer);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>알파벳 객체를 만들고 이전 문제인 10진법을 36진법으로 바꾸는 로직을 역순으로 짜보았다.</li>
+<li>첫번째 자릿수부터 $36^0*(1의 자리수)$, $36^1*(10의 자리수)$… 이런식으로 10진법의 숫자로 변환할 수 있다.</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 또 다른 해답</span></span><br><span class="line"><span class="keyword">let</span> [N, B] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> answer = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> reversed = N.<span class="title function_">split</span>(<span class="string">&quot;&quot;</span>).<span class="title function_">reverse</span>();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; N.<span class="property">length</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (reversed[i] &gt;= <span class="string">&quot;A&quot;</span> &amp;&amp; reversed[i] &lt;= <span class="string">&quot;Z&quot;</span>) &#123;</span><br><span class="line">    reversed[i] = reversed[i].<span class="title function_">charCodeAt</span>(<span class="number">0</span>) - <span class="number">55</span>;</span><br><span class="line">    answer += reversed[i] * <span class="title class_">Math</span>.<span class="title function_">pow</span>(B, i);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    answer += reversed[i] * <span class="title class_">Math</span>.<span class="title function_">pow</span>(B, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(answer);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>알파벳 코드를 굳이 만들지 않고 부등호를 사용하여 구하여 코드가 간결해졌다.</li>
+<li>지수를 계산할 때, Math.pow() 메서드를 사용하여 깔끔하다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/boj-2745-%EC%A7%84%EB%B2%95-%EB%B3%80%ED%99%98-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/21/Algorithm/boj/DP/boj-1463-1%EB%A1%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0-JavaScript/"
                             aria-label=": boj-1463 1로 만들기(JavaScript)"
                         >
@@ -977,102 +1056,6 @@
                         <p>
                             <a
                                 href="/2023/02/21/Algorithm/boj/DP/boj-1912-%EC%97%B0%EC%86%8D%ED%95%A9-JavaScript/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/"
-                            aria-label=": boj-1699 제곱수의 합(JavaScript)"
-                        >
-                            boj-1699 제곱수의 합(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-21T12:15:35+09:00">
-	
-		    2023/02/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>어떤 자연수 N은 그보다 작거나 같은 제곱수들의 합으로 나타낼 수 있다. 예를 들어 11&#x3D;32+12+12(3개 항)이다. 이런 표현방법은 여러 가지가 될 수 있는데, 11의 경우 11&#x3D;22+22+12+12+12(5개 항)도 가능하다. 이 경우, 수학자 숌크라테스는 “11은 3개 항의 제곱수 합으로 표현할 수 있다.”라고 말한다. 또한 11은 그보다 적은 항의 제곱수 합으로 표현할 수 없으므로, 11을 그 합으로써 표현할 수 있는 제곱수 항의 최소 개수는 3이다.</p>
-<p>주어진 자연수 N을 이렇게 제곱수들의 합으로 표현할 때에 그 항의 최소개수를 구하는 프로그램을 작성하시오.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 자연수 N이 주어진다. (1 ≤ N ≤ 100,000)</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>주어진 자연수를 제곱수의 합으로 나타낼 때에 그 제곱수 항의 최소 개수를 출력한다.</p>
-<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-3"><a href="#예제-입력-3" class="headerlink" title="예제 입력 3"></a>예제 입력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-3"><a href="#예제-출력-3" class="headerlink" title="예제 출력 3"></a>예제 출력 3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-4"><a href="#예제-입력-4" class="headerlink" title="예제 입력 4"></a>예제 입력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">11</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-4"><a href="#예제-출력-4" class="headerlink" title="예제 출력 4"></a>예제 출력 4</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-입력-5"><a href="#예제-입력-5" class="headerlink" title="예제 입력 5"></a>예제 입력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">13</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="예제-출력-5"><a href="#예제-출력-5" class="headerlink" title="예제 출력 5"></a>예제 출력 5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: input + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> i);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">4</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= <span class="title class_">Math</span>.<span class="title function_">sqrt</span>(i); j++) &#123;</span><br><span class="line">    <span class="keyword">const</span> sqrt = <span class="title class_">Math</span>.<span class="title function_">sqrt</span>(i);</span><br><span class="line">    <span class="keyword">if</span> (sqrt === <span class="built_in">parseInt</span>(sqrt)) &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i] = <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[i - j ** <span class="number">2</span>] + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input]);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>처음에는 단순히 초기값을 가지고 다음값을 구하는 식으로만 했었는데, 이렇게 할 경우 최소항을 비교하여 저장하면서 진행할 수 없다고 판단하여 2중 for문을 사용하였다.</li>
-<li>그 결과, 각 DP 마다 해당 index의 제곱근을 빼준 숫자의 DP에 +1 해준 것과 현재 DP를 비교했다.</li>
-</ul>
-<p>ex) input &#x3D; 18이라면, DP[18] &#x3D; 18인 상태로 시작한다.</p>
-<ol>
-<li>j &#x3D; 1 인 경우, DP[17] + 1 &#x3D; 3이므로, DP[18] &#x3D; 3를 저장한다.</li>
-<li>j &#x3D; 2 인 경우, DP[14] + 1 &#x3D; 4이므로, 이전 값을 그대로 둔다.</li>
-<li>j &#x3D; 3 인 경우, DP[9] + 1 &#x3D; 2 이므로, DP[18] &#x3D; 2를 저장한다.</li>
-<li>j &#x3D; 4 인 경우, DP[2] + 1 &#x3D; 3 이므로 이전 값을 그대로 둔다.</li>
-</ol>
-<p>j는 제곱근 이전 까지만 순회를 하므로 순회를 종료하고 DP값을 출력한다.</p>
-<p>따라서, DP[18] &#x3D; 2 로 (9+9) 이렇게 답을 구할 수 있다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/21/Algorithm/boj/DP/boj-1699-%EC%A0%9C%EA%B3%B1%EC%88%98%EC%9D%98-%ED%95%A9-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
