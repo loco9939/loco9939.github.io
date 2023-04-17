@@ -233,6 +233,82 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/11/14/React/%EC%9E%AC%EC%82%AC%EC%9A%A9-%EB%A7%8E%EC%9D%B4-%EB%90%98%EB%8A%94-Loading-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/"
+                            aria-label=": 재사용 많이 되는 Loading 컴포넌트"
+                        >
+                            재사용 많이 되는 Loading 컴포넌트
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-14T20:40:09+09:00">
+	
+		    2022/11/14
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>애플리케이션의 비동기 처리는 빈번하게 발생하므로 비동기 요청의 응답을 기다리는 동안 사용자에게 로딩을 표시해줘야한다. <strong>재사용이 가능한 컴포넌트로 로딩 컴포넌트를 만들어보자.</strong></p>
+<h2 id="✏️-접근성-고려"><a href="#✏️-접근성-고려" class="headerlink" title="✏️ 접근성 고려"></a>✏️ 접근성 고려</h2><p>접근성을 고려하였을 때, <red>스크린 리더가 로딩중이 시작할 때와 로딩이 종료되었을 때를 읽을 수 있도록 하기 위해서는</red> public 폴더에 index.html 파일에 다음과 같이 기재가 되어있어야한다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// public/index.html</span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 로딩 스피너 접근성을 위한 DOM 요소를 추가하세요. --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;loading-start&quot;</span> <span class="attr">aria-live</span>=<span class="string">&quot;assertive&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;loading-end&quot;</span> <span class="attr">aria-live</span>=<span class="string">&quot;assertive&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>aria-live=&quot;assertive&quot;</code>속성을 주어 다른 것보다 우선적으로 스크린 리더가 읽도록 설정해준다.</li>
+</ul>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Spinner.js</span></span><br><span class="line"><span class="keyword">const</span> loadingElements = &#123;</span><br><span class="line">  <span class="attr">start</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;loading-start&quot;</span>),</span><br><span class="line">  <span class="attr">end</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;loading-end&quot;</span>),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Spinner</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&quot;connect&quot;</span>, <span class="comment">// &#x27;grow&#x27;, &#x27;learn&#x27;, &#x27;connect&#x27;*</span></span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;로딩 중...&quot;</span>,</span><br><span class="line">    <span class="attr">showMessage</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">timeToDisappear</span>: &#123;</span><br><span class="line">      <span class="attr">start</span>: <span class="number">1500</span>,</span><br><span class="line">      <span class="attr">end</span>: <span class="number">2500</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; type, message, showMessage &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">    <span class="keyword">const</span> spinnerImagePath = <span class="title function_">getAsset</span>(<span class="string">`spinner/spinner-<span class="subst">$&#123;type&#125;</span>.gif`</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">figure</span> <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">className</span>=<span class="string">&#123;styles.image&#125;</span> <span class="attr">src</span>=<span class="string">&#123;spinnerImagePath&#125;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;showMessage ? (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">figcaption</span>&gt;</span>&#123;message&#125;<span class="tag">&lt;/<span class="name">figcaption</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ) : (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">A11yHidden</span> <span class="attr">as</span>=<span class="string">&quot;figcaption&quot;</span>&gt;</span>&#123;message&#125;<span class="tag">&lt;/<span class="name">A11yHidden</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">figure</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; start &#125; = loadingElements;</span><br><span class="line">    start.<span class="title function_">setAttribute</span>(<span class="string">&quot;role&quot;</span>, <span class="string">&quot;alert&quot;</span>);</span><br><span class="line">    start.<span class="title function_">insertAdjacentHTML</span>(</span><br><span class="line">      <span class="string">&quot;beforeend&quot;</span>,</span><br><span class="line">      <span class="string">`&lt;span class=&quot;a11yHidden&quot;&gt;<span class="subst">$&#123;<span class="variable language_">this</span>.props.message&#125;</span>&lt;/span&gt;`</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentWillUnmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; start, end &#125; = loadingElements;</span><br><span class="line">    <span class="keyword">const</span> &#123; timeToDisappear &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      start.<span class="title function_">removeAttribute</span>(<span class="string">&quot;role&quot;</span>);</span><br><span class="line">      start.<span class="property">innerHTML</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">      end.<span class="title function_">insertAdjacentHTML</span>(</span><br><span class="line">        <span class="string">&quot;afterbegin&quot;</span>,</span><br><span class="line">        <span class="string">`&lt;span class=&quot;a11yHidden&quot;&gt;로딩이 종료되었습니다.&lt;/span&gt;`</span></span><br><span class="line">      );</span><br><span class="line">    &#125;, timeToDisappear.<span class="property">start</span>);</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      end.<span class="property">innerHTML</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;, timeToDisappear.<span class="property">end</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>loading 요소를 반복적으로 사용할 것이기 때문에 최상단에 객체의 프로퍼티로 등록시켜주었다.</li>
+<li>Spinner 컴포넌트의 기본 props값을 설정해주었다.<ul>
+<li>이는 컴포넌트를 만든 사람만 알 수 있기때문에 <strong>문서화를 하거나 TypeScript를 사용하여 개발자 경험(DX)를 높일 수 있다.</strong></li>
+</ul>
+</li>
+<li>로딩중이라는 메시지를 보여주는 경우와 그렇지 않는 경우를 나누었다. 보여주지 않는 경우에는 접근성 컴포넌트로 생성하여 스크린 리더에는 읽히도록 설정해주었다.</li>
+<li>컴포넌트가 mounted 될 때, <code>role=&quot;alert&quot;</code>속성을 주어 스크린 리더가 읽고 있는 것을 중지하고 로딩중을 읽도록 설정하였다.</li>
+<li><red>StrictMode 에서는 mounted - unmounted - mounted 되는 특징</red>때문에 2번 작동할 수 있으므로 <strong>성능을 고려하여 clean Up을 해줘야한다.</strong></li>
+</ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/14/React/%EC%9E%AC%EC%82%AC%EC%9A%A9-%EB%A7%8E%EC%9D%B4-%EB%90%98%EB%8A%94-Loading-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/11/14/React/Portal-%ED%8F%AC%ED%84%B8/"
                             aria-label=": Portal(포털)"
                         >
@@ -1081,181 +1157,6 @@
                         <p>
                             <a
                                 href="/2022/11/02/React/React%EC%97%90%EC%84%9C-Upload-Button-Component-%EB%A7%8C%EB%93%A4%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/"
-                            aria-label=": React(리액트)는 어떻게 작동하는가?"
-                        >
-                            React(리액트)는 어떻게 작동하는가?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-31T19:13:18+09:00">
-	
-		    2022/10/31
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <style>
-  bold {
-    font-weight:700;
-    font-size:1rem;
-  }
-  
-  red {
-    color:red;
-    font-size:1rem
-  }
-</style>
-
-<h1 id="📌-React란"><a href="#📌-React란" class="headerlink" title="📌 React란?"></a>📌 React란?</h1><p>화면에 렌더링되는 UI를 컴포넌트 단위로 쪼개 사용할 수 있는 Javascript 라이브러리리 혹은 프레임워크이다.<br>라이브러리인가? 프레임워크인가?는 크게 중요하지 않다. 우리가 중점적으로 생각해야할 부분은 리액트는 <red>Progressive(점진적)</red>이라는 것이다.</p>
-<h2 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h2><ol>
-<li><p>리액트는 점진적이므로 애플리케이션을 모두 리액트로 구성할 필요가 없다.</p>
-</li>
-<li><p>리액트는 Javascript 중점 라이브러리이다. 그러므로 자바스크립트를 잘하면 재밌을 것이다.</p>
-</li>
-<li><p>리액트는 별도의 설치가 필요없이 컴포넌트를 즉시 사용해볼 수 있다.</p>
-</li>
-<li><p>선언형 프로그래밍으로 명령형 프로그래밍보다 코드를 이해하기가 쉽다.</p>
-</li>
-<li><p>리액트를 배우면 웹, 리액트 네이티브를 배우면 모바일 등 한가지를 배워 확장성이 넓다.</p>
-</li>
-</ol>
-<h2 id="시작하기-전"><a href="#시작하기-전" class="headerlink" title="시작하기 전"></a>시작하기 전</h2><h3 id="1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다"><a href="#1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다" class="headerlink" title="1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다."></a>1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CDN</span></span><br><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react@17/umd/react.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>만약 버전을 변경하고 싶다면 @version을 써준다.</p>
-</li>
-<li><p>만약 IE를 고려 해야한다면 17 버전을 사용하고 그렇지 않다면 18 버전 사용하자.</p>
-</li>
-</ul>
-<h3 id="2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다"><a href="#2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다" class="headerlink" title="2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다."></a>2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react-dom@17/umd/react-dom.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>React API와 버젼을 일치시켜 줘야한다.</li>
-</ul>
-<p><strong>💡 React v17의 render()와 v18의 createRoot() 차이</strong></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 17</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(app,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>),</span><br><span class="line">    <span class="function">() =&gt;</span> &#123;<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;rendered!&#x27;</span>)&#125;</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>렌더링할 React 요소인 app을 인자로 전달하고 이를 렌더링할 container인 root container를 render()에 전달한다.</li>
-</ul>
-<p>리액트 버전 18부터 render() 대신 createRoot()를 사용한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">createRoot</span>(container[, options])</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 18</span></span><br><span class="line"><span class="keyword">const</span> root = <span class="title function_">createRoot</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>; <span class="comment">// JSX</span></span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(element);</span><br></pre></td></tr></table></figure>
-
-<p>문서의 RealDOM 요소 노드인 container를 React Root로 만들어 반환하고, React Root를 render() 메서드를 사용하여 React 요소를 RealDOM에 렌더링한다.</p>
-<h2 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h2><h3 id="1-React-요소-노드와-Real-DOM-요소-노드-차이"><a href="#1-React-요소-노드와-Real-DOM-요소-노드-차이" class="headerlink" title="1. React 요소 노드와 Real DOM 요소 노드 차이"></a>1. React 요소 노드와 Real DOM 요소 노드 차이</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Real</span></span><br><span class="line"><span class="keyword">const</span> headlineNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;h1&#x27;</span>);</span><br><span class="line">headlineNode.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;headline&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">setAttribute</span>(<span class="string">&#x27;land&#x27;</span>,<span class="string">&#x27;en&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">insertAdjacentHTML</span>(<span class="string">&#x27;beforeend&#x27;</span>, <span class="string">`Add &lt;strong&gt;React&lt;/strong&gt; to a Website`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// React</span></span><br><span class="line"><span class="keyword">const</span> headlineVnode = <span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">  <span class="string">&#x27;h1&#x27;</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    className : <span class="string">&#x27;headline&#x27;</span>,</span><br><span class="line">    <span class="attr">lang</span>: <span class="string">&#x27;en&#x27;</span></span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="string">&#x27;Add &#x27;</span>,</span><br><span class="line">  <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;strong&#x27;</span>, <span class="literal">null</span>, <span class="string">&#x27;React&#x27;</span>),</span><br><span class="line">  <span class="string">&#x27;to a Website&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/React.createElement/React.createElement.png" alt="React.createElement"></p>
-<ul>
-<li><p>RealDOM 요소 노드는 브라우저가 렌더링하면서 생성한 것이고 이와 달리 React 요소 노드는 Object(객체)로 그 형태가 다르게 생겼다.</p>
-</li>
-<li><p>위 사진을 보면 props라는 객체에 children, className, lang 등이 담겨있는 것을 알 수 있다. props에 대해서는 이후에 알아보자.</p>
-</li>
-</ul>
-<p><strong>❗️ StrictMode 오류 해결</strong></p>
-<p>ECMAScript에서 ‘use strict’ 사용하여 문법적 오류를 미리 알려주었듯이 React에서도 이러한 오류를 미리 알려준다.</p>
-<p>이에 대한 경고를 해결하기 위해서는 StrictMode 컴포넌트를 사용해야한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">    <span class="title class_">React</span>.<span class="property">StrictMode</span>,</span><br><span class="line">    <span class="literal">null</span>,</span><br><span class="line">    <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="title class_">App</span>, &#123; <span class="attr">children</span>: [headline, reactLogo] &#125;)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
-
-<p>사용법은 간단하다. 생성하려는 React 요소를 React.StrictMode의 자식 요소로 전달해주면 된다.</p>
-<h3 id="2-React-Component-vs-React-Element"><a href="#2-React-Component-vs-React-Element" class="headerlink" title="2. React Component vs React Element"></a>2. React Component vs React Element</h3><p>자바스크립트에서는 재사용을 위해 함수를 사용하고 리액트에서는 재사용을 위해 컴포넌트를 사용한다. 컴포넌트 생성 방법은 함수를 생성하듯이 생성할 수 있다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SvgPath</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;path&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">d</span>: props.<span class="property">d</span>,</span><br><span class="line">        <span class="attr">fill</span>: <span class="string">&#x27;currentColor&#x27;</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = props =&gt; <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    &#123; <span class="attr">className</span>: <span class="string">&#x27;App&#x27;</span> &#125;,</span><br><span class="line">    ...props.<span class="property">children</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>리액트 컴포넌트는 매개변수로 props를 받는다.</p>
-</li>
-<li><p>props 객체를 통해 다른 컴포넌트에게 본인의 HTML attributes, 자바스크립트 값(객체, 배열, 함수 등)을 전달해줄 수 있다.</p>
-</li>
-<li><p>함수선언식, 함수표현식 둘 다 가능하다.</p>
-</li>
-</ul>
-<p>하지만 createElement()를 사용하여 컴포넌트를 생성하는 것은 매우 번거로운 일이다. 그 대안으로 생겨난 것이 바로 JSX이다.</p>
-<h2 id="JSX란"><a href="#JSX란" class="headerlink" title="JSX란?"></a>JSX란?</h2><p>JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        안녕하세요~! &#123;name&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// rendered</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>안녕하세요~! loco<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>자동 세미콜론 삽입이 되는 것을 방지하기 위해 <strong>괄호로 감싸는 것을 추천한다.</strong></p>
-<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ol>
-<li><p>선언형, HTML과 비슷한 구조, {}를 사용한 데이터 바인딩이 편리하다.</p>
-</li>
-<li><p>브라우저엔진에 의해 해석되지 못하므로 babel이 컴파일을 해줘야만 한다.</p>
-</li>
-<li><p>HTML 보단 JS에 가까우므로 camelCase 명명규칙을 따른다.</p>
-</li>
-<li><p>JSX는 렌더링하기 전에 이스케이프하므로 애플리케이션에서 명시적으로 작성되지 않는 내용은 script에 주입되지 않아 XSS 공격으로부터 안전하다.</p>
-</li>
-</ol>
-<p><strong>❗️ React에서 babel 추가 설정</strong></p>
-<p><img src="/../../images/React.babel/React.babel.png" alt="React바벨추가설정"></p>
-<ol>
-<li><p>이전에 React를 사용하기 전에 설정해두었던 babel 사양에서는 React를 컴파일 해줄 수 없다.</p>
-</li>
-<li><p>컴포넌트를 모듈 파일로 구분할 때에 babel은 input으로 지정된 파일만 컴파일 해주고 input 파일에서 import한 파일까지 컴파일해주지 않는다.</p>
-</li>
-</ol>
-<p>위 2가지 문제 해결을 위해서는 <strong>플러그인을 설치 해줘야한다.</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D @babel/preset-react</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">comments</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">presets</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&#x27;@babel/preset-env&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">modules</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">loose</span>: <span class="literal">true</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&#x27;@babel/preset-react&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>설치가 끝났다면 babel.config.js 파일에 해당 플러그인을 사용할 것이라고 등록을 해줘야 정상 동작한다.</p>
-</li>
-<li><p>옵션값이 있을 경우 []로 감싸서 넣어주고 그렇지 않은 경우 문자열로만 추가한다.</p>
-</li>
-</ul>
-<h2 id="JSX로-컴포넌트-생성하기"><a href="#JSX로-컴포넌트-생성하기" class="headerlink" title="JSX로 컴포넌트 생성하기"></a>JSX로 컴포넌트 생성하기</h2><p>이제 JSX를 사용할 준비가 끝났으니 JSX를 사용하여 컴포넌트를 생성해보자.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">HeadLine</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;headline&quot;</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        Add <span class="tag">&lt;<span class="name">strong</span>&gt;</span>React<span class="tag">&lt;/<span class="name">strong</span>&gt;</span> to a Website</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">HeadLine</span>&gt;</span><span class="tag">&lt;/<span class="name">HeadLine</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;react-root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ReactDOMRoot</span> = <span class="title class_">ReactDOM</span>.<span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOMRoot</span>.<span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>React.createElement()를 사용하여 React Element를 생성하여 컴포넌트를 생성하는 방법보다 훨씬 편리하다는 것을 알 수 있다.</li>
-</ul>
-<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>리액트 수업을 듣고 배운것을 차근차근 익혀가면서 정리해보았다. props에 대한 개념도 확실히 잡히고, JSX를 왜 쓰게 되었는지, 안쓰면 무엇인 문제점이고 불편한지를 깨달을 수 있는 시간이여서 좋았다.</p>
-<p>공식문서를 읽어볼 때도 영어로 된 것을 자동번역하여 읽지 않고 원문을 보면서 읽으니 시간이 조금 더디지만 그렇기 때문에 기억에 더 오래 남을 것이라고 생각하여 영어로 읽는 연습을 하고있다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
