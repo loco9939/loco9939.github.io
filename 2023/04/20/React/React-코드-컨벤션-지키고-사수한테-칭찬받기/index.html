@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/04/20/react/react-코드-컨벤션-지키고-사수한테-칭찬받기/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>React 코드 컨벤션 지키고 사수한테 칭찬받기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"1. ESLint와 Prettier 사용하기\nESLint\nPrettier\n\nimport&#x2F;order 까지 설정해두면 복잡한 import 구문의 가독성을 조금이나마 개선할 수 있다.\n12345678910111213141516171819202122232425262728293031323334// .eslintrc.json&#123;    ...  &quot;rules&quot;: &#123;    &quot;import/order&quot;: [      2,      &#123;        &quot;newlines-between&quot;: &quot;always&quot;,        &quot;groups&quot;: [          &quot;builtin&quot;,          &quot;external&quot;,          &quot;internal&quot;,          &quot;parent&quot;,          &quot;sibling&quot;,          &quot;index&quot;,          &quot;unknown&quot;,          &quot;object&quot;,          &quot;type&quot;        ],        &quot;alphabetize&quot;: &#123;          &quot;order&quot;: &quot;asc&quot;,          &quot;caseInsensitive&quot;: true        &#125;,        &quot;pathGroups&quot;: [          &#123;            &quot;pattern&quot;: &quot;react*&quot;,            &quot;group&quot;: &quot;external&quot;,            &quot;position&quot;: &quot;before&quot;          &#125;        ]      &#125;    ]  &#125;&#125;\n\n2. 네이밍 컨벤션컴포넌트, interface, type에는 PascalCase를 써라1234567891011121314// React componentconst BannersEditForm = () =&gt; &#123;  ...&#125;// Typescript interfaceinterface TodoItem &#123;  id: number;  name: string;  value: string;&#125;// Typescript type aliastype TodoList = TodoItem[];\n\nJavaScript 데이터(변수, 배열, 객체, 함수 등)은 camelCase를 써라123const getLastDigit = () =&gt; &#123; ... &#125;const userTypes = [ ... ]\n\n또한, 폴더와 컴포넌트가 아닌 파일 이름은 camelCase를 사용하고 컴포넌트 파일에는 PascalCase를 써라\n123src/utils/form.tssrc/hooks/useForm.tssrc/components/banners/edit/Form.tsx\n\n3. TypeScript 통(barrels)을 사용해라barrels는 여러 export를 하나의 파일에서 다루는 방법이다.\n123456// barrel file exampleexport * from &quot;./DropDown&quot;;export * from &quot;./TextBox&quot;;export * from &quot;./CheckBox&quot;;export * from &quot;./DateTimePicker&quot;;export * from &quot;./Slider&quot;;\n\n1234567import &#123;  DropDown,  TextBox,  CheckBox,  DateTimePicker,  Slider,&#125; from &quot;./src/controls&quot;;\n\n\n이렇게 하면 import를 여러 파일에서 하지 않고 하나의 파일에서 할 수 있어 간편하다.\n이렇듯 타입스크립트도 barrels를 사용하여 관리하면 클린 코드에 좋을 것이다.\n\n4. 기본 내보내기 (default export)를 피하라기본 내보내기는 내보낼 항목과 어떤 이름도 연결하지 않는다.\n즉, 개발자가 내보내려는 이름대로 가져오는 것이 클린 코드에 보다 적합하다.\n1234567// ❌export default MyComponent;// ✅export &#123; MyComponent &#125;;export const MyComponent = ...;export type MyComponentType = ...;\n\n5. 컴포넌트 구조 통일하기모든 컴포넌트의 구조를 다음과 같이 통일해라\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100// 1. Imports - Prefer destructuring imports to minimize writen codeimport React, &#123; PropsWithChildren, useState, useEffect &#125; from &quot;react&quot;;// 2. Typestype ComponentProps = &#123;  someProperty: string;&#125;;// 3. Styles - with @mui use styled API or sx prop of the componentconst Wrapper = styled(&quot;div&quot;)((&#123; theme &#125;) =&gt; (&#123;  color: theme.palette.white,&#125;));// 4. Additional variablesconst SOME_CONSTANT = &quot;something&quot;;// 5. Componentfunction Component(&#123; someProperty &#125;: PropsWithChildren&lt;ComponentProps&gt;) &#123;  // 5.1 Definitions  const [state, setState] = useState(true);  const &#123; something &#125; = useSomething();  // 5.2 Functions  function handleToggleState() &#123;    setState(!state);  &#125;  // 5.3 Effects  // ❌  React.useEffect(() =&gt; &#123;    // ...  &#125;, []);  // ✅  useEffect(() =&gt; &#123;    // ...  &#125;, []);  // 5.5 Additional destructures  const &#123; property &#125; = something;  return (    &lt;div&gt;      &#123;/* Separate elements if not closed on the same line to make the code clearer */&#125;      &#123;/* ❌ */&#125;      &lt;div&gt;        &lt;div&gt;          &lt;p&gt;Lorem ipsum&lt;/p&gt;          &lt;p&gt;Pellentesque arcu&lt;/p&gt;        &lt;/div&gt;        &lt;p&gt;Lorem ipsum&lt;/p&gt;        &lt;p&gt;Pellentesque arcu&lt;/p&gt;      &lt;/div&gt;      &lt;div&gt;        &lt;p&gt;          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque          arcu. Et harum quidem rerum facilis est et expedita distinctio.        &lt;/p&gt;        &lt;p&gt;Pellentesque arcu&lt;/p&gt;        &lt;p&gt;          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque          arcu. Et harum quidem rerum facilis est et expedita distinctio.        &lt;/p&gt;      &lt;/div&gt;      &#123;/* ✅ */&#125;      &lt;Wrapper&gt;        &lt;div&gt;          &lt;p&gt;Lorem ipsum&lt;/p&gt;          &lt;p&gt;Pellentesque arcu&lt;/p&gt;        &lt;/div&gt;        &lt;p&gt;Lorem ipsum&lt;/p&gt;        &lt;p&gt;Pellentesque arcu&lt;/p&gt;      &lt;/Wrapper&gt;      &lt;div&gt;        &lt;div&gt;          &lt;p&gt;            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.            Pellentesque arcu. Et harum quidem rerum facilis est et expedita            distinctio.          &lt;/p&gt;          &lt;p&gt;Pellentesque arcu&lt;/p&gt;          &lt;p&gt;            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.            Pellentesque arcu. Et harum quidem rerum facilis est et expedita            distinctio.          &lt;/p&gt;        &lt;/div&gt;      &lt;/div&gt;    &lt;/div&gt;  );&#125;// 6. Exportsexport &#123; Component &#125;;export type &#123; ComponentProps &#125;;\n\n6. PropsWithChildren 을 사용해라12345678910111213import React, &#123; PropsWithChildren &#125; from &quot;react&quot;;type ComponentProps = &#123;  someProperty: string,&#125;;// ✅function Component(&#123;  someProperty,  children,&#125;: PropsWithChildren&lt;ComponentProps&gt;) &#123;  // ...&#125;\n\n\nprops로 children을 내려주고 children 타입을 설정해주는 작업이 반복적으로 발생할 때 번거로움을 해소하고자 PropsWithChildren을 사용할 수 있다.\n\n\nPropsWithChildren의 children 타입은 optional 하다. 그러므로 꼭 children이 들어가야하는 컴포넌트에서 보다 엄격하게 타입을 지정해주기 위해서는 children:ReactNode로 타입을 지정해주는 방법이 있다.\n\n7. JSX에서 함수가 한줄 이상이라면 분리하라1234567891011121314151617181920// ❌&lt;button  onClick=&#123;() =&gt; &#123;    setState(!state);    resetForm();    reloadData();  &#125;&#125;/&gt;// ✅&lt;button onClick=&#123;() =&gt; setState(!state)&#125; /&gt;// ✅const handleButtonClick = () =&gt; &#123;  setState(!state);  resetForm();  reloadData();&#125;&lt;button onClick=&#123;handleButtonClick&#125; /&gt;\n\n8. Key props로 index를 사용을 피해라1234567891011121314151617181920212223242526272829// ❌const List = () =&gt; &#123;  const list = [&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;];  return (    &lt;ul&gt;      &#123;list.map((value, index) =&gt; &#123;        return &lt;li key=&#123;index&#125;&gt;&#123;value&#125;&lt;/li&gt;;      &#125;)&#125;    &lt;/ul&gt;  );&#125;;// ✅const List = () =&gt; &#123;  const list = [    &#123; id: &quot;111&quot;, value: &quot;item1&quot; &#125;,    &#123; id: &quot;222&quot;, value: &quot;item2&quot; &#125;,    &#123; id: &quot;333&quot;, value: &quot;item3&quot; &#125;,  ];  return (    &lt;ul&gt;      &#123;list.map((item) =&gt; &#123;        return &lt;li key=&#123;item.id&#125;&gt;&#123;item.value&#125;&lt;/li&gt;;      &#125;)&#125;    &lt;/ul&gt;  );&#125;;\n\n공시군서에 따르면 배열 내에서만 고유한 값을 전달해주면 된다고 나와있으니 map 고차함수를 사용하여 index를 key prop로 전달해도 될 것 같다.\n하지만 이렇게 할 경우, React에서는 props가 변경되면 컴포넌트를 재렌더링하는데, 배열에서 리스트를 추가, 삭제하면 index가 변경되므로 변경되지 않은 다른 리스트들도 불필요한 재렌더링이 발생하게 된다.\n그러므로 key prop에는 item의 id, react uid 라이브러리로 고유한 key를 지정해줘야한다.\n9. fragments를 써라12345678910111213141516171819// ❌const ActionButtons = (&#123; text1, text2 &#125;) =&gt; &#123;  return (    &lt;div&gt;      &lt;button&gt;&#123;text1&#125;&lt;/button&gt;      &lt;button&gt;&#123;text2&#125;&lt;/button&gt;    &lt;/div&gt;  );&#125;;// ✅const Button = (&#123; text1, text2 &#125;) =&gt; &#123;  return (    &lt;&gt;      &lt;button&gt;&#123;text1&#125;&lt;/button&gt;      &lt;button&gt;&#123;text2&#125;&lt;/button&gt;    &lt;/&gt;  );&#125;;\n\n불필요한 div 태그 대신 Fragment를 사용하자\n10. 구조분해할당 사용하라12345678910111213141516// ❌const Button = (props) =&gt; &#123;  return &lt;button&gt;&#123;props.text&#125;&lt;/button&gt;;&#125;;// ✅const Button = (props) =&gt; &#123;  const &#123; text &#125; = props;  return &lt;button&gt;&#123;text&#125;&lt;/button&gt;;&#125;;// ✅const Button = (&#123; text &#125;) =&gt; &#123;  return &lt;button&gt;&#123;text&#125;&lt;/button&gt;;&#125;;\n\n11. 관심사를 분리해라presentation 컴포넌트에서 business 로직을 분리하는 것은 컴포넌트 코드의 가독성을 높힐 수 있다.\n대부분의 page, screen, container 컴포넌트에 다수의 hook과 useEffect를 사용하려고 할 때 business 로직을 분리하는 것을 시도할 수 있다.\ncustom hook관심사(책임)을 분리하기 위해서 useEffect나 다수의 useState를 컴포넌트에 직접 넣는 대신 Custom hook을 사용해라\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263// ❌const ScreenDimensions = () =&gt; &#123;  const [windowSize, setWindowSize] = useState(&#123;    width: undefined,    height: undefined,  &#125;);  useEffect(() =&gt; &#123;    function handleResize() &#123;      setWindowSize(&#123;        width: window.innerWidth,        height: window.innerHeight,      &#125;);    &#125;    window.addEventListener(&quot;resize&quot;, handleResize);    handleResize();    return () =&gt; window.removeEventListener(&quot;resize&quot;, handleResize);  &#125;, []);  return (    &lt;&gt;      &lt;p&gt;Current screen width: &#123;windowSize.width&#125;&lt;/p&gt;      &lt;p&gt;Current screen height: &#123;windowSize.height&#125;&lt;/p&gt;    &lt;/&gt;  );&#125;;// ✅const useWindowSize = () =&gt; &#123;  const [windowSize, setWindowSize] = useState(&#123;    width: undefined,    height: undefined,  &#125;);  useEffect(() =&gt; &#123;    function handleResize() &#123;      setWindowSize(&#123;        width: window.innerWidth,        height: window.innerHeight,      &#125;);    &#125;    window.addEventListener(&quot;resize&quot;, handleResize);    handleResize();    return () =&gt; window.removeEventListener(&quot;resize&quot;, handleResize);  &#125;, []);  return windowSize;&#125;;const ScreenDimensions = () =&gt; &#123;  const windowSize = useWindowSize();  return (    &lt;&gt;      &lt;p&gt;Current screen width: &#123;windowSize.width&#125;&lt;/p&gt;      &lt;p&gt;Current screen height: &#123;windowSize.height&#125;&lt;/p&gt;    &lt;/&gt;  );&#125;;\n\n12. 거대 컴포넌트를 피해라거대 컴포넌트가 가능하더라도, 컴포넌트를 작은 단위로 분리해라.\n주로 조건부 렌더링을 할 때 사용할 수 있다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647// ❌const SomeSection = (&#123; isEditable, value &#125;) =&gt; &#123;  if (isEditable) &#123;    return (      &lt;Section&gt;        &lt;Title&gt;Edit this content&lt;/Title&gt;        &lt;Content&gt;&#123;value&#125;&lt;/Content&gt;        &lt;Button&gt;Clear content&lt;/Button&gt;      &lt;/Section&gt;    );  &#125;  return (    &lt;Section&gt;      &lt;Title&gt;Read this content&lt;/Title&gt;      &lt;Content&gt;&#123;value&#125;&lt;/Content&gt;    &lt;/Section&gt;  );&#125;;// ✅const EditableSection = (&#123; value &#125;) =&gt; &#123;  return (    &lt;Section&gt;      &lt;Title&gt;Edit this content&lt;/Title&gt;      &lt;Content&gt;&#123;value&#125;&lt;/Content&gt;      &lt;Button&gt;Clear content&lt;/Button&gt;    &lt;/Section&gt;  );&#125;;const DetailSection = (&#123; value &#125;) =&gt; &#123;  return (    &lt;Section&gt;      &lt;Title&gt;Read this content&lt;/Title&gt;      &lt;Content&gt;&#123;value&#125;&lt;/Content&gt;    &lt;/Section&gt;  );&#125;;const SomeSection = (&#123; isEditable, value &#125;) =&gt; &#123;  return isEditable ? (    &lt;EditableSection value=&#123;value&#125; /&gt;  ) : (    &lt;DetailSection value=&#123;value&#125; /&gt;  );&#125;;\n\n13. 가능하다면 state를 그룹화해라123456// ❌const [username, setUsername] = useState(&quot;&quot;);const [password, setPassword] = useState(&quot;&quot;);// ✅const [user, setUser] = useState(&#123;&#125;);\n\n14. boolean shorthand를 사용해라12345// ❌&lt;Form hasPadding=&#123;true&#125; withError=&#123;true&#125; /&gt;// ✅&lt;Form hasPadding withError /&gt;\n\n15. curly braces를 피해라12345// ❌&lt;Title variant=&#123;&quot;h1&quot;&#125; value=&#123;&quot;Home page&quot;&#125; /&gt;// ✅&lt;Title variant=&quot;h1&quot; value=&quot;Home page&quot; /&gt;\n\n16. inline 스타일을 피해라12345678910111213141516171819202122232425262728// ❌const Title = (props) =&gt; &#123;  return (    &lt;h1 style=&#123;&#123; fontWeight: 600, fontSize: &quot;24px&quot; &#125;&#125; &#123;...props&#125;&gt;      &#123;children&#125;    &lt;/h1&gt;  );&#125;;// ✅const useStyles = (props) =&gt; &#123;  return useMemo(    () =&gt; (&#123;      header: &#123; fontWeight: props.isBold ? 700 : 400, fontSize: &quot;24px&quot; &#125;,    &#125;),    [props]  );&#125;;const Title = (props) =&gt; &#123;  const styles = useStyles(props);  return (    &lt;h1 style=&#123;styles.header&#125; &#123;...props&#125;&gt;      &#123;children&#125;    &lt;/h1&gt;  );&#125;;\n\n17. 조건부 렌더링은 삼항 연산자 사용해라1234567891011const &#123; role &#125; = user;// ❌if (role === ADMIN) &#123;  return &lt;AdminUser /&gt;;&#125; else &#123;  return &lt;NormalUser /&gt;;&#125;// ✅return role === ADMIN ? &lt;AdminUser /&gt; : &lt;NormalUser /&gt;;\n\n18. 타입 별칭을 사용해라1234567891011export type TodoId = number;export type UserId = number;export interface Todo &#123;  id: TodoId;  name: string;  completed: boolean;  userId: UserId;&#125;export type TodoList = Todo[];\n\n19. 써드 파티 라이브러리를 직접 사용하는 것을 피해라12// src/lib/store.tsexport &#123; useDispatch, useSelector &#125; from &quot;react-redux&quot;;\n\n12// src/lib/query.tsexport &#123; useQuery, useMutation, useQueryClient &#125; from &quot;react-query&quot;;\n\n20. 직접 구현 대신 추상화에 의존해라1234567891011121314151617181920212223242526272829303132333435363738// ❌ directly using momemtimport moment from &quot;moment&quot;;const updateProduct = (product) =&gt; &#123;  const payload = &#123;    ...product,    // ❌ we are bound to the moment interface implementation    updatedAt: moment().toDate(),  &#125;;  return await fetch(`/product/$&#123;product.id&#125;`, &#123;    method: &quot;PUT&quot;,    body: JSON.stringify(payload),  &#125;);&#125;;// ✅ creating the abstraction, a.k.a. helper function which wraps the functionality// utils/createDate.tsimport moment from &quot;moment&quot;;export const createDate = (): Date =&gt; moment().toDate();// updateProduct.tsimport &#123; createDate &#125; from &quot;./utils/createDate&quot;;const updateProduct = (product) =&gt; &#123;  const payload = &#123;    ...product,    // ✅ using the abstracted helper function    updatedAt: createDate(),  &#125;;  return await fetch(`/product/$&#123;product.id&#125;`, &#123;    method: &quot;PUT&quot;,    body: JSON.stringify(payload),  &#125;);&#125;;\n\n\nmoment를 사용하여 직접 구현하기 보다 createDate 함수사용하여 추상화하면 간결하다.\n\n21. 선언적 프로그래밍을 해라1234567891011// ❌ imperative: dealing with internals of array iterationconst arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];let sum = 0;for (let i = 0; i &lt; arr.length; i++) &#123;  sum += arr[i];&#125;// ✅ declarative: we don&#x27;t deal with internals of iterationconst arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];const sum = arr.reduce((acc, v) =&gt; acc + v, 0);\n\n22. 변수 이름을 이쁘게 지어라1234567891011121314// ❌ Avoid single letter namesconst n = &quot;Max&quot;;// ✅const name = &quot;Max&quot;;// ❌ Avoid abbreviationsconst sof = &quot;Sunday&quot;;// ✅const startOfWeek = &quot;Sunday&quot;;// ❌ Avoid meaningless namesconst foo = false;// ✅const appInit = false;\n\n23. 함수 인자를 3개 이상 넘기지 말아라123456789101112131415// ❌function createPerson(firstName, lastName, height, weight, gender) &#123;  // ...&#125;// ✅function createPerson(&#123; firstName, lastName, height, weight, gender &#125;) &#123;  // ...&#125;// ✅function createPerson(person) &#123;  const &#123; firstName, lastName, height, weight, gender &#125; = person;  // ...&#125;\n\n24. template literal 사용해라12345// ❌const userName = user.firstName + &quot; &quot; + user.lastName;// ✅const userDetails = `$&#123;user.firstName&#125; $&#123;user.lastName&#125;`;\n\n25. 간단한 함수에서 암묵적 return 사용해라1234567// ❌const add = (a, b) =&gt; &#123;  return a + b;&#125;;// ✅const add = (a, b) =&gt; a + b;\n\n참고React Code Conventions and best practices - Medium\n","dateCreated":"2023-04-20T22:52:33+09:00","dateModified":"2023-04-25T23:23:06+09:00","datePublished":"2023-04-20T22:52:33+09:00","description":"","headline":"React 코드 컨벤션 지키고 사수한테 칭찬받기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"}</script>
+    <meta name="description" content="1. ESLint와 Prettier 사용하기 ESLint Prettier  import&#x2F;order 까지 설정해두면 복잡한 import 구문의 가독성을 조금이나마 개선할 수 있다. 12345678910111213141516171819202122232425262728293031323334&#x2F;&#x2F; .eslintrc.json&amp;#123;    ...  &amp;quo">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="React 코드 컨벤션 지키고 사수한테 칭찬받기">
+<meta property="og:url" content="https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="1. ESLint와 Prettier 사용하기 ESLint Prettier  import&#x2F;order 까지 설정해두면 복잡한 import 구문의 가독성을 조금이나마 개선할 수 있다. 12345678910111213141516171819202122232425262728293031323334&#x2F;&#x2F; .eslintrc.json&amp;#123;    ...  &amp;quo">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-04-20T13:52:33.000Z">
+<meta property="article:modified_time" content="2023-04-25T14:23:06.380Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            React 코드 컨벤션 지키고 사수한테 칭찬받기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-04-20T22:52:33+09:00">
+	
+		    2023/04/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="1-ESLint와-Prettier-사용하기"><a href="#1-ESLint와-Prettier-사용하기" class="headerlink" title="1. ESLint와 Prettier 사용하기"></a>1. ESLint와 Prettier 사용하기</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://eslint.org/">ESLint</a></li>
+<li><a target="_blank" rel="noopener" href="https://prettier.io/docs/en/install.html">Prettier</a></li>
+</ul>
+<p>import&#x2F;order 까지 설정해두면 복잡한 import 구문의 가독성을 조금이나마 개선할 수 있다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .eslintrc.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="attr">&quot;rules&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;import/order&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;newlines-between&quot;</span><span class="punctuation">:</span> <span class="string">&quot;always&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;groups&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="string">&quot;builtin&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;external&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;internal&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;parent&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;sibling&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;index&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;unknown&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="string">&quot;type&quot;</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;alphabetize&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;asc&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;caseInsensitive&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;pathGroups&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;pattern&quot;</span><span class="punctuation">:</span> <span class="string">&quot;react*&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;group&quot;</span><span class="punctuation">:</span> <span class="string">&quot;external&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;position&quot;</span><span class="punctuation">:</span> <span class="string">&quot;before&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="2-네이밍-컨벤션"><a href="#2-네이밍-컨벤션" class="headerlink" title="2. 네이밍 컨벤션"></a>2. 네이밍 컨벤션</h1><h3 id="컴포넌트-interface-type에는-PascalCase를-써라"><a href="#컴포넌트-interface-type에는-PascalCase를-써라" class="headerlink" title="컴포넌트, interface, type에는 PascalCase를 써라"></a>컴포넌트, interface, type에는 PascalCase를 써라</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// React component</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">BannersEditForm</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Typescript interface</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">TodoItem</span> &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">value</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Typescript type alias</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TodoList</span> = <span class="title class_">TodoItem</span>[];</span><br></pre></td></tr></table></figure>
+
+<h3 id="JavaScript-데이터-변수-배열-객체-함수-등-은-camelCase를-써라"><a href="#JavaScript-데이터-변수-배열-객체-함수-등-은-camelCase를-써라" class="headerlink" title="JavaScript 데이터(변수, 배열, 객체, 함수 등)은 camelCase를 써라"></a>JavaScript 데이터(변수, 배열, 객체, 함수 등)은 camelCase를 써라</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getLastDigit</span> = (<span class="params"></span>) =&gt; &#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> userTypes = [ ... ]</span><br></pre></td></tr></table></figure>
+
+<p>또한, 폴더와 컴포넌트가 아닌 파일 이름은 <code>camelCase</code>를 사용하고 컴포넌트 파일에는 <code>PascalCase</code>를 써라</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">src/utils/form.ts</span><br><span class="line">src/hooks/useForm.ts</span><br><span class="line">src/components/banners/edit/Form.tsx</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-TypeScript-통-barrels-을-사용해라"><a href="#3-TypeScript-통-barrels-을-사용해라" class="headerlink" title="3. TypeScript 통(barrels)을 사용해라"></a>3. TypeScript 통(barrels)을 사용해라</h1><p>barrels는 여러 export를 하나의 파일에서 다루는 방법이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// barrel file example</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./DropDown&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./TextBox&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./CheckBox&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./DateTimePicker&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&quot;./Slider&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">DropDown</span>,</span><br><span class="line">  <span class="title class_">TextBox</span>,</span><br><span class="line">  <span class="title class_">CheckBox</span>,</span><br><span class="line">  <span class="title class_">DateTimePicker</span>,</span><br><span class="line">  <span class="title class_">Slider</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;./src/controls&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이렇게 하면 import를 여러 파일에서 하지 않고 하나의 파일에서 할 수 있어 간편하다.</li>
+<li>이렇듯 타입스크립트도 barrels를 사용하여 관리하면 클린 코드에 좋을 것이다.</li>
+</ul>
+<h1 id="4-기본-내보내기-default-export-를-피하라"><a href="#4-기본-내보내기-default-export-를-피하라" class="headerlink" title="4. 기본 내보내기 (default export)를 피하라"></a>4. 기본 내보내기 (default export)를 피하라</h1><p>기본 내보내기는 내보낼 항목과 어떤 이름도 연결하지 않는다.</p>
+<p>즉, 개발자가 내보내려는 이름대로 가져오는 것이 클린 코드에 보다 적합하다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">MyComponent</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">export</span> &#123; <span class="title class_">MyComponent</span> &#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">MyComponent</span> = ...;</span><br><span class="line"><span class="keyword">export</span> type <span class="title class_">MyComponentType</span> = ...;</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-컴포넌트-구조-통일하기"><a href="#5-컴포넌트-구조-통일하기" class="headerlink" title="5. 컴포넌트 구조 통일하기"></a>5. 컴포넌트 구조 통일하기</h1><p>모든 컴포넌트의 구조를 다음과 같이 통일해라</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. Imports - Prefer destructuring imports to minimize writen code</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">PropsWithChildren</span>, useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. Types</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">ComponentProps</span> = &#123;</span><br><span class="line">  <span class="attr">someProperty</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. Styles - with @mui use styled API or sx prop of the component</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Wrapper</span> = <span class="title function_">styled</span>(<span class="string">&quot;div&quot;</span>)(<span class="function">(<span class="params">&#123; theme &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">color</span>: theme.<span class="property">palette</span>.<span class="property">white</span>,</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. Additional variables</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SOME_CONSTANT</span> = <span class="string">&quot;something&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. Component</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Component</span>(<span class="params">&#123; someProperty &#125;: PropsWithChildren&lt;ComponentProps&gt;</span>) &#123;</span><br><span class="line">  <span class="comment">// 5.1 Definitions</span></span><br><span class="line">  <span class="keyword">const</span> [state, setState] = <span class="title function_">useState</span>(<span class="literal">true</span>);</span><br><span class="line">  <span class="keyword">const</span> &#123; something &#125; = <span class="title function_">useSomething</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 5.2 Functions</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleToggleState</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">setState</span>(!state);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 5.3 Effects</span></span><br><span class="line">  <span class="comment">// ❌</span></span><br><span class="line">  <span class="title class_">React</span>.<span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ✅</span></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 5.5 Additional destructures</span></span><br><span class="line">  <span class="keyword">const</span> &#123; property &#125; = something;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;/* Separate elements if not closed on the same line to make the code clearer */&#125;</span></span><br><span class="line"><span class="language-xml">      &#123;/* ❌ */&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque</span></span><br><span class="line"><span class="language-xml">          arcu. Et harum quidem rerum facilis est et expedita distinctio.</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque</span></span><br><span class="line"><span class="language-xml">          arcu. Et harum quidem rerum facilis est et expedita distinctio.</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      &#123;/* ✅ */&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Wrapper</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Wrapper</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</span></span><br><span class="line"><span class="language-xml">            Pellentesque arcu. Et harum quidem rerum facilis est et expedita</span></span><br><span class="line"><span class="language-xml">            distinctio.</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Pellentesque arcu<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</span></span><br><span class="line"><span class="language-xml">            Pellentesque arcu. Et harum quidem rerum facilis est et expedita</span></span><br><span class="line"><span class="language-xml">            distinctio.</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6. Exports</span></span><br><span class="line"><span class="keyword">export</span> &#123; <span class="title class_">Component</span> &#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> &#123; <span class="title class_">ComponentProps</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="6-PropsWithChildren-을-사용해라"><a href="#6-PropsWithChildren-을-사용해라" class="headerlink" title="6. PropsWithChildren 을 사용해라"></a>6. <code>PropsWithChildren</code> 을 사용해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">PropsWithChildren</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line">type <span class="title class_">ComponentProps</span> = &#123;</span><br><span class="line">  <span class="attr">someProperty</span>: string,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Component</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">  someProperty,</span></span><br><span class="line"><span class="params">  children,</span></span><br><span class="line"><span class="params">&#125;: PropsWithChildren&lt;ComponentProps&gt;</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>props로 children을 내려주고 children 타입을 설정해주는 작업이 반복적으로 발생할 때 번거로움을 해소하고자 <code>PropsWithChildren</code>을 사용할 수 있다.</li>
+</ul>
+<blockquote>
+<p>PropsWithChildren의 children 타입은 optional 하다. 그러므로 꼭 children이 들어가야하는 컴포넌트에서 보다 엄격하게 타입을 지정해주기 위해서는 <code>children:ReactNode</code>로 타입을 지정해주는 방법이 있다.</p>
+</blockquote>
+<h1 id="7-JSX에서-함수가-한줄-이상이라면-분리하라"><a href="#7-JSX에서-함수가-한줄-이상이라면-분리하라" class="headerlink" title="7. JSX에서 함수가 한줄 이상이라면 분리하라"></a>7. JSX에서 함수가 한줄 이상이라면 분리하라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line">&lt;button</span><br><span class="line">  onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setState</span>(!state);</span><br><span class="line">    <span class="title function_">resetForm</span>();</span><br><span class="line">    <span class="title function_">reloadData</span>();</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setState(!state)&#125; /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleButtonClick</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setState</span>(!state);</span><br><span class="line">  <span class="title function_">resetForm</span>();</span><br><span class="line">  <span class="title function_">reloadData</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;button onClick=&#123;handleButtonClick&#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="8-Key-props로-index를-사용을-피해라"><a href="#8-Key-props로-index를-사용을-피해라" class="headerlink" title="8. Key props로 index를 사용을 피해라"></a>8. Key props로 index를 사용을 피해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">List</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> list = [<span class="string">&quot;item1&quot;</span>, <span class="string">&quot;item2&quot;</span>, <span class="string">&quot;item3&quot;</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;list.map((value, index) =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">        return <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span>;</span></span><br><span class="line"><span class="language-xml">      &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">List</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> list = [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="string">&quot;111&quot;</span>, <span class="attr">value</span>: <span class="string">&quot;item1&quot;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="string">&quot;222&quot;</span>, <span class="attr">value</span>: <span class="string">&quot;item2&quot;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="string">&quot;333&quot;</span>, <span class="attr">value</span>: <span class="string">&quot;item3&quot;</span> &#125;,</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;list.map((item) =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">        return <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;item.id&#125;</span>&gt;</span>&#123;item.value&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span>;</span></span><br><span class="line"><span class="language-xml">      &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>공시군서에 따르면 배열 내에서만 고유한 값을 전달해주면 된다고 나와있으니 map 고차함수를 사용하여 index를 key prop로 전달해도 될 것 같다.</p>
+<p>하지만 이렇게 할 경우, React에서는 props가 변경되면 컴포넌트를 재렌더링하는데, 배열에서 리스트를 추가, 삭제하면 index가 변경되므로 변경되지 않은 다른 리스트들도 불필요한 재렌더링이 발생하게 된다.</p>
+<p>그러므로 <strong>key prop에는 item의 id, react uid 라이브러리로 고유한 key를 지정해줘야한다.</strong></p>
+<h1 id="9-fragments를-써라"><a href="#9-fragments를-써라" class="headerlink" title="9. fragments를 써라"></a>9. fragments를 써라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">ActionButtons</span> = (<span class="params">&#123; text1, text2 &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text1&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text2&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params">&#123; text1, text2 &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text1&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text2&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>불필요한 div 태그 대신 Fragment를 사용하자</p>
+<h1 id="10-구조분해할당-사용하라"><a href="#10-구조분해할당-사용하라" class="headerlink" title="10. 구조분해할당 사용하라"></a>10. 구조분해할당 사용하라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;props.text&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; text &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params">&#123; text &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="11-관심사를-분리해라"><a href="#11-관심사를-분리해라" class="headerlink" title="11. 관심사를 분리해라"></a>11. 관심사를 분리해라</h1><p>presentation 컴포넌트에서 business 로직을 분리하는 것은 컴포넌트 코드의 가독성을 높힐 수 있다.</p>
+<p>대부분의 page, screen, container 컴포넌트에 다수의 hook과 useEffect를 사용하려고 할 때 business 로직을 분리하는 것을 시도할 수 있다.</p>
+<h3 id="custom-hook"><a href="#custom-hook" class="headerlink" title="custom hook"></a>custom hook</h3><p>관심사(책임)을 분리하기 위해서 useEffect나 다수의 useState를 컴포넌트에 직접 넣는 대신 Custom hook을 사용해라</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">ScreenDimensions</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [windowSize, setWindowSize] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: <span class="literal">undefined</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="literal">undefined</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">handleResize</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">setWindowSize</span>(&#123;</span><br><span class="line">        <span class="attr">width</span>: <span class="variable language_">window</span>.<span class="property">innerWidth</span>,</span><br><span class="line">        <span class="attr">height</span>: <span class="variable language_">window</span>.<span class="property">innerHeight</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;resize&quot;</span>, handleResize);</span><br><span class="line">    <span class="title function_">handleResize</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;resize&quot;</span>, handleResize);</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Current screen width: &#123;windowSize.width&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Current screen height: &#123;windowSize.height&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">useWindowSize</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [windowSize, setWindowSize] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: <span class="literal">undefined</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="literal">undefined</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">handleResize</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">setWindowSize</span>(&#123;</span><br><span class="line">        <span class="attr">width</span>: <span class="variable language_">window</span>.<span class="property">innerWidth</span>,</span><br><span class="line">        <span class="attr">height</span>: <span class="variable language_">window</span>.<span class="property">innerHeight</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;resize&quot;</span>, handleResize);</span><br><span class="line">    <span class="title function_">handleResize</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;resize&quot;</span>, handleResize);</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> windowSize;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">ScreenDimensions</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> windowSize = <span class="title function_">useWindowSize</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Current screen width: &#123;windowSize.width&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Current screen height: &#123;windowSize.height&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="12-거대-컴포넌트를-피해라"><a href="#12-거대-컴포넌트를-피해라" class="headerlink" title="12. 거대 컴포넌트를 피해라"></a>12. 거대 컴포넌트를 피해라</h1><p>거대 컴포넌트가 가능하더라도, 컴포넌트를 작은 단위로 분리해라.</p>
+<p>주로 조건부 렌더링을 할 때 사용할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">SomeSection</span> = (<span class="params">&#123; isEditable, value &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (isEditable) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Title</span>&gt;</span>Edit this content<span class="tag">&lt;/<span class="name">Title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Content</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">Content</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Button</span>&gt;</span>Clear content<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Section</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Title</span>&gt;</span>Read this content<span class="tag">&lt;/<span class="name">Title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Content</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">Content</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Section</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">EditableSection</span> = (<span class="params">&#123; value &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Title</span>&gt;</span>Edit this content<span class="tag">&lt;/<span class="name">Title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Content</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">Content</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Button</span>&gt;</span>Clear content<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Section</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">DetailSection</span> = (<span class="params">&#123; value &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Title</span>&gt;</span>Read this content<span class="tag">&lt;/<span class="name">Title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Content</span>&gt;</span>&#123;value&#125;<span class="tag">&lt;/<span class="name">Content</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Section</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">SomeSection</span> = (<span class="params">&#123; isEditable, value &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> isEditable ? (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">EditableSection</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> /&gt;</span></span></span><br><span class="line">  ) : (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">DetailSection</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="13-가능하다면-state를-그룹화해라"><a href="#13-가능하다면-state를-그룹화해라" class="headerlink" title="13. 가능하다면 state를 그룹화해라"></a>13. 가능하다면 state를 그룹화해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> [username, setUsername] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> [password, setPassword] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> [user, setUser] = <span class="title function_">useState</span>(&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="14-boolean-shorthand를-사용해라"><a href="#14-boolean-shorthand를-사용해라" class="headerlink" title="14. boolean shorthand를 사용해라"></a>14. boolean shorthand를 사용해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line">&lt;<span class="title class_">Form</span> hasPadding=&#123;<span class="literal">true</span>&#125; withError=&#123;<span class="literal">true</span>&#125; /&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Form</span> <span class="attr">hasPadding</span> <span class="attr">withError</span> /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="15-curly-braces를-피해라"><a href="#15-curly-braces를-피해라" class="headerlink" title="15. curly braces를 피해라"></a>15. curly braces를 피해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line">&lt;<span class="title class_">Title</span> variant=&#123;<span class="string">&quot;h1&quot;</span>&#125; value=&#123;<span class="string">&quot;Home page&quot;</span>&#125; /&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Title</span> <span class="attr">variant</span>=<span class="string">&quot;h1&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Home page&quot;</span> /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="16-inline-스타일을-피해라"><a href="#16-inline-스타일을-피해라" class="headerlink" title="16. inline 스타일을 피해라"></a>16. inline 스타일을 피해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Title</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">fontWeight:</span> <span class="attr">600</span>, <span class="attr">fontSize:</span> &quot;<span class="attr">24px</span>&quot; &#125;&#125; &#123;<span class="attr">...props</span>&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">useStyles</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">header</span>: &#123; <span class="attr">fontWeight</span>: props.<span class="property">isBold</span> ? <span class="number">700</span> : <span class="number">400</span>, <span class="attr">fontSize</span>: <span class="string">&quot;24px&quot;</span> &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">    [props]</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Title</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> styles = <span class="title function_">useStyles</span>(props);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">&#123;styles.header&#125;</span> &#123;<span class="attr">...props</span>&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="17-조건부-렌더링은-삼항-연산자-사용해라"><a href="#17-조건부-렌더링은-삼항-연산자-사용해라" class="headerlink" title="17. 조건부 렌더링은 삼항 연산자 사용해라"></a>17. 조건부 렌더링은 삼항 연산자 사용해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; role &#125; = user;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">if</span> (role === <span class="variable constant_">ADMIN</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">AdminUser</span> /&gt;</span></span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">NormalUser</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">return</span> role === <span class="variable constant_">ADMIN</span> ? <span class="language-xml"><span class="tag">&lt;<span class="name">AdminUser</span> /&gt;</span></span> : <span class="language-xml"><span class="tag">&lt;<span class="name">NormalUser</span> /&gt;</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="18-타입-별칭을-사용해라"><a href="#18-타입-별칭을-사용해라" class="headerlink" title="18. 타입 별칭을 사용해라"></a>18. 타입 별칭을 사용해라</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">TodoId</span> = <span class="built_in">number</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">UserId</span> = <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Todo</span> &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="title class_">TodoId</span>;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">completed</span>: <span class="built_in">boolean</span>;</span><br><span class="line">  <span class="attr">userId</span>: <span class="title class_">UserId</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">TodoList</span> = <span class="title class_">Todo</span>[];</span><br></pre></td></tr></table></figure>
+
+<h1 id="19-써드-파티-라이브러리를-직접-사용하는-것을-피해라"><a href="#19-써드-파티-라이브러리를-직접-사용하는-것을-피해라" class="headerlink" title="19. 써드 파티 라이브러리를 직접 사용하는 것을 피해라"></a>19. 써드 파티 라이브러리를 직접 사용하는 것을 피해라</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/lib/store.ts</span></span><br><span class="line"><span class="keyword">export</span> &#123; useDispatch, useSelector &#125; <span class="keyword">from</span> <span class="string">&quot;react-redux&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/lib/query.ts</span></span><br><span class="line"><span class="keyword">export</span> &#123; useQuery, useMutation, useQueryClient &#125; <span class="keyword">from</span> <span class="string">&quot;react-query&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="20-직접-구현-대신-추상화에-의존해라"><a href="#20-직접-구현-대신-추상화에-의존해라" class="headerlink" title="20. 직접 구현 대신 추상화에 의존해라"></a>20. 직접 구현 대신 추상화에 의존해라</h1><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ directly using momemt</span></span><br><span class="line"><span class="keyword">import</span> moment <span class="keyword">from</span> <span class="string">&quot;moment&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">updateProduct</span> = (<span class="params">product</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> payload = &#123;</span><br><span class="line">    ...product,</span><br><span class="line">    <span class="comment">// ❌ we are bound to the moment interface implementation</span></span><br><span class="line">    <span class="attr">updatedAt</span>: <span class="title function_">moment</span>().<span class="title function_">toDate</span>(),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">`/product/<span class="subst">$&#123;product.id&#125;</span>`</span>, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&quot;PUT&quot;</span>,</span><br><span class="line">    <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(payload),</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ creating the abstraction, a.k.a. helper function which wraps the functionality</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// utils/createDate.ts</span></span><br><span class="line"><span class="keyword">import</span> moment <span class="keyword">from</span> <span class="string">&quot;moment&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> createDate = (): <span class="function"><span class="params">Date</span> =&gt;</span> <span class="title function_">moment</span>().<span class="title function_">toDate</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// updateProduct.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; createDate &#125; <span class="keyword">from</span> <span class="string">&quot;./utils/createDate&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">updateProduct</span> = (<span class="params">product</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> payload = &#123;</span><br><span class="line">    ...product,</span><br><span class="line">    <span class="comment">// ✅ using the abstracted helper function</span></span><br><span class="line">    <span class="attr">updatedAt</span>: <span class="title function_">createDate</span>(),</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">`/product/<span class="subst">$&#123;product.id&#125;</span>`</span>, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&quot;PUT&quot;</span>,</span><br><span class="line">    <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(payload),</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>moment를 사용하여 직접 구현하기 보다 createDate 함수사용하여 추상화하면 간결하다.</li>
+</ul>
+<h1 id="21-선언적-프로그래밍을-해라"><a href="#21-선언적-프로그래밍을-해라" class="headerlink" title="21. 선언적 프로그래밍을 해라"></a>21. 선언적 프로그래밍을 해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ imperative: dealing with internals of array iteration</span></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>];</span><br><span class="line"><span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">  sum += arr[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ declarative: we don&#x27;t deal with internals of iteration</span></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>];</span><br><span class="line"><span class="keyword">const</span> sum = arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, v</span>) =&gt;</span> acc + v, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="22-변수-이름을-이쁘게-지어라"><a href="#22-변수-이름을-이쁘게-지어라" class="headerlink" title="22. 변수 이름을 이쁘게 지어라"></a>22. 변수 이름을 이쁘게 지어라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ Avoid single letter names</span></span><br><span class="line"><span class="keyword">const</span> n = <span class="string">&quot;Max&quot;</span>;</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> name = <span class="string">&quot;Max&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ Avoid abbreviations</span></span><br><span class="line"><span class="keyword">const</span> sof = <span class="string">&quot;Sunday&quot;</span>;</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> startOfWeek = <span class="string">&quot;Sunday&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ Avoid meaningless names</span></span><br><span class="line"><span class="keyword">const</span> foo = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> appInit = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="23-함수-인자를-3개-이상-넘기지-말아라"><a href="#23-함수-인자를-3개-이상-넘기지-말아라" class="headerlink" title="23. 함수 인자를 3개 이상 넘기지 말아라"></a>23. 함수 인자를 3개 이상 넘기지 말아라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">firstName, lastName, height, weight, gender</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">&#123; firstName, lastName, height, weight, gender &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">person</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; firstName, lastName, height, weight, gender &#125; = person;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="24-template-literal-사용해라"><a href="#24-template-literal-사용해라" class="headerlink" title="24. template literal 사용해라"></a>24. template literal 사용해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> userName = user.<span class="property">firstName</span> + <span class="string">&quot; &quot;</span> + user.<span class="property">lastName</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> userDetails = <span class="string">`<span class="subst">$&#123;user.firstName&#125;</span> <span class="subst">$&#123;user.lastName&#125;</span>`</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="25-간단한-함수에서-암묵적-return-사용해라"><a href="#25-간단한-함수에서-암묵적-return-사용해라" class="headerlink" title="25. 간단한 함수에서 암묵적 return 사용해라"></a>25. 간단한 함수에서 암묵적 return 사용해라</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params">a, b</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params">a, b</span>) =&gt; a + b;</span><br></pre></td></tr></table></figure>
+
+<h1 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h1><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/react-code-conventions-and-best-practices-433e23ed69aa">React Code Conventions and best practices - Medium</a></p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/04/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-20%EC%9D%BC%EC%B0%A8-:not/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 20일차&gt; :not"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 20일차&gt; :not"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/04/18/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-20%EC%9D%BC%EC%B0%A8-:not/"
+                    data-tooltip="&lt;오늘부터 CSS 마스터 20일차&gt; :not"
+                    aria-label="다음: &lt;오늘부터 CSS 마스터 20일차&gt; :not"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/04/20/React/React-%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A7%80%ED%82%A4%EA%B3%A0-%EC%82%AC%EC%88%98%ED%95%9C%ED%85%8C-%EC%B9%AD%EC%B0%AC%EB%B0%9B%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
