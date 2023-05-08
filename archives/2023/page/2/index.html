@@ -233,6 +233,76 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/04/04/Daily/useEffect-%EC%B4%88%EA%B8%B0-%EB%A0%8C%EB%8D%94%EB%A7%81-%EB%B0%A9%EC%A7%80%ED%95%98%EA%B8%B0/"
+                            aria-label=": useEffect 초기 렌더링 방지하기"
+                        >
+                            useEffect 초기 렌더링 방지하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-04-04T23:38:10+09:00">
+	
+		    2023/04/04
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useEffect-초기-렌더링-스킵하기"><a href="#useEffect-초기-렌더링-스킵하기" class="headerlink" title="useEffect 초기 렌더링 스킵하기"></a>useEffect 초기 렌더링 스킵하기</h1><p>종속성 배열에 요소에 의존하여 어떤 로직을 실행하고 싶을 때, useEffect를 사용한다.</p>
+<p>그런데 useEffect는 무조건 처음에 렌더링 되기 전에 실행된다.</p>
+<p>이번 프로젝트에서 Nickname 페이지에서 Nickname을 수정하고 Mypage로 이동하여 Modal을 띄워야하는 경우가 있었다.</p>
+<p>처음에는 Mypage에서 useEffect로 종속성 배열에 user를 넣어서 user가 변경되었음을 감지하고 effect 함수가 실행되기를 바랬지만, 이는 두가지 문제점이 있었다.</p>
+<h3 id="문제점1-effect는-처음에-한번-무조건-실행된다"><a href="#문제점1-effect는-처음에-한번-무조건-실행된다" class="headerlink" title="문제점1. effect는 처음에 한번 무조건 실행된다."></a>문제점1. effect는 처음에 한번 무조건 실행된다.</h3><p>Nickname이 변경되었을 때만 Modal을 띄워야 하는데, Mypage가 렌더링 될 때마다 모달이 뜨는 문제가 발생하였다.</p>
+<p>이를 해결하기 위해서는 effect 함수의 초기 렌더링때는 스킵해줘야한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect, useRef &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useDidUpdateEffect</span>(<span class="params">fn, inputs</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> didMountRef = <span class="title function_">useRef</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (didMountRef.<span class="property">current</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> fn;</span><br><span class="line">    &#125;</span><br><span class="line">    didMountRef.<span class="property">current</span> = <span class="literal">true</span>;</span><br><span class="line">  &#125;, inputs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>useRef를 사용하여 초기 렌더링 때 effect 함수가 실행되는 것을 스킵할 수 있다.</p>
+<h3 id="문제점2-user-상태를-종속성배열로-넣어도-변화를-감지하지-못한다"><a href="#문제점2-user-상태를-종속성배열로-넣어도-변화를-감지하지-못한다" class="headerlink" title="문제점2. user 상태를 종속성배열로 넣어도 변화를 감지하지 못한다."></a>문제점2. user 상태를 종속성배열로 넣어도 변화를 감지하지 못한다.</h3><p>Mypage 안의 useEffect는 결국 Mypage 컴포넌트가 불러와져서 렌더링 되기 이전에 실행되는 코드이다.</p>
+<p>그러므로 Mypage가 렌더링 되기 이전에 Nickname 페이지에서 상태를 변경한 것을 감지할 수 없다는 것이다.</p>
+<p>이를 망각한 체 useEffect에서 어떻게하면 전역 상태의 변경을 감지할 수 있을지에 대해 오랜 시간 고민하며 시간을 허비했다…</p>
+<p>이를 해결하기 위해서는 <strong>전역 상태로 nickname 수정이 완료되었다는 상태(NicknameModal)을 갖도록 하여 간단하게 해결할 수 있었다.</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/04/04/Daily/useEffect-%EC%B4%88%EA%B8%B0-%EB%A0%8C%EB%8D%94%EB%A7%81-%EB%B0%A9%EC%A7%80%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/04/01/Daily/onClick-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%A0%84%ED%8C%8C/"
                             aria-label=": onClick 이벤트 전파"
                         >
@@ -975,123 +1045,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%96%B4%EB%96%A4-%EB%8B%A8%EC%9C%84%EB%A1%9C-%EA%B5%AC%EC%84%B1%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/"
-                            aria-label=": 컴포넌트 구성과 상태관리 전략"
-                        >
-                            컴포넌트 구성과 상태관리 전략
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-18T09:16:28+09:00">
-	
-		    2023/03/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="데이터와-디자인을-컴포넌트로-구성하기"><a href="#데이터와-디자인을-컴포넌트로-구성하기" class="headerlink" title="데이터와 디자인을 컴포넌트로 구성하기"></a>데이터와 디자인을 컴포넌트로 구성하기</h1><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1920</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;사과&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1640</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;두리안&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;과일&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">2480</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;아보카도&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1700</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;시금치&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">2800</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;호박&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;채소&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span> <span class="number">1330</span><span class="punctuation">,</span> <span class="attr">&quot;stocked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;완도콩&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/comp/design.png" alt="design"></p>
-<p>위와 같이 데이터와 디자인 시안이 제시되었을 때, 컴포넌트를 어떻게 구성하는 것이 좋을지 생각해본다.</p>
-<p><strong>UI와 데이터는 주로 동일한 모양을 갖기 때문에 데이터 구조와 컴포넌트 구조가 자연스럽게 매핑된다.</strong></p>
-<p>그러므로 다음과 같이 컴포넌트를 구성할 수 있을 것이다.</p>
-<p><img src="/../../images/comp/components.png" alt="component"></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FilterableProductTable</span><br><span class="line"> ├── SearchBar</span><br><span class="line"> └── ProductTable</span><br><span class="line">      ├── ProductCategoryRow</span><br><span class="line">      └── ProductRow</span><br></pre></td></tr></table></figure>
-
-<p>폴더 구조는 위와 같이 구성할 수 있을 것이다.</p>
-<blockquote>
-<p>이상적인 컴포넌트 설계는 한가지만 책임하는 것이다. 만약 한가지 이상의 처리가 필요하다면 컴포넌트를 더 작은 컴포넌트로 나눠야한다.</p>
-</blockquote>
-<h2 id="React-정적-컴포넌트-구성"><a href="#React-정적-컴포넌트-구성" class="headerlink" title="React 정적 컴포넌트 구성"></a>React 정적 컴포넌트 구성</h2><p>컴포넌트에 대한 구상이 끝났으므로 React로 앱을 빌드해보자.</p>
-<p>이 때 가장 간단한 접근법은 사용자와의 상호작용은 고려하지 않고 데이터 모델에서 UI를 렌더링 하는 버전으로 작성하는 것이다.</p>
-<p>데이터 모델을 렌더링하는 앱을 만들고자 한다면 props와 state를 사용하고 싶을 것이다. 하지만 <span style="color:red;">현재 단계에서는 state를 사용하지 않는다.</span><br>왜냐하면 state는 사용자와 상호작용할 때 사용하기 때문에 아직 단계가 아니다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="variable constant_">PRODUCTS</span> <span class="keyword">from</span> <span class="string">&quot;../../api/products.json&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FilterableProductTable</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> products = [...<span class="variable constant_">PRODUCTS</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;filterableProductTable&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">SearchBar</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ProductTable</span> <span class="attr">products</span>=<span class="string">&#123;products&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">FilterableProductTable</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>정적 빌드된 컴포넌트는 JSX만을 반환한다. 그리고 컴포넌트 트리 최상위 컴포넌트에서 데이터 모델을 하위 props로 전달하는 “단방향 데이터 흐름”을 구현한다.</p>
-</blockquote>
-<h2 id="컴포넌트-UI-대화형으로-만들기"><a href="#컴포넌트-UI-대화형으로-만들기" class="headerlink" title="컴포넌트 UI 대화형으로 만들기"></a>컴포넌트 UI 대화형으로 만들기</h2><p>UI를 대화형으로 만들려면 사용자가 기본 데이터를 변경할 수 있도록 해야한다. 이러한 상호작용이 필요할 때, state를 사용한다.</p>
-<p><strong>state는 앱이 기억하고 변경해야 할 데이터의 최소 집합이라고 생각할 수 있다.</strong></p>
-<p>이 때 상태를 구성하는 가장 중요한 원칙은 DRY(Don’t Repeat Yourself)이다. state는 최소한으로만 필요해야하며 나머지는 필요할 때 다시 고민한다.</p>
-<p>그렇다면 위 컴포넌트에서는 state는 무엇이 될 수 있을까?</p>
-<h3 id="state와-props-구분하기"><a href="#state와-props-구분하기" class="headerlink" title="state와 props 구분하기"></a>state와 props 구분하기</h3><h4 id="1-시간이-지남에도-변경이-없다면"><a href="#1-시간이-지남에도-변경이-없다면" class="headerlink" title="1. 시간이 지남에도 변경이 없다면?"></a>1. 시간이 지남에도 변경이 없다면?</h4><p>&#x3D;&gt; 이는 state가 아니다. state는 사용자와 상호작용해야하는 요소이기 때문이다.</p>
-<h4 id="2-props를-통해-상위-컴포넌트로-부터-전달될-수-있다면"><a href="#2-props를-통해-상위-컴포넌트로-부터-전달될-수-있다면" class="headerlink" title="2. props를 통해 상위 컴포넌트로 부터 전달될 수 있다면?"></a>2. props를 통해 상위 컴포넌트로 부터 전달될 수 있다면?</h4><p>&#x3D;&gt; 이는 state가 아니다.</p>
-<h4 id="3-컴포넌트의-기존-state-또는-props를-기반으로-계산할-수-있다면"><a href="#3-컴포넌트의-기존-state-또는-props를-기반으로-계산할-수-있다면" class="headerlink" title="3. 컴포넌트의 기존 state 또는 props를 기반으로 계산할 수 있다면?"></a>3. 컴포넌트의 기존 state 또는 props를 기반으로 계산할 수 있다면?</h4><p>&#x3D;&gt; 이는 state가 아니다.</p>
-<p>그러므로 위 예시에서 state는 검색 텍스트 값과 체크박스 값이 될 수 있다.</p>
-<h2 id="앱-상태-관리-하기"><a href="#앱-상태-관리-하기" class="headerlink" title="앱 상태 관리 하기"></a>앱 상태 관리 하기</h2><p>자 이제 앱이 가지는 최소한의 state를 파악했다. 그러면 이 state를 변경하고 소유하는 컴포넌트는 누가 할 것인지를 정해줘야한다.</p>
-<p>React는 단방향 데이터 흐름을 사용하기 때문에 상위 컴포넌트에서 하위 컴포넌트로 데이터가 전달된다.</p>
-<h3 id="컴포넌트-상태-관리-전략"><a href="#컴포넌트-상태-관리-전략" class="headerlink" title="컴포넌트 상태 관리 전략"></a>컴포넌트 상태 관리 전략</h3><ol>
-<li>state를 기반으로 무언가를 렌더링하는 모든 컴포넌트 확인한다.</li>
-<li>해당 컴포넌트와 가장 가까운 공통 상위 컴포넌트를 찾는다.</li>
-</ol>
-<p>이제 state를 어디서 관리할지 정해줘야한다. 경우의 수는 3가지가 있다.</p>
-<ul>
-<li>state를 공통 상위 컴포넌트에서 관리</li>
-<li>state를 공통 상위 컴포넌트보다 상위에서 관리</li>
-<li>state를 소유하는 것이 타당한 컴포넌트를 찾지 못한 경우, state를 유지하기 위한 새로운 컴포넌트 만들고 공통 상위 컴포넌트 보다 위 어딘가에 추가하여 관리</li>
-</ul>
-<p>위 예시에서 검색 텍스트 값과 체크박스 값이 state라고 하였다.</p>
-<h3 id="컴포넌트-상태-관리-단계"><a href="#컴포넌트-상태-관리-단계" class="headerlink" title="컴포넌트 상태 관리 단계"></a>컴포넌트 상태 관리 단계</h3><ol>
-<li>상태를 사용하는 컴포넌트 식별</li>
-</ol>
-<ul>
-<li>SearchBar - 검색 텍스트 state 관리</li>
-<li>ProductTable - 체크박스 유무 state 관리</li>
-</ul>
-<ol start="2">
-<li>공통 상위 컴포넌트 찾기</li>
-</ol>
-<p>SearchBar, ProductTable 의 공통 상위 컴포넌트는 FilterableProductTable 컴포넌트이다.</p>
-<ol start="3">
-<li>state가 있는 위치 결정</li>
-</ol>
-<p>공통 상위 컴포넌트인 FilterableProductTable 컴포넌트에서 관리한다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="variable constant_">PRODUCTS</span> <span class="keyword">from</span> <span class="string">&quot;../../api/products.json&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">SearchBar</span> <span class="keyword">from</span> <span class="string">&quot;./SearchBar/SearchBar&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ProductTable</span> <span class="keyword">from</span> <span class="string">&quot;./ProductTable/ProductTable&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FilterableProductTable</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> products = [...<span class="variable constant_">PRODUCTS</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [searchText, setSearchText] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> [inStockOnly, setInStockOnly] = <span class="title function_">useState</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handeChangeSearchText</span> = (<span class="params">newSearchText: string</span>) =&gt;</span><br><span class="line">    <span class="title function_">setSearchText</span>(newSearchText);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handeChangeInStockOnly</span> = (<span class="params">inStockOnlyState: boolean</span>) =&gt;</span><br><span class="line">    <span class="title function_">setInStockOnly</span>(inStockOnlyState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;filterableProductTable&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">SearchBar</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">searchText</span>=<span class="string">&#123;searchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">inStockOnly</span>=<span class="string">&#123;inStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChangeSearchText</span>=<span class="string">&#123;handeChangeSearchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChangeInStockOnly</span>=<span class="string">&#123;handeChangeInStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ProductTable</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">products</span>=<span class="string">&#123;products&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">searchText</span>=<span class="string">&#123;searchText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">inStockOnly</span>=<span class="string">&#123;inStockOnly&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">FilterableProductTable</span>;</span><br></pre></td></tr></table></figure>
-
-<p>해당 컴포넌트에서 state를 관리하고 props로 전달하는 것은 완료했으니 state를 관리하는 컴포넌트에서 state 변경함수까지 props 전달하여 사용자가 UI를 업데이트 할 수 있도록 구현해주면 완성이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/18/React/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%96%B4%EB%96%A4-%EB%8B%A8%EC%9C%84%EB%A1%9C-%EA%B5%AC%EC%84%B1%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1118,7 +1071,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 2 of 13</li>
+        <li class="pagination-number">page 2 of 14</li>
     </ul>
 </div>
 
