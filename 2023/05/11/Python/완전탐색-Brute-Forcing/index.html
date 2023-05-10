@@ -1,0 +1,585 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/05/11/python/완전탐색-brute-forcing/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>완전탐색(Brute Forcing) - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"완전탐색(Brute Forcing)가능한 모든 경우의 수를 검사하는 방법문제 1시간에서 ‘3’이 포함된 횟수 구하는 문제12345678910h = int(input())count = 0for i in range(h+1):    for j in range(60):        for k in range(60):            if &#x27;3&#x27; in str(i)+str(j)+str(k):                count += 1print(count)\n\n문제 2체스 말이 움직일 수 있는 경우의 수 구하라123456789101112131415161718col,row = map(str,input())n = 8# ASCII 코드 구하는 코드 ord(str), ord(&#x27;a&#x27;) = 97array = [[i+1 for i in range(n)] for _ in range(n)]steps = [(-2,-1),(-1,-2),(1,-2),(2,-1),(2,1),(1,2),(-1,2),(-2,1)]count = 0for step in steps:    y = int(row) + step[0]    x = int(ord(col)) - int(ord(&#x27;a&#x27;)) + 1 + step[1]    if x &lt; 1 or y &lt; 1 or x &gt; 8 or y &gt; 8:        continue    count += 1print(count)\n\n123456# 말이 움직이는 벡터 방향dx = [2,2,-2,-2,1,1,-1,-1]dy = [1,-1,1,-1,2,-2,2,-2]# x,y로 방향이 2개로 정해져있으니 튜플 사용 가능steps = [(-2,-1),(-1,-2),(1,-2),(2,-1),(2,1),(1,2),(-1,2),(-2,1)]\n\n\nASCII 코드를 사용하여 ‘a’ 문자열을 숫자로 변환\n\n문제 3문자는 정렬하고 숫자는 더하여 반환하라12345678910111213141516input = input()result = []value = 0for i in input:    if i.isalpha():        result.append(i)    else:        value += int(i)result.sort()if value != 0:    result.append(str(value))print(&#x27;&#x27;.join(result))\n\n\nisalpha() 내장함수를 사용하여 i가 문자열인지 확인\njoin() 내장함수를 사용하여 list를 문자열로 합침\n\n","dateCreated":"2023-05-11T00:17:26+09:00","dateModified":"2023-05-11T00:23:32+09:00","datePublished":"2023-05-11T00:17:26+09:00","description":"","headline":"완전탐색(Brute Forcing)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"}</script>
+    <meta name="description" content="완전탐색(Brute Forcing)가능한 모든 경우의 수를 검사하는 방법문제 1시간에서 ‘3’이 포함된 횟수 구하는 문제12345678910h &#x3D; int(input())count &#x3D; 0for i in range(h+1):    for j in range(60):        for k in range(60):            if &amp;#x27;3&amp;#x27">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="완전탐색(Brute Forcing)">
+<meta property="og:url" content="https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="완전탐색(Brute Forcing)가능한 모든 경우의 수를 검사하는 방법문제 1시간에서 ‘3’이 포함된 횟수 구하는 문제12345678910h &#x3D; int(input())count &#x3D; 0for i in range(h+1):    for j in range(60):        for k in range(60):            if &amp;#x27;3&amp;#x27">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-05-10T15:17:26.000Z">
+<meta property="article:modified_time" content="2023-05-10T15:23:32.356Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="loco9939">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            완전탐색(Brute Forcing)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-05-11T00:17:26+09:00">
+	
+		    2023/05/11
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="완전탐색-Brute-Forcing"><a href="#완전탐색-Brute-Forcing" class="headerlink" title="완전탐색(Brute Forcing)"></a>완전탐색(Brute Forcing)</h1><h3 id="가능한-모든-경우의-수를-검사하는-방법"><a href="#가능한-모든-경우의-수를-검사하는-방법" class="headerlink" title="가능한 모든 경우의 수를 검사하는 방법"></a>가능한 모든 경우의 수를 검사하는 방법</h3><h2 id="문제-1"><a href="#문제-1" class="headerlink" title="문제 1"></a>문제 1</h2><h3 id="시간에서-‘3’이-포함된-횟수-구하는-문제"><a href="#시간에서-‘3’이-포함된-횟수-구하는-문제" class="headerlink" title="시간에서 ‘3’이 포함된 횟수 구하는 문제"></a>시간에서 ‘3’이 포함된 횟수 구하는 문제</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">h = <span class="built_in">int</span>(<span class="built_in">input</span>())</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(h+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">60</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">60</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;3&#x27;</span> <span class="keyword">in</span> <span class="built_in">str</span>(i)+<span class="built_in">str</span>(j)+<span class="built_in">str</span>(k):</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(count)</span><br></pre></td></tr></table></figure>
+
+<h2 id="문제-2"><a href="#문제-2" class="headerlink" title="문제 2"></a>문제 2</h2><h3 id="체스-말이-움직일-수-있는-경우의-수-구하라"><a href="#체스-말이-움직일-수-있는-경우의-수-구하라" class="headerlink" title="체스 말이 움직일 수 있는 경우의 수 구하라"></a>체스 말이 움직일 수 있는 경우의 수 구하라</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">col,row = <span class="built_in">map</span>(<span class="built_in">str</span>,<span class="built_in">input</span>())</span><br><span class="line"></span><br><span class="line">n = <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ASCII 코드 구하는 코드 ord(str), ord(&#x27;a&#x27;) = 97</span></span><br><span class="line">array = [[i+<span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line"></span><br><span class="line">steps = [(-<span class="number">2</span>,-<span class="number">1</span>),(-<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">2</span>,-<span class="number">1</span>),(<span class="number">2</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">2</span>,<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> step <span class="keyword">in</span> steps:</span><br><span class="line">    y = <span class="built_in">int</span>(row) + step[<span class="number">0</span>]</span><br><span class="line">    x = <span class="built_in">int</span>(<span class="built_in">ord</span>(col)) - <span class="built_in">int</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)) + <span class="number">1</span> + step[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> x &lt; <span class="number">1</span> <span class="keyword">or</span> y &lt; <span class="number">1</span> <span class="keyword">or</span> x &gt; <span class="number">8</span> <span class="keyword">or</span> y &gt; <span class="number">8</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(count)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 말이 움직이는 벡터 방향</span></span><br><span class="line">dx = [<span class="number">2</span>,<span class="number">2</span>,-<span class="number">2</span>,-<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,-<span class="number">1</span>,-<span class="number">1</span>]</span><br><span class="line">dy = [<span class="number">1</span>,-<span class="number">1</span>,<span class="number">1</span>,-<span class="number">1</span>,<span class="number">2</span>,-<span class="number">2</span>,<span class="number">2</span>,-<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># x,y로 방향이 2개로 정해져있으니 튜플 사용 가능</span></span><br><span class="line">steps = [(-<span class="number">2</span>,-<span class="number">1</span>),(-<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">2</span>,-<span class="number">1</span>),(<span class="number">2</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">2</span>,<span class="number">1</span>)]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ASCII 코드를 사용하여 ‘a’ 문자열을 숫자로 변환</li>
+</ul>
+<h2 id="문제-3"><a href="#문제-3" class="headerlink" title="문제 3"></a>문제 3</h2><h3 id="문자는-정렬하고-숫자는-더하여-반환하라"><a href="#문자는-정렬하고-숫자는-더하여-반환하라" class="headerlink" title="문자는 정렬하고 숫자는 더하여 반환하라"></a>문자는 정렬하고 숫자는 더하여 반환하라</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">input</span> = <span class="built_in">input</span>()</span><br><span class="line">result = []</span><br><span class="line">value = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">input</span>:</span><br><span class="line">    <span class="keyword">if</span> i.isalpha():</span><br><span class="line">        result.append(i)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value += <span class="built_in">int</span>(i)</span><br><span class="line"></span><br><span class="line">result.sort()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> value != <span class="number">0</span>:</span><br><span class="line">    result.append(<span class="built_in">str</span>(value))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;&#x27;</span>.join(result))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>isalpha()</code> 내장함수를 사용하여 <code>i</code>가 문자열인지 확인</li>
+<li><code>join()</code> 내장함수를 사용하여 list를 문자열로 합침</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/05/09/Python/%EA%B7%B8%EB%A6%AC%EB%94%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-with-Python/"
+                    data-tooltip="그리디 알고리즘 with Python"
+                    aria-label="다음: 그리디 알고리즘 with Python"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/05/09/Python/%EA%B7%B8%EB%A6%AC%EB%94%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-with-Python/"
+                    data-tooltip="그리디 알고리즘 with Python"
+                    aria-label="다음: 그리디 알고리즘 with Python"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
