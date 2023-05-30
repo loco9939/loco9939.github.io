@@ -233,6 +233,91 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                            aria-label=": node.js란 무엇인가요?"
+                        >
+                            node.js란 무엇인가요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-02T15:58:24+09:00">
+	
+		    2023/03/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EA%B8%B0%EC%B4%88-%EA%B0%9C%EB%B0%9C-%EC%A7%80%EC%8B%9D/">기초 개발 지식</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="node-js"><a href="#node-js" class="headerlink" title="node.js"></a>node.js</h1><p>node.js란 비동기적 이벤트 주도 방식, 논블로킹 I&#x2F;O 모델을 사용하는 구글의 V8 엔진을 장착한 자바스크립트 런타임이다.</p>
+<p>런타임이란, 프로그램이 실행될 때 그 프로그램이 머무는 공간을 의미한다. 때문에 브라우저는 자바스크립트 런타임이라고도 한다.</p>
+<p>이와 동일하게 node.js 또한 자바스크립트 런타임이므로 자바스크립트로 만든 프로그램을 실행할 수 있다.</p>
+<p>이번에는 node.js로 서버를 만들어서 API를 구현해보는 예시를 해보자.</p>
+<h2 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h2><ol>
+<li><p>nodejs를 설치한다.</p>
+</li>
+<li><p>json 파일과 서버파일을 생성한다.</p>
+</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Wix&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tall&quot;</span><span class="punctuation">:</span> <span class="string">&quot;178&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">&quot;express&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">&quot;fs&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">express</span>();</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;/&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> f = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(fs.<span class="title function_">readFileSync</span>(<span class="string">&quot;a.json&quot;</span>, &#123; <span class="attr">encoding</span>: <span class="string">&quot;utf-8&quot;</span> &#125;));</span><br><span class="line">  <span class="keyword">const</span> data = &#123;</span><br><span class="line">    <span class="attr">name</span>: f.<span class="property">name</span>,</span><br><span class="line">    <span class="attr">tall</span>: f.<span class="property">tall</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  res.<span class="title function_">send</span>(data);</span><br><span class="line">&#125;);</span><br><span class="line">app.<span class="title function_">listen</span>(port, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`http://127.0.0.1:<span class="subst">$&#123;port&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>express 모듈 설치</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express</span><br></pre></td></tr></table></figure>
+
+<p>express는 node.js에서 동작하는 웹 프레임워크이다. 라우팅, 미들웨어, 정적자원서버 설정이 쉬운 장점이 있다.</p>
+<ol start="4">
+<li>터미널로 node 프로그램을 실행해본다.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node b.js</span><br></pre></td></tr></table></figure>
+
+<p>get() 메서드에 설정한 경로 &#x2F;로 get 요청이 보내졌고 서버에서는 name, tall이 담긴 자바스크립트 객체 데이터가 응답으로 전송되었다.</p>
+<p>앞서 API의 특징을 설명할 때, 파일 내부가 변경되더라도 API를 변경되지 않도록 설계할 수 있다고 하였다.</p>
+<p><strong>a.json 파일 내용을 바꾸더라도 API를 바꿔줄 필요가 없다.</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/node-js%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
                             aria-label=": API란 무엇인가요?"
                         >
@@ -933,86 +1018,6 @@
                         <p>
                             <a
                                 href="/2023/02/25/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-7%EC%9D%BC%EC%B0%A8-Position/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/23/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-6%EC%9D%BC%EC%B0%A8-Display/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 6일차&gt; Display"
-                        >
-                            &lt;오늘부터 CSS 마스터 6일차&gt; Display
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-23T23:20:40+09:00">
-	
-		    2023/02/23
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Display"><a href="#Display" class="headerlink" title="Display"></a>Display</h1><p>diplay 속성은 레이아웃을 조작하는데 매우 중요한 속성이다.</p>
-<p>대부분 요소의 기본값은 <code>block</code> 또는 <code>inline</code>이다.</p>
-<h2 id="Block-level-요소"><a href="#Block-level-요소" class="headerlink" title="Block-level 요소"></a>Block-level 요소</h2><p>block-level 요소는 새로운 줄에서 시작하고 가능한 최대 너비로 차지한다.</p>
-<ul>
-<li>div</li>
-<li>h1 ~ h6</li>
-<li>p</li>
-<li>form</li>
-<li>header</li>
-<li>footer</li>
-<li>section</li>
-</ul>
-<h2 id="inline-요소"><a href="#inline-요소" class="headerlink" title="inline 요소"></a>inline 요소</h2><p>inline 요소는 필요한 만큼의 너비를 가지고 새로운 줄에서 시작하지 않는다.</p>
-<ul>
-<li>span</li>
-<li>a</li>
-<li>img</li>
-</ul>
-<h2 id="display-none"><a href="#display-none" class="headerlink" title="display: none;"></a>display: none;</h2><p>위 속성은 요소를 제거하고 다시 만드는 것 대신 요소를 숨기고 나타내기 위해 JavaScript와 함께 사용하는 속성이다.</p>
-<p>script 요소는 display:none 속성이 기본값이다.</p>
-<h2 id="display-none과-visibility-hidden의-차이"><a href="#display-none과-visibility-hidden의-차이" class="headerlink" title="display:none과 visibility:hidden의 차이"></a>display:none과 visibility:hidden의 차이</h2><p><code>display:none</code>은 요소를 숨기고 페이지는 그곳에 해당 요소가 없는 것처럼 나타낸다.</p>
-<p>하지만, <code>visibility:hidden</code>은 요소를 숨기지만 이전과 동일한 공간을 차지한다. 즉, 요소는 보이지 않지만 layout에는 영향을 미친다.</p>
-<p><a target="_blank" rel="noopener" href="https://www.w3schools.com/css/tryit.asp?filename=trycss_display">display:none과 visibility:hidden 비교</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/23/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-6%EC%9D%BC%EC%B0%A8-Display/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
