@@ -232,6 +232,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/"
+                            aria-label=": useEffect로 이전 상태 기반하여 상태 업데이트 하기"
+                        >
+                            useEffect로 이전 상태 기반하여 상태 업데이트 하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-06T16:24:27+09:00">
+	
+		    2023/02/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useEffect란"><a href="#useEffect란" class="headerlink" title="useEffect란?"></a>useEffect란?</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(setup, dependencies?)</span><br></pre></td></tr></table></figure>
+
+<p>외부 시스템과 컴포넌트를 동기화 하는데 사용하는 React Hook이다. <strong>즉, 외부 시스템과 동기화하는 작업이 아니라면 useEffect를 사용하지 않는 것이 좋다.</strong></p>
+<h2 id="params"><a href="#params" class="headerlink" title="params"></a>params</h2><h3 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h3><p>Effect 로직 함수로, 선택적으로 cleanup 함수를 반환할 수 있다.</p>
+<ul>
+<li>컴포넌트가 처음 DOM에 추가 되었을 때, setup 함수가 실행된다.</li>
+<li>의존성이 변경되어 리렌더링이 발생한 이후, <span style='color:red;'>리액트는 이전 값으로 cleanup 함수 먼저 실행하고 새로운 값으로 setup 함수를 실행한다.</span></li>
+<li><strong>컴포넌트가 DOM에서 제거된 후, 리액트는 클린업 함수를 한 번 실행한다.</strong></li>
+</ul>
+<h3 id="dependencies"><a href="#dependencies" class="headerlink" title="dependencies?"></a>dependencies?</h3><p>setup 함수 코드 내부와 관련된 리액트 값들의 리스트이다. 리액트 값들은 컴포넌트 내부에서 선언된 props, state, 변수, 함수들을 의미한다.</p>
+<ul>
+<li>리액트는 이전 값과 dependencies를 Object.is() 메서드로 비교한다.</li>
+<li>만약 dependencies를 명확히 기재하지 않는다면, 컴포넌트 리렌더링이 발생할 때마다 Effect가 다시 실행된다.</li>
+</ul>
+<h2 id="이전-상태를-기반으로-useEffect로-상태-업데이트-하기"><a href="#이전-상태를-기반으로-useEffect로-상태-업데이트-하기" class="headerlink" title="이전 상태를 기반으로 useEffect로 상태 업데이트 하기"></a>이전 상태를 기반으로 useEffect로 상태 업데이트 하기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slider.js - 의존성 있는 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(index + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, [index]);</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 slider 프로젝트를 제작하다가 나온 코드이다. setInterval을 Effect 로직에 사용하였는데, 의존성으로 indexrk 있어 index가 변경될 때마다 해당 Effect 로직이 cleanup되고 setup되고를 반복하게 된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// slieder.js - 의존성 빈 배열인 경우</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> interval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setIndex</span>(<span class="function">(<span class="params">i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">3000</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 바꿀 경우 코드는 동일하게 동작하지만, 이전 상태를 기반으로 상태를 업데이트할 때에는 이전 값을 직접 넣어주기보단 updater 함수를 콜백함수로 전달해줌으로서 의존성 데이터를 줄일 수 있다.</p>
+<p><strong>그 결과, 처음 컴포넌트가 렌더링되고 한번만 실행되기 때문에 불필요한 setup과 cleanup 과정을 줄일 수 있다.</strong></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"
                             aria-label=": &lt;Suspense&gt; 컴포넌트는 무엇인가?"
                         >
@@ -1088,192 +1166,6 @@
                         <p>
                             <a
                                 href="/2023/01/19/CS/1-1-0-1-1-2-%EA%B0%80-%ED%8B%80%EB%A6%B0-%EC%9D%B4%EC%9C%A0%EB%8A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": REST API란 무엇인가요?"
-                        >
-                            REST API란 무엇인가요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-18T14:30:25+09:00">
-	
-		    2023/01/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="REST-API란-무엇인가요"><a href="#REST-API란-무엇인가요" class="headerlink" title="REST API란 무엇인가요?"></a>REST API란 무엇인가요?</h1><p>자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다.</p>
-<p>즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.</p>
-<h2 id="REST-API의-구성"><a href="#REST-API의-구성" class="headerlink" title="REST API의 구성"></a>REST API의 구성</h2><ul>
-<li>자원 : 모든 자원에는 고유한 ID가 존재하고 ID는 &#x2F;store&#x2F;:store_ID와 같은 HTTP URI이다.</li>
-<li>행위 : 자원에 대한 행위 (HTTP 요청 메서드)</li>
-<li>표현 : 자원에 대한 행위의 구체적 내용 (페이로드, JSON)</li>
-</ul>
-<h2 id="REST-API-설계-규칙"><a href="#REST-API-설계-규칙" class="headerlink" title="REST API 설계 규칙"></a>REST API 설계 규칙</h2><h3 id="1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다"><a href="#1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다" class="headerlink" title="1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다."></a>1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /getTodos/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/show/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span>/</span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다"><a href="#2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다" class="headerlink" title="2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다."></a>2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다.</h3><table>
-<thead>
-<tr>
-<th>HTTP 요청 메서드</th>
-<th>종류</th>
-<th>목적</th>
-<th>페이로드</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>GET</td>
-<td>index&#x2F;retrieve</td>
-<td>모든&#x2F;특정 리소스 취득</td>
-<td>X</td>
-</tr>
-<tr>
-<td>POST</td>
-<td>create</td>
-<td>리소스 생성</td>
-<td>O</td>
-</tr>
-<tr>
-<td>PUT</td>
-<td>replace</td>
-<td>리소스 전체 교체</td>
-<td>O</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td>modify</td>
-<td>리소스 일부 수정</td>
-<td>O</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td>delete</td>
-<td>모든&#x2F;특정 리소스 삭제</td>
-<td>X</td>
-</tr>
-</tbody></table>
-<ul>
-<li>리소스에 대한 행위는 HTTP 요청 메서드를 통해 표현하며 URI에 표현하지 않는다.</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="keyword">delete</span>/<span class="number">1</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">DELETE</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-슬래시-구분자-x2F-는-계층-관계를-표현"><a href="#3-슬래시-구분자-x2F-는-계층-관계를-표현" class="headerlink" title="3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현"></a>3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4-불가피하게-긴-URI인-경우-하이픈-사용"><a href="#4-불가피하게-긴-URI인-경우-하이픈-사용" class="headerlink" title="4. 불가피하게 긴 URI인 경우 하이픈(-) 사용"></a>4. 불가피하게 긴 URI인 경우 하이픈(-) 사용</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/very-long-store</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>단 밑줄(_)은 포함하지 않는다.</p>
-</blockquote>
-<h3 id="5-파일-확장자는-URI에-포함하지-않는다"><a href="#5-파일-확장자는-URI에-포함하지-않는다" class="headerlink" title="5. 파일 확장자는 URI에 포함하지 않는다."></a>5. 파일 확장자는 URI에 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant/:1/logo.png</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /stores/restaurant/:<span class="number">1</span>/logo <span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="attr">HOST</span>: example.<span class="property">com</span> <span class="title class_">Accept</span>: image/png</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>대신 Accept header를 사용한다.</li>
-</ul>
-<h2 id="RESTful한-REST-API-설계하기"><a href="#RESTful한-REST-API-설계하기" class="headerlink" title="RESTful한 REST API 설계하기"></a>RESTful한 REST API 설계하기</h2><p>RESTful은 이해하기 쉽고 사용하기 쉬운 REST API를 만들고, 일관적인 컨벤션을 통해 API의 이해도를 높이는 것을 말한다.</p>
-<h3 id="REST-API-설계-예시"><a href="#REST-API-설계-예시" class="headerlink" title="REST API 설계 예시"></a>REST API 설계 예시</h3><table>
-<thead>
-<tr>
-<th>CRUD</th>
-<th>HTTP verbs</th>
-<th>Route</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>resource 목록 표시</td>
-<td>GET</td>
-<td>&#x2F;resource</td>
-</tr>
-<tr>
-<td>resource 하나 내용 표시</td>
-<td>GET</td>
-<td>&#x2F;resource&#x2F;:id</td>
-</tr>
-<tr>
-<td>resource 생성</td>
-<td>POST</td>
-<td>&#x2F;resource</td>
-</tr>
-<tr>
-<td>resource 수정</td>
-<td>PUT</td>
-<td>&#x2F;resource&#x2F;:id</td>
-</tr>
-<tr>
-<td>resource 삭제</td>
-<td>DELETE</td>
-<td>&#x2F;resource&#x2F;:id</td>
-</tr>
-</tbody></table>
-<h4 id="응답상태-코드"><a href="#응답상태-코드" class="headerlink" title="응답상태 코드"></a>응답상태 코드</h4><table>
-<thead>
-<tr>
-<th>상태코드</th>
-<th>설명</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1xx</td>
-<td>전송 프로토콜 수준의 정보 교환</td>
-</tr>
-<tr>
-<td>2xx</td>
-<td>클라이언트 요청 성공</td>
-</tr>
-<tr>
-<td>3xx</td>
-<td>클라이언트 요청 완료하기 위해 추가 행동 필요</td>
-</tr>
-<tr>
-<td>4xx</td>
-<td>클라이언트의 잘못된 요청</td>
-</tr>
-<tr>
-<td>5xx</td>
-<td>서버쪽 오류</td>
-</tr>
-</tbody></table>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
