@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2023/07/14/python/python_datastructure/배열-0과-1로-구성된-배열-정렬/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/07/14/python/python_datastructure/배열-제시된-합을-가진-부분-배열-찾기/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>배열 - 0과 1로 구성된 배열 정렬 - Loco&#39;s Dev Blog</title>
+    <title>배열 - 제시된 합을 가진 부분 배열 찾기 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -19,16 +19,16 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"0과 1로 구성된 배열 정렬0과 1로 이루어진 배열이 있다. 배열 자체를 오름차순으로 정렬하라.\n\n입력: [1, 0, 1, 1, 1, 1, 1, 0, 0, 0], 출력: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]\n입력: [1, 1], 출력: [1, 1]\n\n방법1. sort() 사용12345arr = [1, 0, 1, 1, 1, 1, 1, 0, 0, 0]def get_increased_arr(arr):    arr.sort()    return arr\n\n\nsort() 메서드는 원본 배열을 오름차순으로 변경한다.\n\n2. sorted() 사용12345arr = [1, 0, 1, 1, 1, 1, 1, 0, 0, 0]def get_increased_arr(arr):    answer = sorted(arr)    return answer\n\n3. count() 사용123def get_increased_arr(arr):    arr[:] = [0] * arr.count(0) + [1] * arr.count(1)    return arr\n\n\narr[:]을 사용하여 원본에 영향을 미치지 않고 복사할 수 있다.\n\n4. 포인터 2개 사용12345678910111213def get_increased_arr(arr):    left = 0    right = len(arr) - 1    while left &lt; right:        while arr[left] == 0:            left += 1        while arr[right] == 1 and right &gt;= 0:            right -= 1        if left &lt; right:            arr[left], arr[right] = 0, 1            left, right = left + 1, right + 1    return arr\n","dateCreated":"2023-07-14T21:35:18+09:00","dateModified":"2023-07-14T22:26:09+09:00","datePublished":"2023-07-14T21:35:18+09:00","description":"","headline":"배열 - 0과 1로 구성된 배열 정렬","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/","keywords":"배열"}</script>
-    <meta name="description" content="0과 1로 구성된 배열 정렬0과 1로 이루어진 배열이 있다. 배열 자체를 오름차순으로 정렬하라.  입력: [1, 0, 1, 1, 1, 1, 1, 0, 0, 0], 출력: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1] 입력: [1, 1], 출력: [1, 1]  방법1. sort() 사용12345arr &#x3D; [1, 0, 1, 1, 1, 1, 1, 0,">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"제시된 합을 가진 부분 배열 찾기정렬되지 않은 양의 정수로 이루어진 배열 A가 있다. 연속된 원소를 더한 값이 제시된 값 S와 같은 부분 배열을 찾아라. (인덱스 기준은 1이다.)\n\n입력: arr &#x3D; [1, 2, 3, 7, 5], s &#x3D; 12, 출력: [2, 4]\n인덱스 2부터 4까지의 합: 2 + 3 + 7 &#x3D; 12\n\n\n입력: arr &#x3D; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], s &#x3D; 15, 출력: [1, 5]\n\n방법1. 이중 반복문 사용1234567def solution(arr,s):    for i in range(len(arr)):        sum = s        for j in range(i,len(arr)):            sum -= arr[j]            if (sum == 0):                return [i+1,j+1]\n\n2-1. O(n) 시간복잡도로 풀기123456789101112131415def solution(arr,s):    sum = s    index = 0    position = 0    while sum != 0:        if position == len(arr) - 1:            return [-1]        sum -= arr[position]        if sum &lt; 0:            index += 1            position = index            sum = s            continue        position += 1    return [index+1,position]\n\n\nsum에 s를 할당하여 position 위치의 요소를 하나씩 빼면서 sum 값이 0 보다 작은지 체크\n0 보다 작다면 연속되는 부분합이 아니므로 리셋시켜주고 시작 index도 우측으로 이동시킨다.\n만약 시작 index가 배열의 끝까지 도달했는데도 sum이 0이 되지 않으면 연속되는 부분합을 만들 수 없다.\n\n2-2. O(n) 시간복잡도로 풀기12345678910def solution(arr,s):    left,sum = 0,0    for right in range(len(arr)):        sum += arr[right]        while (left &lt; right and sum &gt; s):            sum -= arr[left]            left += 1        if sum == s:            return [left+1,right+1]    return [-1]\n\n\n배열의 첫번째 요소부터 하나씩 sum에 더해준다.\nsum이 s보다 작거나 같으면 계속 배열의 요소를 더해준다.\nsum &gt; s를 만족하면, sum에 left 위치의 요소를 빼주면서 sum이 s보다 작거나 같으면 중단\n이 때, sum == s를 만족하면 [left+1, right+1]을 반환한다.\nleft == right 일 때, sum == s를 만족하지 않으면 연속되는 부분합이 없다.\n\n","dateCreated":"2023-07-14T22:27:34+09:00","dateModified":"2023-07-15T00:07:02+09:00","datePublished":"2023-07-14T22:27:34+09:00","description":"","headline":"배열 - 제시된 합을 가진 부분 배열 찾기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/","keywords":"배열"}</script>
+    <meta name="description" content="제시된 합을 가진 부분 배열 찾기정렬되지 않은 양의 정수로 이루어진 배열 A가 있다. 연속된 원소를 더한 값이 제시된 값 S와 같은 부분 배열을 찾아라. (인덱스 기준은 1이다.)  입력: arr &#x3D; [1, 2, 3, 7, 5], s &#x3D; 12, 출력: [2, 4] 인덱스 2부터 4까지의 합: 2 + 3 + 7 &#x3D; 12   입력:">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="배열 - 0과 1로 구성된 배열 정렬">
-<meta property="og:url" content="https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/index.html">
+<meta property="og:title" content="배열 - 제시된 합을 가진 부분 배열 찾기">
+<meta property="og:url" content="https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="0과 1로 구성된 배열 정렬0과 1로 이루어진 배열이 있다. 배열 자체를 오름차순으로 정렬하라.  입력: [1, 0, 1, 1, 1, 1, 1, 0, 0, 0], 출력: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1] 입력: [1, 1], 출력: [1, 1]  방법1. sort() 사용12345arr &#x3D; [1, 0, 1, 1, 1, 1, 1, 0,">
+<meta property="og:description" content="제시된 합을 가진 부분 배열 찾기정렬되지 않은 양의 정수로 이루어진 배열 A가 있다. 연속된 원소를 더한 값이 제시된 값 S와 같은 부분 배열을 찾아라. (인덱스 기준은 1이다.)  입력: arr &#x3D; [1, 2, 3, 7, 5], s &#x3D; 12, 출력: [2, 4] 인덱스 2부터 4까지의 합: 2 + 3 + 7 &#x3D; 12   입력:">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-07-14T12:35:18.000Z">
-<meta property="article:modified_time" content="2023-07-14T13:26:09.907Z">
+<meta property="article:published_time" content="2023-07-14T13:27:34.000Z">
+<meta property="article:modified_time" content="2023-07-14T15:07:02.708Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="배열">
 <meta name="twitter:card" content="summary">
@@ -233,12 +233,12 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            배열 - 0과 1로 구성된 배열 정렬
+            배열 - 제시된 합을 가진 부분 배열 찾기
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-07-14T21:35:18+09:00">
+    <time datetime="2023-07-14T22:27:34+09:00">
 	
 		    2023/07/14
     	
@@ -258,24 +258,32 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="0과-1로-구성된-배열-정렬"><a href="#0과-1로-구성된-배열-정렬" class="headerlink" title="0과 1로 구성된 배열 정렬"></a>0과 1로 구성된 배열 정렬</h1><p>0과 1로 이루어진 배열이 있다. 배열 자체를 오름차순으로 정렬하라.</p>
+            <h1 id="제시된-합을-가진-부분-배열-찾기"><a href="#제시된-합을-가진-부분-배열-찾기" class="headerlink" title="제시된 합을 가진 부분 배열 찾기"></a>제시된 합을 가진 부분 배열 찾기</h1><p>정렬되지 않은 양의 정수로 이루어진 배열 A가 있다. 연속된 원소를 더한 값이 제시된 값 S와 같은 부분 배열을 찾아라. (인덱스 기준은 1이다.)</p>
 <ul>
-<li>입력: [1, 0, 1, 1, 1, 1, 1, 0, 0, 0], 출력: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]</li>
-<li>입력: [1, 1], 출력: [1, 1]</li>
+<li>입력: arr &#x3D; [1, 2, 3, 7, 5], s &#x3D; 12, 출력: [2, 4]<ul>
+<li>인덱스 2부터 4까지의 합: 2 + 3 + 7 &#x3D; 12</li>
 </ul>
-<h2 id="방법"><a href="#방법" class="headerlink" title="방법"></a>방법</h2><h3 id="1-sort-사용"><a href="#1-sort-사용" class="headerlink" title="1. sort() 사용"></a>1. sort() 사용</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr = [<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_increased_arr</span>(<span class="params">arr</span>):</span><br><span class="line">    arr.sort()</span><br><span class="line">    <span class="keyword">return</span> arr</span><br></pre></td></tr></table></figure>
+</li>
+<li>입력: arr &#x3D; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], s &#x3D; 15, 출력: [1, 5]</li>
+</ul>
+<h2 id="방법"><a href="#방법" class="headerlink" title="방법"></a>방법</h2><h3 id="1-이중-반복문-사용"><a href="#1-이중-반복문-사용" class="headerlink" title="1. 이중 반복문 사용"></a>1. 이중 반복문 사용</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params">arr,s</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">        <span class="built_in">sum</span> = s</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i,<span class="built_in">len</span>(arr)):</span><br><span class="line">            <span class="built_in">sum</span> -= arr[j]</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">sum</span> == <span class="number">0</span>):</span><br><span class="line">                <span class="keyword">return</span> [i+<span class="number">1</span>,j+<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-O-n-시간복잡도로-풀기"><a href="#2-1-O-n-시간복잡도로-풀기" class="headerlink" title="2-1. O(n) 시간복잡도로 풀기"></a>2-1. O(n) 시간복잡도로 풀기</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params">arr,s</span>):</span><br><span class="line">    <span class="built_in">sum</span> = s</span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    position = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">sum</span> != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> position == <span class="built_in">len</span>(arr) - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> [-<span class="number">1</span>]</span><br><span class="line">        <span class="built_in">sum</span> -= arr[position]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">sum</span> &lt; <span class="number">0</span>:</span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">            position = index</span><br><span class="line">            <span class="built_in">sum</span> = s</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        position += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> [index+<span class="number">1</span>,position]</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>sort() 메서드는 원본 배열을 오름차순으로 변경한다.</li>
+<li>sum에 s를 할당하여 position 위치의 요소를 하나씩 빼면서 sum 값이 0 보다 작은지 체크</li>
+<li>0 보다 작다면 연속되는 부분합이 아니므로 리셋시켜주고 시작 index도 우측으로 이동시킨다.</li>
+<li>만약 시작 index가 배열의 끝까지 도달했는데도 sum이 0이 되지 않으면 연속되는 부분합을 만들 수 없다.</li>
 </ul>
-<h3 id="2-sorted-사용"><a href="#2-sorted-사용" class="headerlink" title="2. sorted() 사용"></a>2. sorted() 사용</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr = [<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_increased_arr</span>(<span class="params">arr</span>):</span><br><span class="line">    answer = <span class="built_in">sorted</span>(arr)</span><br><span class="line">    <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-count-사용"><a href="#3-count-사용" class="headerlink" title="3. count() 사용"></a>3. count() 사용</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_increased_arr</span>(<span class="params">arr</span>):</span><br><span class="line">    arr[:] = [<span class="number">0</span>] * arr.count(<span class="number">0</span>) + [<span class="number">1</span>] * arr.count(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> arr</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-O-n-시간복잡도로-풀기"><a href="#2-2-O-n-시간복잡도로-풀기" class="headerlink" title="2-2. O(n) 시간복잡도로 풀기"></a>2-2. O(n) 시간복잡도로 풀기</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params">arr,s</span>):</span><br><span class="line">    left,<span class="built_in">sum</span> = <span class="number">0</span>,<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">        <span class="built_in">sum</span> += arr[right]</span><br><span class="line">        <span class="keyword">while</span> (left &lt; right <span class="keyword">and</span> <span class="built_in">sum</span> &gt; s):</span><br><span class="line">            <span class="built_in">sum</span> -= arr[left]</span><br><span class="line">            left += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">sum</span> == s:</span><br><span class="line">            <span class="keyword">return</span> [left+<span class="number">1</span>,right+<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> [-<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><code>arr[:]</code>을 사용하여 원본에 영향을 미치지 않고 복사할 수 있다.</li>
+<li>배열의 첫번째 요소부터 하나씩 sum에 더해준다.</li>
+<li>sum이 s보다 작거나 같으면 계속 배열의 요소를 더해준다.</li>
+<li><code>sum &gt; s</code>를 만족하면, sum에 left 위치의 요소를 빼주면서 sum이 s보다 작거나 같으면 중단</li>
+<li>이 때, <code>sum == s</code>를 만족하면 <code>[left+1, right+1]</code>을 반환한다.</li>
+<li><code>left == right</code> 일 때, <code>sum == s</code>를 만족하지 않으면 연속되는 부분합이 없다.</li>
 </ul>
-<h3 id="4-포인터-2개-사용"><a href="#4-포인터-2개-사용" class="headerlink" title="4. 포인터 2개 사용"></a>4. 포인터 2개 사용</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_increased_arr</span>(<span class="params">arr</span>):</span><br><span class="line">    left = <span class="number">0</span></span><br><span class="line">    right = <span class="built_in">len</span>(arr) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> left &lt; right:</span><br><span class="line">        <span class="keyword">while</span> arr[left] == <span class="number">0</span>:</span><br><span class="line">            left += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> arr[right] == <span class="number">1</span> <span class="keyword">and</span> right &gt;= <span class="number">0</span>:</span><br><span class="line">            right -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> left &lt; right:</span><br><span class="line">            arr[left], arr[right] = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">            left, right = left + <span class="number">1</span>, right + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> arr</span><br></pre></td></tr></table></figure>
 
             
 
@@ -297,14 +305,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
-                    data-tooltip="배열 - 제시된 합을 가진 부분 배열 찾기"
-                    aria-label="이전: 배열 - 제시된 합을 가진 부분 배열 찾기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -314,9 +319,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%ED%9A%8C%EB%AC%B8-Pelindromes-%EC%B0%BE%EA%B8%B0/"
-                    data-tooltip="배열 - 회문(Pelindromes) 찾기"
-                    aria-label="다음: 배열 - 회문(Pelindromes) 찾기"
+                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    data-tooltip="배열 - 0과 1로 구성된 배열 정렬"
+                    aria-label="다음: 배열 - 0과 1로 구성된 배열 정렬"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -341,7 +346,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -354,7 +359,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -367,7 +372,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -412,14 +417,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
-                    data-tooltip="배열 - 제시된 합을 가진 부분 배열 찾기"
-                    aria-label="이전: 배열 - 제시된 합을 가진 부분 배열 찾기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -429,9 +431,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%ED%9A%8C%EB%AC%B8-Pelindromes-%EC%B0%BE%EA%B8%B0/"
-                    data-tooltip="배열 - 회문(Pelindromes) 찾기"
-                    aria-label="다음: 배열 - 회문(Pelindromes) 찾기"
+                    href="/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    data-tooltip="배열 - 0과 1로 구성된 배열 정렬"
+                    aria-label="다음: 배열 - 0과 1로 구성된 배열 정렬"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -456,7 +458,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -469,7 +471,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -482,7 +484,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -516,7 +518,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -529,7 +531,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -542,7 +544,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-0%EA%B3%BC-1%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/14/Python/Python_DataStructure/%EB%B0%B0%EC%97%B4-%EC%A0%9C%EC%8B%9C%EB%90%9C-%ED%95%A9%EC%9D%84-%EA%B0%80%EC%A7%84-%EB%B6%80%EB%B6%84-%EB%B0%B0%EC%97%B4-%EC%B0%BE%EA%B8%B0/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
