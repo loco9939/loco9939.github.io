@@ -232,6 +232,109 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/23/Daily/Recoil%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84/"
+                            aria-label=": Recoil에 들어가기 전..."
+                        >
+                            Recoil에 들어가기 전...
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-23T22:31:34+09:00">
+	
+		    2023/03/23
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="상태란"><a href="#상태란" class="headerlink" title="상태란?"></a>상태란?</h1><p>상태(state)는 애플리케이션의 작동 방식을 설명하는 모든 데이터를 말한다. 상태 관리는 시간의 흐름에 따라 상태가 변경되는 방식이다.</p>
+<p>상태 관리를 위해서는 다음 기능이 필요하다.</p>
+<ul>
+<li>초기값(initial Value)을 저장할 수 있어야 한다.</li>
+<li>현재 값(Current Value)을 읽을 수 있어야 한다.</li>
+<li>값을 업데이트 할 수 있어야 한다.</li>
+</ul>
+<h2 id="React-상태관리의-한계"><a href="#React-상태관리의-한계" class="headerlink" title="React 상태관리의 한계"></a>React 상태관리의 한계</h2><ol>
+<li><p>컴포넌트 상태는 연관된 상위 컴포넌트까지 끌어올려야 공유가 가능하고 이 과정에서 Props Drilling 이슈가 발생하고 불필요한 리렌더링 발생한다. <span style="color:red">(성능저하)</span></p>
+</li>
+<li><p>Context로 Props Drilling 이슈 해결할 수 있지만, <strong>Context는 단일 값만 저장할 수 있고 여러 값들의 집합을 담기가 어렵다.</strong></p>
+</li>
+<li><p>React의 Context, Props 만으로는 최상단에서 최하단 까지의 state 코드 분리가 어렵다.</p>
+</li>
+</ol>
+<h2 id="Recoil-장점"><a href="#Recoil-장점" class="headerlink" title="Recoil 장점"></a>Recoil 장점</h2><h3 id="유연한-상태-공유"><a href="#유연한-상태-공유" class="headerlink" title="유연한 상태 공유"></a>유연한 상태 공유</h3><p>Redux처럼 복잡한 과정이 없다. 간단한 get&#x2F;set 인터페이스를 사용해 상태 공유가 쉽다.</p>
+<h3 id="파생된-상태"><a href="#파생된-상태" class="headerlink" title="파생된 상태"></a>파생된 상태</h3><p>데이터는 간단하고 또 안전하게 상태나 다른 파생된 데이터로부터 파생될 수 있다. 또한, 상태에 접근하는 방법과 동일하게 파생된 상태에 접근 가능하다.</p>
+<p>파생된 상태는 동기, 비동기 처리가 가능하다.</p>
+<h3 id="광범위한-앱-상태-관찰"><a href="#광범위한-앱-상태-관찰" class="headerlink" title="광범위한 앱 상태 관찰"></a>광범위한 앱 상태 관찰</h3><p>Recoil 상태의 전체 또는 일부의 상태를 읽거나 상태가 변경된 것을 감지할 수 있다. 앱의 상태를 유지할 수도 있고 다시 수화(Hydration)하는 기능을 제공한다.</p>
+<h3 id="비교적-낮은-러닝-커브"><a href="#비교적-낮은-러닝-커브" class="headerlink" title="비교적 낮은 러닝 커브"></a>비교적 낮은 러닝 커브</h3><p>Recoil은 React API와 유사하여 Redux에 비해 쉽고 Recoil은 기본적으로 비동기 처리 기능을 가진다.</p>
+<h2 id="Recoil-핵심-개념"><a href="#Recoil-핵심-개념" class="headerlink" title="Recoil 핵심 개념"></a>Recoil 핵심 개념</h2><h3 id="1-atoms"><a href="#1-atoms" class="headerlink" title="1. atoms"></a>1. atoms</h3><ul>
+<li>atoms은 공유 상태</li>
+<li>컴포넌트가 구독할 수 있는 상태 단위</li>
+</ul>
+<p>atom은 상태단위이며 구독과 업데이트가 가능하다. atom이 업데이트되면 구독중인 컴포넌트는 새 값을 반영해 다시 렌더링된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> authUserState = <span class="title function_">atom</span>(&#123;</span><br><span class="line">  <span class="attr">key</span>: <span class="string">&quot;authUserState&quot;</span>,</span><br><span class="line">  <span class="attr">defualt</span>: <span class="literal">null</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>atom은 고유한 key를 가져야 한다.</li>
+<li>default 속성으로 초깃값 설정한다.</li>
+</ul>
+<p>컴포넌트에서 atom을 읽거나 쓰려면 useRecoilState 훅을 사용한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SignIn</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [authUser] = <span class="title function_">useRecoilState</span>(authUserState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    !authUser ? <span class="language-xml"><span class="tag">&lt;<span class="name">SignInForm</span> /&gt;</span></span> : <span class="language-xml"><span class="tag">&lt;<span class="name">Browse</span> /&gt;</span></span>;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>뿐만 아니라 상태 업데이트를 위한 업데이트 함수만 추출할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SignInButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [, setAuthUser] = <span class="title function_">useRecoilState</span>(authUserState);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleSignIn</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="title function_">setAuthUser</span>(&#123; name, email &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;handleSignIn&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      로그인</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-selectors"><a href="#2-selectors" class="headerlink" title="2. selectors"></a>2. selectors</h3><p>selector는 atom이나 다른 selector를 입력받아 파생된 상태를 생성하는 순수함수이다. <strong>상위의 atom, selector가 업데이트되면 하위의 selector도 다시 실행된다.</strong> 컴포넌트는 atom과 마찬가지로 selector가 변경되면 다시 렌더링된다.</p>
+<p>최소한의 상태만 atom에 저장하고 selector로 파생된 상태를 효과적으로 계산하여 불필요한 상태 보존을 방지한다.</p>
+<p>selector는 어떤 컴포넌트가 필요로하는지, 어떤 상태에 의존하는지 추적하므로 함수적인 접근 방식을 매우 효율적으로 만든다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> authUserNameState = <span class="title function_">selector</span>(&#123;</span><br><span class="line">  <span class="attr">key</span>: <span class="string">&quot;authUserNameState&quot;</span>,</span><br><span class="line">  <span class="attr">get</span>:(&#123; get &#125;) &#123;</span><br><span class="line">    <span class="keyword">const</span> authUser = <span class="title function_">get</span>(authUserState);</span><br><span class="line">    <span class="keyword">return</span> authUser.<span class="property">name</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>get 메서드 내부의 <code>get</code>함수는 atom 또는 다른 selector를 전달받을 수 있다. </li>
+<li>전달받게 되면 자동적으로 종속 관계가 생성되며 참조했던 다른 atom, selector가 업데이트 되면 다시 실행된다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/23/Daily/Recoil%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/21/React/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%A0%91%EA%B7%BC%EC%84%B1-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%AA%A8%EB%8B%AC-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"
                             aria-label=": 리액트 접근성 높이는 모달 구현하기"
                         >
@@ -934,84 +1037,6 @@
                         <p>
                             <a
                                 href="/2023/03/10/CS/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%97%B0%EC%8A%B5%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/"
-                            aria-label=": 정적 타입 시스템의 필요성"
-                        >
-                            정적 타입 시스템의 필요성
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-10T11:53:52+09:00">
-	
-		    2023/03/10
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>, <a class="category-link" href="/categories/CS/%EA%B8%B0%EC%B4%88-%EA%B0%9C%EB%B0%9C-%EC%A7%80%EC%8B%9D/">기초 개발 지식</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>개발자는 사용자에게 안정적인 서비스를 제공하기 위해 여러가지 방법을 사용한다.</p>
-<p>정적 타입 시스템도 그 중 하나다.</p>
-<h2 id="타입-시스템"><a href="#타입-시스템" class="headerlink" title="타입 시스템"></a>타입 시스템</h2><p>타입 시스템은 개발자가 정의한 타입을 기반으로 해당 타입을 언어와 연관시키는 메커니즘이다.</p>
-<ul>
-<li>동등: 두 타입이 동일할 때 적용 (number:number)</li>
-<li>호환: 두가지 타입이 정확히 일치하지 않더라도 어느정도 호환이 되는지를 나타내는 규칙(any: number)</li>
-<li>추론: 타입이 정의되어 있지 않지만 주변 문맥에 따라 타입이 결정되는 규칙(a&#x3D;3 일 때, a는 number)</li>
-</ul>
-<p>모든 언어는 타입시스템이 존재하고 동적 타입과 정적 타입으로 나뉜다.</p>
-<h2 id="동적-타입과-정적-타입-차이"><a href="#동적-타입과-정적-타입-차이" class="headerlink" title="동적 타입과 정적 타입 차이"></a>동적 타입과 정적 타입 차이</h2><h3 id="동적-타입"><a href="#동적-타입" class="headerlink" title="동적 타입"></a>동적 타입</h3><p>런타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.</p>
-<p>ex) PHP, JS, Python</p>
-<h3 id="정적-타입"><a href="#정적-타입" class="headerlink" title="정적 타입"></a>정적 타입</h3><p>컴파일 타임에 모든 변수의 유형을 결정한다. 잘못된 경우 예외 발생시킨다.</p>
-<p>ex) C, C++, Java</p>
-<h2 id="정적-타입-시스템의-필요성"><a href="#정적-타입-시스템의-필요성" class="headerlink" title="정적 타입 시스템의 필요성"></a>정적 타입 시스템의 필요성</h2><ol>
-<li><p>타입을 명시하여 나중에 다른 개발자가 보더라도 어떤 매개변수를 넣고 이 함수가 어떤 값을 반환하는지 명시적으로 파악 가능</p>
-</li>
-<li><p>어떤 함수 또는 API에 대해 여러가지의 타입으로 이루어진 값이 발생될 수 있는데, 해당 값들에 대한 대처를 “미리” 할 수 있다.</p>
-</li>
-<li><p>매개변수 잘못입력하거나 등의 개발자 잔실수 줄여준다.</p>
-</li>
-</ol>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
