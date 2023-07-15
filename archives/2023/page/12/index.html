@@ -233,6 +233,164 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/13/Algorithm/boj/DP/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/"
+                            aria-label=": boj-1932 정수 삼각형(JavaScript)"
+                        >
+                            boj-1932 정수 삼각형(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-13T19:06:41+09:00">
+	
+		    2023/02/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    7</span><br><span class="line">   3 8</span><br><span class="line">  8 1 0</span><br><span class="line"> 2 7 4 4</span><br><span class="line">4 5 2 6 5</span><br></pre></td></tr></table></figure>
+
+<p>위 그림은 크기가 5인 정수 삼각형의 한 모습이다.</p>
+<p>맨 위층 7부터 시작해서 아래에 있는 수 중 하나를 선택하여 아래층으로 내려올 때, 이제까지 선택된 수의 합이 최대가 되는 경로를 구하는 프로그램을 작성하라. 아래층에 있는 수는 현재 층에서 선택된 수의 대각선 왼쪽 또는 대각선 오른쪽에 있는 것 중에서만 선택할 수 있다.</p>
+<p>삼각형의 크기는 1 이상 500 이하이다. 삼각형을 이루고 있는 각 수는 모두 정수이며, 범위는 0 이상 9999 이하이다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 삼각형의 크기 n(1 ≤ n ≤ 500)이 주어지고, 둘째 줄부터 n+1번째 줄까지 정수 삼각형이 주어진다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 합이 최대가 되는 경로에 있는 수의 합을 출력한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">예제 입력 1</span><br><span class="line">5</span><br><span class="line">7</span><br><span class="line">3 8</span><br><span class="line">8 1 0</span><br><span class="line">2 7 4 4</span><br><span class="line">4 5 2 6 5</span><br><span class="line"></span><br><span class="line">예제 출력 1</span><br><span class="line">30</span><br></pre></td></tr></table></figure>
+
+<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><p>처음에는 탑 다운 방식으로 7을 선택하고 3과 8을 더한 수는 DP[2][0], DP[2][1]에 저장하는 방법으로 진행해보려고 하였다.</p>
+<p>그런데 횟수가 많아지고 DP[3][1]에서 DP[2][0]과 DP[2][1] 중 큰 값을 구해서 더해야하는데 만약 3이 아니라 10이라면 1과 10을 제외한 2~9를 반복문을 돌면서 그 중에 최댓값인 것과 더해서 DP 값을 구해야 하기에 이는 너무 복잡하여 다르게 생각해보려고 노력했지만 한 문제에 너무 많은 시간을 쏟는 것 같아 다른 사람의 해설을 참고하였다.</p>
+<p>위에서 부터 순서대로 7-3-8-7-5를 선택하여 총합 30이라는 숫자를 출력하였는데, 이는 반대로 생각해볼 수 있다.</p>
+<p>맨 아래에서부터 시작하여 4, 5, 2, 6, 5의 바로 위의 숫자에는 4개의 숫자가 있다. 즉, 5번째 줄의 숫자를 2개씩 짝지어서 비교하여 큰 값을 바로 위에 숫자와 더하여 누적하면서 위로 올라가다보면 최종적으로 맨 위에는 최댓값이 남게되는 방식이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> n = +input.<span class="title function_">shift</span>();</span><br><span class="line"><span class="keyword">const</span> triangle = input.<span class="title function_">map</span>(<span class="function">(<span class="params">floor</span>) =&gt;</span> floor.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">solution</span> = (<span class="params">n, triangle</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">2</span>) <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>] + <span class="title class_">Math</span>.<span class="title function_">max</span>(...triangle[<span class="number">1</span>]);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    triangle[i].<span class="title function_">forEach</span>(<span class="function">(<span class="params">v, idx, self</span>) =&gt;</span> &#123;</span><br><span class="line">      self[idx] = v + <span class="title class_">Math</span>.<span class="title function_">max</span>(triangle[i + <span class="number">1</span>][idx], triangle[i + <span class="number">1</span>][idx + <span class="number">1</span>]);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> triangle[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">solution</span>(n, triangle));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DP 배열을 만들지 않고 triangle 배열을 그대로 바꾸어 반환하였다.</li>
+</ul>
+<h3 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://tesseractjh.tistory.com/114">한걸음씩 블로그 </a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/13/Algorithm/boj/DP/boj-1932-%EC%A0%95%EC%88%98-%EC%82%BC%EA%B0%81%ED%98%95-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/"
+                            aria-label=": boj-2156 포도주 시식(JavaScript)"
+                        >
+                            boj-2156 포도주 시식(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-13T16:30:46+09:00">
+	
+		    2023/02/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.</p>
+<p>포도주 잔을 선택하면 그 잔에 들어있는 포도주는 모두 마셔야 하고, 마신 후에는 원래 위치에 다시 놓아야 한다.<br>연속으로 놓여 있는 3잔을 모두 마실 수는 없다.<br>효주는 될 수 있는 대로 많은 양의 포도주를 맛보기 위해서 어떤 포도주 잔을 선택해야 할지 고민하고 있다. 1부터 n까지의 번호가 붙어 있는 n개의 포도주 잔이 순서대로 테이블 위에 놓여 있고, 각 포도주 잔에 들어있는 포도주의 양이 주어졌을 때, 효주를 도와 가장 많은 양의 포도주를 마실 수 있도록 하는 프로그램을 작성하시오.</p>
+<p>예를 들어 6개의 포도주 잔이 있고, 각각의 잔에 순서대로 6, 10, 13, 9, 8, 1 만큼의 포도주가 들어 있을 때, 첫 번째, 두 번째, 네 번째, 다섯 번째 포도주 잔을 선택하면 총 포도주 양이 33으로 최대로 마실 수 있다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">예제 입력 1</span><br><span class="line">6</span><br><span class="line">6</span><br><span class="line">10</span><br><span class="line">13</span><br><span class="line">9</span><br><span class="line">8</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">예제 출력 1</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"><span class="keyword">const</span> n = input.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> <span class="number">0</span>);</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = input[<span class="number">0</span>];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>] = input[<span class="number">0</span>] + input[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">    <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[n]);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DP는 N이 0에서 부터 n까지로 마실 수 있는 최대 포도주 양을 담은 배열이다.</li>
+<li>만약 포도주가 1개라고 하면 1잔으로 마실 수 있는 포도주 최대 양을 DP[1]이라고 할 수 있고 그 값은 가장 첫번째 배열의 요소이다. (왜냐하면? 해당 배열에는 한개의 요소밖에 없으니깐)</li>
+<li>만약 포도주가 2개일 때, 2잔으로 마실 수 있는 포도주 최대 양은 DP[2]이고, 그 값은 가장 첫번째 배열과 두번째 배열의 요소의 합이다.</li>
+</ul>
+<p>하지만 여기서 DP[3]부터는 고려해줘야하는 부분이 생겨난다.</p>
+<p>1번잔, 2번잔, 3번잔이 있을 때, DP[3]으로 올 수 있는 경우의 수는 다음과 같다.</p>
+<ol>
+<li>1번과 2번을 마시는 경우 &#x3D;&gt; DP[2]와 같은 의미이다.</li>
+<li>1번과 3번을 마시는 경우 &#x3D;&gt; DP[1]+input[2]</li>
+<li>2번과 3번을 마시는 경우 &#x3D;&gt; 1번을 제외 하는 것이니 DP[0]+input[1]+input[2]</li>
+</ol>
+<p>위를 토대로 점화식을 세울 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">2</span>] + input[i - <span class="number">1</span>],</span><br><span class="line">  <span class="variable constant_">DP</span>[i - <span class="number">3</span>] + input[i - <span class="number">1</span>] + input[i - <span class="number">2</span>]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/13/Algorithm/boj/DP/boj-2156-%ED%8F%AC%EB%8F%84%EC%A3%BC-%EC%8B%9C%EC%8B%9D-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"
                             aria-label=": useState로 컴포넌트 리셋하기"
                         >
@@ -908,260 +1066,6 @@
                         <p>
                             <a
                                 href="/2023/01/26/CS/%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
-                            aria-label=": 스코프는 무엇인가요?"
-                        >
-                            스코프는 무엇인가요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-20T10:30:56+09:00">
-	
-		    2023/01/20
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="스코프"><a href="#스코프" class="headerlink" title="스코프"></a>스코프</h1><p>스코프란, 식별자가 참조할 수 있는 범위(유효범위)를 말한다. 자바스크립트 엔진이 식별자를 찾기 위해 사용하는 규칙이다.</p>
-<ul>
-<li>모든 식별자는 자신이 선언된 위치에 의해 상위 스코프를 결정한다.</li>
-<li>식별자는 어떤 값을 구별하기 위해 유일 해야하므로 <span style="color:red">중복될 수 없다.</span> 단, 스코프가 다르면 중복될 수 있다.</li>
-</ul>
-<h2 id="지역-스코프"><a href="#지역-스코프" class="headerlink" title="지역 스코프"></a>지역 스코프</h2><p>자바스크립트는 함수 레벨 스코프를 갖는다. 그러므로 지역이란, 함수 몸체 내부를 말한다.</p>
-<p>즉, 지역 스코프는 함수에 의해서 생성된다.</p>
-<blockquote>
-<p>let, const가 나오면서 블록 레벨 스코프를 갖는 식별자를 선언할 수 있다. 여기서 지역 스코프는 코드 블록에 의해 생성된다.</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 함수 레벨 스코프를 갖는다. 즉, 함수 몸체 내부에서 var 키워드로 선언된 변수는 지역 스코프 범위를 참조할 수 있다. 함수 몸체 이외에서 선언된 변수는 모드 전역 스코프 범위로 본다.</p>
-<h2 id="스코프-체인"><a href="#스코프-체인" class="headerlink" title="스코프 체인"></a>스코프 체인</h2><p>스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 모든 스코프는 하나의 계층적 구조로 연결된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>; <span class="comment">// 전역 스코프</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = -<span class="number">100</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 100</span></span><br><span class="line">  <span class="title function_">inner</span>(); <span class="comment">// -100</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">outer</span>();</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>전역 스코프 (최상위 스코프)</p>
-</li>
-<li><p>outer 지역 스코프</p>
-</li>
-<li><p>inner 지역 스코프</p>
-</li>
-</ol>
-<p>자바스크립트 엔진은 변수를 참조하는 스코프에서 시작하여 <span style="color:red">상위 스코프 방향</span>으로 이동하며 변수를 검색한다.</p>
-<blockquote>
-<p>실제 자바스크립트 엔진은 코드를 실행하기 전 렉시컬 환경이라는 자료구조를 생성한다. 변수 선언이 실행되면 변수 식별자가 자료구조의 key로 등록되고 변수 할당이 일어나면 변수 식별자에 해당하는 값을 변경한다.</p>
-</blockquote>
-<h2 id="렉시컬-스코프"><a href="#렉시컬-스코프" class="headerlink" title="렉시컬 스코프"></a>렉시컬 스코프</h2><p>렉시컬 스코프란, 함수 정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.</p>
-<p><span style="color:red">함수 호출이 아닌</span> 함수 정의(함수 선언문, 함수 표현식)가 실행되어 생성된 함수 객체는 자신이 정의된 스코프인 상위 스코프를 기억한다.</p>
-<blockquote>
-<p>즉, 내가(함수가) 정의된 스코프가 자신의 상위 스코드이다.</p>
-</blockquote>
-<hr>
-<h1 id="전역변수와-var-키워드"><a href="#전역변수와-var-키워드" class="headerlink" title="전역변수와 var 키워드"></a>전역변수와 var 키워드</h1><p>변수는 생명주기가 있어 선언에 의해 생성되고 언젠가 소멸한다. 소멸하는 시점은 스코프에 따라 다르다.</p>
-<ul>
-<li><p>전역변수 : 런타임 이전에 자바스크립트 엔진에 의해 선언되고 애플리케이션이 종료되면 소멸한다.</p>
-</li>
-<li><p>지역변수 : 함수가 호출될 때 생성되고 함수가 종료하면 소멸한다. 함수가 호출되는 순간 함수 몸체에 있는 선언들이 호이스팅 된다.</p>
-</li>
-</ul>
-<h2 id="전역변수의-문제점"><a href="#전역변수의-문제점" class="headerlink" title="전역변수의 문제점"></a>전역변수의 문제점</h2><ol>
-<li><p>암묵적 결합<br>어디서든 참조하고 변경할 수 있어 의도치 않게 변경될 수 있다.</p>
-</li>
-<li><p>긴 생명주기</p>
-</li>
-</ol>
-<p>메모리 자원도 오랜 기간 소비한다. 1번의 위험이 오래 지속되어 오류의 기회가 많아진다.</p>
-<ol start="3">
-<li>네임 스페이스 오염</li>
-</ol>
-<p>자바스크립트는 파일을 분리해도 전역 스코프를 공유한다는 점에서 다른 파일에서 동일한 이름의 전역 변수끼리 충돌이 일어날 수 있다.</p>
-<blockquote>
-<p>그러므로 전역변수를 꼭 써야하는 상황이 아니라면 사용하지 말자.</p>
-</blockquote>
-<h2 id="전역변수-사용-억제-방법"><a href="#전역변수-사용-억제-방법" class="headerlink" title="전역변수 사용 억제 방법"></a>전역변수 사용 억제 방법</h2><ol>
-<li><p>즉시실행함수<br>즉시실행함수를만들어 함수 종료 시 변수도 사라져 메모리 해제도 빨리 되고 지역 스코프를 가져 충돌의 위험을 줄일 수 있다.</p>
-</li>
-<li><p>모듈패턴<br>클래스를 모방하여 관련이 있는 변수와 함수를 모아 즉시실행함수로 감싸 하나의 모듈로 만든다.</p>
-</li>
-</ol>
-<p>전역변수 억제와 캡슐화까지 가능하다.</p>
-<blockquote>
-<p>캡슐화란, 객체의 상태를 나타내는 프로퍼티와 프로퍼티를 참조하고 조작할 수 있는 메서드를 하나로 묶는 것을 말한다. 객체의 특정 프로퍼티나 메서드를 감출 목적으로 사용하기도 한다.(정보은닉)</p>
-</blockquote>
-<h1 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h1><p>var 키워드는 함수 레벨 스코프를 따른다. 함수 몸체 외부에서 var 키워드로 선언시 전역 변수로 선언되고 전역 스코프를 갖는다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">x</span>); <span class="comment">// 10;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드는 전역에서 선언시 전역 객체의 프로퍼티로 등록된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  z = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
-
-<p>키워드로 선언되지 않은 변수는 어디에서든지 항상 전역 변수이다.</p>
-<p>선언되지 않은 변수는 해당 코드가 실행되어야 존재한다.</p>
-<blockquote>
-<p>키워드 없이 선언하는 것은 옳지 않다.</p>
-</blockquote>
-<p><span style="font-size:1.2rem">러버덕하면서 알게된 내용</span></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  y = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;x&quot;</span>); <span class="comment">//  &#123;value: 100, writable: true, enumerable: true, configurable: false&#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptor</span>(<span class="variable language_">window</span>, <span class="string">&quot;y&quot;</span>); <span class="comment">// &#123;value: 50, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>var 키워드로 선언된 변수와 암묵적 선언으로 선언된 변수 모두 전역 객체의 프로퍼티로 등록된다.</p>
-<p>하지만, 객체의 프로퍼티를 보면 configurable 값이 다른 것을 볼 수 있는데, 이것이 true이면 재정의(삭제, 변경)가 가능하다는 의미이다.</p>
-<p>따라서 암묵적 선언으로 전역 객체의 프로퍼티로 등록이 되면 재정의가 가능하므로 암묵적 선언은 사용하지 않는 것이 좋다.</p>
-<hr>
-<h1 id="let-const-키워드"><a href="#let-const-키워드" class="headerlink" title="let, const 키워드"></a>let, const 키워드</h1><p>let, const 키워드는 블록 레벨 스코프를 따른다. 그러므로 var 키워드의 함수 레벨 스코프보다 더 한정적인 스코프를 지원하여 작은 범위의 스코프를 다룰 수 있어 유용하다.</p>
-<h2 id="let"><a href="#let" class="headerlink" title="let"></a>let</h2><p>var 키워드와 비교하여 let 키워드를 알아보자.</p>
-<ol>
-<li><p>변수 중복 선언 금지</p>
-</li>
-<li><p>블록 레벨 스코프</p>
-</li>
-</ol>
-<p>let 키워드로 선언한 전역변수는 전역객체의 프로퍼티가 아니다. 전역 객체의 프로퍼티가 되는 것들은 var 키워드로 선언한 전역변수 및 전역함수, 그리고 선언하지 않는 변수에 값을 할당한 암묵적 전역이 있다. 이에 대해서는 실행 컨텍스트에 대해 배울 때 자세히 배우자.</p>
-<ol start="3">
-<li>변수 호이스팅</li>
-</ol>
-<p>var 키워드로 선언한 변수는 선언단계와 초기화 단계가 동시에 진행된다. 하지만 let 키워드로 선언한 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
-<p>선언단계가 자바스크립트 엔진에 의해 실행되고 <span style="color:red">초기화 단계는 변수 선언문에 도달했을 때</span>, 실행된다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined</span></span><br><span class="line">a = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// Uncaught ReferenceError: b is not defined</span></span><br><span class="line"><span class="keyword">let</span> b;</span><br></pre></td></tr></table></figure>
-
-<p>언뜻보면 let 키워드는 호이스팅이 일어나지 않는 것처럼 보이지만, 선언단계는 호이스팅이 되어 최상단에서 먼저 실행되었고 초기화 단계는 선언문에 도달했을 경우 진행되기 때문에 위와 같은 현상이 발생하는 것이다.</p>
-<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p>let 키워드와 비교해서 알아보자</p>
-<ol>
-<li>선언과 초기화</li>
-</ol>
-<p>const 키워드로 선언한 변수는 개발자가 선언과 초기화를 동시에 해야한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="number">1</span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz; <span class="comment">// Uncaught SyntaxError : Unexpected identifier</span></span><br></pre></td></tr></table></figure>
-
-<p>이전에 선언을 하면 선언단계와 초기화 단계가 진행된다 그랬었는데, 이것도 초기화가 맞지만 const를 사용하기 위해서는 개발자가 직접 초기화를 해줘야한다. 만약 초기화를 해주지 않고 나중에 값을 할당한다는 것이 재할당으로 해석되기 때문이다.</p>
-<ol start="2">
-<li>재할당 금지</li>
-</ol>
-<p>const 키워드로 선언한 변수에 원시값을 할당하면 값을 변경할 수 없다. 하지만 객체를 할당한 경우 값을 변경할 수 있다. 재할당 금지라는 말이 불변을 의미하지는 않는다. 왜냐하면 식별자가 가리키는 메모리 주소 공간은 참조값이 저장되어 있고 객체를 변경하여도 참조값은 변하지 않기 때문이다.</p>
-<ol start="3">
-<li>상수</li>
-</ol>
-<p>변하지 않는 값을 사용하기 위해 우리는 상수를 사용한다.</p>
-<p>주로 상수의 이름은 대문자로 사용한다. 원시값을 할당한 경우 원시값은 변경 불가능한 값이고 재할당이 금지되므로 할당된 값을 변경할 방법은 없다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/20/CS/%EC%8A%A4%EC%BD%94%ED%94%84%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/19/CS/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%80/"
-                            aria-label=": 프로세스와 스레드의 차이점은?"
-                        >
-                            프로세스와 스레드의 차이점은?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-19T15:12:28+09:00">
-	
-		    2023/01/19
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="프로세스와-스레드는-무엇인가요"><a href="#프로세스와-스레드는-무엇인가요" class="headerlink" title="프로세스와 스레드는 무엇인가요?"></a>프로세스와 스레드는 무엇인가요?</h1><p><strong>프로세스란?</strong> 작업의 단위로써, 작업을 관리하는 주체는 OS이다. 프로세스는 최소 1개의 스레드(thread)를 가진다.</p>
-<p>컴퓨터가 명령을 받게되면 명령을 실행하면서 연산코드의 흐름이 생겨난다. <span style="color:red;">이 때의 흐름을 스레드라고 한다.</span></p>
-<p><strong>즉, 스레드가 실질적으로 연산을 하는 주체가 된다.</strong></p>
-<p>기본적으로 프로세스 흐름(스레드)은 1개이다. 그런데 흐름이 n개 일 수 있는데, 이런 경우를 멀티 스레딩(Multi-threading)라고 한다.</p>
-<p>멀티 스레딩은 동시성과 동기화라는 특징이 있는데 이는 아래 예시를 통해 설명할 수 있다.</p>
-<blockquote>
-<p>만약 프로세스가 여러 개라면 멀티 태스킹(Multi-tasking)이라고 한다.</p>
-</blockquote>
-<h2 id="프로세스와-스레드-비유-설명"><a href="#프로세스와-스레드-비유-설명" class="headerlink" title="프로세스와 스레드 비유 설명"></a>프로세스와 스레드 비유 설명</h2><p><img src="/../images/../../images/processandthread/process_thread.png" alt="프로세스와 스레드 비유 설명"></p>
-<p>한 가구(Process)가 있다고 하자. 해당 가구는 집(Virtual Memory)이라는 공간에 살게된다. 한 가구안에 세대원(Thread) 3명이 있다고 하자.</p>
-<p>집 안에는 세대원들이 각자 방(Thread Local Storage)을 하나씩 사용한다. 뿐만 아니라 Thread마다 Stack 자료구조로 관리되는 메모리 공간이 따로 있다.</p>
-<p>각자 방은 본인만 사용 가능하고 거실, 화장실, 부엌은 공용공간(Heap)이다.</p>
-<h2 id="프로세스와-스레드-작동원리"><a href="#프로세스와-스레드-작동원리" class="headerlink" title="프로세스와 스레드 작동원리"></a>프로세스와 스레드 작동원리</h2><p><img src="/../images/../../images/processandthread/procee_thread_logic.png" alt="프로세스와 스레드 작동원리"></p>
-<ol>
-<li><p>Process가 Thread를 처리하기 위해서는 CPU와 메모리(연습장)가 필요하는데 이를 관리해주는 것이 바로 OS가 하는 일이다.</p>
-</li>
-<li><p>이 때 Process는 실제 메모리를 사용하지 않고 RAM(1차 메모리)과 HDD(2차 메모리)를 추상화한 Virtual Memory를 사용한다.</p>
-</li>
-<li><p>Virtual Memory는 RAM과 연결된 부분이 있을 수도 있고 HDD와 연결된 부분이 있을 수도 있다. RAM이 부족해서 연결하지 못하는 것보단 HDD라도 연결해주는 것이 낫기 때문이다.</p>
-</li>
-</ol>
-<p>OS가 Virtual Memory를 Process에게 할당해준다. 때문에 Process 내부의 Thread는 작동범위가 Virtual Memory로 제한된다.</p>
-<h1 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h1><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=x-Lp-h_pf9Q&t=58s">유튜브 널널한 개발자 - Process와 Thread 차이</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/19/CS/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%80/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
