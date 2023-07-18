@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2023/07/18/스택-단어를-역순으로-출력하기/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/07/18/python/datastructure/stack/스택-연습-문제/스택-연습-문제/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>스택 - 단어를 역순으로 출력하기 - Loco&#39;s Dev Blog</title>
+    <title>스택 - 연습문제 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -19,17 +19,18 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"","dateCreated":"2023-07-18T22:38:41+09:00","dateModified":"2023-07-18T22:38:41+09:00","datePublished":"2023-07-18T22:38:41+09:00","description":"","headline":"스택 - 단어를 역순으로 출력하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"}</script>
-    <meta property="og:type" content="blog">
-<meta property="og:title" content="스택 - 단어를 역순으로 출력하기">
-<meta property="og:url" content="https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/index.html">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제 1. 괄호 짝 검사괄호의 짝이 바르면 True, 바르지 않으면 False를 반환하는 함수를 작성하라.\n예를 들어 ((a*(b+c))-d) / e는 괄호의 짝이 올바르지만, (((a*(b+c))-d) / e 는 괄호의 짝이 맞지 않는다.\n괄호는 소괄호(())만 사용한다.\n풀이12345678910def solution(str):    stack = Stack()    for x in str:        if x == &#x27;(&#x27;:            stack.push(x)        elif x == &#x27;)&#x27;:            if not stack.pop():                return False    return stack.is_empty()\n\n\n여는 괄호가 나오면 stack에 Push\n닫는 괄호가 나오면 stack을 pop\n이 때, stack에서 아무것도 pop되지 않는다면, 제대로 된 괄호가 구성되지 않은 것이다.\n\n\n\n문제 2. 소,중,대괄호 짝 검사소괄호, 중괄호, 대괄호 짝이 맞는지 검사\n123&quot;[&#123;a * (b + c)&#125; - d] / e&quot; # True&quot;[&#123;a * (b + c)] - d] / e&quot; # False\n\n풀이123456789101112def solution(str):    brackets = &#123;&quot;)&quot;:&quot;(&quot;, &quot;&#125;&quot;:&quot;&#123;&quot;, &quot;]&quot;:&quot;[&quot;&#125;    stack = Stack()    for x in str:        if x in brackets.values():            stack.push(x)        elif x in brackets:            popped = stack.pop()            if not popped or brackets[x] != popped:                return False    return stack.is_empty()\n\n\nbrackets을 관리하는 딕셔너리를 만든다.\n여는 괄호면 stack에 push한다.\n닫는 괄호면, 해당 닫는 괄호와 짝을 이루는 여는 괄호가 stack.pop()한 요소와 같은지 비교\n만약 다르거나 pop한 요소가 None이라면 False\n\n\n\n문제 3. 짝지어 제거하기같은 알파벳 2개가 붙어 있는 짝을 찾습니다.\n그 다음 그 둘을 제거한 뒤 앞뒤로 문자열을 이어 붙입니다.\n이 과정을 반복하여 문자열이 모두 제거된다면 1을 반환하고 그렇지 않으면 0을 반환합니다.\n풀이123456789def solution(str):    stack = []    for ch in str:        if stack and ch == stack[-1]:            stack.pop()        else:            stack.append(ch)    return 0 if stack else 1\n\n\nstack 클래스 대신 배열을 사용했다.\nstack의 push(): append()\nstack의 pop(): pop()\nstack의 peek(): [-1]로 인덱싱\nis_empty(): 빈 리스트 논리값은 False 임을 이용\n\n","dateCreated":"2023-07-18T23:48:21+09:00","dateModified":"2023-07-19T00:26:53+09:00","datePublished":"2023-07-18T23:48:21+09:00","description":"","headline":"스택 - 연습문제","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/","keywords":"스택"}</script>
+    <meta name="description" content="문제 1. 괄호 짝 검사괄호의 짝이 바르면 True, 바르지 않으면 False를 반환하는 함수를 작성하라. 예를 들어 ((a*(b+c))-d) &#x2F; e는 괄호의 짝이 올바르지만, (((a*(b+c))-d) &#x2F; e 는 괄호의 짝이 맞지 않는다. 괄호는 소괄호(())만 사용한다. 풀이12345678910def solution(str):    stack &#x3D; Sta">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="스택 - 연습문제">
+<meta property="og:url" content="https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="문제 1. 괄호 짝 검사괄호의 짝이 바르면 True, 바르지 않으면 False를 반환하는 함수를 작성하라. 예를 들어 ((a*(b+c))-d) &#x2F; e는 괄호의 짝이 올바르지만, (((a*(b+c))-d) &#x2F; e 는 괄호의 짝이 맞지 않는다. 괄호는 소괄호(())만 사용한다. 풀이12345678910def solution(str):    stack &#x3D; Sta">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-07-18T13:38:41.000Z">
-<meta property="article:modified_time" content="2023-07-18T13:38:41.173Z">
+<meta property="article:published_time" content="2023-07-18T14:48:21.000Z">
+<meta property="article:modified_time" content="2023-07-18T15:26:53.438Z">
 <meta property="article:author" content="loco9939">
-<meta property="article:tag" content="loco9939">
-<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="스택">
 <meta name="twitter:card" content="summary">
     
     
@@ -232,16 +233,22 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            스택 - 단어를 역순으로 출력하기
+            스택 - 연습문제
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-07-18T22:38:41+09:00">
+    <time datetime="2023-07-18T23:48:21+09:00">
 	
 		    2023/07/18
     	
     </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Stack/">Stack</a>
+
+
     
 </div>
 
@@ -251,13 +258,57 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            
+            <h1 id="문제-1-괄호-짝-검사"><a href="#문제-1-괄호-짝-검사" class="headerlink" title="문제 1. 괄호 짝 검사"></a>문제 1. 괄호 짝 검사</h1><p>괄호의 짝이 바르면 True, 바르지 않으면 False를 반환하는 함수를 작성하라.</p>
+<p>예를 들어 <code>((a*(b+c))-d) / e</code>는 괄호의 짝이 올바르지만, <code>(((a*(b+c))-d) / e</code> 는 괄호의 짝이 맞지 않는다.</p>
+<p>괄호는 소괄호(())만 사용한다.</p>
+<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    stack = Stack()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> x == <span class="string">&#x27;(&#x27;</span>:</span><br><span class="line">            stack.push(x)</span><br><span class="line">        <span class="keyword">elif</span> x == <span class="string">&#x27;)&#x27;</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> stack.pop():</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> stack.is_empty()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>여는 괄호가 나오면 stack에 <code>Push</code></li>
+<li>닫는 괄호가 나오면 stack을 <code>pop</code><ul>
+<li>이 때, stack에서 아무것도 <code>pop</code>되지 않는다면, 제대로 된 괄호가 구성되지 않은 것이다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="문제-2-소-중-대괄호-짝-검사"><a href="#문제-2-소-중-대괄호-짝-검사" class="headerlink" title="문제 2. 소,중,대괄호 짝 검사"></a>문제 2. 소,중,대괄호 짝 검사</h1><p>소괄호, 중괄호, 대괄호 짝이 맞는지 검사</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;[&#123;a * (b + c)&#125; - d] / e&quot;</span> <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;[&#123;a * (b + c)] - d] / e&quot;</span> <span class="comment"># False</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="풀이-1"><a href="#풀이-1" class="headerlink" title="풀이"></a>풀이</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    brackets = &#123;<span class="string">&quot;)&quot;</span>:<span class="string">&quot;(&quot;</span>, <span class="string">&quot;&#125;&quot;</span>:<span class="string">&quot;&#123;&quot;</span>, <span class="string">&quot;]&quot;</span>:<span class="string">&quot;[&quot;</span>&#125;</span><br><span class="line">    stack = Stack()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">in</span> brackets.values():</span><br><span class="line">            stack.push(x)</span><br><span class="line">        <span class="keyword">elif</span> x <span class="keyword">in</span> brackets:</span><br><span class="line">            popped = stack.pop()</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> popped <span class="keyword">or</span> brackets[x] != popped:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> stack.is_empty()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>brackets을 관리하는 딕셔너리를 만든다.</li>
+<li>여는 괄호면 stack에 push한다.</li>
+<li>닫는 괄호면, 해당 닫는 괄호와 짝을 이루는 여는 괄호가 stack.pop()한 요소와 같은지 비교<ul>
+<li>만약 다르거나 pop한 요소가 None이라면 False</li>
+</ul>
+</li>
+</ul>
+<h1 id="문제-3-짝지어-제거하기"><a href="#문제-3-짝지어-제거하기" class="headerlink" title="문제 3. 짝지어 제거하기"></a>문제 3. 짝지어 제거하기</h1><p>같은 알파벳 2개가 붙어 있는 짝을 찾습니다.</p>
+<p>그 다음 그 둘을 제거한 뒤 앞뒤로 문자열을 이어 붙입니다.</p>
+<p>이 과정을 반복하여 문자열이 모두 제거된다면 1을 반환하고 그렇지 않으면 0을 반환합니다.</p>
+<h2 id="풀이-2"><a href="#풀이-2" class="headerlink" title="풀이"></a>풀이</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    stack = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> stack <span class="keyword">and</span> ch == stack[-<span class="number">1</span>]:</span><br><span class="line">            stack.pop()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            stack.append(ch)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span> <span class="keyword">if</span> stack <span class="keyword">else</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>stack 클래스 대신 배열을 사용했다.</li>
+<li>stack의 <code>push()</code>: <code>append()</code></li>
+<li>stack의 <code>pop()</code>: <code>pop()</code></li>
+<li>stack의 <code>peek()</code>: [-1]로 인덱싱</li>
+<li><code>is_empty()</code>: 빈 리스트 논리값은 False 임을 이용</li>
+</ul>
+
             
 
 
         </div>
     </div>
     <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%8A%A4%ED%83%9D/" rel="tag">스택</a>
+
+            </div>
         
         
             <div class="post-actions-wrap">
@@ -306,7 +357,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -319,7 +370,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -332,7 +383,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -418,7 +469,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -431,7 +482,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -444,7 +495,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -478,7 +529,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -491,7 +542,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -504,7 +555,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/%EC%8A%A4%ED%83%9D-%EB%8B%A8%EC%96%B4%EB%A5%BC-%EC%97%AD%EC%88%9C%EC%9C%BC%EB%A1%9C-%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
