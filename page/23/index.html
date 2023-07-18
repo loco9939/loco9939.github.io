@@ -232,6 +232,280 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/"
+                            aria-label=": scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip"
+                        >
+                            scroll 이벤트, counter, isPalindrome, darkmode, modal, stopwatch Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-22T19:09:28+09:00">
+	
+		    2022/09/22
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="2번째-리팩터링-하면서-느낀점"><a href="#2번째-리팩터링-하면서-느낀점" class="headerlink" title="2번째 리팩터링 하면서 느낀점"></a>2번째 리팩터링 하면서 느낀점</h1><h1 id="scrollGotoTop"><a href="#scrollGotoTop" class="headerlink" title="scrollGotoTop"></a>scrollGotoTop</h1><ul>
+<li>스크롤 깊이와 스로틀 딜레이와 같은 정해진 숫자는 상수이므로, 가독성을 높이기 위해 대문자로 네이밍해주었다.<ul>
+<li>은닉해야할 정보가 없기 때문에 클로저로 만들어줄 필요가 없다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="counter"><a href="#counter" class="headerlink" title="counter"></a>counter</h1><ul>
+<li>리팩터링 전 코드에서는 생성자 함수로 만들어서 인스턴스를 생성하여 클로저를 구현하였다<ul>
+<li>하지만 이 방식은 불필요한 인스턴스 생성을 한다는 생각이 들었다.</li>
+<li>리팩토링한 코드는 즉시 실행 함수로 감싸서 변수 할당 같이 한번만 실행해도 되는 것들은 한 번만 실행되도록 만들어주었고, 내부의 데이터에 유일하게 접근할 수 있는 해당 함수를 return 해주어 데이터를 은닉해주었다.</li>
+<li>counter에 관련된(해당 기능에만 사용되는) 데이터들과 함수들을 한데 묶어줘 응집도를 높여주었다</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//document.body.addEventListener(&#x27;click&#x27;, e =&gt; &#123;</span></span><br><span class="line"><span class="comment">//  if (!e.target.matches(&#x27;button&#x27;)) return;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  e.target.matches(&#x27;.increase&#x27;) ? counter.increase() : counter.decrease();</span></span><br><span class="line"><span class="comment">//&#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.increase&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">increase</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.decrease&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, counter.<span class="property">decrease</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>증가, 감소 버튼을 이벤트 위임으로 작성해보았다. 이럴 경우 이벤트 핸들러 등록 갯수가 줄어들어 증감 버튼에 대한 로직을 한곳에서 관리할 수 있고 각각의 이벤트 마다 이벤트 핸들러를 등록하지 않아도 된다는 장점이 있다고 생각했다.<ul>
+<li>하지만, 이벤트 위임의 경우 각 버튼이 다른 기능을 해야하는 경우라면 이벤트가 발생한 요소에 대한 조건문이 많아지고 그에 따라 코드가 복잡해질 수 있으므로 이벤트 위임 대신 각 요소에 이벤트 핸들러를 등록하는 방법으로 선택하였다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="isPalindrome"><a href="#isPalindrome" class="headerlink" title="isPalindrome"></a>isPalindrome</h1><ul>
+<li>문자열을 배열로 만들어 주는 경우 <code>str.split(&#39;&#39;)</code> 를 사용하는 것보단 문자열이 이터러블 요소인 것을 감안하여 스프레드 문법(<code>[…string]</code>)을 사용하였다.<ul>
+<li>메서드를 사용하기위해 알아야 할 것들이 많은데 스프레드 문법은 알아야할 정보가 적어 코드의 이해성을 높일 수 있다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//$result.textContent = isPalindrome(value) ? `&quot;$&#123;value&#125;&quot; is a palindrome` : `&quot;$&#123;value&#125;&quot; is not a palindrome`</span></span><br><span class="line"></span><br><span class="line">$result.<span class="property">textContent</span> = <span class="string">`&quot;<span class="subst">$&#123;value&#125;</span>&quot; is <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">  isPalindrome(value) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;not&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">&#125;</span> a palindrome`</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>중복이 아닌 부분만 삼항 연산자를 이용하여 중복을 줄였다.</li>
+<li>innerHTML 대신 textContent를 사용한 이유는 해당 요소에 할당한 값이 text 요소로만 이루어져 있기 때문이다.<ul>
+<li>innerText는 숨겨진 텍스트는 무시하고 사용자에게 보여지는 text만 가져올 수 있기 때문에 원하지 않는 오류가 발생할 수 있다. 내부에 특별히 스타일 적용이 없는 문자열을 할당할 때는 성능상 적합하지 않다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="DarkMode"><a href="#DarkMode" class="headerlink" title="DarkMode"></a>DarkMode</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// +getComputedStyle(document.querySelector(&#x27;:root&#x27;)).getPropertyValue(&#x27;--transition-duration&#x27;)</span></span><br><span class="line"></span><br><span class="line">+<span class="title function_">getComputedStyle</span>(<span class="variable language_">document</span>.<span class="property">documentElement</span>).<span class="title function_">getPropertyValue</span>(</span><br><span class="line">  <span class="string">&quot;--transition-duration&quot;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>:root 에 존재하는 사용자 정의 변수를 가지고 올 경우에는 document.documentElement로 접근해야 한다.<ul>
+<li><code>document.querySelector(&#39;:root&#39;)</code> 도 가능하지만 querySelector 메서드를 사용하는 것보다 프로퍼티를 접근하는 것이 더 효율적이므로 판단하여 사용하자.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getCurrentMode</span> = (<span class="params"></span>) =&gt; <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;isDark&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>로컬스토리지에 정보를 저장할 때 문자열로 저장되기 때문에 이를 getter 함수로 가져올 때 문자열 ‘true’ 값을 boolean 값으로 받기 위해 JSON.parse() 메서드를 사용하였다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// const setCurrentMode = selectedMode =&gt; &#123;</span></span><br><span class="line"><span class="comment">//    localStorage.setItem(&#x27;isDark&#x27;, selectedMode);</span></span><br><span class="line"><span class="comment">//    toggleMode();</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">init</span>(<span class="params"></span>) &#123;</span><br><span class="line">   <span class="comment">// localStorage.getItem(&#x27;isDark&#x27;) === null ? setCurrentMode(userTheme) : toggleMode();</span></span><br><span class="line">   <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;isDark&#x27;</span>, <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;isDark&#x27;</span>) ?? userTheme);</span><br><span class="line">   <span class="title function_">toggleMode</span>();</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">   <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;isDark&#x27;</span>, !<span class="title function_">getCurrentMode</span>());</span><br><span class="line">   <span class="title function_">toggleMode</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>기존에는 삼항연산자를 사용하였지만, 초기값이 없는 null 상태일 때 null 병합 연산자를 사용하여 초기값을 할당함으로써 함수를 줄일 수 있었다. 또한, setCurrentMode 함수가 필요없으므로 함수를 제거하여 코드의 이해성과 가독성을 높였다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, setDarkMode.<span class="property">init</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, setDarkMode.<span class="property">preventBlink</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>렌더링 되는 시점이 다르면 다른 역할을 하는 함수로 판단한다.</li>
+</ul>
+<h1 id="popupModal"><a href="#popupModal" class="headerlink" title="popupModal"></a>popupModal</h1><ul>
+<li>변수를 사용한 이유는 단지 코드의 중복때문만이 아니라 이벤트가 발생할 때마다 호출될 필요가 없는 함수의 반환값을 변수에 저장하여 사용하기 위함이다.</li>
+<li>특정 목적을 위해서 밀접하게 연관된 기능들을 한데 모아 관리하면 해당 함수에 대한 이해도가 증가하게 되고 이는 유지보수성을 높이는데 도움이 된다. 또한 코드의 재사용성도 증가하는 장점도 있어 응집도를 높이는 구조로 코드를 설계하였습니다. 응집도를 높인 코드를 짜면서 정보를 안전하게 다룰 수 있도록 클로저를 구현하였습니다.</li>
+<li>요구사항에 맞게 Enter키 입력과 OK버튼 클릭시 중복을 줄이는 코드를 작성하기 위해서 이들을 form 태그로 감싸주었고 ‘submit’ 이벤트 타입으로 이벤트 핸들러를 등록하였습니다. cancel 버튼도 연관성을 위해 form 태그 안에 추가하였는데, cancel 버튼은 기본타입을 버튼으로 변경하여 submit 이벤트가 발생하지 않도록 하였습니다.</li>
+<li>is-open 클래스를 이용하여 모달창을 보여주고 사라지도록 구현하였습니다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> popupModal = (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> $modalContainer = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> $modal = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> $popupMessage = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-message&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">toggle</span>(<span class="params"></span>) &#123;</span><br><span class="line">      $modal.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;is-open&quot;</span>);</span><br><span class="line">      $modalContainer.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;background-gray&quot;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//    remove() &#123;</span></span><br><span class="line">    <span class="comment">//      $modal.classList.remove(&#x27;is-open&#x27;);</span></span><br><span class="line">    <span class="comment">//      $modalContainer.classList.remove(&#x27;background-gray&#x27;);</span></span><br><span class="line">    <span class="comment">//   &#125;,</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params">e</span>) &#123;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>();</span><br><span class="line">      $popupMessage.<span class="property">textContent</span> = <span class="string">`from popup : <span class="subst">$&#123;e.target.firstElementChild.value&#125;</span>`</span>;</span><br><span class="line">      popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span></span><br><span class="line">  .<span class="title function_">querySelector</span>(<span class="string">&quot;.popup-form&quot;</span>)</span><br><span class="line">  .<span class="title function_">addEventListener</span>(<span class="string">&quot;submit&quot;</span>, popupModal.<span class="property">render</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.is-close&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// popupModal.remove()</span></span><br><span class="line">  popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.modal-container&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!e.<span class="property">target</span>.<span class="title function_">matches</span>(<span class="string">&quot;.modal-container&quot;</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// popupModal.remove()</span></span><br><span class="line">  popupModal.<span class="title function_">toggle</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>e ⇒ &#123;popupModal.render(e)&#125; === popupModal</code> 인수 전달안해줘도 event 객체 첫번째 인수로 넘어간다. <strong>축약형</strong></li>
+<li>toggle 메서드를 사용하여 remove 메서드가 필요없어지므로 제거하였다.</li>
+</ul>
+<h1 id="stopWatch"><a href="#stopWatch" class="headerlink" title="stopWatch"></a>stopWatch</h1><ul>
+<li>동일한 버튼을 구분할 때 textContent가 Start인지 Stop인지로 판단하는 것은 매우 좋지 않은 방식이므로, isStarted라는 현재 상태(시작&#x2F;정지)를 판단하는 변수를 사용하였습니다.</li>
+<li>leftButton &#x2F; rightButton , laps&#x2F; title은 동일한 클래스를 가져 querySelectAll로 불러와서 인덱스 값으로 접근하는 것이 아닌 배열 디스트럭처링 할당으로 식별자를 할당해주었습니다.<ul>
+<li>리팩터링 이후 이벤트 핸들러를 위한 leftButton, rightButton만 querySelectorAll로 받아오고 lap,title은 내부적으로 해결하였다.</li>
+</ul>
+</li>
+<li>스톱워치내에서 관리해야할 데이터(isStarted, elapsedTime, timerId)를 하나의 객체에 담았다.<ul>
+<li>isStarted : 스톱워치가 시작되었는지 여부 (true &#x2F; false)</li>
+<li>elapsedTime : Start 버튼을 누르고 경과된 시간<br>(setInterval의 delay마다 값이 증가하며, 이를 convertTime 함수를 통해 display에 표시한다.)</li>
+<li>timerId : setInterval 함수의 리턴값을 가지며 clearInterval 함수와 함께 stop 기능을 구현하였다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">convertTime</span> = (<span class="params">time</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> minutes =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>(time / <span class="number">6000</span>) &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time / <span class="number">6000</span>)&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time / <span class="number">6000</span>)&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> seconds =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>((time % <span class="number">6000</span>) / <span class="number">100</span>) &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor((time % <span class="number">6000</span>) / <span class="number">100</span>)&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor((time % <span class="number">6000</span>) / <span class="number">100</span>)&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> ms =</span><br><span class="line">    <span class="title class_">Math</span>.<span class="title function_">floor</span>(time % <span class="number">6000</span>) % <span class="number">100</span> &lt; <span class="number">10</span></span><br><span class="line">      ? <span class="string">`0<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time % <span class="number">6000</span>) % <span class="number">100</span>&#125;</span>`</span></span><br><span class="line">      : <span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.floor(time % <span class="number">6000</span>) % <span class="number">100</span>&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;minutes&#125;</span>:<span class="subst">$&#123;seconds&#125;</span>:<span class="subst">$&#123;ms&#125;</span>`</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>convert 함수는 display에 보여질 시간으로 변환하고 그 값을 문자열로 리턴한다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// $laps.children.length</span></span><br><span class="line">$laps.<span class="property">childElementCount</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>리팩터링 전에는 자식노드의 갯수를 알기 위해서 자식노드(children)로 접근한 다음 길이(length)로 접근하여 값을 얻었지만, childElementCount라는 프로퍼티를 이용하여 한 번에 값을 얻을 수 있었다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$laps.<span class="title function_">insertAdjacentHTML</span>(<span class="string">&quot;beforeend&quot;</span>, newLap);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>리팩터링 전에는 laps를 배열로 관리하여 이를 innerHTML으로 하나가 추가되더라도 모든 부분을 렌더링하였지만, 리팩터링 후에는 insertAdjacentHTML 메서드를 사용하여 HTML을 동적으로 추가해주어 추가된 부분만 렌더링 되도록 해주었다. (참고 : 여기서 beforeend 는 해당 요소의 자식노드 마지막에 삽입하는 것을 의미한다)</li>
+<li>reset 함수에서도 insertAdjacentHTML처럼 추가된 부분만 삭제해주고 싶었지만, 고려해야할 조건들이 많아져 가독성을 위해 기존의 innerHTML을 사용하였다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line">  toggle,</span><br><span class="line">  <span class="title function_">lapAndReset</span>(<span class="params"></span>) &#123;</span><br><span class="line">    !data.<span class="property">isStarted</span> ? <span class="title function_">addLap</span>() : <span class="title function_">reset</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$rightButton.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, stopWatch.<span class="property">lapAndReset</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이벤트 핸들러에서 data.isStarted를 이용하여 조건에 따라 함수를 실행해주려 하였으나 클로저로 구현하였기 때문에 클로저 바깥에서 data.isStarted 값을 참조할 수 없기 때문에 클로저 내부에서 data.isStarted를 참조하여 조건에 맞게 해당 함수를 실행하는 함수를 return하였다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/22/PairProgramming/level%201/scroll%20%EC%9D%B4%EB%B2%A4%ED%8A%B8,%20counter,%20isPalindrome,%20darkmode,%20modal,%20stopwatch%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/"
+                            aria-label=": form validation Tip"
+                        >
+                            form validation Tip
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-09-21T19:11:05+09:00">
+	
+		    2022/09/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-1/">level 1</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Form-Validation-구현-중-느낀점"><a href="#Form-Validation-구현-중-느낀점" class="headerlink" title="Form Validation 구현 중 느낀점"></a>Form Validation 구현 중 느낀점</h1><h2 id="1-모든-코드를-setState로-틀을-고정하여-생각하지-말자"><a href="#1-모든-코드를-setState로-틀을-고정하여-생각하지-말자" class="headerlink" title="1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자."></a>1. 모든 코드를 setState로 틀을 고정하여 생각하지 말자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">  <span class="attr">pw</span>: <span class="string">&quot;pending&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [$idSuccessIcon, $pwSuccessIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-success&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorIcon, $pwErrorIcon] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.icon-error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> [$idErrorMessage, $pwErrorMessage] = [</span><br><span class="line">  ...<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;.error&quot;</span>),</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> $signinButton = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.button&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  $idSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $idErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">id</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $pwSuccessIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;success&quot;</span>);</span><br><span class="line">  $pwErrorIcon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, state.<span class="property">pw</span> !== <span class="string">&quot;error&quot;</span>);</span><br><span class="line"></span><br><span class="line">  $idErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">id</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line">  $pwErrorMessage.<span class="property">textContent</span> =</span><br><span class="line">    state.<span class="property">pw</span> === <span class="string">&quot;error&quot;</span> ? <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span> : <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (state.<span class="property">id</span> === <span class="string">&quot;success&quot;</span> &amp;&amp; state.<span class="property">pw</span> === <span class="string">&quot;success&quot;</span>)</span><br><span class="line">    $signinButton.<span class="title function_">removeAttribute</span>(<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span> $signinButton.<span class="title function_">setAttribute</span>(<span class="string">&quot;disabled&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">setState</span> = (<span class="params">newState</span>) =&gt; &#123;</span><br><span class="line">  state = &#123; ...state, ...newState &#125;;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkIdValidation</span> = (<span class="params">input</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (input === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: <span class="string">&quot;pending&quot;</span> &#125;);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> regExp =</span><br><span class="line">    <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setState</span>(&#123; <span class="attr">id</span>: regExp.<span class="title function_">test</span>(input) ? <span class="string">&quot;success&quot;</span> : <span class="string">&quot;error&quot;</span> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> $signIdInput = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#signin-userid&quot;</span>);</span><br><span class="line"></span><br><span class="line">$signIdInput.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;keyup&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkIdValidation</span>($signIdInput.<span class="property">value</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>위 코드는 만약 인풋에 입력해야할 값이 늘어 유효성 검사 항목이 늘어나게 된다면 유지보수가 어려워진다. 또한, DOM API에 의존적인 코드이므로 HTML 코드가 변경될 시 유지보수가 어려워질 수 있다.</p>
+</li>
+<li><p>위 코드는 처음부터 구조를 setState로 잡고 데이터를 변경하는 함수는 setState가 도맡아 하고 render는 화면에 보여주는 역할을 모은 함수 이런 식으로 코드를 작성하였다.</p>
+</li>
+</ul>
+<p>하지만 위와 같이 틀을 미리 잡고 코드를 작성하는 것은 <span style='color:red'>별로 좋지 않는 습관이다.</span></p>
+<p>왜냐하면, state를 사용해야하는 상황이 아님에도 setState를 사용하여 그 구조에 억지로 끼워맞추게 되고 그렇게 되면 코드의 가독성과 이해도가 떨어질 수 있고 발전이 없는 코드를 작성하게 된다.</p>
+<p>그러므로 코드를 작성할 때는, 우선 구현이 되도록 작성을 하되, 생각을 하면서 그 때 그 때 상황에 맞게 코드를 개선해나가야 한다.</p>
+<p>위 코드를 리팩터링한 결과는 다음과 같다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> signinSchema = &#123;</span><br><span class="line">  <span class="attr">userid</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]&#123;2,3&#125;$/</span>.<span class="title function_">test</span>(</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">value</span></span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;이메일 형식에 맞게 입력해 주세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">password</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="regexp">/\w&#123;6,12&#125;$/</span>.<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&quot;영문 또는 숫자를 6~12자 입력하세요.&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">valid</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">userid</span>.<span class="property">valid</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">password</span>.<span class="property">valid</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>리팩터링한 코드는 우선 setState로 틀을 구성하지 않았다. 굳이 처음부터 setState 함수로 데이터를 변경하고 렌더링까지 해주는 구조를 가질 필요가 없다.</li>
+</ul>
+<blockquote>
+<p>마치 setState로 정해놓고 코드를 작성하는 것은 아이가 어른 흉내를 내는 듯한 느낌이 든다.</p>
+</blockquote>
+<ul>
+<li><p>email과 password의 input에 관련이 있는 데이터를 객체로 관리하고 있다.</p>
+</li>
+<li><p>input에 이벤트가 발생할 때 마다 input의 value 값을 객체의 데이터에 변경해줘야한다.</p>
+</li>
+<li><p>접근자 프로퍼티를 사용하여 접근자 프로퍼티를 참조하면 input.value 값과 정규 표현식이 같은지 확인하여 유효성 검사를 결과를 반환한다. 접근자 프로퍼티를 사용한 이유는 해당 접근자 프로퍼티를 참조할 때마다 갱신된 해당 프로퍼티의 유효성 검사 결과를 얻기 위해서 get을 붙여 접근자 프로퍼티로 만들었다.</p>
+</li>
+</ul>
+<blockquote>
+<p>각 객체에 필요한 데이터를 한곳에서 관리하고 이들을 이용하여 요구사항을 어떻게 충족시킬지 생각해보자.</p>
+</blockquote>
+<h2 id="2-DOM-API-사용을-줄이자"><a href="#2-DOM-API-사용을-줄이자" class="headerlink" title="2. DOM API 사용을 줄이자."></a>2. DOM API 사용을 줄이자.</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">checkValidation</span> = (<span class="params">target</span>) =&gt; &#123;</span><br><span class="line">  signinSchema[target.<span class="property">name</span>].<span class="property">value</span> = target.<span class="property">value</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (signinSchema[target.<span class="property">name</span>].<span class="property">value</span> === <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span></span><br><span class="line">      .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">      .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-success`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, !signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span></span><br><span class="line">    .<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .icon-error`</span>)</span><br><span class="line">    .<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&quot;hidden&quot;</span>, signinSchema[target.<span class="property">name</span>].<span class="property">valid</span>);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">`#<span class="subst">$&#123;target.id&#125;</span> ~ .error`</span>).<span class="property">textContent</span> = !signinSchema[</span><br><span class="line">    target.<span class="property">name</span></span><br><span class="line">  ].<span class="property">valid</span></span><br><span class="line">    ? signinSchema[target.<span class="property">name</span>].<span class="property">message</span></span><br><span class="line">    : <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>최대한 DOM API를 적게 사용하기 위해 해당 이벤트 핸들러의 이벤트 객체를 통해서 다른 요소에 접근할 수 있도록 코드를 작성하였다.</p>
+</li>
+<li><p><code>document.querySelector(`#$&#123;target.id&#125; ~ .icon-success`)</code> 의 의미는 이벤트가 발생한 요소의 id값을 선택자로 가져와서 해당 선택자의 일반 형제 요소 중 클래스가 icon-success인 요소를 선택하라는 뜻이다.</p>
+</li>
+</ul>
+<blockquote>
+<p>DOM API로 요소를 선택할 때 마다 시간이 오래 걸리고 어려운 작업이므로, 이러한 과정을 줄이도록 생각하며 코드를 작성한다.</p>
+</blockquote>
+<h2 id="3-input-이벤트-타입"><a href="#3-input-이벤트-타입" class="headerlink" title="3. input 이벤트 타입"></a>3. input 이벤트 타입</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.signin&quot;</span>).<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&quot;input&quot;</span>,</span><br><span class="line">  _.<span class="title function_">debounce</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">checkValidation</span>(e.<span class="property">target</span>);</span><br><span class="line">  &#125;, <span class="number">500</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>리팩터링 이전 코드에서는 keyup 이벤트를 사용하여 email과 password의 input에서 발생하는 이벤트를 이벤트 핸들러로 각각 등록해주었다.</p>
+</li>
+<li><p>리팩터링한 코드에서는 이벤트 위임을 통해서 이벤트를 다뤄주었다.</p>
+</li>
+<li><p>또한, 인수로 이벤트가 발생한 객체를 전달해주고 이벤트 핸들러 함수 내부에서는 target 매개변수를 해당 인수를 받아 배치해주었다.</p>
+</li>
+<li><p>e.target.name은 HTML 문서에서 name 어트리뷰트를 가리킨다. 이러한 점을 알게되어 HTML이 매우 중요하다는 것을 깨달았다.</p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/09/21/PairProgramming/level%201/form%20validation%20Tip/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/09/20/PairProgramming/level%201/toaster,%20autocomplete,%20carousel%20Tip/"
                             aria-label=": toaster, autocomplete, carousel Tip"
                         >
@@ -1097,295 +1371,6 @@
                         <p>
                             <a
                                 href="/2022/08/05/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/%EB%B0%B0%EB%8B%AC%EC%9D%98%20%EB%AF%BC%EC%A1%B1%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%ED%9A%8C%EA%B3%A0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/04/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/inline%20%EC%9A%94%EC%86%8C%20%EB%B0%B0%EC%B9%98,%20nth-child()/"
-                            aria-label=": inline 요소 배치, nth-child()"
-                        >
-                            inline 요소 배치, nth-child()
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-04T15:58:54+09:00">
-	
-		    2022/08/04
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/%EB%B0%B0%EB%8B%AC%EC%9D%98%EB%AF%BC%EC%A1%B1/">배달의민족</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="오늘-공부한-것"><a href="#오늘-공부한-것" class="headerlink" title="오늘 공부한 것"></a>오늘 공부한 것</h1><h2 id="배달의-민족-프로젝트"><a href="#배달의-민족-프로젝트" class="headerlink" title="배달의 민족 프로젝트"></a>배달의 민족 프로젝트</h2><h3 id="inline-요소-layout-배치"><a href="#inline-요소-layout-배치" class="headerlink" title="inline 요소 layout 배치"></a>inline 요소 layout 배치</h3><hr>
-<p><img src="/images/220804/layout.png" alt="layout"><br>위 사진처럼 우리집(button)이 좌측으로, cate(a), alert(button), my(a)가 우측에 배치되어 있는 레이아웃을 만들어 보자.</p>
-<h4 id="마크업"><a href="#마크업" class="headerlink" title="마크업"></a>마크업</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;header__logo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;logo__link&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">&quot;logo__img&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;배달의 민족&quot;</span></span></span><br><span class="line"><span class="tag">    /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;nav-wrapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;header__address-button&quot;</span>&gt;</span>우리집<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;category&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span>&gt;</span>cate<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;header__alert-button&quot;</span>&gt;</span>alert<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;mypage&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span>&gt;</span>my<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">&quot;search-form&quot;</span> <span class="attr">action</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">legend</span> <span class="attr">class</span>=<span class="string">&quot;sr-only&quot;</span>&gt;</span>검색 폼<span class="tag">&lt;/<span class="name">legend</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;sr-only&quot;</span> <span class="attr">for</span>=<span class="string">&quot;&quot;</span>&gt;</span>검색<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;search-form__input&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">placeholder</span>=<span class="string">&quot;찾아라! 맛있는 음식과 맛집&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;search&quot;</span></span></span><br><span class="line"><span class="tag">      /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;search-form__button-submit&quot;</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>button, a 태그 둘다 인라인 요소이므로 한줄을 전부 차지하는 block 요소와 다르게 컨텐츠의 크기만큼 width,heigth를 가진다.</li>
-</ul>
-<h4 id="sass"><a href="#sass" class="headerlink" title="sass"></a>sass</h4><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 헤더</span></span><br><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$mainColor</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="built_in">rem</span>(<span class="number">19px</span>);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">20px</span> <span class="number">20px</span>;</span><br><span class="line">  &amp; <span class="selector-class">.nav-wrapper</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: flex;</span><br><span class="line">    <span class="attribute">flex-flow</span>: row nowrap;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;__address-<span class="selector-tag">button</span> &#123;</span><br><span class="line">    <span class="keyword">@include</span> size(rem(<span class="number">120px</span>), rem(<span class="number">32px</span>));</span><br><span class="line">    <span class="attribute">background</span>: transparent;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0px</span> solid black;</span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">    <span class="attribute">text-align</span>: left;</span><br><span class="line">    <span class="attribute">margin-right</span>: auto;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp; <span class="selector-class">.category</span>,</span><br><span class="line">  &amp;__alert-<span class="selector-tag">button</span>,</span><br><span class="line">  &amp; <span class="selector-class">.mypage</span> &#123;</span><br><span class="line">    <span class="keyword">@include</span> size(rem(<span class="number">32px</span>), rem(<span class="number">32px</span>));</span><br><span class="line">    <span class="attribute">background</span>: red;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;__alert-<span class="selector-tag">button</span> &#123;</span><br><span class="line">    <span class="attribute">margin-left</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">    <span class="attribute">margin-right</span>: <span class="built_in">rem</span>(<span class="number">20px</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>button,a 태그들을 좌우배치하기 위해 이들을 div로 감싸고 부모요소에게 flex를 주었다.</li>
-<li>button, a 태그 각각 width, heigth를 주었다.</li>
-</ul>
-<aside>
-💡 width,heigth 주지 않으면 컨텐트 크기만큼 width를 가진다. 또한, flex의 기본속성이 stretch여서 부모요소 높이만큼 자식요소도 쭈욱 높이가 늘어나게 된다.
-</aside>
-
-<ul>
-<li>a,button 태그들이 flexible 속성으로 변하게 되면서 각 content만큼 width를 갖는 inline-block 요소로 변한다.</li>
-<li>flex 요소들이 직접 width를 가지거나, 컨텐츠 크기만큼 width를 가졌을 때, 결국 각자의 width를 가지고 있기 때문에 요소들에게 <strong>margin auto 속성</strong>을 적용하여 좌우 배치할 수 있다.</li>
-</ul>
-<hr>
-<h3 id="자주-쓰는-nth-child"><a href="#자주-쓰는-nth-child" class="headerlink" title="자주 쓰는 :nth-child()"></a>자주 쓰는 :nth-child()</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">address</span> <span class="attr">class</span>=<span class="string">&quot;address&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>(주)우아한형제들<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>대표이사 김범준<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>사업자등록번호 120-87-65763<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>통신판매업 서울 송파-0515<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>호스팅서비스제공자 (주)우아한형제들<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;CS@woowahan.com&quot;</span>&gt;</span>CS@woowahan.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>서울특별시 송파구 위례성대로 2 장은빌딩<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span></span></span><br><span class="line"><span class="tag">    &gt;</span>전자금융분쟁처리 Tel <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;tel:1600-0987&quot;</span>&gt;</span>1600-0987<span class="tag">&lt;/<span class="name">a</span>&gt;</span>(유료),</span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;080-849-0987&quot;</span>&gt;</span>080-849-0987<span class="tag">&lt;/<span class="name">a</span>&gt;</span>(무료)&lt;/span</span><br><span class="line">  &gt;</span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>Fax <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;fax:050-6050-0400&quot;</span>&gt;</span>050-6050-0400<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">address</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 마크업 처럼 address 안에 span 태그의 형제요소들이 많이 있을 때, 내가 원하는 순서의 span 태그에만 스타일링 주고 싶을 때 사용</li>
-</ul>
-<h4 id="3번째-포함-그-이후-요소"><a href="#3번째-포함-그-이후-요소" class="headerlink" title="3번째 포함 그 이후 요소"></a>3번째 포함 그 이후 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">3</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3번째-부터-5번째-요소"><a href="#3번째-부터-5번째-요소" class="headerlink" title="3번째 부터 5번째 요소"></a>3번째 부터 5번째 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">3</span>)<span class="selector-pseudo">:nth-child</span>(-n + <span class="number">5</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="짝수-및-홀수-요소"><a href="#짝수-및-홀수-요소" class="headerlink" title="짝수 및 홀수 요소"></a>짝수 및 홀수 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(odd) &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(even) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="함수형-요소"><a href="#함수형-요소" class="headerlink" title="함수형 요소"></a>함수형 요소</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">span</span><span class="selector-pseudo">:nth-child</span>(<span class="number">3</span>n + <span class="number">1</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>1, 4, 7, 10 … 요소 선택</li>
-</ul>
-<hr>
-<h3 id="after-before로-세로선-스타일링"><a href="#after-before로-세로선-스타일링" class="headerlink" title="::after,before로 세로선 스타일링"></a>::after,before로 세로선 스타일링</h3><p><img src="/images/220804/styling.png" alt="after"><br>각 a 태그 사이에 | 구분선 모양을 가상 요소 선택자를 사용하여 구현해보자.</p>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(n + <span class="number">2</span>)<span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">90%</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$gray-100</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">6px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>2번째 li 태그부터 끝까지 before 선택자로 선택하였다.</li>
-<li>position : absolute 를 주고 배치를 맞춘 뒤 배경색을 채우고 width,height를 설정하여 선처럼 보이게 하였다.</li>
-</ul>
-<aside>
-💡 이 때, 부모 요소에게 position : relative 속성을 줘야 부모를 기준으로 배치할 수 있다.
-
-</aside>
-
-<hr>
-<h1 id="오늘-소감"><a href="#오늘-소감" class="headerlink" title="오늘 소감"></a>오늘 소감</h1><p>내일은 1달간 HTML&#x2F;CSS 수업에 대한 미니 프로젝트 발표가 있는 날이다. 수업동안 상대적으로 어려운 예제를 다루다가 일반적인 레이아웃을 다루니 쉽게 레이아웃은 쉽게 느껴졌다. 하지만, 여전히 제일 어려운 것은 마크업인 것 같다. 논리적인 순서에도 맞아야 하며 배치도 적절하게 되게끔 마크업을 설계하는 것이 매우 중요하다고 생각이 들었다.</p>
-<p>중간중간 CSS 스타일링에 대해 막혔었던 부분도 TIL을 작성하며 정리하니 나중에 찾아보기도 편하고 기억에 오래 남을 것 같다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/04/Project/%EB%B0%B0%EB%AF%BC%20%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9/inline%20%EC%9A%94%EC%86%8C%20%EB%B0%B0%EC%B9%98,%20nth-child()/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"
-                            aria-label=": branch 전략이란?"
-                        >
-                            branch 전략이란?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-08-03T17:31:00+09:00">
-	
-		    2022/08/03
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/git/">git</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="branch"><a href="#branch" class="headerlink" title="branch"></a>branch</h1><hr>
-<h2 id="branch란"><a href="#branch란" class="headerlink" title="branch란?"></a>branch란?</h2><p>분기점을 생성하여 독립적으로 코드를 변경할 수 있도록 도와주는 모델</p>
-<p>명령어</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> branch // 로컬 브랜치 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch -r // 원격 브랜치 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch -a // 둘다 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch html-init // 브랜치명 입력하면 브랜치 생성</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> switch 브랜치명 // 브랜치 이동</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>로컬에서 브랜치 생성한 후 원격 저장소에 push를 해줘야만 github 저장소에 해당 브랜치가 생성된다.</p>
-</blockquote>
-<p><strong style="color:red">주의사항</strong></p>
-<ul>
-<li>처음 브랜치를 push 하는 경우에는 -u 플래그를 사용해줘야한다.<br>그 이유는 원격 저장소에게 새로만든 브랜치가 main 브랜치와 연관성이 있다라는 것을 의미하기 때문이다.</li>
-<li>플래그는 맨 앞에 위치하는 것만 아니면 위치는 상관없다.</li>
-</ul>
-<h2 id="branch-사용-이유"><a href="#branch-사용-이유" class="headerlink" title="branch 사용 이유"></a>branch 사용 이유</h2><hr>
-<p>개발을 할 때, main 브랜치를 두고 개발 브랜치로 소스 코드를 가져와서 원하는 개발을 시도하여도 메인 소스코드에 영향을 주지 않을 수 있어 자유로운 개발을 할 수 있다. <strong>협업에 필수적인 모델이다.</strong></p>
-<h2 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h2><hr>
-<p>개발 브랜치를 생성한 후 main 브랜치와 합치기 위해서는 merge 작업을 해줘야한다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// main</span><br><span class="line"><span class="variable">$git</span> merge develop</span><br></pre></td></tr></table></figure>
-
-<p>자신의 역할을 끝낸 즉, merge가 된 브랜치는 바로바로 삭제해준다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> branch -D develop</span><br></pre></td></tr></table></figure>
-
-<h3 id="merge-conflict"><a href="#merge-conflict" class="headerlink" title="merge conflict"></a>merge conflict</h3><hr>
-<p>만약 main 브랜치와 develop 브랜치에서 같은 파일의 같은 라인을 수정했다면, 컴퓨터는 어떤 것을 선택해야할지 알지 못하므로 그 선택을 우리에게 맡긴다.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>git branch practice on branch main<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  =======</span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>homepage<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>This work on branch body-init<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">  &gt;&gt;&gt;&gt;&gt;&gt;&gt; body-init</span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>이럴 경우 원하는 부분을 선택하여 수정해주고 add, commit을 해주면 된다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> add index.html</span><br><span class="line"><span class="variable">$git</span> commit</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>merge를 할 경우, merge commit이 제목과 내용으로 채워져있다.</p>
-</blockquote>
-<p><strong style="color:red">주의사항</strong></p>
-<ul>
-<li>commit은 항상 동작하는 단위 (최소단위)여야 한다.</li>
-<li>-m 플래그는 사용하지 말자</li>
-<li>merge conflict가 발생한 경우 commit 내용으로 어떻게 충돌을 해결했는지도 적어주자</li>
-</ul>
-<h1 id="gitflow-전략"><a href="#gitflow-전략" class="headerlink" title="gitflow 전략"></a>gitflow 전략</h1><hr>
-<p><img src="/images/220803/gitflow.png" alt="gitflow"></p>
-<ul>
-<li><p>Master(Main): 사용자를 위한 배포용 소스코드용</p>
-</li>
-<li><p>Hotfix: 갑작스러운 버그를 수정하기 위한 브랜치</p>
-</li>
-<li><p>Develop: 개발용 브랜치로, feature 브랜치에서 작업한 것들을 이곳에서 모아서 확인한다.</p>
-</li>
-<li><p>Feature: 개발자의 작업 브랜치, add와 commit이 작은 단위로 일어나는 곳</p>
-</li>
-</ul>
-<h2 id="gitflow-전략-사용"><a href="#gitflow-전략-사용" class="headerlink" title="gitflow 전략 사용"></a>gitflow 전략 사용</h2><hr>
-<ol>
-<li><p>github 저장소에 repository 생성한 다음 나의 로컬 폴더에 git clone 한다.</p>
-</li>
-<li><p>저장소와 로컬을 연결했다면 저장소를 초기화해준다.</p>
-</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow init</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>feature 브랜치를 생성하고 이동하여 작업을 시작한다.</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow feature start <span class="string">&quot;브랜치명&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>기능이나 최소단위로 작업을 진행한다.</p>
-<ol start="4">
-<li>작업이 끝났다면 develop 브랜치와 merge한 뒤 feature 브랜치 삭제</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow feature finish <span class="string">&quot;브랜치명&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>위 명령어로 merge,delete 까지 한번에 해줄 수 있다.</p>
-<ol start="5">
-<li>기능 개발 마무리되면 release 사용하여 배포 전 브랜치로 이동한다.</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow release start <span class="string">&quot;버전&quot;</span> // ex) v0.1</span><br></pre></td></tr></table></figure>
-
-<p>위 작업을 통해 버전 태그를 달아준다.</p>
-<ol start="6">
-<li>release 브랜치에서 github 저장소의 main 브랜치와 develop 브랜치, tags를 push 해준다.</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> push origin main</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> push -u origin develop // develop브랜치는 처음 github에 올라가니 -u 플래그 사용</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> push --tags // 한번만 해주면 된다.</span><br></pre></td></tr></table></figure>
-
-<ol start="7">
-<li>release 브랜치를 merge + delete 해준다.</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow release finish <span class="string">&quot;버전&quot;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="8">
-<li>github 저장소에서 tag에 가서 release 해주면 된다.</li>
-</ol>
-<p><img src="/images/220803/release.png" alt="release"></p>
-<p><img src="/images/220803/release2.png" alt="release"></p>
-<p><img src="/images/220803/release3.png" alt="release"></p>
-<h2 id="gitflow-전략을-통한-협업"><a href="#gitflow-전략을-통한-협업" class="headerlink" title="gitflow 전략을 통한 협업"></a>gitflow 전략을 통한 협업</h2><hr>
-<ol>
-<li><p>팀장 또는 단체의 repository에서 fork를 하여 복사본은 나의 github 저장소로 가져온다.<br><img src="/images/220803/fork.png" alt="fork"></p>
-</li>
-<li><p>앞서 사용한 feature 브랜치를 사용하여 개발을 한 후 fork한 사본 저장소에 push를 한다.</p>
-</li>
-<li><p>PR을 하기전 issue 탭에가서 내가 무슨 작업을 할 것 인지 알려주도록 한다.<br><img src="/images/220803/issue.png" alt="issue"></p>
-</li>
-<li><p>팀장 또는 단체의 repository에 가서 PR(Pull Request)를 한다.</p>
-</li>
-<li><p>팀장은 나의 PR을 확인하고 요청에 응답하거나 문제가 있다면 코드리뷰를 하며 PR을 보류한다.<br><img src="/images/220803/pr.png" alt="pullrequest"></p>
-</li>
-<li><p>PR이 열려있는 상태에서 나는 나의 develop 브랜치에 돌아가서 코드를 수정한 뒤 commit을 해주면 다시 팀장이 확인하고 끝내 merge를 한다.</p>
-</li>
-</ol>
-<ul>
-<li>이 후 팀장이 develop 브랜치와 main 브랜치를 merge하면 issue가 closed 된다.</li>
-</ul>
-<p><strong style="color:red">주의사항</strong></p>
-<ul>
-<li>PR할 때, 나의 develop 브랜치에서 팀장의 develop 브랜치로 PR을 보내야한다.</li>
-</ul>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><hr>
-<p>gitflow 수업이 끝난 후 1시간 30분 동안 4명이서 소규모 팀프로젝트를 경험해보았는데, 아직 머릿속에서 내가 어떤 상태이고 무엇을 해야하는지 헷갈려서 조금 어수선한 감이 있었다.</p>
-<p>그래도 피보나치킨 게임(?)을 만들어서 배포까지 해보니 gitflow 전략을 통한 협업의 장점을 느낄 수 있어서 재밌었다.</p>
-<blockquote>
-<p>튜토리얼처럼 단계별로 코드를 따라 치는 것이 아닌 내가 어떤 단계에 있고 어떤 행동을 해야하는지를 생각하며 개발을 해야한다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

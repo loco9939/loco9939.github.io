@@ -233,6 +233,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9C%BC%EB%A1%9C-%EC%8A%A4%ED%83%9D-stack-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/%EC%8A%A4%ED%83%9D-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9C%BC%EB%A1%9C-%EC%8A%A4%ED%83%9D-stack-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"
+                            aria-label=": 스택 - 파이썬으로 스택(stack) 구현하기"
+                        >
+                            스택 - 파이썬으로 스택(stack) 구현하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-07-18T21:40:59+09:00">
+	
+		    2023/07/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Stack/">Stack</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="파이썬으로-Stack-스택-구현하기"><a href="#파이썬으로-Stack-스택-구현하기" class="headerlink" title="파이썬으로 Stack(스택) 구현하기"></a>파이썬으로 Stack(스택) 구현하기</h1><p><img src="/./stack.png" alt="stack"></p>
+<ul>
+<li>스택은 서류나 책 위에 다른 서류나 책을 쌓아 올리는 형태이다.</li>
+<li>자료를 꺼낼 때에는 맨 위부터 꺼내야한다. 후입선출(Last In First Out, LIFO)</li>
+</ul>
+<p><img src="/./stack2.png" alt="stack2"></p>
+<ul>
+<li>90도 눕혀서 보게 되면 연결리스트와 비슷한 구조를 지닌다.</li>
+<li>연결리스트의 <code>head</code>를 스택에서는 <code>top</code>이라고 부른다.</li>
+</ul>
+<h2 id="Stack-메서드"><a href="#Stack-메서드" class="headerlink" title="Stack 메서드"></a>Stack 메서드</h2><ul>
+<li><code>push(data)</code>: data를 넣는 작업, 연결리스트의 <code>appendLeft와</code> 같다.</li>
+<li><code>pop()</code>: 자료를 꺼내는 작업, 연결리스트의 <code>popLeft와</code> 같다.</li>
+<li><code>peek()</code>: 마지막에 넣은 자료 확인, pop과 비슷하지만 값을 제거하지는 않는다.</li>
+<li><code>is_empty()</code>: 빈 스택인지 확인</li>
+</ul>
+<h2 id="Stack-클래스-만들기"><a href="#Stack-클래스-만들기" class="headerlink" title="Stack 클래스 만들기"></a>Stack 클래스 만들기</h2><ul>
+<li>단일 연결리스트를 활용하여 Stack 클래스에서는 top 속성을 넣고 length 속성은 뺀다.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span>:</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,data</span>):</span><br><span class="line">    self.data = data</span><br><span class="line">    self.<span class="built_in">next</span> = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Stack</span>:</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    self.top = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self,data</span>):</span><br><span class="line">    node = Node(data)</span><br><span class="line">    <span class="keyword">if</span> self.top == <span class="literal">None</span>:</span><br><span class="line">      self.top = node</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      node.<span class="built_in">next</span> = self.top</span><br><span class="line">      self.top = node</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">if</span> self.top == <span class="literal">None</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    node = self.top</span><br><span class="line">    self.top = node.<span class="built_in">next</span></span><br><span class="line">    <span class="keyword">return</span> node.data</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">peek</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">if</span> self.top == <span class="literal">None</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">return</span> self.top.data</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">return</span> self.top == <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9C%BC%EB%A1%9C-%EC%8A%A4%ED%83%9D-stack-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/%EC%8A%A4%ED%83%9D-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EC%9C%BC%EB%A1%9C-%EC%8A%A4%ED%83%9D-stack-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/07/17/Python/is%EB%8A%94-%EA%B0%99%EC%A7%80-%EC%95%8A%EB%8B%A4-Python/"
                             aria-label=": ==, is는 같지 않다. (Python)"
                         >
@@ -942,78 +1020,6 @@
                         <p>
                             <a
                                 href="/2023/07/14/Python/DataStructure/Array/%EB%B0%B0%EC%97%B4-%ED%9A%8C%EB%AC%B8-Pelindromes-%EC%B0%BE%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/"
-                            aria-label=": 완전탐색(Brute Forcing)"
-                        >
-                            완전탐색(Brute Forcing)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-05-11T00:17:26+09:00">
-	
-		    2023/05/11
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Python/">Python</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="완전탐색-Brute-Forcing"><a href="#완전탐색-Brute-Forcing" class="headerlink" title="완전탐색(Brute Forcing)"></a>완전탐색(Brute Forcing)</h1><h3 id="가능한-모든-경우의-수를-검사하는-방법"><a href="#가능한-모든-경우의-수를-검사하는-방법" class="headerlink" title="가능한 모든 경우의 수를 검사하는 방법"></a>가능한 모든 경우의 수를 검사하는 방법</h3><h2 id="문제-1"><a href="#문제-1" class="headerlink" title="문제 1"></a>문제 1</h2><h3 id="시간에서-‘3’이-포함된-횟수-구하는-문제"><a href="#시간에서-‘3’이-포함된-횟수-구하는-문제" class="headerlink" title="시간에서 ‘3’이 포함된 횟수 구하는 문제"></a>시간에서 ‘3’이 포함된 횟수 구하는 문제</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">h = <span class="built_in">int</span>(<span class="built_in">input</span>())</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(h+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">60</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">60</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;3&#x27;</span> <span class="keyword">in</span> <span class="built_in">str</span>(i)+<span class="built_in">str</span>(j)+<span class="built_in">str</span>(k):</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(count)</span><br></pre></td></tr></table></figure>
-
-<h2 id="문제-2"><a href="#문제-2" class="headerlink" title="문제 2"></a>문제 2</h2><h3 id="체스-말이-움직일-수-있는-경우의-수-구하라"><a href="#체스-말이-움직일-수-있는-경우의-수-구하라" class="headerlink" title="체스 말이 움직일 수 있는 경우의 수 구하라"></a>체스 말이 움직일 수 있는 경우의 수 구하라</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">col,row = <span class="built_in">map</span>(<span class="built_in">str</span>,<span class="built_in">input</span>())</span><br><span class="line"></span><br><span class="line">n = <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ASCII 코드 구하는 코드 ord(str), ord(&#x27;a&#x27;) = 97</span></span><br><span class="line">array = [[i+<span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line"></span><br><span class="line">steps = [(-<span class="number">2</span>,-<span class="number">1</span>),(-<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">2</span>,-<span class="number">1</span>),(<span class="number">2</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">2</span>,<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> step <span class="keyword">in</span> steps:</span><br><span class="line">    y = <span class="built_in">int</span>(row) + step[<span class="number">0</span>]</span><br><span class="line">    x = <span class="built_in">int</span>(<span class="built_in">ord</span>(col)) - <span class="built_in">int</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)) + <span class="number">1</span> + step[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> x &lt; <span class="number">1</span> <span class="keyword">or</span> y &lt; <span class="number">1</span> <span class="keyword">or</span> x &gt; <span class="number">8</span> <span class="keyword">or</span> y &gt; <span class="number">8</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(count)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 말이 움직이는 벡터 방향</span></span><br><span class="line">dx = [<span class="number">2</span>,<span class="number">2</span>,-<span class="number">2</span>,-<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,-<span class="number">1</span>,-<span class="number">1</span>]</span><br><span class="line">dy = [<span class="number">1</span>,-<span class="number">1</span>,<span class="number">1</span>,-<span class="number">1</span>,<span class="number">2</span>,-<span class="number">2</span>,<span class="number">2</span>,-<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># x,y로 방향이 2개로 정해져있으니 튜플 사용 가능</span></span><br><span class="line">steps = [(-<span class="number">2</span>,-<span class="number">1</span>),(-<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">1</span>,-<span class="number">2</span>),(<span class="number">2</span>,-<span class="number">1</span>),(<span class="number">2</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">1</span>,<span class="number">2</span>),(-<span class="number">2</span>,<span class="number">1</span>)]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ASCII 코드를 사용하여 ‘a’ 문자열을 숫자로 변환</li>
-</ul>
-<h2 id="문제-3"><a href="#문제-3" class="headerlink" title="문제 3"></a>문제 3</h2><h3 id="문자는-정렬하고-숫자는-더하여-반환하라"><a href="#문자는-정렬하고-숫자는-더하여-반환하라" class="headerlink" title="문자는 정렬하고 숫자는 더하여 반환하라"></a>문자는 정렬하고 숫자는 더하여 반환하라</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">input</span> = <span class="built_in">input</span>()</span><br><span class="line">result = []</span><br><span class="line">value = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">input</span>:</span><br><span class="line">    <span class="keyword">if</span> i.isalpha():</span><br><span class="line">        result.append(i)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value += <span class="built_in">int</span>(i)</span><br><span class="line"></span><br><span class="line">result.sort()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> value != <span class="number">0</span>:</span><br><span class="line">    result.append(<span class="built_in">str</span>(value))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;&#x27;</span>.join(result))</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>isalpha()</code> 내장함수를 사용하여 <code>i</code>가 문자열인지 확인</li>
-<li><code>join()</code> 내장함수를 사용하여 list를 문자열로 합침</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/05/11/Python/%EC%99%84%EC%A0%84%ED%83%90%EC%83%89-Brute-Forcing/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
