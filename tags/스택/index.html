@@ -233,6 +233,111 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/"
+                            aria-label=": 스택 - 후위 표기법"
+                        >
+                            스택 - 후위 표기법
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-07-19T22:41:59+09:00">
+	
+		    2023/07/19
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Stack/">Stack</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="후위표기법-1"><a href="#후위표기법-1" class="headerlink" title="후위표기법 1"></a>후위표기법 1</h1><p>연산자를 피연산자 뒤에 쓰는 연산기법</p>
+<p>예를 들어, <code>3+5x2</code> 를 중위 표기법이라 하고,</p>
+<p><code>352x+</code>를 후위 표기법이라고 한다.</p>
+<h2 id="계산-방법"><a href="#계산-방법" class="headerlink" title="계산 방법"></a>계산 방법</h2><p><code>3+5x2</code>를 후위 표기법으로 적으면, <code>352x+</code>이다.</p>
+<p><code>352x+</code>를 계산하기 위해서 다음과정을 따른다.</p>
+<ol>
+<li>피연산자(숫자)는 스택에 담는다. <code>[3,5,2]</code></li>
+<li>연산자를 만나면, 스택에서 피연산자 2개를 꺼내 계산한다.</li>
+<li>결과값을 다시 스택에 넣는다. <code>[3,10]</code></li>
+<li>다음 연산자는 <code>+</code>이므로 <code>3+10</code>을 계산한다.</li>
+</ol>
+<ul>
+<li>컴퓨터 입장에서는 후위 표기법이 연산의 우선순위가 명확하다는 장점이 있다.</li>
+</ul>
+<h2 id="중위-표기법을-후위-표기법으로-변환"><a href="#중위-표기법을-후위-표기법으로-변환" class="headerlink" title="중위 표기법을 후위 표기법으로 변환"></a>중위 표기법을 후위 표기법으로 변환</h2><p><code>3+5x2</code>를 후위 표기법으로 바꾸는 과정을 알아보자.</p>
+<ol>
+<li>피연산자 3을 결과값에 추가</li>
+<li><ul>
+<li>연산자 스택에 push</li>
+</ul>
+</li>
+<li>피연산자 5 결과값에 추가</li>
+<li>x 연산자와 스택의 마지막 값인 + 우선순위 비교</li>
+<li>x 연산자가 우선순위 높으므로 스택에 push</li>
+<li>피연산자 2 결과값에 추가</li>
+<li>스택이 빌 때까지 pop하여 결과값에 추가</li>
+</ol>
+<p><code>3x5+2</code>를 후위 표기법으로 바꿔보자.</p>
+<ol>
+<li>피연산자 3을 결과값에 추가</li>
+<li>x 연산자 스택에 push</li>
+<li>피연산자 5 결과값에 추가</li>
+<li><ul>
+<li>연산자와 스택의 마지막 값인 x 우선순위 비교</li>
+</ul>
+</li>
+<li>스택의 마지막 값인 x 연산자가 높으니 pop하여 결과값에 추가</li>
+<li><ul>
+<li>연산자는 스택에 push</li>
+</ul>
+</li>
+<li>피연산자 2을 결과값에 추가</li>
+<li>스택이 빌 때까지 pop하여 결과값에 추가</li>
+</ol>
+<h2 id="문제-풀이"><a href="#문제-풀이" class="headerlink" title="문제 풀이"></a>문제 풀이</h2><h3 id="Stack-클래스를-이용한-풀이"><a href="#Stack-클래스를-이용한-풀이" class="headerlink" title="Stack 클래스를 이용한 풀이"></a>Stack 클래스를 이용한 풀이</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    priority = &#123;<span class="string">&#x27;+&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;-&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;*&#x27;</span>:<span class="number">1</span>,<span class="string">&#x27;/&#x27;</span>:<span class="number">1</span>&#125;</span><br><span class="line">    s = Stack()</span><br><span class="line"></span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">not</span> <span class="keyword">in</span> priority.keys():</span><br><span class="line">            result += x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> s.top == <span class="literal">None</span>:</span><br><span class="line">                s.push(x)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> priority[s.top.data] &lt; priority[x]:</span><br><span class="line">                    s_pop = s.pop()</span><br><span class="line">                    result += s_pop</span><br><span class="line">                s.push(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> s.is_empty():</span><br><span class="line">        s_pop = s.pop()</span><br><span class="line">        result += s_pop</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>아래는 if 문으 조금 줄여보았다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    priority = &#123;<span class="string">&#x27;+&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;-&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;*&#x27;</span>:<span class="number">1</span>,<span class="string">&#x27;/&#x27;</span>:<span class="number">1</span>&#125;</span><br><span class="line">    s = Stack()</span><br><span class="line"></span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">not</span> <span class="keyword">in</span> priority.keys():</span><br><span class="line">            result += x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> s.is_empty() <span class="keyword">and</span> priority[s.top.data] &lt; priority[x]:</span><br><span class="line">                s_pop = s.pop()</span><br><span class="line">                result += s_pop</span><br><span class="line">            s.push(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> s.is_empty():</span><br><span class="line">        s_pop = s.pop()</span><br><span class="line">        result += s_pop</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/07/18/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/%EC%8A%A4%ED%83%9D-%EC%97%B0%EC%8A%B5-%EB%AC%B8%EC%A0%9C/"
                             aria-label=": 스택 - 연습문제"
                         >
