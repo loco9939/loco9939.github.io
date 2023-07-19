@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/07/19/python/datastructure/stack/스택-후위-표기법2/스택-후위-표기법2/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>스택 - 후위 표기법2 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"후위 표기법 2소괄호를 포함한 후위 표기법 바꾸기\n소괄호()는 *보다 우선순위가 높다.\n후위 표기법은 우선순위가 높은 것을 먼저 출력하므로, 열린 소괄호가 나오면 스택에 넣는다.\n이후 닫힌 소괄호가 나오면 스택에 열린 소괄호 나올 때 까지 pop하여 연산자를 결과값에 추가한다.\n\n괄호는 변수에 추가하면 안되므로 스택에서 pop하여 제거한다.\n\n1234567891011121314151617181920212223def solution(str):    priority = &#123;&#x27;+&#x27;:2,&#x27;-&#x27;:2,&#x27;*&#x27;:1,&#x27;/&#x27;:1&#125;    result = &#x27;&#x27;    s = []    for x in str:        if x.isnumeric():            result += x        elif x == &#x27;(&#x27;:            s.append(x)        elif x == &#x27;)&#x27;:            while s[-1] != &quot;(&quot;:                result += s.pop()            s.pop()        elif x in priority:            if s and s[-1] != &#x27;(&#x27; and priority[s[-1]] &lt; priority[x]:                result += s.pop()            s.append(x)    while s:        result += s.pop()    return result\n\n\n코딩테스트를 본다고 생각하고 리스트를 활용하여 위 문제를 풀어보았다.\nisnumeric() 함수는 문자열이 숫자인지 판단하는 메서드이다.\nstack의 top을 의미하는 s[-1] 슬라이싱을 활용하였다.\n빈 리스트는 논리값이 False라는 점을 활용하여 while 반복문을 실행했다.\n\n후위 표기법 계산하기\n문자열을 순회하면서 해당 문자가 숫자면 정수형으로 변환하여 스택에 push\n연산자이면 스택에서 두 수를 pop하여 계산\n스택은 후입선출이므로, 처음 pop한 수를 n2, 두번째 pop한 수를 n1으로 두고 (n1 연산자 n2)로 계산한다.\n계산결과를 스택에 push\n스택에 마지막에 저장된 값이 결과값이다.\n\n123456789101112131415161718def eval_postfix(expression):    s = []    for exp in expression:        if exp.isnumeric():            s.append(int(exp))        elif exp != &quot; &quot;:            n2 = s.pop()            n1 = s.pop()            if exp == &#x27;+&#x27;:                res = n1 + n2            elif exp == &#x27;-&#x27;:                res = n1 - n2            elif exp == &#x27;*&#x27;:                res = n1 * n2            else:                res = n1 / n2            s.append(res)    return s[0]\n","dateCreated":"2023-07-19T23:52:34+09:00","dateModified":"2023-07-20T00:18:12+09:00","datePublished":"2023-07-19T23:52:34+09:00","description":"","headline":"스택 - 후위 표기법2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/","keywords":"스택"}</script>
+    <meta name="description" content="후위 표기법 2소괄호를 포함한 후위 표기법 바꾸기 소괄호()는 *보다 우선순위가 높다. 후위 표기법은 우선순위가 높은 것을 먼저 출력하므로, 열린 소괄호가 나오면 스택에 넣는다. 이후 닫힌 소괄호가 나오면 스택에 열린 소괄호 나올 때 까지 pop하여 연산자를 결과값에 추가한다.  괄호는 변수에 추가하면 안되므로 스택에서 pop하여 제거한다.  1234567">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="스택 - 후위 표기법2">
+<meta property="og:url" content="https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="후위 표기법 2소괄호를 포함한 후위 표기법 바꾸기 소괄호()는 *보다 우선순위가 높다. 후위 표기법은 우선순위가 높은 것을 먼저 출력하므로, 열린 소괄호가 나오면 스택에 넣는다. 이후 닫힌 소괄호가 나오면 스택에 열린 소괄호 나올 때 까지 pop하여 연산자를 결과값에 추가한다.  괄호는 변수에 추가하면 안되므로 스택에서 pop하여 제거한다.  1234567">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-07-19T14:52:34.000Z">
+<meta property="article:modified_time" content="2023-07-19T15:18:12.181Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="스택">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            스택 - 후위 표기법2
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-07-19T23:52:34+09:00">
+	
+		    2023/07/19
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Stack/">Stack</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="후위-표기법-2"><a href="#후위-표기법-2" class="headerlink" title="후위 표기법 2"></a>후위 표기법 2</h1><p>소괄호를 포함한 후위 표기법 바꾸기</p>
+<p>소괄호<code>()</code>는 <code>*</code>보다 우선순위가 높다.</p>
+<p>후위 표기법은 우선순위가 높은 것을 먼저 출력하므로, 열린 소괄호가 나오면 스택에 넣는다.</p>
+<p>이후 닫힌 소괄호가 나오면 스택에 열린 소괄호 나올 때 까지 pop하여 연산자를 결과값에 추가한다.</p>
+<ul>
+<li>괄호는 변수에 추가하면 안되므로 스택에서 pop하여 제거한다.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params"><span class="built_in">str</span></span>):</span><br><span class="line">    priority = &#123;<span class="string">&#x27;+&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;-&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;*&#x27;</span>:<span class="number">1</span>,<span class="string">&#x27;/&#x27;</span>:<span class="number">1</span>&#125;</span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    s = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">if</span> x.isnumeric():</span><br><span class="line">            result += x</span><br><span class="line">        <span class="keyword">elif</span> x == <span class="string">&#x27;(&#x27;</span>:</span><br><span class="line">            s.append(x)</span><br><span class="line">        <span class="keyword">elif</span> x == <span class="string">&#x27;)&#x27;</span>:</span><br><span class="line">            <span class="keyword">while</span> s[-<span class="number">1</span>] != <span class="string">&quot;(&quot;</span>:</span><br><span class="line">                result += s.pop()</span><br><span class="line">            s.pop()</span><br><span class="line">        <span class="keyword">elif</span> x <span class="keyword">in</span> priority:</span><br><span class="line">            <span class="keyword">if</span> s <span class="keyword">and</span> s[-<span class="number">1</span>] != <span class="string">&#x27;(&#x27;</span> <span class="keyword">and</span> priority[s[-<span class="number">1</span>]] &lt; priority[x]:</span><br><span class="line">                result += s.pop()</span><br><span class="line">            s.append(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> s:</span><br><span class="line">        result += s.pop()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>코딩테스트를 본다고 생각하고 리스트를 활용하여 위 문제를 풀어보았다.</li>
+<li><code>isnumeric()</code> 함수는 문자열이 숫자인지 판단하는 메서드이다.</li>
+<li>stack의 top을 의미하는 s[-1] 슬라이싱을 활용하였다.</li>
+<li>빈 리스트는 논리값이 False라는 점을 활용하여 while 반복문을 실행했다.</li>
+</ul>
+<h2 id="후위-표기법-계산하기"><a href="#후위-표기법-계산하기" class="headerlink" title="후위 표기법 계산하기"></a>후위 표기법 계산하기</h2><ol>
+<li>문자열을 순회하면서 해당 문자가 숫자면 정수형으로 변환하여 스택에 push</li>
+<li>연산자이면 스택에서 두 수를 pop하여 계산</li>
+<li>스택은 후입선출이므로, 처음 pop한 수를 n2, 두번째 pop한 수를 n1으로 두고 <code>(n1 연산자 n2)</code>로 계산한다.</li>
+<li>계산결과를 스택에 push</li>
+<li>스택에 마지막에 저장된 값이 결과값이다.</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">eval_postfix</span>(<span class="params">expression</span>):</span><br><span class="line">    s = []</span><br><span class="line">    <span class="keyword">for</span> exp <span class="keyword">in</span> expression:</span><br><span class="line">        <span class="keyword">if</span> exp.isnumeric():</span><br><span class="line">            s.append(<span class="built_in">int</span>(exp))</span><br><span class="line">        <span class="keyword">elif</span> exp != <span class="string">&quot; &quot;</span>:</span><br><span class="line">            n2 = s.pop()</span><br><span class="line">            n1 = s.pop()</span><br><span class="line">            <span class="keyword">if</span> exp == <span class="string">&#x27;+&#x27;</span>:</span><br><span class="line">                res = n1 + n2</span><br><span class="line">            <span class="keyword">elif</span> exp == <span class="string">&#x27;-&#x27;</span>:</span><br><span class="line">                res = n1 - n2</span><br><span class="line">            <span class="keyword">elif</span> exp == <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">                res = n1 * n2</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                res = n1 / n2</span><br><span class="line">            s.append(res)</span><br><span class="line">    <span class="keyword">return</span> s[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%8A%A4%ED%83%9D/" rel="tag">스택</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/"
+                    data-tooltip="스택 - 후위 표기법"
+                    aria-label="다음: 스택 - 후위 표기법"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%95/"
+                    data-tooltip="스택 - 후위 표기법"
+                    aria-label="다음: 스택 - 후위 표기법"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
