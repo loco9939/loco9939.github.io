@@ -233,6 +233,84 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/07/21/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%9E%90%EC%8B%A0%EB%B3%B4%EB%8B%A4-%ED%81%B0-%EC%9B%90%EC%86%8C-%EC%B0%BE%EA%B8%B0/%EC%8A%A4%ED%83%9D-%EC%9E%90%EC%8B%A0%EB%B3%B4%EB%8B%A4-%ED%81%B0-%EC%9B%90%EC%86%8C-%EC%B0%BE%EA%B8%B0/"
+                            aria-label=": 스택 - 자신보다 큰 원소 찾기"
+                        >
+                            스택 - 자신보다 큰 원소 찾기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-07-21T00:01:47+09:00">
+	
+		    2023/07/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Stack/">Stack</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>참조: <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/next-greater-element/">https://www.geeksforgeeks.org/next-greater-element/</a></p>
+<p>음이 아닌 정수 배열이 주어졌을 때, 각 원소의 오른쪽에 있는 원소 중에서 현재 원소보다 큰 값을 출력하되, 가장 근접한 원소를 출력하라. 현재 원소보다 큰 값이 없으면 -1을 출력하라.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">예시 1</span><br><span class="line"></span><br><span class="line">입력: [4, 5, 2, 25]</span><br><span class="line">출력:</span><br><span class="line">4 --&gt; 5</span><br><span class="line">5 --&gt; 25</span><br><span class="line">2 --&gt; 25</span><br><span class="line">25 --&gt; -1</span><br><span class="line">예시 2</span><br><span class="line"></span><br><span class="line">입력: [13, 7, 6, 12]</span><br><span class="line">출력:</span><br><span class="line">13 --&gt; -1</span><br><span class="line">7 --&gt; 12</span><br><span class="line">6 --&gt; 12</span><br><span class="line">12 --&gt; -1</span><br></pre></td></tr></table></figure>
+
+<h2 id="풀이"><a href="#풀이" class="headerlink" title="풀이"></a>풀이</h2><h3 id="이중반복문"><a href="#이중반복문" class="headerlink" title="이중반복문"></a>이중반복문</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>(<span class="params">int_arr</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(int_arr)):</span><br><span class="line">        <span class="built_in">int</span> = int_arr[i]</span><br><span class="line">        result = -<span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i,<span class="built_in">len</span>(int_arr)):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">int</span> &lt; int_arr[j]:</span><br><span class="line">                result = int_arr[j]</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;<span class="built_in">int</span>&#125;</span> --&gt; <span class="subst">&#123;result&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="스택"><a href="#스택" class="headerlink" title="스택"></a>스택</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solution</span>*by_stack(int_arr):</span><br><span class="line">    n = <span class="built_in">len</span>(int_arr)</span><br><span class="line">    s = []</span><br><span class="line">    res = [-<span class="number">1</span> <span class="keyword">for</span> * <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(int_arr))]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n-<span class="number">1</span>,-<span class="number">1</span>,-<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">while</span> s:</span><br><span class="line">            <span class="keyword">if</span> s[-<span class="number">1</span>] &gt; int_arr[i]:</span><br><span class="line">                res[i] = s[-<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                s.pop()</span><br><span class="line">        s.append(int_arr[i])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;int_arr[i]&#125;</span> --&gt; <span class="subst">&#123;res[i]&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>현재 원소와 오른쪽 원소를 비교하므로, 오른쪽에서 왼쪽으로 이동하면서 비교하면 수월하다.</li>
+<li>문제에서 요구하는 것은 현재 원소의 오른쪽 값 중 가장 가까운 값이므로, 오른쪽 부터 왼쪽으로 가면서 원소를 저장했다면 꺼낼 때는 <code>역순으로 꺼내서 비교한다.</code></li>
+</ul>
+<ol>
+<li>stack을 빈 상태로 초기화</li>
+<li>res 배열을 -1로 배열 길이 만큼 초기화</li>
+<li>역순으로 순회를 하면서 stack이 비어있으면, 원소를 추가한다.</li>
+<li>만약 stack에 값이 있다면, 스택의 값들과 현재 원소를 비교한다.</li>
+<li>스택의 값이 크다면 해당 원소의 index에 위치하는 res 배열에 스택의 값을 할당하고 해당 원소를 stack 저장</li>
+<li>다음 순회</li>
+<li>만약 스택의 값이 작다면 stack에 마지막 값을 <code>pop</code>한다.</li>
+</ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/07/21/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%EC%9E%90%EC%8B%A0%EB%B3%B4%EB%8B%A4-%ED%81%B0-%EC%9B%90%EC%86%8C-%EC%B0%BE%EA%B8%B0/%EC%8A%A4%ED%83%9D-%EC%9E%90%EC%8B%A0%EB%B3%B4%EB%8B%A4-%ED%81%B0-%EC%9B%90%EC%86%8C-%EC%B0%BE%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/07/19/Python/DataStructure/Stack/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/%EC%8A%A4%ED%83%9D-%ED%9B%84%EC%9C%84-%ED%91%9C%EA%B8%B0%EB%B2%952/"
                             aria-label=": 스택 - 후위 표기법2"
                         >
