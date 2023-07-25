@@ -233,6 +233,76 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/"
+                            aria-label=": AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기"
+                        >
+                            AllWAIS [TRST] emotion 스타일링, 타입 덮어씌기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-02T23:02:32+09:00">
+	
+		    2023/01/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/AllWAIS/">AllWAIS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Emotion-Styled-Component-Cascading-문제"><a href="#Emotion-Styled-Component-Cascading-문제" class="headerlink" title="Emotion Styled Component Cascading 문제"></a>Emotion Styled Component Cascading 문제</h1><p>Emotion에서 Styled Component 를 사용하면 해당 컴포넌트의 클래스 이름이 재정의된다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>styled component를 사용하여 TabPanel 컴포넌트를 생성하였다. 브라우저에서 해당 요소를 확인해보면 다음과 같이 알 수 없는 클래스로 나오는 것을 알 수 있다.</p>
+<p><img src="/../../../images/TRST/emotionStyled/emotionStyled.png" alt="emotion styled component"></p>
+<h1 id="TypeScript-오류-사용량-덮어씜"><a href="#TypeScript-오류-사용량-덮어씜" class="headerlink" title="TypeScript 오류 - 사용량 덮어씜"></a>TypeScript 오류 - 사용량 덮어씜</h1><p><img src="/../../../images/TRST/emotionStyled/tsduplicated.png" alt="ts덮어씜"></p>
+<p>props를 생성하고 해당 props를 통해 styled Component에서 조건부 스타일을 주려고 한다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Component</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  className?: <span class="built_in">string</span>;</span><br><span class="line">  children?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125; &amp; <span class="title class_">React</span>.<span class="property">ComponentPropsWithRef</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TabPanelProps</span>&lt;T <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="property">ElementType</span>&gt; = &#123;</span><br><span class="line">  dataIndex?: <span class="title class_">TabsContextValue</span>[<span class="string">&quot;selected&quot;</span>];</span><br><span class="line">&#125; &amp; <span class="title class_">Component</span>&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">StyledTabPanel</span> = styled.<span class="property">div</span>&lt;<span class="title class_">TabPanelProps</span>&lt;<span class="string">&quot;div&quot;</span>&gt;&gt;<span class="string">`</span></span><br><span class="line"><span class="string">  padding: 5px;</span></span><br><span class="line"><span class="string">  border: 2px solid hsl(219deg 1% 72%);</span></span><br><span class="line"><span class="string">  border-radius: 0 5px 5px;</span></span><br><span class="line"><span class="string">  background: hsl(220deg 43% 99%);</span></span><br><span class="line"><span class="string">  min-height: 10em;</span></span><br><span class="line"><span class="string">  min-width: 550px;</span></span><br><span class="line"><span class="string">  overflow: auto;</span></span><br><span class="line"><span class="string">  display: <span class="subst">$&#123;(props) =&gt;</span></span></span><br><span class="line"><span class="subst"><span class="string">    props.dataIndex === +(props.id?.slice(-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">unknown</span> <span class="keyword">as</span> <span class="built_in">number</span>)</span></span></span><br><span class="line"><span class="subst"><span class="string">      ? <span class="string">&quot;block&quot;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">      : <span class="string">&quot;none&quot;</span>&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TabPanel</span>(<span class="params">&#123; children, className, ...restProps &#125;: TabPanelProps&lt;<span class="string">&quot;div&quot;</span>&gt;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; selected, setSelected &#125; = <span class="title function_">useTabsContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">StyledTabPanel</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">role</span>=<span class="string">&quot;tabpanel&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">tabIndex</span>=<span class="string">&#123;0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">dataIndex</span>=<span class="string">&#123;selected&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&#123;className&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">StyledTabPanel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>해당 타입을 정의할 때, 필수가 아닌 선택 사항으로 정의해주어서 해결하였다.</li>
+<li>styled component 타입 지정 시 해당 컴포넌트의 props라고 지정을 해줘야지만 props에서 찾을 수 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/02/React/AllWAIS/AllWAIS-TRST-emotion-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%83%80%EC%9E%85-%EB%8D%AE%EC%96%B4%EC%94%8C%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/02/CS/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80/"
                             aria-label=": 이벤트 위임이란 무엇이고 왜 사용하는가?"
                         >
@@ -905,80 +975,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
-                            aria-label=": 💭 useState"
-                        >
-                            💭 useState
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-21T19:40:24+09:00">
-	
-		    2022/11/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <span id="more"></span>
-
-<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
-
-<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
-<ul>
-<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
-</ul>
-<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1005,7 +1001,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 16 of 24</li>
+        <li class="pagination-number">page 16 of 25</li>
     </ul>
 </div>
 

@@ -11439,4 +11439,23 @@
         <tag>큐</tag>
       </tags>
   </entry>
+  <entry>
+    <title>TypeScript - 객체의 key 값에 유니온 타입 선언하기</title>
+    <url>/2023/07/25/TypeScript/TypeScript-%EA%B0%9D%EC%B2%B4%EC%9D%98-key-%EA%B0%92%EC%97%90-%EC%9C%A0%EB%8B%88%EC%98%A8-%ED%83%80%EC%9E%85-%EC%84%A0%EC%96%B8%ED%95%98%EA%B8%B0/</url>
+    <content><![CDATA[<h1 id="객체의-key-값에-유니온-타입-선언하기"><a href="#객체의-key-값에-유니온-타입-선언하기" class="headerlink" title="객체의 key 값에 유니온 타입 선언하기"></a>객체의 key 값에 유니온 타입 선언하기</h1><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> userInfoType = <span class="string">&quot;name&quot;</span> | <span class="string">&quot;age&quot;</span> | <span class="string">&quot;address&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">User</span> &#123;</span><br><span class="line">  [<span class="attr">key</span>: userInfoType]: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/key_union.png" alt="유니온 타입 에러"></p>
+<ul>
+<li>“인덱스 시그니처 매개변수는 리터럴 타입이나 제네릭 타입이 될 수 없다.”는 에러가 발생했다.</li>
+<li>매핑된 객체를 대신 사용하라고 알려준다.</li>
+</ul>
+<h2 id="해결방법"><a href="#해결방법" class="headerlink" title="해결방법"></a>해결방법</h2><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> userInfoType = <span class="string">&quot;name&quot;</span> | <span class="string">&quot;age&quot;</span> | <span class="string">&quot;address&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> userType = &#123;</span><br><span class="line">  [key <span class="keyword">in</span> userInfoType]: <span class="built_in">string</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">user</span>: userType = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;홍길동&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="string">&quot;20&quot;</span>,</span><br><span class="line">  <span class="attr">address</span>: <span class="string">&quot;서울&quot;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>TypeScript</category>
+      </categories>
+      <tags>
+        <tag>타입스크립트</tag>
+      </tags>
+  </entry>
 </search>
