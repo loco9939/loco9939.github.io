@@ -233,6 +233,184 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/"
+                            aria-label=": branch 전략이란?"
+                        >
+                            branch 전략이란?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-08-03T17:31:00+09:00">
+	
+		    2022/08/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/git/">git</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="branch"><a href="#branch" class="headerlink" title="branch"></a>branch</h1><hr>
+<h2 id="branch란"><a href="#branch란" class="headerlink" title="branch란?"></a>branch란?</h2><p>분기점을 생성하여 독립적으로 코드를 변경할 수 있도록 도와주는 모델</p>
+<p>명령어</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> branch // 로컬 브랜치 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch -r // 원격 브랜치 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch -a // 둘다 확인</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> branch html-init // 브랜치명 입력하면 브랜치 생성</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> switch 브랜치명 // 브랜치 이동</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>로컬에서 브랜치 생성한 후 원격 저장소에 push를 해줘야만 github 저장소에 해당 브랜치가 생성된다.</p>
+</blockquote>
+<p><strong style="color:red">주의사항</strong></p>
+<ul>
+<li>처음 브랜치를 push 하는 경우에는 -u 플래그를 사용해줘야한다.<br>그 이유는 원격 저장소에게 새로만든 브랜치가 main 브랜치와 연관성이 있다라는 것을 의미하기 때문이다.</li>
+<li>플래그는 맨 앞에 위치하는 것만 아니면 위치는 상관없다.</li>
+</ul>
+<h2 id="branch-사용-이유"><a href="#branch-사용-이유" class="headerlink" title="branch 사용 이유"></a>branch 사용 이유</h2><hr>
+<p>개발을 할 때, main 브랜치를 두고 개발 브랜치로 소스 코드를 가져와서 원하는 개발을 시도하여도 메인 소스코드에 영향을 주지 않을 수 있어 자유로운 개발을 할 수 있다. <strong>협업에 필수적인 모델이다.</strong></p>
+<h2 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h2><hr>
+<p>개발 브랜치를 생성한 후 main 브랜치와 합치기 위해서는 merge 작업을 해줘야한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// main</span><br><span class="line"><span class="variable">$git</span> merge develop</span><br></pre></td></tr></table></figure>
+
+<p>자신의 역할을 끝낸 즉, merge가 된 브랜치는 바로바로 삭제해준다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> branch -D develop</span><br></pre></td></tr></table></figure>
+
+<h3 id="merge-conflict"><a href="#merge-conflict" class="headerlink" title="merge conflict"></a>merge conflict</h3><hr>
+<p>만약 main 브랜치와 develop 브랜치에서 같은 파일의 같은 라인을 수정했다면, 컴퓨터는 어떤 것을 선택해야할지 알지 못하므로 그 선택을 우리에게 맡긴다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>git branch practice on branch main<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  =======</span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>homepage<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>This work on branch body-init<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">  &gt;&gt;&gt;&gt;&gt;&gt;&gt; body-init</span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>이럴 경우 원하는 부분을 선택하여 수정해주고 add, commit을 해주면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> add index.html</span><br><span class="line"><span class="variable">$git</span> commit</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>merge를 할 경우, merge commit이 제목과 내용으로 채워져있다.</p>
+</blockquote>
+<p><strong style="color:red">주의사항</strong></p>
+<ul>
+<li>commit은 항상 동작하는 단위 (최소단위)여야 한다.</li>
+<li>-m 플래그는 사용하지 말자</li>
+<li>merge conflict가 발생한 경우 commit 내용으로 어떻게 충돌을 해결했는지도 적어주자</li>
+</ul>
+<h1 id="gitflow-전략"><a href="#gitflow-전략" class="headerlink" title="gitflow 전략"></a>gitflow 전략</h1><hr>
+<p><img src="/images/220803/gitflow.png" alt="gitflow"></p>
+<ul>
+<li><p>Master(Main): 사용자를 위한 배포용 소스코드용</p>
+</li>
+<li><p>Hotfix: 갑작스러운 버그를 수정하기 위한 브랜치</p>
+</li>
+<li><p>Develop: 개발용 브랜치로, feature 브랜치에서 작업한 것들을 이곳에서 모아서 확인한다.</p>
+</li>
+<li><p>Feature: 개발자의 작업 브랜치, add와 commit이 작은 단위로 일어나는 곳</p>
+</li>
+</ul>
+<h2 id="gitflow-전략-사용"><a href="#gitflow-전략-사용" class="headerlink" title="gitflow 전략 사용"></a>gitflow 전략 사용</h2><hr>
+<ol>
+<li><p>github 저장소에 repository 생성한 다음 나의 로컬 폴더에 git clone 한다.</p>
+</li>
+<li><p>저장소와 로컬을 연결했다면 저장소를 초기화해준다.</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow init</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>feature 브랜치를 생성하고 이동하여 작업을 시작한다.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow feature start <span class="string">&quot;브랜치명&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>기능이나 최소단위로 작업을 진행한다.</p>
+<ol start="4">
+<li>작업이 끝났다면 develop 브랜치와 merge한 뒤 feature 브랜치 삭제</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow feature finish <span class="string">&quot;브랜치명&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>위 명령어로 merge,delete 까지 한번에 해줄 수 있다.</p>
+<ol start="5">
+<li>기능 개발 마무리되면 release 사용하여 배포 전 브랜치로 이동한다.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow release start <span class="string">&quot;버전&quot;</span> // ex) v0.1</span><br></pre></td></tr></table></figure>
+
+<p>위 작업을 통해 버전 태그를 달아준다.</p>
+<ol start="6">
+<li>release 브랜치에서 github 저장소의 main 브랜치와 develop 브랜치, tags를 push 해준다.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> push origin main</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> push -u origin develop // develop브랜치는 처음 github에 올라가니 -u 플래그 사용</span><br><span class="line"></span><br><span class="line"><span class="variable">$git</span> push --tags // 한번만 해주면 된다.</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>release 브랜치를 merge + delete 해준다.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> flow release finish <span class="string">&quot;버전&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>github 저장소에서 tag에 가서 release 해주면 된다.</li>
+</ol>
+<p><img src="/images/220803/release.png" alt="release"></p>
+<p><img src="/images/220803/release2.png" alt="release"></p>
+<p><img src="/images/220803/release3.png" alt="release"></p>
+<h2 id="gitflow-전략을-통한-협업"><a href="#gitflow-전략을-통한-협업" class="headerlink" title="gitflow 전략을 통한 협업"></a>gitflow 전략을 통한 협업</h2><hr>
+<ol>
+<li><p>팀장 또는 단체의 repository에서 fork를 하여 복사본은 나의 github 저장소로 가져온다.<br><img src="/images/220803/fork.png" alt="fork"></p>
+</li>
+<li><p>앞서 사용한 feature 브랜치를 사용하여 개발을 한 후 fork한 사본 저장소에 push를 한다.</p>
+</li>
+<li><p>PR을 하기전 issue 탭에가서 내가 무슨 작업을 할 것 인지 알려주도록 한다.<br><img src="/images/220803/issue.png" alt="issue"></p>
+</li>
+<li><p>팀장 또는 단체의 repository에 가서 PR(Pull Request)를 한다.</p>
+</li>
+<li><p>팀장은 나의 PR을 확인하고 요청에 응답하거나 문제가 있다면 코드리뷰를 하며 PR을 보류한다.<br><img src="/images/220803/pr.png" alt="pullrequest"></p>
+</li>
+<li><p>PR이 열려있는 상태에서 나는 나의 develop 브랜치에 돌아가서 코드를 수정한 뒤 commit을 해주면 다시 팀장이 확인하고 끝내 merge를 한다.</p>
+</li>
+</ol>
+<ul>
+<li>이 후 팀장이 develop 브랜치와 main 브랜치를 merge하면 issue가 closed 된다.</li>
+</ul>
+<p><strong style="color:red">주의사항</strong></p>
+<ul>
+<li>PR할 때, 나의 develop 브랜치에서 팀장의 develop 브랜치로 PR을 보내야한다.</li>
+</ul>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><hr>
+<p>gitflow 수업이 끝난 후 1시간 30분 동안 4명이서 소규모 팀프로젝트를 경험해보았는데, 아직 머릿속에서 내가 어떤 상태이고 무엇을 해야하는지 헷갈려서 조금 어수선한 감이 있었다.</p>
+<p>그래도 피보나치킨 게임(?)을 만들어서 배포까지 해보니 gitflow 전략을 통한 협업의 장점을 느낄 수 있어서 재밌었다.</p>
+<blockquote>
+<p>튜토리얼처럼 단계별로 코드를 따라 치는 것이 아닌 내가 어떤 단계에 있고 어떤 행동을 해야하는지를 생각하며 개발을 해야한다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/08/03/git/branch%20%EC%A0%84%EB%9E%B5%EC%9D%B4%EB%9E%80?/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/08/02/CS/CDN/"
                             aria-label=": CDN"
                         >
