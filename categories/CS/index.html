@@ -233,7 +233,91 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2023/07/30/JavaScript%EC%9D%98-%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%9D%B4%EB%9E%80/"
+                            href="/2023/07/31/CS/JavaScript%EC%9D%98-var-let-const-%ED%82%A4%EC%9B%8C%EB%93%9C%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
+                            aria-label=": JavaScript의 var, let, const 키워드에 대해 설명하라"
+                        >
+                            JavaScript의 var, let, const 키워드에 대해 설명하라
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-07-31T22:39:28+09:00">
+	
+		    2023/07/31
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="var-키워드"><a href="#var-키워드" class="headerlink" title="var 키워드"></a>var 키워드</h1><ul>
+<li>함수레벨 스코프</li>
+<li>생략 가능</li>
+<li>변수 재선언, 재할당 가능</li>
+<li>변수 호이스팅: 선언 이전에 참조할 수 있다.</li>
+<li>전역 변수로 선언 시 전역 객체의 프로퍼티로 등록</li>
+</ul>
+<h1 id="let-키워드"><a href="#let-키워드" class="headerlink" title="let 키워드"></a>let 키워드</h1><ul>
+<li>블록레벨 스코프</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let foo = 123; // 전역 변수</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  let foo = 456; // 지역 변수</span><br><span class="line">  let bar = 456; // 지역 변수</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(foo); // 123</span><br><span class="line">console.log(bar); // ReferenceError: bar is not defined</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>재선언 불가</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="number">123</span>;</span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">456</span>; <span class="comment">// 중복 선언 허용</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">123</span>;</span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">456</span>; <span class="comment">// Uncaught SyntaxError: Identifier &#x27;bar&#x27; has already been declared</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="let-키워드의-호이스팅"><a href="#let-키워드의-호이스팅" class="headerlink" title="let 키워드의 호이스팅"></a>let 키워드의 호이스팅</h2><p><img src="/../../images/var%20hoisting.png"></p>
+<p><code>var</code> 키워드로 선언된 변수는 선언단계와 초기화 단계가 동시에 일어난다.</p>
+<p><img src="/../../images/let%20hoisting.png"></p>
+<p>하지만 <code>let</code>, <code>const</code> 키워드로 선언된 변수는 선언단계와 초기화 단계가 분리되어 진행된다.</p>
+<h1 id="const-키워드"><a href="#const-키워드" class="headerlink" title="const 키워드"></a>const 키워드</h1><ul>
+<li>재할당, 재선언 불가</li>
+<li>상수를 주로 사용</li>
+<li>변수 자체를 재할당할 순 없지만 객체의 프로퍼티는 변경 가능하다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user = &#123; <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// const 변수는 재할당이 금지된다.</span></span><br><span class="line"><span class="comment">// user = &#123;&#125;; // TypeError: Assignment to constant variable.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 객체의 내용은 변경할 수 있다.</span></span><br><span class="line">user.<span class="property">name</span> = <span class="string">&quot;Kim&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user); <span class="comment">// &#123; name: &#x27;Kim&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/07/31/CS/JavaScript%EC%9D%98-var-let-const-%ED%82%A4%EC%9B%8C%EB%93%9C%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2023/07/30/CS/JavaScript%EC%9D%98-%EB%B3%80%EC%88%98%EB%9E%80?/"
                             aria-label=": JavaScript의 변수란?"
                         >
                             JavaScript의 변수란?
@@ -292,7 +376,7 @@
                     
                         <p>
                             <a
-                                href="/2023/07/30/JavaScript%EC%9D%98-%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%9D%B4%EB%9E%80/#post-footer"
+                                href="/2023/07/30/CS/JavaScript%EC%9D%98-%EB%B3%80%EC%88%98%EB%9E%80?/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
@@ -999,112 +1083,6 @@
                         <p>
                             <a
                                 href="/2023/03/02/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/JSON%EA%B3%BC-XML%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/02/CS/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/"
-                            aria-label=": Context API란 무엇이고 Redux와 어떤 차이가 있나요?"
-                        >
-                            Context API란 무엇이고 Redux와 어떤 차이가 있나요?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-02T15:35:47+09:00">
-	
-		    2023/02/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="Context-API란"><a href="#Context-API란" class="headerlink" title="Context API란?"></a>Context API란?</h1><div style="display:flex">
-    <img src="../../images/contextapi/context.png" width="200" height="300">
-    <p style="padding:0 1rem; line-height:1.5;">앱의 규모가 커지고 복잡해짐에 따라 부모 컴포넌트에서 중첩된 자식 컴포넌트에게 데이터나 데이터 변경함수를 전달해줄 때, 몇단계를 걸쳐서 전달해줌으로서 애플리케이션이 더욱 복잡해지는 문제가 발생하였다.<br />
-    이를 해결하기 위해 context API가 등장하였고, 이로써 props를 단계별로 넘겨주지 않아도 데이터를 제공할 수 있게 되었다. 그 결과 <b>컴포넌트 트리로 묶인 컴포넌트 간 데이터 공유가 수월해졌다.</b> 
-    </p>
-</div>
-
-<ul>
-<li>리액트에서 제공하는 내장 기능이다.</li>
-</ul>
-<blockquote>
-<p>단, Context API를 사용하게 되면 컴포넌트의 재사용이 어려워지므로 꼭 필요한 경우에만 사용한다.</p>
-</blockquote>
-<h1 id="Redux란"><a href="#Redux란" class="headerlink" title="Redux란?"></a>Redux란?</h1><p>Redux는 action이라는 이벤트를 사용하여 데이터를 관리할 수 있는 상태관리 라이브러리이다.</p>
-<p><img src="/../../images/contextapi/Redux.png" alt="redux"></p>
-<h2 id="리덕스의-3원칙"><a href="#리덕스의-3원칙" class="headerlink" title="리덕스의 3원칙"></a>리덕스의 3원칙</h2><ol>
-<li>단 하나의 store에서 모든 상태가 저장된다.</li>
-<li>store의 상태를 변경하는 유일한 방법은 action 객체를 dispatch하는 방법 뿐이다.</li>
-<li>action에 의한 상태 변경은 순수함수를 통해서만 가능하도록 작성해야 한다.</li>
-</ol>
-<h2 id="리덕스-특징"><a href="#리덕스-특징" class="headerlink" title="리덕스 특징"></a>리덕스 특징</h2><ul>
-<li>thunk, saga와 같은 미들웨어를 추가적으로 설정할 수 있다. 비동기 처리를 Util로 처리 가능</li>
-<li>Redux Devtool Extension을 사용하여 디버깅이 용이하다.</li>
-<li>전역 상태 관리 이외도 로컬스토리지에 상태 저장, 버그 리포트 등의 기능을 제공한다.</li>
-</ul>
-<h2 id="Context-API와-Redux의-차이"><a href="#Context-API와-Redux의-차이" class="headerlink" title="Context API와 Redux의 차이"></a>Context API와 Redux의 차이</h2><table>
-<thead>
-<tr>
-<th></th>
-<th>Context API</th>
-<th>Redux</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Learning Curve</td>
-<td>쉬움</td>
-<td>어려움</td>
-</tr>
-<tr>
-<td>알아야 할 것들</td>
-<td>적다</td>
-<td>많다</td>
-</tr>
-<tr>
-<td>유지보수성</td>
-<td>작고 간단한 애플리케이션에 적합</td>
-<td>복잡한 애플리케이션에 적합</td>
-</tr>
-</tbody></table>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/02/CS/Context-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-Redux%EC%99%80-%EC%96%B4%EB%96%A4-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
