@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/08/02/daily/원하는-요소를-제외한-영역-클릭-시-함수-실행하기/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>원하는 요소를 제외한 영역 클릭 시 함수 실행하기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"흔히 웹을 사용하면서 select 태그를 클릭해서 options 들이 나타났을 때, select 태그 내부의 option을 클릭하면 해당 option이 선택되고, option 외부를 클릭했을 때, 나타났던 option들이 사라지도록 구현된 웹을 많이 경험했을 것이다.\n나도 그래프를 CustomLegend의 요소를 클릭했을 때, 클릭한 Legend의 Line 그래프를 highlight 시켜주고, CustomLegend 내부의 요소 이외의 영역을 클릭했을 때, 클릭한 요소를 해제하도록 구현해보았다.\n1. 선택된 그래프의 x축 값을 상태로 관리한다.1const [clickedGraph, setClickedGraph] = useState(&quot;&quot;);\n\n2. CustomLegend에 이벤트 위임을 해준다.123456789const CustomLegend = () =&gt; &#123;  return (    &lt;ul id=&quot;CUSTOM_LEGEND&quot;&gt;      &#123;payload.map((elem) =&gt; (        &lt;li key=&#123;elem.name&#125;&gt;&#123;elem.value&#125;&lt;/li&gt;      ))&#125;    &lt;/ul&gt;  );&#125;;\n\n\nCustomLegend의 ul 태그에 id를 부여한다.\nli 요소를 클릭 이벤트를 이벤트 위임을 통해 이벤트 발생을 캐치할 수 있다.\n\n3. 이벤트 핸들러 생성123456789101112const handleClickGraph = (e: any) =&gt; &#123;  const value = e.target.innerHTML;  setClickedGraph(value);&#125;;const handleClickOutside = (e: any) =&gt; &#123;  const parentElem = e.target as HTMLElement;  if (!targetElem.closest(&quot;#CUSTOM_LEGEND&quot;)) &#123;    setClickedGraph(&quot;&quot;);  &#125;&#125;;\n\n\n클릭이벤트가 발생한 요소의 가장 가까운 요소 중 id가 CUSTOM_LEGEND인 요소가 없으면 clickedGraph의 값을 빈 값으로 초기화 시킨다.\n\n4. 브라우저에 이벤트 등록1234567useEffect(() =&gt; &#123;  document.addEventListener(&quot;click&quot;, handleClickOutside);  return () =&gt; &#123;    document.removeEventListener(&quot;click&quot;, handleClickOutside);  &#125;;&#125;);\n\n\n내가 지정한 영역은 ul 태그 안이고 내가 지정하지 않은 외부의 영역을 모두 다루기 위해서는 브라우저에 이벤트를 등록해줘야한다.\nuseEffect는 함수형 컴포넌트에서 리액트 컴포넌트의 라이프사이클에 원하는 함수를 실행할 수 있도록 도와주는 훅이다.\nreturn으로 함수를 반환하면 해당 함수는 컴포넌트가 소멸할 때, 실행된다.\n\n\n\n\n렌더링 되기 이전에 브라우저에 이벤트를 등록해주고 해당 컴포넌트가 소멸할 때, 이벤트를 제거해줘야 컴포넌트가 렌더링 될 때마다 이벤트가 중복으로 등록되지 않아 성능상 문제를 해결할 수 있다.\n\n","dateCreated":"2023-08-02T22:42:39+09:00","dateModified":"2023-08-02T23:12:58+09:00","datePublished":"2023-08-02T22:42:39+09:00","description":"","headline":"원하는 요소를 제외한 영역 클릭 시 함수 실행하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/","keywords":"이벤트 위임"}</script>
+    <meta name="description" content="흔히 웹을 사용하면서 select 태그를 클릭해서 options 들이 나타났을 때, select 태그 내부의 option을 클릭하면 해당 option이 선택되고, option 외부를 클릭했을 때, 나타났던 option들이 사라지도록 구현된 웹을 많이 경험했을 것이다. 나도 그래프를 CustomLegend의 요소를 클릭했을 때, 클릭한 Legend의 Line">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="원하는 요소를 제외한 영역 클릭 시 함수 실행하기">
+<meta property="og:url" content="https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="흔히 웹을 사용하면서 select 태그를 클릭해서 options 들이 나타났을 때, select 태그 내부의 option을 클릭하면 해당 option이 선택되고, option 외부를 클릭했을 때, 나타났던 option들이 사라지도록 구현된 웹을 많이 경험했을 것이다. 나도 그래프를 CustomLegend의 요소를 클릭했을 때, 클릭한 Legend의 Line">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-08-02T13:42:39.000Z">
+<meta property="article:modified_time" content="2023-08-02T14:12:58.016Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="이벤트 위임">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            원하는 요소를 제외한 영역 클릭 시 함수 실행하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-08-02T22:42:39+09:00">
+	
+		    2023/08/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>흔히 웹을 사용하면서 select 태그를 클릭해서 options 들이 나타났을 때, select 태그 내부의 option을 클릭하면 해당 option이 선택되고, option 외부를 클릭했을 때, 나타났던 option들이 사라지도록 구현된 웹을 많이 경험했을 것이다.</p>
+<p>나도 그래프를 CustomLegend의 요소를 클릭했을 때, 클릭한 Legend의 Line 그래프를 highlight 시켜주고, CustomLegend 내부의 요소 이외의 영역을 클릭했을 때, 클릭한 요소를 해제하도록 구현해보았다.</p>
+<h3 id="1-선택된-그래프의-x축-값을-상태로-관리한다"><a href="#1-선택된-그래프의-x축-값을-상태로-관리한다" class="headerlink" title="1. 선택된 그래프의 x축 값을 상태로 관리한다."></a>1. 선택된 그래프의 x축 값을 상태로 관리한다.</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [clickedGraph, setClickedGraph] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-CustomLegend에-이벤트-위임을-해준다"><a href="#2-CustomLegend에-이벤트-위임을-해준다" class="headerlink" title="2. CustomLegend에 이벤트 위임을 해준다."></a>2. CustomLegend에 이벤트 위임을 해준다.</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;CUSTOM_LEGEND&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((elem) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;elem.name&#125;</span>&gt;</span>&#123;elem.value&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CustomLegend의 ul 태그에 id를 부여한다.</li>
+<li>li 요소를 클릭 이벤트를 이벤트 위임을 통해 이벤트 발생을 캐치할 수 있다.</li>
+</ul>
+<h3 id="3-이벤트-핸들러-생성"><a href="#3-이벤트-핸들러-생성" class="headerlink" title="3. 이벤트 핸들러 생성"></a>3. 이벤트 핸들러 생성</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">handleClickGraph</span> = (<span class="params">e: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> value = e.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line">  <span class="title function_">setClickedGraph</span>(value);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleClickOutside</span> = (<span class="params">e: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> parentElem = e.<span class="property">target</span> <span class="keyword">as</span> <span class="title class_">HTMLElement</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!targetElem.<span class="title function_">closest</span>(<span class="string">&quot;#CUSTOM_LEGEND&quot;</span>)) &#123;</span><br><span class="line">    <span class="title function_">setClickedGraph</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클릭이벤트가 발생한 요소의 가장 가까운 요소 중 id가 <code>CUSTOM_LEGEND</code>인 요소가 없으면 clickedGraph의 값을 빈 값으로 초기화 시킨다.</li>
+</ul>
+<h3 id="4-브라우저에-이벤트-등록"><a href="#4-브라우저에-이벤트-등록" class="headerlink" title="4. 브라우저에 이벤트 등록"></a>4. 브라우저에 이벤트 등록</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, handleClickOutside);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;click&quot;</span>, handleClickOutside);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>내가 지정한 영역은 ul 태그 안이고 내가 지정하지 않은 외부의 영역을 모두 다루기 위해서는 브라우저에 이벤트를 등록해줘야한다.</li>
+<li>useEffect는 함수형 컴포넌트에서 리액트 컴포넌트의 라이프사이클에 원하는 함수를 실행할 수 있도록 도와주는 훅이다.<ul>
+<li>return으로 함수를 반환하면 해당 함수는 컴포넌트가 소멸할 때, 실행된다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>렌더링 되기 이전에 브라우저에 이벤트를 등록해주고 해당 컴포넌트가 소멸할 때, 이벤트를 제거해줘야 컴포넌트가 렌더링 될 때마다 이벤트가 중복으로 등록되지 않아 성능상 문제를 해결할 수 있다.</p>
+</blockquote>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9C%84%EC%9E%84/" rel="tag">이벤트 위임</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/01/Daily/JavaScript-%EB%82%A0%EC%A7%9C-%EC%89%BD%EA%B2%8C-%EB%8B%A4%EB%A3%A8%EA%B8%B0/"
+                    data-tooltip="JavaScript 날짜 쉽게 다루기"
+                    aria-label="다음: JavaScript 날짜 쉽게 다루기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/01/Daily/JavaScript-%EB%82%A0%EC%A7%9C-%EC%89%BD%EA%B2%8C-%EB%8B%A4%EB%A3%A8%EA%B8%B0/"
+                    data-tooltip="JavaScript 날짜 쉽게 다루기"
+                    aria-label="다음: JavaScript 날짜 쉽게 다루기"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
