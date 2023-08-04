@@ -233,6 +233,86 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/21/Algorithm/boj/DP/boj-11726-2xn-%ED%83%80%EC%9D%BC%EB%A7%81-JavaScript/"
+                            aria-label=": boj-11726 2xn 타일링(JavaScript)"
+                        >
+                            boj-11726 2xn 타일링(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-21T12:27:43+09:00">
+	
+		    2023/02/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>2×n 크기의 직사각형을 1×2, 2×1 타일로 채우는 방법의 수를 구하는 프로그램을 작성하시오.</p>
+<p>아래 그림은 2×5 크기의 직사각형을 채운 한 가지 방법의 예이다.</p>
+<p><img src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/11726/1.png" alt="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/11726/1.png"></p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 n이 주어진다. (1 ≤ n ≤ 1,000)</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 2×n 크기의 직사각형을 채우는 방법의 수를 10,007로 나눈 나머지를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">9</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">55</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> input = +<span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>).<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = [];</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="variable constant_">DP</span>[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">3</span>; i &lt;= input; i++) &#123;</span><br><span class="line">  <span class="variable constant_">DP</span>[i] = (<span class="variable constant_">DP</span>[i - <span class="number">1</span>] + <span class="variable constant_">DP</span>[i - <span class="number">2</span>]) % <span class="number">10007</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[input]);</span><br></pre></td></tr></table></figure>
+
+<p>패턴을 찾아보려고 노력했지만 결국 못찾고 다른 사람 코드를 보았다.. DP는 작은 문제에서 나온 결과물을 가지고 큰 문제를 해결하는 문제이다. 즉, 작은 문제의 결과물을 큰 문제에 결과물에 대입할 수 있는 안목이 필요하다.</p>
+<p>위 문제는 2x1 타일을 가장 왼쪽에 세로로 배치했을 때, 2x1 타일을 가장 왼쪽에 가로로 2줄 배치했을 때 경우의 수로 나뉜다.</p>
+<p>n &#x3D; 1인 경우는 1가지이고, n &#x3D; 2인 경우 2가지를 그림으로 그려본다.</p>
+<p><img src="/../../../../images/boj/11726/Frame%201.png" alt="Frame 1.png"></p>
+<ul>
+<li>즉, 왼쪽에 세로로 2x1을 배치했을 때 경우의 수는 n-1 경우의 수와 같고, 왼쪽에 가로로 2줄 배치했을 때경우의 수는 n-2의 경우의 수와 같다.</li>
+<li>따라서 DP[n] &#x3D; DP[n-1] + DP[n-2]가 성립한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/21/Algorithm/boj/DP/boj-11726-2xn-%ED%83%80%EC%9D%BC%EB%A7%81-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/21/Algorithm/boj/DP/boj-11052-%EC%B9%B4%EB%93%9C-%EA%B5%AC%EB%A7%A4%ED%95%98%EA%B8%B0-JavaScript/"
                             aria-label=": boj-11052 카드 구매하기(JavaScript)"
                         >
@@ -988,77 +1068,6 @@
                         <p>
                             <a
                                 href="/2023/02/21/Algorithm/boj/DP/boj-11054-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EB%B0%94%EC%9D%B4%ED%86%A0%EB%8B%89-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/21/Algorithm/boj/DP/boj-11722-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EA%B0%90%EC%86%8C%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/"
-                            aria-label=": boj-11722 가장 긴 감소하는 부분 수열(JavaScript)"
-                        >
-                            boj-11722 가장 긴 감소하는 부분 수열(JavaScript)
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-21T12:01:05+09:00">
-	
-		    2023/02/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>수열 A가 주어졌을 때, 가장 긴 감소하는 부분 수열을 구하는 프로그램을 작성하시오.</p>
-<p>예를 들어, 수열 A &#x3D; {10, 30, 10, 20, 20, 10} 인 경우에 가장 긴 감소하는 부분 수열은 A &#x3D; {10, 30, 10, 20, 20, 10} 이고, 길이는 3이다.</p>
-<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000)이 주어진다.</p>
-<p>둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ Ai ≤ 1,000)</p>
-<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 수열 A의 가장 긴 감소하는 부분 수열의 길이를 출력한다.</p>
-<h3 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">10 30 10 20 20 10</span><br></pre></td></tr></table></figure>
-
-<h3 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, input] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> A = input.<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>).<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">LDS</span>(<span class="params">arr</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> N = arr.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N &#125;, <span class="function">() =&gt;</span> <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (A[j] &gt; A[i]) &#123;</span><br><span class="line">        <span class="variable constant_">DP</span>[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable constant_">DP</span>[i], <span class="variable constant_">DP</span>[j] + <span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="variable constant_">DP</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">LDS</span>(A));</span><br></pre></td></tr></table></figure>
-
-<h2 id="해설"><a href="#해설" class="headerlink" title="해설"></a>해설</h2><p>지난 번에 가장 긴 증가하는 부분수열과 조건문만 수정하면 되는 문제였다.</p>
-<p>DP는 A 수열의 index에서 감소하는 부분 수열의 길이를 저장한다.</p>
-<p>DP의 해당 index와 이전 index까지의 수열 요소와 비교하여 이전 index가 더 작다면, DP값을 갱신해주는 문제이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/21/Algorithm/boj/DP/boj-11722-%EA%B0%80%EC%9E%A5-%EA%B8%B4-%EA%B0%90%EC%86%8C%ED%95%98%EB%8A%94-%EB%B6%80%EB%B6%84-%EC%88%98%EC%97%B4-JavaScript/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
