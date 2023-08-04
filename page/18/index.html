@@ -224,6 +224,80 @@
                 <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/"
+                            aria-label=": 💭 useState"
+                        >
+                            💭 useState
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-11-21T19:40:24+09:00">
+	
+		    2022/11/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <span id="more"></span>
+
+<h1 id="📌-useState"><a href="#📌-useState" class="headerlink" title="📌 useState"></a>📌 useState</h1><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(initState);</span><br></pre></td></tr></table></figure>
+
+<p>함수 컴포넌트에서 상태를 관리할 때 사용하는 API이다.</p>
+<ul>
+<li><code>stateUpdater</code>는 보통 <code>setStateValue</code> 이런식으로 set을 붙혀서 사용한다.</li>
+</ul>
+<h2 id="🐸-지연된-초기화"><a href="#🐸-지연된-초기화" class="headerlink" title="🐸 지연된 초기화"></a>🐸 지연된 초기화</h2><p><code>initState</code>값은 초기 렌더링 시에만 사용되는 값으로, 이후 렌더링 시에는 무시된다. 만약 초깃값을 계산하는데 많은 시간이 필요한 경우 콜백함수를 통해 지연된 초기화 처리가 가능하다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [stateValue, stateUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 계산에 적지 않은 시간이 소요될 경우</span></span><br><span class="line">  <span class="comment">// 약 790.62890625 ms</span></span><br><span class="line">  <span class="keyword">const</span> initialState = <span class="title function_">fibonacci</span>(<span class="number">39</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 계산 이후: 지연된 초기화의 처리 값을 반환</span></span><br><span class="line">  <span class="keyword">return</span> initialState;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 또는 localStorage에서 값을 읽어오는 경우</span></span><br><span class="line"><span class="keyword">const</span> [stateValue, setUpdater] = <span class="title function_">useState</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> persnalization = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;persnalization&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">JSON</span>.<span class="title function_">parse</span>(persnalization);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="⛳️-객체-타입-상태-관리"><a href="#⛳️-객체-타입-상태-관리" class="headerlink" title="⛳️ 객체 타입 상태 관리"></a>⛳️ 객체 타입 상태 관리</h2><p><code>updateState</code> 함수는 <code>setState</code> 함수처럼 객체 상태를 관리하기 합성된 객체를 반환해야 한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, updateState] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">key1</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">updateState</span>(&#123;</span><br><span class="line">  ...state,</span><br><span class="line">  <span class="attr">key2</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>updateState</code> 함수는 상태 병합이 아닌 대체를 하므로 변경되지 않는 객체 값을 유지하기 위해서 위와 같이 해야한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/11/21/React/Hooks/%F0%9F%92%AD-useState/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -1066,109 +1140,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/11/CS/%F0%9F%A5%81-CORS/"
-                            aria-label=": 🥁 CORS"
-                        >
-                            🥁 CORS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-11T21:00:28+09:00">
-	
-		    2022/11/11
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-CORS란"><a href="#📌-CORS란" class="headerlink" title="📌 CORS란?"></a>📌 CORS란?</h1><p>교차 출처 리소스 공유(Cross-Origin Resource Sharing)는 추가 HTTP Header를 사용하여 한 출처에서 실행 중인 애플리케이션이 다른 출처의 선택한 자원에 접근할 수 있는 권한을 부여하도록 <red>브라우저에게 알려준다.</red></p>
-<p><strong>웹 애플리케이션은 리소스가 자신의 출처(도메인, 프로토콜, 포트)와 다를 때, 교차 출처 HTTP 요청을 실행한다.</strong></p>
-<p>ex) <code>https://domain-a.com</code>의 프론트 엔드 JavaScript 코드가 XMLHttpRequest를 사용하여 <code>https://domain-b.com/data.json</code>을 요청하는 경우 보안 상의 이유로 <red>브라우저는 HTTP 요청을 제한한다.</red></p>
-<ul>
-<li>CORS 체제는 브라우저와 서버 간의 안전한 교차 출처 요청 및 데이터 전송을 지원한다.</li>
-<li>CORS 표준에 맞춘다는 것은 서버에서도 새로운 요청과 응답 Header를 처리해야한다.</li>
-</ul>
-<h2 id="🤿-DeepDive"><a href="#🤿-DeepDive" class="headerlink" title="🤿 DeepDive"></a>🤿 DeepDive</h2><p>CORS 표준은 웹 브라우저에서 허용된 출처를 서버에서 새로운 HTTP Header에 추가함으로써 동작한다.</p>
-<h3 id="📮-Simple-Request"><a href="#📮-Simple-Request" class="headerlink" title="📮 Simple Request"></a>📮 Simple Request</h3><p>HTTP 요청 메서드가 GET, POST 일 때 사용한다.</p>
-<ol>
-<li><p>다른 출처끼리 요청을 보낼 때, 요청에 Origin이라는 Header를 추가한다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://loco9939.com:5000</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Origin은 요청하는 쪽의 Scheme, 도메인, 포트가 담겨있다.</strong></li>
-<li>scheme : https</li>
-<li>도메인 : loco9939.com</li>
-<li>포트 : :5000</li>
-</ul>
-</li>
-<li><p>요청 받은 서버는 응답 Header에 지정된 ACAO(Access Control Allow Origin) 정보를 실어서 보낸다.</p>
-</li>
-<li><p>브라우저가 ACAO 정보가 담긴 응답과 요청의 Origin을 비교하여 동일하면 허락한다.</p>
-</li>
-</ol>
-<h3 id="✈️-Preflight"><a href="#✈️-Preflight" class="headerlink" title="✈️ Preflight"></a>✈️ Preflight</h3><p>브라우저가 사전요청을 먼저 보낸 후 서버의 응답을 보고 안전한지 확인한 후 본 요청을 보내는 방식이다. 본 요청은 Simple Request 방식과 동일하다.</p>
-<h2 id="🌈-CORS-오류-해결-방법"><a href="#🌈-CORS-오류-해결-방법" class="headerlink" title="🌈 CORS 오류 해결 방법"></a>🌈 CORS 오류 해결 방법</h2><h3 id="🔨-서버-측"><a href="#🔨-서버-측" class="headerlink" title="🔨 서버 측"></a>🔨 서버 측</h3><ul>
-<li>ACAO(Access Control Allow Origin) 설정하기<ul>
-<li>구체적인 출처 명시하기</li>
-<li>Credentials: <strong>include 옵션 사용한 경우 * 사용한 경우 CORS 에러발생</strong></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PORT</span> = process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = http.<span class="title function_">createServer</span>(<span class="keyword">function</span> (<span class="params">request, response</span>) &#123;</span><br><span class="line">  <span class="comment">// Setting up Headers</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-origin&quot;</span>, <span class="string">&quot;*&quot;</span>); <span class="comment">// 모든 출처(orogin)을 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(</span><br><span class="line">    <span class="string">&quot;Access-Control-Allow-Methods&quot;</span>,</span><br><span class="line">    <span class="string">&quot;GET, POST, OPTIONS, PUT, PATCH, DELETE&quot;</span></span><br><span class="line">  ); <span class="comment">// 모든 HTTP 메서드 허용</span></span><br><span class="line">  response.<span class="title function_">setHeader</span>(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>, <span class="string">&quot;true&quot;</span>); <span class="comment">// 클라이언트와 서버 간에 쿠키 주고받기 허용</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  response.<span class="title function_">writeHead</span>(<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;text/plain&quot;</span> &#125;);</span><br><span class="line">  response.<span class="title function_">end</span>(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">httpServer.<span class="title function_">listen</span>(<span class="variable constant_">PORT</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Server is running at port 3000...&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Access-Control-Allow-origin 헤더 값으로 * 을 사용하면 모든 Origin에서 오는 요청을 허용한다는 의미이므로 당장은 편할 수 있겠지만, 바꿔서 생각하면 정체도 모르는 이상한 출처에서 오는 요청까지 모두 허용하기 때문에 보안은 더 허술해진다. 그러니 가급적이면 귀찮더라도 다음과 같이 출처를 직접 명시해주도록 하자.</p>
-</blockquote>
-<h3 id="👑-클라이언트-측"><a href="#👑-클라이언트-측" class="headerlink" title="👑 클라이언트 측"></a>👑 클라이언트 측</h3><ul>
-<li>Proxy 설정<ul>
-<li>브라우저 요청을 Proxy에서 설정한 주소로 우회하여 전송하는 방법</li>
-<li>라이브러리 사용한다</li>
-<li>개발단계에서만 사용하고 <red>Production 환경에서는 Proxy 처리가 되지 않는다.</red></li>
-</ul>
-</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/11/11/CS/%F0%9F%A5%81-CORS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1195,7 +1166,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 18 of 25</li>
+        <li class="pagination-number">page 18 of 26</li>
     </ul>
 </div>
 

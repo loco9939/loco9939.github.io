@@ -232,6 +232,94 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/13/Project/holymoly/CBD%20%EA%B8%B0%EB%B0%98%20%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/"
+                            aria-label=": CBD 기반 라우터 구현"
+                        >
+                            CBD 기반 라우터 구현
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-13T21:57:19+09:00">
+	
+		    2022/10/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="1-CBD-기반-라우터-구현"><a href="#1-CBD-기반-라우터-구현" class="headerlink" title="1. CBD 기반 라우터 구현"></a>1. CBD 기반 라우터 구현</h1><p>CBD 라이브러리에서 컴포넌트가 바뀌었을 때, 라우터와 렌더링을 구현해주었다. 각 컴포넌트에서 click 이벤트가 발생하면 그 때의 a 태그의 href 값을 구하여 pushState 메서드로 history를 등록해주고 상태로도 할당해주어 렌더링을 발생시켰다.</p>
+<p>즉, signin 클릭해서 click 이벤트 발생하면 history등록, setState로 상태 갱신을 해주었다.</p>
+<p>그리고 App 컴포넌트에서는 popstate 이벤트를 등록하여 브라우저의 뒤로가기, 다음 버튼을 클릭했을 때, 해당 path 상태를 window.location.pathname으로 변경시켜줘서 라우터가 변경되면 렌더링 발생하는 기능도 구현하였다.</p>
+<p>문제점은 구현을 하다가 작은 부분에서 막혀서 그 작은 부분을 해결하려고 몰두해있었던 점이 문제라고 생각한다. 작은 문제는 근본적인 문제가 아닌 경우가 많은 것 같다. 큰 문제를 해결하면 작은 문제는 알아서 해결될 수 있으니 큰 틀에서 생각하려고 해야겠다.</p>
+<h2 id="1-click-이벤트-발생-시-gt-pushState-메서드로-history-관리-setState-메서드로-화면-재렌더링-발생"><a href="#1-click-이벤트-발생-시-gt-pushState-메서드로-history-관리-setState-메서드로-화면-재렌더링-발생" class="headerlink" title="1. click 이벤트 발생 시 -&gt; pushState 메서드로 history 관리 + setState 메서드로 화면 재렌더링 발생"></a>1. click 이벤트 발생 시 -&gt; pushState 메서드로 history 관리 + setState 메서드로 화면 재렌더링 발생</h2><h2 id="2-history-API-사용-시-gt-popstate-이벤트-핸들러-등록하여-setState-메서드로-path-상태를-window-location-pathname로-갱신"><a href="#2-history-API-사용-시-gt-popstate-이벤트-핸들러-등록하여-setState-메서드로-path-상태를-window-location-pathname로-갱신" class="headerlink" title="2. history API 사용 시 -&gt; popstate 이벤트 핸들러 등록하여 setState 메서드로 path 상태를 window.location.pathname로 갱신"></a>2. history API 사용 시 -&gt; popstate 이벤트 핸들러 등록하여 setState 메서드로 path 상태를 window.location.pathname로 갱신</h2><blockquote>
+<p>popState 시 navigate() 함수 안에서 pushState() 해주고 있어서 더 이상 history API가 제대로 동작하지 않으므로.. 이를 확인하자.</p>
+</blockquote>
+<p>위 두가지 로직이 전부이다.</p>
+<h1 id="2-MatchingCards-CBD-상태-관리"><a href="#2-MatchingCards-CBD-상태-관리" class="headerlink" title="2. MatchingCards CBD 상태 관리"></a>2. MatchingCards CBD 상태 관리</h1><p>매칭 카드 알고리즘 구현한 것을 CBD 구조에 맞게 상태로 관리해주었다. CBD 구조가 setState로 상태가 변경되서 렌더링 될 때, App 컴포넌트는 한번만 호출되지만, App 컴포넌트에서 다른 컴포넌트를 그려주는 역할을 하는 domStr() 메서드가 반복 호출 되므로, 이 때, 다른 컴포넌트(클래스)가 new 연산자로 호출되므로 컴포넌트가 새롭게 생성되어 지역 컴포넌트의 상태를 관리해주기가 까다로웠다.</p>
+<p>이러한 문제를 해결하기 위해서는 CBD 구조를 개편해야만 했다. 하지만 프로젝트 시간동안에는 힘들것 같아서 상태관리를 App에서만 해주기로 하였다.</p>
+<p>App 컴포넌트에서 상태를 등록하고 다른 컴포넌트로 보내줄 때, 아래와 같이 전달해준다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="keyword">new</span> <span class="title class_">Page</span>(&#123;</span><br><span class="line">  ...<span class="variable language_">this</span>.<span class="property">state</span>,</span><br><span class="line">  <span class="attr">navigate</span>: <span class="variable language_">this</span>.<span class="property">navigate</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>),</span><br><span class="line">  <span class="attr">checkCard</span>: <span class="variable language_">this</span>.<span class="property">checkCard</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>),</span><br><span class="line">&#125;).<span class="title function_">domStr</span>()&#125;</span><br></pre></td></tr></table></figure>
+
+<p>상태를 받는 컴포넌트에서는 아래와 같이 props를 통해 받는다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">shuffledNum</span></span><br><span class="line">.<span class="title function_">map</span>(</span><br><span class="line">  <span class="function">(<span class="params">num, index</span>) =&gt;</span> <span class="string">`</span></span><br><span class="line"><span class="string">&lt;div class=&quot;cards <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">  <span class="variable language_">this</span>.props.openCard[<span class="number">0</span>] === index + <span class="number">1</span> || <span class="variable language_">this</span>.props.openCard[<span class="number">1</span>] === index + <span class="number">1</span> ? <span class="string">&#x27;opened&#x27;</span> : <span class="string">&#x27;&#x27;</span></span></span></span><br><span class="line"><span class="subst"><span class="string">&#125;</span>&quot; data-id=&quot;<span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>단, props에서 받을 때, 메서드를 받게 된다면 this가 꼬일 수 있기 때문에 bind(this)를 사용하여 this를 일치시켜서 보내줘야 한다.</p>
+<blockquote>
+<p>만약 함수정의를 보내주는 것이 아닌 함수 호출값을 보내주고 싶다면 call(this, 인자) 이렇게 전달해줄 수 도 있다.</p>
+</blockquote>
+<h1 id="3-form-형식으로-서버에게-데이터-전송에-대해-알게된-점"><a href="#3-form-형식으로-서버에게-데이터-전송에-대해-알게된-점" class="headerlink" title="3. form 형식으로 서버에게 데이터 전송에 대해 알게된 점"></a>3. form 형식으로 서버에게 데이터 전송에 대해 알게된 점</h1><p>서버는 express를 사용하여 구현하였다.</p>
+<p>로그인 기능 구현을 위해 form 형식의 input 값을 서버에 axios를 사용하여 보내주었다.</p>
+<p>기본적으로 form 형식은 <code>x-www-form-urlencoded</code> 이런 형식의 데이터로 전달된다. 서버는 이런 데이터를 해석하기 위해 파싱을 <code>express.urlencoded(&#123;extended:true&#125;)</code> 메서드를 사용한다.</p>
+<p>하지만 axios를 사용하면 클라이언트에서 데이터 요청을 json 형식으로 서버에 요청하기 때문에 서로 다른 형식으로 주고 받기 때문에 제대로 된 요청과 응답이 먹히지 않게 되었다.</p>
+<p>이러한 문제를 해결하기 위해서 서버에서 <code>express.json()</code>메서드를 사용하여 json 형식의 데이터를 받아 파싱해주도록 하였다.</p>
+<p>또한, 서버에서 request를 확인해보면 <code>&#39;content-type&#39;: &#39;application/json&#39;</code>인 것을 확인할 수 있었다.</p>
+<p>심지어 axios 홈페이지에서도 json으로 직렬화된 데이터로 요청한다고 나와있다!</p>
+<p>이런 부분은 눈으로 읽기는 읽었지만 그 배경에 대해 제대로 이해하지 못한 체로 읽었기 때문이다. 이렇게 하나 하나 배워가다 보면 배경지식도 넓게 쌓여서 새로운 지식을 배울 때에도 두려움이 적어질 것 같다.</p>
+<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>이전에 라우터를 구현했던 방법은 상태를 관리하지 않고 했었기 때문에 쉬웠고 상태를 관리하면서 라우터를 구현하는 것은 머리가 복잡해지고 의욕이 떨어졌다.. 그래도 동기들에게 물어보면서 이번 기회에 제대로 알게 된 것 같아 기쁘다.</p>
+<p>로그인 구현과 서버에 대해 스스로가 두려움을 느끼고 있는 것 같아 더 머리가 안돌아가는 것 같다.</p>
+<p>최대한 이번기회에 로그인 회원가입에 대한 로직과 친숙해져서 다음 프로젝트 때에는 막힘없이 도전해보고 싶다!</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/13/Project/holymoly/CBD%20%EA%B8%B0%EB%B0%98%20%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/12/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%EA%B5%AC%ED%98%84%20(Custom%20Event)/"
                             aria-label=": 라우터 구현 (Custom Event)"
                         >
@@ -994,85 +1082,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/"
-                            aria-label=": tictactoe, drag 이벤트 Tip"
-                        >
-                            tictactoe, drag 이벤트 Tip
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-02T21:38:49+09:00">
-	
-		    2022/10/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Pair-Programming/">Pair Programming</a>, <a class="category-link" href="/categories/Pair-Programming/level-2/">level 2</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="2-tictactoe"><a href="#2-tictactoe" class="headerlink" title="2. tictactoe"></a>2. tictactoe</h1><ol>
-<li>재렌더링 일어나는 부부은 game-status, game-grid-items 이 부분만 인데, innerHTML로 game 안을 전부 변경하려고 하니 재렌더링 필요 없는 부분인 game-reset 까지 재렌더링 해줘야하는 문제가 생겼다.<ol>
-<li>일단은 재렌더링 일어나도록 구현하였다.</li>
-</ol>
-</li>
-<li>isOver라는 상태를 두는 것이 맞는지? 이벤트 핸들러 안에서 isOver 값을 가지고 얼리리턴으로 더이상 게임을 못하게 막는것이 맞는지…<ol>
-<li>일단 위와같이 하였다.</li>
-</ol>
-</li>
-</ol>
-<h1 id="4-drag"><a href="#4-drag" class="headerlink" title="4. drag"></a>4. drag</h1><ol>
-<li>swapLang 할 때, 왜 새로운 변수에다가 langs 값을 복사해서 다루는 것인가?<ol>
-<li>lang을 변경할 수 있는 역할을 하는 함수가 setLang 함수이기 때문에 lang 데이터 변경은 반드시 setLang 함수로만 해야하기 때문이다.</li>
-</ol>
-</li>
-<li>render에서 lang 변수를 받는 이유는 ??<ol>
-<li>함수를 순수함수로 만들어주기 위함이다. 매개변수로 받은 인자를 가지고만 코드를 실행하도록 짜서 순수함수가 되도록 한다.</li>
-</ol>
-</li>
-<li>dragenter 이벤트로 드롭할 요소로 드래그 했을 때, p태그, i태그 등 div안의 다른 요소에 드래그한 체로 이동하면 dragleave이벤트랑 겹침 현상이 발생하여 이를 해결하기 위해서는 얼리 리턴으로 조건을 달아줘야하는데, 복잡한 구조로 되어있는 경우 매우 어려워진다. 그러므로 dragover를 사용하여 이벤트가 많이 발생하는 것은 디바운스로 해결해주자.</li>
-</ol>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>혼자서 짜보려고 하니 같이 짜는 것보다 스스로 생각해보고 문제를 해결해나가는 능력이 길러진 것 같다. 같이 짜면 상대방에게 의존할 수 있는 경우가 있는데 혼자서는 그런 것 없이 혼자 다 이겨내야하므로 어렵지만 더 기억에 오래 남을 것 같다. 앞으로도 내가 직접 해본것이 아니라면 반드시 내 손으로 다시 직접 해보면서 해결방안을 직접 터득하면서 나아가야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/02/PairProgramming/level%202/tictactoe,%20drag%20%EC%9D%B4%EB%B2%A4%ED%8A%B8%20Tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1099,7 +1108,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 23 of 25</li>
+        <li class="pagination-number">page 23 of 26</li>
     </ul>
 </div>
 

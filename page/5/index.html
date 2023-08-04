@@ -232,6 +232,77 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/04/06/React/React%EC%97%90%EC%84%9C-TypeScript-%EC%98%AC%EB%B0%94%EB%A5%B4%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
+                            aria-label=": React에서 TypeScript 올바르게 사용하기"
+                        >
+                            React에서 TypeScript 올바르게 사용하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-04-06T00:41:09+09:00">
+	
+		    2023/04/06
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="React에서-TypeScript-올바르게-사용하기"><a href="#React에서-TypeScript-올바르게-사용하기" class="headerlink" title="React에서 TypeScript 올바르게 사용하기"></a>React에서 TypeScript 올바르게 사용하기</h1><p>Select 컴포넌트를 만든다고 가정해보자.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Select</span> = (<span class="params">&#123; label, value, options, onChange &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;label&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">select</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;options.map((option) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&#123;option.value&#125;</span>&gt;</span>&#123;option.label&#125;<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-무지성으로-타입-정의"><a href="#1-무지성으로-타입-정의" class="headerlink" title="1. 무지성으로 타입 정의"></a>1. 무지성으로 타입 정의</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Select</span> = (<span class="params">&#123;</span></span><br><span class="line"><span class="params">  label,</span></span><br><span class="line"><span class="params">  value,</span></span><br><span class="line"><span class="params">  options,</span></span><br><span class="line"><span class="params">  onChange,</span></span><br><span class="line"><span class="params">&#125;: &#123;</span></span><br><span class="line"><span class="params">  label: <span class="built_in">string</span>;</span></span><br><span class="line"><span class="params">  value: <span class="built_in">string</span>;</span></span><br><span class="line"><span class="params">  options: &#123; label: <span class="built_in">string</span>; value: <span class="built_in">string</span> &#125;[];</span></span><br><span class="line"><span class="params">  onChange: (event: React.ChangeEvent&lt;HTMLSelectElement&gt;) =&gt; <span class="built_in">void</span>;</span></span><br><span class="line"><span class="params">&#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;label&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">select</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;options.map((option) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&#123;option.value&#125;</span>&gt;</span>&#123;option.label&#125;<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-type-interface로-타입-정의"><a href="#2-type-interface로-타입-정의" class="headerlink" title="2. type, interface로 타입 정의"></a>2. type, interface로 타입 정의</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Option</span> = &#123; <span class="attr">label</span>: <span class="built_in">string</span>; <span class="attr">value</span>: <span class="built_in">string</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Options</span> = <span class="title class_">Option</span>[];</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">SelectProps</span> = &#123;</span><br><span class="line">  <span class="attr">label</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">value</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">options</span>: <span class="title class_">Options</span>;</span><br><span class="line">  <span class="attr">onChange</span>: <span class="function">(<span class="params">event: React.ChangeEvent&lt;HTMLSelectElement&gt;</span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Select</span> = (<span class="params">&#123; label, value, options, onChange &#125;: SelectProps</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;label&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">select</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;options.map((option) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&#123;option.value&#125;</span>&gt;</span>&#123;option.label&#125;<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-타입-파일-분리하기"><a href="#3-타입-파일-분리하기" class="headerlink" title="3. 타입 파일 분리하기"></a>3. 타입 파일 분리하기</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Select.d.ts</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Option</span> = &#123; <span class="attr">label</span>: <span class="built_in">string</span>; <span class="attr">value</span>: <span class="built_in">string</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Options</span> = <span class="title class_">Option</span>[];</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">SelectProps</span> = &#123;</span><br><span class="line">  <span class="attr">label</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">value</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">options</span>: <span class="title class_">Options</span>;</span><br><span class="line">  <span class="attr">onChange</span>: <span class="function">(<span class="params">event: React.ChangeEvent&lt;HTMLSelectElement&gt;</span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Select.tsx</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Select</span>: <span class="title class_">React</span>.<span class="property">FC</span>&lt;<span class="title class_">SelectProps</span>&gt; = (&#123;</span><br><span class="line">  label,</span><br><span class="line">  value,</span><br><span class="line">  options,</span><br><span class="line">  onChange,</span><br><span class="line">&#125;): <span class="variable constant_">JSX</span>.<span class="property">Element</span> =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;label&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">select</span> <span class="attr">value</span>=<span class="string">&#123;value&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;options.map((option) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&#123;option.value&#125;</span>&gt;</span>&#123;option.label&#125;<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>정답은 없지만 팀 내부에서 하나를 결정하고 통일할 필요는 있다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/04/06/React/React%EC%97%90%EC%84%9C-TypeScript-%EC%98%AC%EB%B0%94%EB%A5%B4%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/04/05/Daily/%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4-%ED%8C%8C%EC%9D%BC-%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%97%90%EC%84%9C-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0/"
                             aria-label=": 마크다운 파일 리액트에서 불러오기"
                         >
@@ -974,84 +1045,6 @@
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/20/Daily/image-sprite-%EC%8B%A4%EC%A0%84-%EC%82%AC%EC%9A%A9%EA%B8%B0/"
-                            aria-label=": image sprite 실전 사용기"
-                        >
-                            image sprite 실전 사용기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-20T22:40:05+09:00">
-	
-		    2023/03/20
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="image-sprite-실전-사용기"><a href="#image-sprite-실전-사용기" class="headerlink" title="image sprite 실전 사용기"></a>image sprite 실전 사용기</h1><p>기존 프로젝트에서는 돋보기 아이콘을 불러올 때, png 파일을 통해서 각각 한개씩 불러왔다.</p>
-<p>이렇게 되면 돋보기 이미지는 상태에 따라 default, focus, disabled 총 3가지 상태를 가진 이미지가 있기 때문에 이미지를 3번 불러와야한다.</p>
-<p>하지만 이미지 스프라이트를 사용하면, image sprite를 사용하여 3가지 상태의 이미지를 svg 파일 한 곳에 넣어두고 이를 배경이미지로 불러와서 원하는 위치의 이미지에 position을 주어 보여주도록 하였다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">46px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">44px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">url</span>(<span class="string">&quot;img_navSprites.png&quot;</span>) <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>이미지를 배경으로 불러온 뒤 left, top 속성으로 배치한다.</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;img_trans.png&quot;</span> &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    )</span></span><br><span class="line"><span class="language-xml">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>src 속성을 비워두게 되면 img 태그에 테두리가 생기게 되는데, 이는 제거하려해도 제거할 수가 없다. (border, outline, padding, margin 여러 방법을 써봐도 안됐다.)</li>
-</ul>
-<p>그래서 src 속성을 비워두지 않기 위해 투명한 이미지 경로를 넣어준 것이다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.next</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">url</span>(<span class="string">&quot;img_navSprites.png&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 또는 img 태그 대신 i 태그 사용하기</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">i</span> <span class="attr">className</span>=<span class="string">&quot;next&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    )</span></span><br><span class="line"><span class="language-xml">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>오늘 프로젝트를 진행하면서 icon을 불러오는 용도로 사용했기 때문에 img 태그 대신 i 태그를 사용하여 불러오니 src 속성없이도 불러올 수 있어서 편리하였다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/20/Daily/image-sprite-%EC%8B%A4%EC%A0%84-%EC%82%AC%EC%9A%A9%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1078,7 +1071,7 @@
             </a>
           </li>
         
-        <li class="pagination-number">page 5 of 25</li>
+        <li class="pagination-number">page 5 of 26</li>
     </ul>
 </div>
 
