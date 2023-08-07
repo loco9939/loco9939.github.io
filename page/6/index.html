@@ -232,6 +232,83 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/21/React/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%A0%91%EA%B7%BC%EC%84%B1-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%AA%A8%EB%8B%AC-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"
+                            aria-label=": 리액트 접근성 높이는 모달 구현하기"
+                        >
+                            리액트 접근성 높이는 모달 구현하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-21T20:09:51+09:00">
+	
+		    2023/03/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="createPortal-사용하여-접근성-높인-모달-구현하기"><a href="#createPortal-사용하여-접근성-높인-모달-구현하기" class="headerlink" title="createPortal 사용하여 접근성 높인 모달 구현하기"></a>createPortal 사용하여 접근성 높인 모달 구현하기</h1><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Modal.tsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createPortal &#125; <span class="keyword">from</span> <span class="string">&quot;react-dom&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Modal</span>(<span class="params">&#123; onClick &#125;: &#123; onClick: () =&gt; <span class="built_in">void</span> &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleModalClose</span> = (<span class="params">e: KeyboardEvent</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">key</span> !== <span class="string">&quot;Escape&quot;</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="title function_">onClick</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">cssText</span> = <span class="string">`position: fixed; top: -<span class="subst">$&#123;<span class="variable language_">window</span>.scrollY&#125;</span>px`</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> scrollY = <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">top</span>;</span><br><span class="line">      <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">cssText</span> = <span class="string">`position: &quot;&quot;; top: &quot;&quot;;`</span>;</span><br><span class="line">      <span class="variable language_">window</span>.<span class="title function_">scrollTo</span>(<span class="number">0</span>, <span class="built_in">parseInt</span>(scrollY || <span class="string">&quot;0&quot;</span>) * -<span class="number">1</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handleModalClose);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keyup&quot;</span>, handleModalClose);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">createPortal</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">article</span> <span class="attr">role</span>=<span class="string">&quot;dialog&quot;</span> <span class="attr">aria-modal</span>=<span class="string">&quot;true&quot;</span> <span class="attr">className</span>=<span class="string">&quot;Dialog&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">header</span> <span class="attr">className</span>=<span class="string">&quot;Dialog__header&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">h2</span>&gt;</span>React 포털로 연 다이얼로그(with 모달)<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Dialog__body&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>여기가 React 앱 밖의 세상인가요?!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">footer</span> <span class="attr">className</span>=<span class="string">&quot;Dialog__footer&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">className</span>=<span class="string">&quot;closeButton&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 닫기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClick</span>=<span class="string">&#123;onClick&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">svg</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">width</span>=<span class="string">&quot;24&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">height</span>=<span class="string">&quot;24&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">fill-rule</span>=<span class="string">&quot;evenodd&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">clip-rule</span>=<span class="string">&quot;evenodd&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M12 11.293l10.293-10.293.707.707-10.293 10.293 10.293 10.293-.707.707-10.293-10.293-10.293 10.293-.707-.707 10.293-10.293-10.293-10.293.707-.707 10.293 10.293z&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;Dialog__dim&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;onClick&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;modal&quot;</span>) <span class="keyword">as</span> <span class="title class_">HTMLElement</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Modal</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>createPortal로 root 태그가 아닌 새로운 id가 modal인 태그에 modal을 생성하였다.</li>
+<li>Esc 키를 눌러 모달을 끌 수 있게 하였다.</li>
+<li>모달이 열려있을 때, 모달 뒤의 배경이 스크롤되지 않도록 하였다.</li>
+</ul>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.tsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;./App.css&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Modal</span> <span class="keyword">from</span> <span class="string">&quot;./Modal&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ModalBtn</span> <span class="keyword">from</span> <span class="string">&quot;./ModalBtn&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [modalOpen, setModalOpen] = <span class="title function_">useState</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleModalOpen</span> = (<span class="params"></span>) =&gt; <span class="title function_">setModalOpen</span>(<span class="literal">true</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleModalClose</span> = (<span class="params"></span>) =&gt; <span class="title function_">setModalOpen</span>(<span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ModalBtn</span> <span class="attr">onClick</span>=<span class="string">&#123;handleModalOpen&#125;</span> <span class="attr">modalOpen</span>=<span class="string">&#123;modalOpen&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;modalOpen &amp;&amp; <span class="tag">&lt;<span class="name">Modal</span> <span class="attr">onClick</span>=<span class="string">&#123;handleModalClose&#125;</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ModalBtn을 클릭하여 모달을 열 수 있게한다.</li>
+</ul>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ModalBtn.tsx</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ModalBtn</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">  onClick,</span></span><br><span class="line"><span class="params">  modalOpen,</span></span><br><span class="line"><span class="params">&#125;: &#123;</span></span><br><span class="line"><span class="params">  onClick: () =&gt; <span class="built_in">void</span>;</span></span><br><span class="line"><span class="params">  modalOpen: <span class="built_in">boolean</span>;</span></span><br><span class="line"><span class="params">&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&quot;openDialogButton&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">aria-haspopup</span>=<span class="string">&quot;dialog&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">aria-label</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">title</span>=<span class="string">&quot;모달 다이얼로그 열기&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;onClick&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">tabIndex</span>=<span class="string">&#123;modalOpen</span> ? <span class="attr">-1</span> <span class="attr">:</span> <span class="attr">0</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">svg</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">width</span>=<span class="string">&quot;24&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">height</span>=<span class="string">&quot;24&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">fill-rule</span>=<span class="string">&quot;evenodd&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">clip-rule</span>=<span class="string">&quot;evenodd&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">ModalBtn</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ModalBtn에 모달 상태를 전달하여 모달이 열려있다면 모달 배경에 포커스가 가지 않도록 하였다.</li>
+</ul>
+<blockquote>
+<p>배경 요소에 모든 focus 요소에 tabIndex 속성을 설정해줘야하는 번거로움이 있다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/21/React/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%A0%91%EA%B7%BC%EC%84%B1-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%AA%A8%EB%8B%AC-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/20/Daily/Emotion-Styled-Components%EC%97%90%EC%84%9C-props-%EC%A7%80%EC%A0%95%ED%95%98%EA%B8%B0/"
                             aria-label=": Emotion Styled Components에서 props 지정하기"
                         >
@@ -935,101 +1012,6 @@
                         <p>
                             <a
                                 href="/2023/03/10/CS/%EA%B8%B0%EC%B4%88%20%EA%B0%9C%EB%B0%9C%20%EC%A7%80%EC%8B%9D/%EC%A0%95%EC%A0%81-%ED%83%80%EC%9E%85-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/09/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-17%EC%9D%BC%EC%B0%A8-attribute-selector/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 17일차&gt; attribute selector"
-                        >
-                            &lt;오늘부터 CSS 마스터 17일차&gt; attribute selector
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-09T21:43:31+09:00">
-	
-		    2023/03/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="attribute"><a href="#attribute" class="headerlink" title="[attribute]"></a>[attribute]</h1><p>특정 attribute를 선택하기 위해 사용하는 선택자이다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-attr">[target]</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>a 태그의 target attribute가 선언된 요소를 선택한다.</li>
-</ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-attr">[target=<span class="string">&quot;_blank&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>attribute 값에 해당하는 요소를 선택한다.</li>
-</ul>
-<h2 id="정확히-특정-단어-포함하는-attribute-선택"><a href="#정확히-특정-단어-포함하는-attribute-선택" class="headerlink" title="정확히 특정 단어 포함하는 attribute 선택"></a>정확히 특정 단어 포함하는 attribute 선택</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[title~=<span class="string">&quot;flower&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">5px</span> solid yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>CSS [attribute~=&quot;value&quot;] Selector<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">  All images with the title attribute containing the word &quot;flower&quot; get a yellow</span><br><span class="line">  border.</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;klematis.jpg&quot;</span> <span class="attr">title</span>=<span class="string">&quot;klematis flower&quot;</span> <span class="attr">width</span>=<span class="string">&quot;150&quot;</span> <span class="attr">height</span>=<span class="string">&quot;113&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;img_flwr.gif&quot;</span> <span class="attr">title</span>=<span class="string">&quot;flower f&quot;</span> <span class="attr">width</span>=<span class="string">&quot;224&quot;</span> <span class="attr">height</span>=<span class="string">&quot;162&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;img_tree.gif&quot;</span> <span class="attr">title</span>=<span class="string">&quot;tree&quot;</span> <span class="attr">width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">height</span>=<span class="string">&quot;358&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/attr/space.png"></p>
-<ul>
-<li>title 속성에 “flower” 단어가 포함된 요소를 선택한다.</li>
-</ul>
-<blockquote>
-<p>띄어쓰기로 구분된 요소는 개별요소로 취급하짐나, 하이푼(-)으로 구분된 요소는 여기서 제외된다.</p>
-</blockquote>
-<h2 id="특정-단어를-포함하는-attribute-선택"><a href="#특정-단어를-포함하는-attribute-선택" class="headerlink" title="특정 단어를 포함하는 attribute 선택"></a>특정 단어를 포함하는 attribute 선택</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[class|=<span class="string">&quot;top&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>CSS [attribute|=&quot;value&quot;] Selector<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;top-header&quot;</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;top-text&quot;</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;topcontent&quot;</span>&gt;</span>Are you learning CSS?<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/attr/exactValue.png" alt="include value"></p>
-<ul>
-<li>top이라는 단어가 포함된 요소만 선택하는 것을 확인할 수 있다. (-으로 구분할 수 있다.)</li>
-</ul>
-<h2 id="특정-단어로-시작하는-attribute-속성-선택"><a href="#특정-단어로-시작하는-attribute-속성-선택" class="headerlink" title="특정 단어로 시작하는 attribute 속성 선택"></a>특정 단어로 시작하는 attribute 속성 선택</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[class^=<span class="string">&quot;top&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>CSS [attribute|=&quot;value&quot;] Selector<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;top-header&quot;</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;top-text&quot;</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;topcontent&quot;</span>&gt;</span>Are you learning CSS?<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/attr/startwith.png" alt="startwith"></p>
-<h2 id="특정-단어로-끝나는-attribute-속성-선택"><a href="#특정-단어로-끝나는-attribute-속성-선택" class="headerlink" title="특정 단어로 끝나는 attribute 속성 선택"></a>특정 단어로 끝나는 attribute 속성 선택</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[class$=<span class="string">&quot;test&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="특정-값을-포함하는-attribute-속성을-선택"><a href="#특정-값을-포함하는-attribute-속성을-선택" class="headerlink" title="특정 값을 포함하는 attribute 속성을 선택"></a>특정 값을 포함하는 attribute 속성을 선택</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[class*=<span class="string">&quot;te&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/09/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-17%EC%9D%BC%EC%B0%A8-attribute-selector/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
