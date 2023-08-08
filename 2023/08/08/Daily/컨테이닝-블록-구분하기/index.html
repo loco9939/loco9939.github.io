@@ -1,0 +1,619 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    <link rel="canonical" href="https://loco9939.github.io/2023/08/08/daily/컨테이닝-블록-구분하기/"/>
+
+<head>
+    <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Loco&#39;s Dev Blog">
+    <title>컨테이닝 블록 구분하기 - Loco&#39;s Dev Blog</title>
+    <meta name="author" content="loco9939">
+    
+        <meta name="keywords" content="loco9939,javascript,">
+    
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"컨테이닝 블록\n요쇼의 크기, 위치를 결정하는 요인이다.\nwidth, height, padding, margin 속성값과 절대적 위치(absolute, fixed)로 설정된 요소의 offset 속성값은 자신의 컨테이닝 블록으로부터 계산된다.\n대부분의 경우 요소의 컨테이닝 블록이 가장 가까운 블록 레벨 조상의 컨텐츠 영역이지만 예외가 있다.\n\n컨테이닝 블록 식별position의 속성에 따라 완전히 달라진다.\n1. position 속성이 static, relative, sticky 인 경우\n컨테이닝 블록은 가장 가까운 조상 블록 컨테이너 또는 서식 맥락을 형성하는 조상 요소(flex,table,grid)의 컨텐츠 영역 경계를 따라 형성된다.\n\n2. position 속성이 absolute 인 경우\n컨테이닝 블록은 속성값이 static이 아닌 가장 가까운 조상의 내부 여백 영역\n그래서 주로 조상 영역에 relative를 추가하여 조상을 기준으로 position을 조절한다.\n\n3. position 속성이 fixed 인 경우\n컨테이닝 블록은 viewport, 페이지 영역이다.\n\n예외position 속성이 absolute, fixed 인 경우, 다음 조건을 만족하는 가장 가까운 조상 내부 영역이 컨테이닝 블록이 될 수 있다.\n\ntransform이나 perspective 속성이 none이 아닐 때, transform 속성을 none으로 바꾸면 viewport 기준으로 바뀐다.\n\nwill-change 속성이 transform이나 perspective 일 때, will-change는 요소의 예상되는 변화의 힌트를 브라우저에게 제공한다.\n\nfilter 속성이 none이 아닐 때\n\ncontain 속성이 paint 일 때\n\n\n12345&lt;body&gt;  &lt;div class=&quot;container&quot;&gt;    &lt;div class=&quot;p-absolute&quot;&gt;1&lt;/div&gt;  &lt;/div&gt;&lt;/body&gt;\n\n\n\ncontainer 클래스에 아무런 값을 주지 않고 있어 p-absolute 값이 static이 아닌 조상 영역을 기준으로 위치하는데, static이 아닌 조상 요소가 없어서 최상위 브라우저를 기준으로 위치해있다.\n\n12345678910111213141516171819202122232425body &#123;  margin-top: 100px;  margin-left: 100px;&#125;.container &#123;  width: 500px;  height: 500px;  background: blue;  position: relative;  /*   transform: rotate(0deg); */  /*   perspective:0; */  /*   transform: rotate(0deg); */  /*   perspective: 10px; */  /*   will-change: perspective; */  /*   will-change: transform; */  /*   filter:opacity(); */&#125;.p-absolute &#123;  width: 100px;  height: 100px;  background: yellow;  position: absolute;  top: 10px;  left: 50px;&#125;\n\n\n\n앞서 설명한 예외를 추가하면 position:relative를 추가한 것과 똑같이 동작하게 된다.\n해당 속성을 가진 요소를 기준으로 위치를 조절한다.\n\n","dateCreated":"2023-08-08T20:31:40+09:00","dateModified":"2023-08-08T20:49:54+09:00","datePublished":"2023-08-08T20:31:40+09:00","description":"","headline":"컨테이닝 블록 구분하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/","keywords":"컨테이닝블록"}</script>
+    <meta name="description" content="컨테이닝 블록 요쇼의 크기, 위치를 결정하는 요인이다. width, height, padding, margin 속성값과 절대적 위치(absolute, fixed)로 설정된 요소의 offset 속성값은 자신의 컨테이닝 블록으로부터 계산된다. 대부분의 경우 요소의 컨테이닝 블록이 가장 가까운 블록 레벨 조상의 컨텐츠 영역이지만 예외가 있다.  컨테이닝 블록 식">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="컨테이닝 블록 구분하기">
+<meta property="og:url" content="https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/index.html">
+<meta property="og:site_name" content="Loco&#39;s Dev Blog">
+<meta property="og:description" content="컨테이닝 블록 요쇼의 크기, 위치를 결정하는 요인이다. width, height, padding, margin 속성값과 절대적 위치(absolute, fixed)로 설정된 요소의 offset 속성값은 자신의 컨테이닝 블록으로부터 계산된다. 대부분의 경우 요소의 컨테이닝 블록이 가장 가까운 블록 레벨 조상의 컨텐츠 영역이지만 예외가 있다.  컨테이닝 블록 식">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://loco9939.github.io/images/containingBlock1.png">
+<meta property="og:image" content="https://loco9939.github.io/images/containingBlcok2.png">
+<meta property="article:published_time" content="2023-08-08T11:31:40.000Z">
+<meta property="article:modified_time" content="2023-08-08T11:49:54.824Z">
+<meta property="article:author" content="loco9939">
+<meta property="article:tag" content="컨테이닝블록">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loco9939.github.io/images/containingBlock1.png">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-alaac2o0p8lb5n7mx8aazw1dzhwcsltexgjtf9twurzytkujqiefoq1soijy.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Loco&#39;s Dev Blog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="링크 열기: /#about"
+            >
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/loco9939"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            컨테이닝 블록 구분하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-08-08T20:31:40+09:00">
+	
+		    2023/08/08
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="컨테이닝-블록"><a href="#컨테이닝-블록" class="headerlink" title="컨테이닝 블록"></a>컨테이닝 블록</h1><ul>
+<li>요쇼의 크기, 위치를 결정하는 요인이다.</li>
+<li><code>width</code>, <code>height</code>, <code>padding</code>, <code>margin</code> 속성값과 절대적 위치(<code>absolute</code>, <code>fixed</code>)로 설정된 요소의 offset 속성값은 자신의 컨테이닝 블록으로부터 계산된다.</li>
+<li>대부분의 경우 요소의 컨테이닝 블록이 가장 가까운 블록 레벨 조상의 컨텐츠 영역이지만 <span style="color:red">예외가 있다.</span></li>
+</ul>
+<h2 id="컨테이닝-블록-식별"><a href="#컨테이닝-블록-식별" class="headerlink" title="컨테이닝 블록 식별"></a>컨테이닝 블록 식별</h2><p>position의 속성에 따라 완전히 달라진다.</p>
+<h3 id="1-position-속성이-static-relative-sticky-인-경우"><a href="#1-position-속성이-static-relative-sticky-인-경우" class="headerlink" title="1. position 속성이 static, relative, sticky 인 경우"></a>1. position 속성이 static, relative, sticky 인 경우</h3><ul>
+<li>컨테이닝 블록은 가장 가까운 조상 블록 컨테이너 또는 서식 맥락을 형성하는 조상 요소(<code>flex</code>,<code>table</code>,<code>grid</code>)의 컨텐츠 영역 경계를 따라 형성된다.</li>
+</ul>
+<h3 id="2-position-속성이-absolute-인-경우"><a href="#2-position-속성이-absolute-인-경우" class="headerlink" title="2. position 속성이 absolute 인 경우"></a>2. position 속성이 absolute 인 경우</h3><ul>
+<li>컨테이닝 블록은 속성값이 <code>static</code>이 아닌 가장 가까운 조상의 내부 여백 영역</li>
+<li>그래서 주로 조상 영역에 <code>relative</code>를 추가하여 조상을 기준으로 position을 조절한다.</li>
+</ul>
+<h3 id="3-position-속성이-fixed-인-경우"><a href="#3-position-속성이-fixed-인-경우" class="headerlink" title="3. position 속성이 fixed 인 경우"></a>3. position 속성이 fixed 인 경우</h3><ul>
+<li>컨테이닝 블록은 <code>viewport</code>, 페이지 영역이다.</li>
+</ul>
+<h3 id="예외"><a href="#예외" class="headerlink" title="예외"></a>예외</h3><p>position 속성이 absolute, fixed 인 경우, 다음 조건을 만족하는 가장 가까운 조상 내부 영역이 컨테이닝 블록이 될 수 있다.</p>
+<ol>
+<li><p>transform이나 perspective 속성이 none이 아닐 때, transform 속성을 none으로 바꾸면 viewport 기준으로 바뀐다.</p>
+</li>
+<li><p>will-change 속성이 transform이나 perspective 일 때, will-change는 요소의 예상되는 변화의 힌트를 브라우저에게 제공한다.</p>
+</li>
+<li><p>filter 속성이 none이 아닐 때</p>
+</li>
+<li><p>contain 속성이 paint 일 때</p>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;p-absolute&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/containingBlock1.png" alt="컨테이닝 블록 예시"></p>
+<ul>
+<li>container 클래스에 아무런 값을 주지 않고 있어 p-absolute 값이 static이 아닌 조상 영역을 기준으로 위치하는데, static이 아닌 조상 요소가 없어서 최상위 브라우저를 기준으로 위치해있다.</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">background</span>: blue;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="comment">/*   transform: rotate(0deg); */</span></span><br><span class="line">  <span class="comment">/*   perspective:0; */</span></span><br><span class="line">  <span class="comment">/*   transform: rotate(0deg); */</span></span><br><span class="line">  <span class="comment">/*   perspective: 10px; */</span></span><br><span class="line">  <span class="comment">/*   will-change: perspective; */</span></span><br><span class="line">  <span class="comment">/*   will-change: transform; */</span></span><br><span class="line">  <span class="comment">/*   filter:opacity(); */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.p-absolute</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/containingBlcok2.png" alt="컨테이닝 블록 예시2"></p>
+<ul>
+<li>앞서 설명한 예외를 추가하면 position:relative를 추가한 것과 똑같이 동작하게 된다.</li>
+<li>해당 속성을 가진 요소를 기준으로 위치를 조절한다.</li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D%EB%B8%94%EB%A1%9D/" rel="tag">컨테이닝블록</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/07/Daily/flex-vs-inline-flex/"
+                    data-tooltip="flex vs inline-flex"
+                    aria-label="다음: flex vs inline-flex"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 loco9939. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/07/Daily/flex-vs-inline-flex/"
+                    data-tooltip="flex vs inline-flex"
+                    aria-label="다음: flex vs inline-flex"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">loco9939</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-wcqoifde3xwnijjx9xd2irfrrksglozwqpgaqfvxoft22e4znrk7db1xxnsx.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>

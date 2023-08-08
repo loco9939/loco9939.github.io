@@ -233,6 +233,95 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/"
+                            aria-label=": boj-2225 합분해(JavaScript)"
+                        >
+                            boj-2225 합분해(JavaScript)
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-17T22:37:31+09:00">
+	
+		    2023/02/17
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Algorithm/">Algorithm</a>, <a class="category-link" href="/categories/Algorithm/boj/">boj</a>, <a class="category-link" href="/categories/Algorithm/boj/DP/">DP</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수를 구하는 프로그램을 작성하시오.</p>
+<p>덧셈의 순서가 바뀐 경우는 다른 경우로 센다(1+2와 2+1은 서로 다른 경우). 또한 한 개의 수를 여러 번 쓸 수도 있다.</p>
+<h2 id="입력"><a href="#입력" class="headerlink" title="입력"></a>입력</h2><p>첫째 줄에 두 정수 N(1 ≤ N ≤ 200), K(1 ≤ K ≤ 200)가 주어진다.</p>
+<h2 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h2><p>첫째 줄에 답을 1,000,000,000으로 나눈 나머지를 출력한다.</p>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><h2 id="예제-입력-1"><a href="#예제-입력-1" class="headerlink" title="예제 입력 1"></a>예제 입력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">20 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-1"><a href="#예제-출력-1" class="headerlink" title="예제 출력 1"></a>예제 출력 1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">21</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-입력-2"><a href="#예제-입력-2" class="headerlink" title="예제 입력 2"></a>예제 입력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6 4</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="예제-출력-2"><a href="#예제-출력-2" class="headerlink" title="예제 출력 2"></a>예제 출력 2</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">84</span><br></pre></td></tr></table></figure>
+
+<h2 id="내-코드"><a href="#내-코드" class="headerlink" title="내 코드"></a>내 코드</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [N, K] = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line">  .<span class="title function_">readFileSync</span>(<span class="string">&quot;/dev/stdin&quot;</span>)</span><br><span class="line">  .<span class="title function_">toString</span>()</span><br><span class="line">  .<span class="title function_">trim</span>()</span><br><span class="line">  .<span class="title function_">split</span>(<span class="string">&quot; &quot;</span>)</span><br><span class="line">  .<span class="title function_">map</span>(<span class="title class_">Number</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DP</span> = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: N + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (i === <span class="number">1</span>) <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: K + <span class="number">1</span> &#125;, <span class="function">(<span class="params">_, i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(K + <span class="number">1</span>).<span class="title function_">fill</span>(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt;= K; j++) &#123;</span><br><span class="line">    <span class="variable constant_">DP</span>[i][j] = (<span class="variable constant_">DP</span>[i - <span class="number">1</span>][j] + <span class="variable constant_">DP</span>[i][j - <span class="number">1</span>]) % <span class="number">1000000000</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable constant_">DP</span>[N][K - <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>✏️ N &#x3D; 1인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.<ul>
+<li>❗️ 1개의 수로 1을 만들 수 있는 경우의 수는 1가지이다.</li>
+<li>2개의 수로 1을 만들 수 있는 경우의 수는 0+1, 1+0으로 2가지이다.</li>
+<li>3개의 수로 1을 만들 수 있는 경우의 수는 0+0+1, 0+1+0, 1+0+0으로 3가지이다…</li>
+</ul>
+</li>
+<li>N &#x3D; 2인 경우 K &#x3D; 1,2,3 …200 경우의 수를 생각해보았다.<ul>
+<li>❗️ 1개의 수로 2를 만들 수 있는 경우의 수는 1가지이다.</li>
+<li>2개의 수로 2를 만들 수 있는 경우의 수는 1+1, 2+0, 0+2로 3가지이다.</li>
+<li>3개의 수로 2를 만들 수 있는 경우의 수는 1+1+0, 1+0+1, 0+1+1, 2+0+0, 0+2+0, 0+0+2로 6가지이다…</li>
+</ul>
+</li>
+</ul>
+<p>❗️의 조건을 가지고 DP[N][k] 2차원 배열에서, DP[N][1] &#x3D; 1인 것을 알 수 있다.</p>
+<p>✏️의 조건을 가지고 DP[1][k] &#x3D; K 인 것을 알 수 있다.</p>
+<p><img src="/../../../../images/boj/2225/Frame.png" alt="Frame.png"></p>
+<p>위와 같은 점화식을 발견하였고 그에 알맞은 식을 만들었다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/17/Algorithm/boj/DP/boj-2225-%ED%95%A9%EB%B6%84%ED%95%B4-JavaScript/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/17/Algorithm/boj/DP/boj-15988-1-2-3-%EB%8D%94%ED%95%98%EA%B8%B0-JavaScript/"
                             aria-label=": boj-15988 1,2,3 더하기 3(JavaScript)"
                         >
@@ -933,89 +1022,6 @@
                         <p>
                             <a
                                 href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/"
-                            aria-label=": &lt;Suspense&gt; 컴포넌트는 무엇인가?"
-                        >
-                            &lt;Suspense&gt; 컴포넌트는 무엇인가?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-02T16:29:47+09:00">
-	
-		    2023/02/02
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="컴포넌트란"><a href="#컴포넌트란" class="headerlink" title=" 컴포넌트란?"></a><Suspense> 컴포넌트란?</h1><p>자식 요소가 로딩중이 완료될 때 까지 fallback에 제공된 컴포넌트를 보여준다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">SomeComponent</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="주의사항"><a href="#주의사항" class="headerlink" title="주의사항"></a>주의사항</h2><ul>
-<li>리액트는 처음 마운트 되기 전에 렌더링이 중단된다면, 어떤 상태도 보존하지 않는다. 컴포넌트가 로드되면 리액트는 중단된 트리를 처음부터 렌더링을 시도한다.</li>
-<li><Suspense> 컴포넌트는 컴포넌트 내부에서 startTransition이나 useDeferredValue로 인한 업데이트가 아닌 경우라면 fallback이 표시된다.</li>
-<li>컴포넌트가 다시 일시 중단되었기 때문에 이미 보여진 컨텐츠를 감출 필요가 있다면, layout effect를 비운다. 다시 컨텐츠를 보여줄 준비가 됐을 때, 리액트는 layout effect를 발생시킨다. 이는 컨텐츠가 숨겨진 동안 DOM layout을 측정하지 않도록 한다.</li>
-</ul>
-<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><p>컨텐츠가 로딩되는 동안에 fallback을 보여준다.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Albums</span> <span class="keyword">from</span> <span class="string">&quot;./Albums.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">ArtistPage</span>(<span class="params">&#123; artist &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;artist.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">Loading</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Loading</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>🌀 Loading...<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="컨텐츠를-한번에-공개"><a href="#컨텐츠를-한번에-공개" class="headerlink" title="컨텐츠를 한번에 공개"></a>컨텐츠를 한번에 공개</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<p><Suspense> 내부에 하나의 컴포넌트라도 일시중단 되더라도 <strong>모든 하위 컴포넌트가 대기했다가 한번에 공개된다.</strong></p>
-<h3 id="가장-가까운-의-fallback을-보여준다"><a href="#가장-가까운-의-fallback을-보여준다" class="headerlink" title="가장 가까운 의 fallback을 보여준다."></a>가장 가까운 <Suspense>의 fallback을 보여준다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Details</span> <span class="attr">artistId</span>=<span class="string">&#123;artist.id&#125;</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Details</span>(<span class="params">&#123; artistId &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Biography</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Albums</span> <span class="attr">artistId</span>=<span class="string">&#123;artistId&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>때문에 직접적인 자식이 아니더라도 Biography와 Albums와 가장 가까운 부모 <Suspense> 경계를 공유하기 때문에 함께 표시된다.</p>
-<h3 id="로드-될-때-중첩된-컨텐츠-표시한다"><a href="#로드-될-때-중첩된-컨텐츠-표시한다" class="headerlink" title="로드 될 때, 중첩된 컨텐츠 표시한다."></a>로드 될 때, 중첩된 컨텐츠 표시한다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Suspense</span> fallback=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">BigSpinner</span> /&gt;</span></span>&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Biography</span> /&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">AlbumsGlimmer</span> /&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Albums</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Suspense</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<p>처음에 Biography가 로딩이 완료 되지 않았을 때, BigSpinner가 fallback으로 보여지고, 이후 Biography는 로딩이 완료되었기 때문에 보여지고, 아래 Albums이 로딩이 완료되지 않았다면 AlbumsGlimmer를 보여주고 있다가 로딩이 완료되어 Albums를 보여준다.</p>
-<p>핵심은 Biography가 Albums 로딩이 완료될 때까지 기다리지 않는 다는 것이다.</p>
-<h3 id="이미-공개된-컨텐츠가-숨겨지는-것을-방지하기"><a href="#이미-공개된-컨텐츠가-숨겨지는-것을-방지하기" class="headerlink" title="이미 공개된 컨텐츠가 숨겨지는 것을 방지하기"></a>이미 공개된 컨텐츠가 숨겨지는 것을 방지하기</h3><p><a target="_blank" rel="noopener" href="https://codesandbox.io/s/0lgig0?file=/App.js&utm_medium=sandpack">Code Example Link</a></p>
-<ul>
-<li><Suspense> 내부에 startTransition이 사용되었다면, <span style="color:red;">fallback이 보여지지 않는다.</span></li>
-<li>때문에 fallback의 BigSpinner에 의해 이전에 보여진 컨텐츠가 숨겨지는 것을 방지할 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/02/React/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/Suspense-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

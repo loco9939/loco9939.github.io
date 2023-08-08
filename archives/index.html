@@ -233,6 +233,103 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/"
+                            aria-label=": 컨테이닝 블록 구분하기"
+                        >
+                            컨테이닝 블록 구분하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-08T20:31:40+09:00">
+	
+		    2023/08/08
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="컨테이닝-블록"><a href="#컨테이닝-블록" class="headerlink" title="컨테이닝 블록"></a>컨테이닝 블록</h1><ul>
+<li>요쇼의 크기, 위치를 결정하는 요인이다.</li>
+<li><code>width</code>, <code>height</code>, <code>padding</code>, <code>margin</code> 속성값과 절대적 위치(<code>absolute</code>, <code>fixed</code>)로 설정된 요소의 offset 속성값은 자신의 컨테이닝 블록으로부터 계산된다.</li>
+<li>대부분의 경우 요소의 컨테이닝 블록이 가장 가까운 블록 레벨 조상의 컨텐츠 영역이지만 <span style="color:red">예외가 있다.</span></li>
+</ul>
+<h2 id="컨테이닝-블록-식별"><a href="#컨테이닝-블록-식별" class="headerlink" title="컨테이닝 블록 식별"></a>컨테이닝 블록 식별</h2><p>position의 속성에 따라 완전히 달라진다.</p>
+<h3 id="1-position-속성이-static-relative-sticky-인-경우"><a href="#1-position-속성이-static-relative-sticky-인-경우" class="headerlink" title="1. position 속성이 static, relative, sticky 인 경우"></a>1. position 속성이 static, relative, sticky 인 경우</h3><ul>
+<li>컨테이닝 블록은 가장 가까운 조상 블록 컨테이너 또는 서식 맥락을 형성하는 조상 요소(<code>flex</code>,<code>table</code>,<code>grid</code>)의 컨텐츠 영역 경계를 따라 형성된다.</li>
+</ul>
+<h3 id="2-position-속성이-absolute-인-경우"><a href="#2-position-속성이-absolute-인-경우" class="headerlink" title="2. position 속성이 absolute 인 경우"></a>2. position 속성이 absolute 인 경우</h3><ul>
+<li>컨테이닝 블록은 속성값이 <code>static</code>이 아닌 가장 가까운 조상의 내부 여백 영역</li>
+<li>그래서 주로 조상 영역에 <code>relative</code>를 추가하여 조상을 기준으로 position을 조절한다.</li>
+</ul>
+<h3 id="3-position-속성이-fixed-인-경우"><a href="#3-position-속성이-fixed-인-경우" class="headerlink" title="3. position 속성이 fixed 인 경우"></a>3. position 속성이 fixed 인 경우</h3><ul>
+<li>컨테이닝 블록은 <code>viewport</code>, 페이지 영역이다.</li>
+</ul>
+<h3 id="예외"><a href="#예외" class="headerlink" title="예외"></a>예외</h3><p>position 속성이 absolute, fixed 인 경우, 다음 조건을 만족하는 가장 가까운 조상 내부 영역이 컨테이닝 블록이 될 수 있다.</p>
+<ol>
+<li><p>transform이나 perspective 속성이 none이 아닐 때, transform 속성을 none으로 바꾸면 viewport 기준으로 바뀐다.</p>
+</li>
+<li><p>will-change 속성이 transform이나 perspective 일 때, will-change는 요소의 예상되는 변화의 힌트를 브라우저에게 제공한다.</p>
+</li>
+<li><p>filter 속성이 none이 아닐 때</p>
+</li>
+<li><p>contain 속성이 paint 일 때</p>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;p-absolute&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/containingBlock1.png" alt="컨테이닝 블록 예시"></p>
+<ul>
+<li>container 클래스에 아무런 값을 주지 않고 있어 p-absolute 값이 static이 아닌 조상 영역을 기준으로 위치하는데, static이 아닌 조상 요소가 없어서 최상위 브라우저를 기준으로 위치해있다.</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">background</span>: blue;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="comment">/*   transform: rotate(0deg); */</span></span><br><span class="line">  <span class="comment">/*   perspective:0; */</span></span><br><span class="line">  <span class="comment">/*   transform: rotate(0deg); */</span></span><br><span class="line">  <span class="comment">/*   perspective: 10px; */</span></span><br><span class="line">  <span class="comment">/*   will-change: perspective; */</span></span><br><span class="line">  <span class="comment">/*   will-change: transform; */</span></span><br><span class="line">  <span class="comment">/*   filter:opacity(); */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.p-absolute</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: yellow;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/containingBlcok2.png" alt="컨테이닝 블록 예시2"></p>
+<ul>
+<li>앞서 설명한 예외를 추가하면 position:relative를 추가한 것과 똑같이 동작하게 된다.</li>
+<li>해당 속성을 가진 요소를 기준으로 위치를 조절한다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/07/Daily/flex-vs-inline-flex/"
                             aria-label=": flex vs inline-flex"
                         >
@@ -938,87 +1035,6 @@
                         <p>
                             <a
                                 href="/2023/07/30/CS/JavaScript%EC%9D%98-%EB%B3%80%EC%88%98%EB%9E%80?/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/07/29/Daily/Recharts-Legend-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95/"
-                            aria-label=": Recharts - Legend 커스터마이징"
-                        >
-                            Recharts - Legend 커스터마이징
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-07-29T12:47:43+09:00">
-	
-		    2023/07/29
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>저번 포스팅 때, Legend에 hover했을 때, 해당 데이터만 highlight 되도록 구현을 했다.</p>
-<p>이번에는 Legend를 커스터마이징하여 색상도 바꿔보도록 하려고한다.</p>
-<h3 id="1-CustomLegend-컴포넌트"><a href="#1-CustomLegend-컴포넌트" class="headerlink" title="1. CustomLegend 컴포넌트"></a>1. CustomLegend 컴포넌트</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params">props: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; payload, onMouseEnter, onMouseLeave &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((entry: any, index: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;</span>`<span class="attr">item-</span>$&#123;<span class="attr">index</span>&#125;`&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseEnter</span>=<span class="string">&#123;onMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseLeave</span>=<span class="string">&#123;onMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">listStyle:</span> &quot;<span class="attr">none</span>&quot;, <span class="attr">color:</span> <span class="attr">colors.GRAPH</span>[`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`] &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;entry.value&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>예시를 위해 타입은 any로 설정하였다.</li>
-<li>Legend의 각 li에 mouse 이벤트를 할당하였다.</li>
-<li>마우스 이벤트는 호버된 데이터를 제외한 데이터들의 opacity를 줄여서 해당 데이터만 highlight 되도록 한다.</li>
-</ul>
-<h3 id="2-CustomLegend의-props"><a href="#2-CustomLegend의-props" class="headerlink" title="2. CustomLegend의 props"></a>2. CustomLegend의 props</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">handleMouseEnter</span> = (<span class="params">o: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> dataKey = o.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span></span><br><span class="line">    key === dataKey ? [key, <span class="number">1</span>] : [key, <span class="number">0.2</span>]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">    prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">  &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>그런데, 해당 데이터에 호버를 해도 모든 데이터의 opacity가 줄어드는 문제가 발생했다.</p>
-<p>그 이유는 Legend에서의 props와 customLegend의 props가 달라서 mouse 이벤트가 잘못 동작했기 때문이다.</p>
-<ul>
-<li>이전 mouse 이벤트에서는 props안에 dataKey 속성으로 호버된 데이터 값을 가져올 수 있었다.</li>
-<li>하지만 customLegend에서는 props에 너무나도 많은 속성이 있었고 이 중 나는 target속성의 innerHTML 속성으로 호버된 데이터의 dataKey를 확인하는 로직을 구성하였다.</li>
-</ul>
-<h3 id="3-전체-코드"><a href="#3-전체-코드" class="headerlink" title="3. 전체 코드"></a>3. 전체 코드</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">LineChart</span>,</span><br><span class="line">  <span class="title class_">Line</span>,</span><br><span class="line">  <span class="title class_">Tooltip</span>,</span><br><span class="line">  <span class="title class_">Legend</span>,</span><br><span class="line">  <span class="title class_">ResponsiveContainer</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;recharts&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> colors <span class="keyword">from</span> <span class="string">&quot;styles/colors&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params">props: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; payload, onMouseEnter, onMouseLeave &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((entry: any, index: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;</span>`<span class="attr">item-</span>$&#123;<span class="attr">index</span>&#125;`&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseEnter</span>=<span class="string">&#123;onMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseLeave</span>=<span class="string">&#123;onMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">listStyle:</span> &quot;<span class="attr">none</span>&quot;, <span class="attr">color:</span> <span class="attr">colors.GRAPH</span>[`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`] &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;entry.value&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">NewPortChart</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [opacity, setOpacity] = useState&lt;<span class="built_in">any</span>&gt;(&#123;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleMouseEnter</span> = (<span class="params">o: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> dataKey = o.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span></span><br><span class="line">      key === dataKey ? [key, <span class="number">1</span>] : [key, <span class="number">0.2</span>]</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">      prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleMouseLeave</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> [key, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">      prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> mappedOpacity = <span class="title class_">Object</span>.<span class="title function_">keys</span>(data[<span class="number">0</span>]).<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      prev = &#123; ...prev, [curr]: <span class="number">1</span> &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedOpacity);</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ResponsiveContainer</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> <span class="attr">height</span>=<span class="string">&quot;100%&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">LineChart</span> <span class="attr">width</span>=<span class="string">&#123;857&#125;</span> <span class="attr">height</span>=<span class="string">&#123;440&#125;</span> <span class="attr">data</span>=<span class="string">&#123;data&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Tooltip</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Legend</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">align</span>=<span class="string">&quot;right&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">verticalAlign</span>=<span class="string">&quot;middle&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">layout</span>=<span class="string">&quot;vertical&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">content</span>=<span class="string">&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &lt;<span class="attr">CustomLegend</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onMouseEnter</span>=<span class="string">&#123;handleMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onMouseLeave</span>=<span class="string">&#123;handleMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#125;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">        &#123;Object.keys(data[0]).map((key, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Line</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">key</span>=<span class="string">&#123;key&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">type</span>=<span class="string">&quot;linear&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">dataKey</span>=<span class="string">&#123;key&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">strokeOpacity</span>=<span class="string">&#123;opacity[key]&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">strokeLinecap</span>=<span class="string">&quot;round&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">stroke</span>=<span class="string">&#123;colors.GRAPH[</span>`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">activeDot</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">dot</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          /&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">LineChart</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ResponsiveContainer</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">NewPortChart</span>;</span><br></pre></td></tr></table></figure>
-
-<h4 id="기본-CustomLegend"><a href="#기본-CustomLegend" class="headerlink" title="기본 CustomLegend"></a>기본 CustomLegend</h4><p><img src="/../../images/customLegend1.png" alt="기본 customlegend"></p>
-<h4 id="Hover된-데이터만-highlight"><a href="#Hover된-데이터만-highlight" class="headerlink" title="Hover된 데이터만 highlight"></a>Hover된 데이터만 highlight</h4><p><img src="/../../images/customLegend2.png" alt="hover1"><br><img src="/../../images/customLegend3.png" alt="hover2"><br><img src="/../../images/customLegend4.png" alt="hover3"></p>
-<h3 id="추가로…"><a href="#추가로…" class="headerlink" title="추가로…"></a>추가로…</h3><p>색상만 바꿀 것이였다면 왜 CustomLegend까지 쓰면서 복잡하게 시도를 했을까 궁금증이 들 수도 있다.</p>
-<p>디자이너 요구사항이 Legend와 해당 Line 데이터 끝 부분을 선으로 연결해달라는 요청이 있었기 때문에 CustomLegend를 사용해보았다.</p>
-<p>아직 해당 부분은 좀 더 고민이 필요하기 때문에 추후에 포스팅하도록 하겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/07/29/Daily/Recharts-Legend-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
