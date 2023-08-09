@@ -233,6 +233,192 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/"
+                            aria-label=": REST API란 무엇인가요?"
+                        >
+                            REST API란 무엇인가요?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-01-18T14:30:25+09:00">
+	
+		    2023/01/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/CS/">CS</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="REST-API란-무엇인가요"><a href="#REST-API란-무엇인가요" class="headerlink" title="REST API란 무엇인가요?"></a>REST API란 무엇인가요?</h1><p>자원의 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미한다. REST API는 HTTP 프로토콜을 의도에 맞게 디자인 하도록 유도하고 있다.</p>
+<p>즉, REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처이고 REST API는 REST를 기반으로 서비스 API를 구현한 것이다.</p>
+<h2 id="REST-API의-구성"><a href="#REST-API의-구성" class="headerlink" title="REST API의 구성"></a>REST API의 구성</h2><ul>
+<li>자원 : 모든 자원에는 고유한 ID가 존재하고 ID는 &#x2F;store&#x2F;:store_ID와 같은 HTTP URI이다.</li>
+<li>행위 : 자원에 대한 행위 (HTTP 요청 메서드)</li>
+<li>표현 : 자원에 대한 행위의 구체적 내용 (페이로드, JSON)</li>
+</ul>
+<h2 id="REST-API-설계-규칙"><a href="#REST-API-설계-규칙" class="headerlink" title="REST API 설계 규칙"></a>REST API 설계 규칙</h2><h3 id="1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다"><a href="#1-URI는-리소스를-표현하는데-집중하고-마지막에-슬래시-포함하지-않는다" class="headerlink" title="1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다."></a>1. URI는 리소스를 표현하는데 집중하고 마지막에 슬래시 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /getTodos/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/show/<span class="number">1</span></span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span>/</span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다"><a href="#2-행위에-대한-정의는-HTTP-요청-메서드를-통해-정의한다" class="headerlink" title="2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다."></a>2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 정의한다.</h3><table>
+<thead>
+<tr>
+<th>HTTP 요청 메서드</th>
+<th>종류</th>
+<th>목적</th>
+<th>페이로드</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>index&#x2F;retrieve</td>
+<td>모든&#x2F;특정 리소스 취득</td>
+<td>X</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>create</td>
+<td>리소스 생성</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>replace</td>
+<td>리소스 전체 교체</td>
+<td>O</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>modify</td>
+<td>리소스 일부 수정</td>
+<td>O</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>delete</td>
+<td>모든&#x2F;특정 리소스 삭제</td>
+<td>X</td>
+</tr>
+</tbody></table>
+<ul>
+<li>리소스에 대한 행위는 HTTP 요청 메서드를 통해 표현하며 URI에 표현하지 않는다.</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="variable constant_">GET</span> /todos/<span class="keyword">delete</span>/<span class="number">1</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">DELETE</span> /todos/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-슬래시-구분자-x2F-는-계층-관계를-표현"><a href="#3-슬래시-구분자-x2F-는-계층-관계를-표현" class="headerlink" title="3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현"></a>3. 슬래시 구분자(&#x2F;)는 계층 관계를 표현</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-불가피하게-긴-URI인-경우-하이픈-사용"><a href="#4-불가피하게-긴-URI인-경우-하이픈-사용" class="headerlink" title="4. 불가피하게 긴 URI인 경우 하이픈(-) 사용"></a>4. 불가피하게 긴 URI인 경우 하이픈(-) 사용</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/very-long-store</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>단 밑줄(_)은 포함하지 않는다.</p>
+</blockquote>
+<h3 id="5-파일-확장자는-URI에-포함하지-않는다"><a href="#5-파일-확장자는-URI에-포함하지-않는다" class="headerlink" title="5. 파일 확장자는 URI에 포함하지 않는다."></a>5. 파일 확장자는 URI에 포함하지 않는다.</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line"><span class="attr">http</span>:<span class="comment">//example.com/stores/restaurant/:1/logo.png</span></span><br><span class="line"></span><br><span class="line"># good</span><br><span class="line"><span class="variable constant_">GET</span> /stores/restaurant/:<span class="number">1</span>/logo <span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="attr">HOST</span>: example.<span class="property">com</span> <span class="title class_">Accept</span>: image/png</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>대신 Accept header를 사용한다.</li>
+</ul>
+<h2 id="RESTful한-REST-API-설계하기"><a href="#RESTful한-REST-API-설계하기" class="headerlink" title="RESTful한 REST API 설계하기"></a>RESTful한 REST API 설계하기</h2><p>RESTful은 이해하기 쉽고 사용하기 쉬운 REST API를 만들고, 일관적인 컨벤션을 통해 API의 이해도를 높이는 것을 말한다.</p>
+<h3 id="REST-API-설계-예시"><a href="#REST-API-설계-예시" class="headerlink" title="REST API 설계 예시"></a>REST API 설계 예시</h3><table>
+<thead>
+<tr>
+<th>CRUD</th>
+<th>HTTP verbs</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource 목록 표시</td>
+<td>GET</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 하나 내용 표시</td>
+<td>GET</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 생성</td>
+<td>POST</td>
+<td>&#x2F;resource</td>
+</tr>
+<tr>
+<td>resource 수정</td>
+<td>PUT</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+<tr>
+<td>resource 삭제</td>
+<td>DELETE</td>
+<td>&#x2F;resource&#x2F;:id</td>
+</tr>
+</tbody></table>
+<h4 id="응답상태-코드"><a href="#응답상태-코드" class="headerlink" title="응답상태 코드"></a>응답상태 코드</h4><table>
+<thead>
+<tr>
+<th>상태코드</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1xx</td>
+<td>전송 프로토콜 수준의 정보 교환</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>클라이언트 요청 성공</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>클라이언트 요청 완료하기 위해 추가 행동 필요</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>클라이언트의 잘못된 요청</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>서버쪽 오류</td>
+</tr>
+</tbody></table>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/01/18/CS/REST-API%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/01/17/CS/OOP%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EC%84%B8%EC%9A%94/"
                             aria-label=": OOP에 대해 설명하세요"
                         >
@@ -930,84 +1116,6 @@
                         <p>
                             <a
                                 href="/2023/01/05/CS/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/"
-                            aria-label=": 호이스팅에 대해 설명하라"
-                        >
-                            호이스팅에 대해 설명하라
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-01-05T14:24:56+09:00">
-	
-		    2023/01/05
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CS/">CS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="📌-호이스팅이란"><a href="#📌-호이스팅이란" class="headerlink" title="📌 호이스팅이란?"></a>📌 호이스팅이란?</h1><p>호이스팅이란 코드에서 선언이 마치 코드 최상단으로 옮겨진 것처럼 동작하는 것을 말한다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var 선언은 에러를 발생하지 않는다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// let/const 선언은 에러를 발생 시킨다.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">let</span> bar = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>마치 위 예제를 보았을 때, let, const 키워드로 선언할 경우 호이스팅이 발생하지 않는 것처럼 느낄 수 있는데, let, const 키워드로 선언했을 경우에도 호이스팅이 발생한다.</p>
-<p>위 예제에서 오류를 발생시키는 것은 var 키워드의 경우 변수 선언 단계와 초기화 단계가 동시에 진행되므로 이 때, 변수가 선언됨과 동시에 undefined로 초기화되어 오류를 발생시키지 않는다.</p>
-<p>반면, let, const 키워드는 선언단계와 초기화 단계가 분리되어 진행되어 <strong>초기화 단계 이전에 해당 변수를 참조하게 되면 참조에러를 발생시킨다.</strong></p>
-<blockquote>
-<p>선언단계 ~ 초기화 단계 시작 전까지 구간을 Temporal Dead Zone(일시적 사각 지대)라고 한다.</p>
-</blockquote>
-<h1 id="📚-함수-호이스팅"><a href="#📚-함수-호이스팅" class="headerlink" title="📚 함수 호이스팅"></a>📚 함수 호이스팅</h1><p>호이스팅은 선언 단계가 마치 최상단으로 올라간 것처럼 동작하는 것을 말하므로 이는 변수 선언과 함수 선언 모두 해당될 수 있다.</p>
-<p>변수 선언은 앞의 예제에서 다루었으니 함수 호이스팅 예제를 보자.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">doubleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">trippleNum</span> = (<span class="params">num</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught ReferenceError: doubleNum is not defined</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 화살표 함수가 표현식으로 선언되었으므로 변수 호이스팅이 발생하여 오류를 발생하는 것을 볼 수 있다.</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> doubled = <span class="title function_">doubleNum</span>(numbers);</span><br><span class="line"><span class="keyword">const</span> trippled = <span class="title function_">trippleNum</span>(numbers);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doubled); <span class="comment">// [2, 4, 6, 8, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(trippled); <span class="comment">// [3, 6, 9, 12, 15]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">doubleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">trippleNum</span>(<span class="params">num</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> num.<span class="title function_">map</span>(<span class="function">(<span class="params">n</span>) =&gt;</span> n * <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 예제에서는 함수 선언식으로 함수를 정의하여서 함수 호이스팅이 발생하여 오류를 발생시키지 않았다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/01/05/CS/%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85%EC%97%90-%EB%8C%80%ED%95%B4-%EC%84%A4%EB%AA%85%ED%95%98%EB%9D%BC/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

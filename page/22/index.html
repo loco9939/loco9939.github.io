@@ -232,6 +232,181 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/"
+                            aria-label=": React(리액트)는 어떻게 작동하는가?"
+                        >
+                            React(리액트)는 어떻게 작동하는가?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2022-10-31T19:13:18+09:00">
+	
+		    2022/10/31
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <style>
+  bold {
+    font-weight:700;
+    font-size:1rem;
+  }
+  
+  red {
+    color:red;
+    font-size:1rem
+  }
+</style>
+
+<h1 id="📌-React란"><a href="#📌-React란" class="headerlink" title="📌 React란?"></a>📌 React란?</h1><p>화면에 렌더링되는 UI를 컴포넌트 단위로 쪼개 사용할 수 있는 Javascript 라이브러리리 혹은 프레임워크이다.<br>라이브러리인가? 프레임워크인가?는 크게 중요하지 않다. 우리가 중점적으로 생각해야할 부분은 리액트는 <red>Progressive(점진적)</red>이라는 것이다.</p>
+<h2 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h2><ol>
+<li><p>리액트는 점진적이므로 애플리케이션을 모두 리액트로 구성할 필요가 없다.</p>
+</li>
+<li><p>리액트는 Javascript 중점 라이브러리이다. 그러므로 자바스크립트를 잘하면 재밌을 것이다.</p>
+</li>
+<li><p>리액트는 별도의 설치가 필요없이 컴포넌트를 즉시 사용해볼 수 있다.</p>
+</li>
+<li><p>선언형 프로그래밍으로 명령형 프로그래밍보다 코드를 이해하기가 쉽다.</p>
+</li>
+<li><p>리액트를 배우면 웹, 리액트 네이티브를 배우면 모바일 등 한가지를 배워 확장성이 넓다.</p>
+</li>
+</ol>
+<h2 id="시작하기-전"><a href="#시작하기-전" class="headerlink" title="시작하기 전"></a>시작하기 전</h2><h3 id="1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다"><a href="#1-React-API-라이브러리를-사용하여-UI를-구상하는-VitualDOM을-생성한다" class="headerlink" title="1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다."></a>1. React API 라이브러리를 사용하여 UI를 구상하는 VitualDOM을 생성한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CDN</span></span><br><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react@17/umd/react.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>만약 버전을 변경하고 싶다면 @version을 써준다.</p>
+</li>
+<li><p>만약 IE를 고려 해야한다면 17 버전을 사용하고 그렇지 않다면 18 버전 사용하자.</p>
+</li>
+</ul>
+<h3 id="2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다"><a href="#2-ReactDOM-API-라이브러리를-사용하여-VirtualDOM을-RealDOM에-렌더링하여-UI를-구현한다" class="headerlink" title="2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다."></a>2. ReactDOM API 라이브러리를 사용하여 VirtualDOM을 RealDOM에 렌더링하여 UI를 구현한다.</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;//unpkg.com/react-dom@17/umd/react-dom.development.js&quot;</span> crossorigin&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>React API와 버젼을 일치시켜 줘야한다.</li>
+</ul>
+<p><strong>💡 React v17의 render()와 v18의 createRoot() 차이</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 17</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(app,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>),</span><br><span class="line">    <span class="function">() =&gt;</span> &#123;<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;rendered!&#x27;</span>)&#125;</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>렌더링할 React 요소인 app을 인자로 전달하고 이를 렌더링할 container인 root container를 render()에 전달한다.</li>
+</ul>
+<p>리액트 버전 18부터 render() 대신 createRoot()를 사용한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">createRoot</span>(container[, options])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version 18</span></span><br><span class="line"><span class="keyword">const</span> root = <span class="title function_">createRoot</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>; <span class="comment">// JSX</span></span><br><span class="line"></span><br><span class="line">root.<span class="title function_">render</span>(element);</span><br></pre></td></tr></table></figure>
+
+<p>문서의 RealDOM 요소 노드인 container를 React Root로 만들어 반환하고, React Root를 render() 메서드를 사용하여 React 요소를 RealDOM에 렌더링한다.</p>
+<h2 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h2><h3 id="1-React-요소-노드와-Real-DOM-요소-노드-차이"><a href="#1-React-요소-노드와-Real-DOM-요소-노드-차이" class="headerlink" title="1. React 요소 노드와 Real DOM 요소 노드 차이"></a>1. React 요소 노드와 Real DOM 요소 노드 차이</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Real</span></span><br><span class="line"><span class="keyword">const</span> headlineNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;h1&#x27;</span>);</span><br><span class="line">headlineNode.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;headline&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">setAttribute</span>(<span class="string">&#x27;land&#x27;</span>,<span class="string">&#x27;en&#x27;</span>);</span><br><span class="line">headlineNode.<span class="title function_">insertAdjacentHTML</span>(<span class="string">&#x27;beforeend&#x27;</span>, <span class="string">`Add &lt;strong&gt;React&lt;/strong&gt; to a Website`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// React</span></span><br><span class="line"><span class="keyword">const</span> headlineVnode = <span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">  <span class="string">&#x27;h1&#x27;</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    className : <span class="string">&#x27;headline&#x27;</span>,</span><br><span class="line">    <span class="attr">lang</span>: <span class="string">&#x27;en&#x27;</span></span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="string">&#x27;Add &#x27;</span>,</span><br><span class="line">  <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;strong&#x27;</span>, <span class="literal">null</span>, <span class="string">&#x27;React&#x27;</span>),</span><br><span class="line">  <span class="string">&#x27;to a Website&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../../images/React.createElement/React.createElement.png" alt="React.createElement"></p>
+<ul>
+<li><p>RealDOM 요소 노드는 브라우저가 렌더링하면서 생성한 것이고 이와 달리 React 요소 노드는 Object(객체)로 그 형태가 다르게 생겼다.</p>
+</li>
+<li><p>위 사진을 보면 props라는 객체에 children, className, lang 등이 담겨있는 것을 알 수 있다. props에 대해서는 이후에 알아보자.</p>
+</li>
+</ul>
+<p><strong>❗️ StrictMode 오류 해결</strong></p>
+<p>ECMAScript에서 ‘use strict’ 사용하여 문법적 오류를 미리 알려주었듯이 React에서도 이러한 오류를 미리 알려준다.</p>
+<p>이에 대한 경고를 해결하기 위해서는 StrictMode 컴포넌트를 사용해야한다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">React</span>.<span class="title function_">createElement</span>(</span><br><span class="line">    <span class="title class_">React</span>.<span class="property">StrictMode</span>,</span><br><span class="line">    <span class="literal">null</span>,</span><br><span class="line">    <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="title class_">App</span>, &#123; <span class="attr">children</span>: [headline, reactLogo] &#125;)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<p>사용법은 간단하다. 생성하려는 React 요소를 React.StrictMode의 자식 요소로 전달해주면 된다.</p>
+<h3 id="2-React-Component-vs-React-Element"><a href="#2-React-Component-vs-React-Element" class="headerlink" title="2. React Component vs React Element"></a>2. React Component vs React Element</h3><p>자바스크립트에서는 재사용을 위해 함수를 사용하고 리액트에서는 재사용을 위해 컴포넌트를 사용한다. 컴포넌트 생성 방법은 함수를 생성하듯이 생성할 수 있다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SvgPath</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;path&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">d</span>: props.<span class="property">d</span>,</span><br><span class="line">        <span class="attr">fill</span>: <span class="string">&#x27;currentColor&#x27;</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = props =&gt; <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    &#123; <span class="attr">className</span>: <span class="string">&#x27;App&#x27;</span> &#125;,</span><br><span class="line">    ...props.<span class="property">children</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>리액트 컴포넌트는 매개변수로 props를 받는다.</p>
+</li>
+<li><p>props 객체를 통해 다른 컴포넌트에게 본인의 HTML attributes, 자바스크립트 값(객체, 배열, 함수 등)을 전달해줄 수 있다.</p>
+</li>
+<li><p>함수선언식, 함수표현식 둘 다 가능하다.</p>
+</li>
+</ul>
+<p>하지만 createElement()를 사용하여 컴포넌트를 생성하는 것은 매우 번거로운 일이다. 그 대안으로 생겨난 것이 바로 JSX이다.</p>
+<h2 id="JSX란"><a href="#JSX란" class="headerlink" title="JSX란?"></a>JSX란?</h2><p>JSX는 리액트 컴포넌트 사용을 HTML 처럼 사용하기 위해 생겨났다. JSX는 XML 처럼 생긴 문법 표현식이다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name = <span class="string">&#x27;loco&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        안녕하세요~! &#123;name&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// rendered</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>안녕하세요~! loco<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>자동 세미콜론 삽입이 되는 것을 방지하기 위해 <strong>괄호로 감싸는 것을 추천한다.</strong></p>
+<h3 id="특징-1"><a href="#특징-1" class="headerlink" title="특징"></a>특징</h3><ol>
+<li><p>선언형, HTML과 비슷한 구조, {}를 사용한 데이터 바인딩이 편리하다.</p>
+</li>
+<li><p>브라우저엔진에 의해 해석되지 못하므로 babel이 컴파일을 해줘야만 한다.</p>
+</li>
+<li><p>HTML 보단 JS에 가까우므로 camelCase 명명규칙을 따른다.</p>
+</li>
+<li><p>JSX는 렌더링하기 전에 이스케이프하므로 애플리케이션에서 명시적으로 작성되지 않는 내용은 script에 주입되지 않아 XSS 공격으로부터 안전하다.</p>
+</li>
+</ol>
+<p><strong>❗️ React에서 babel 추가 설정</strong></p>
+<p><img src="/../../images/React.babel/React.babel.png" alt="React바벨추가설정"></p>
+<ol>
+<li><p>이전에 React를 사용하기 전에 설정해두었던 babel 사양에서는 React를 컴파일 해줄 수 없다.</p>
+</li>
+<li><p>컴포넌트를 모듈 파일로 구분할 때에 babel은 input으로 지정된 파일만 컴파일 해주고 input 파일에서 import한 파일까지 컴파일해주지 않는다.</p>
+</li>
+</ol>
+<p>위 2가지 문제 해결을 위해서는 <strong>플러그인을 설치 해줘야한다.</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D @babel/preset-react</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">comments</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">presets</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&#x27;@babel/preset-env&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">modules</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">loose</span>: <span class="literal">true</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&#x27;@babel/preset-react&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>설치가 끝났다면 babel.config.js 파일에 해당 플러그인을 사용할 것이라고 등록을 해줘야 정상 동작한다.</p>
+</li>
+<li><p>옵션값이 있을 경우 []로 감싸서 넣어주고 그렇지 않은 경우 문자열로만 추가한다.</p>
+</li>
+</ul>
+<h2 id="JSX로-컴포넌트-생성하기"><a href="#JSX로-컴포넌트-생성하기" class="headerlink" title="JSX로 컴포넌트 생성하기"></a>JSX로 컴포넌트 생성하기</h2><p>이제 JSX를 사용할 준비가 끝났으니 JSX를 사용하여 컴포넌트를 생성해보자.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">HeadLine</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;headline&quot;</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        Add <span class="tag">&lt;<span class="name">strong</span>&gt;</span>React<span class="tag">&lt;/<span class="name">strong</span>&gt;</span> to a Website</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">HeadLine</span>&gt;</span><span class="tag">&lt;/<span class="name">HeadLine</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;react-root&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ReactDOMRoot</span> = <span class="title class_">ReactDOM</span>.<span class="title function_">createRoot</span>(container);</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOMRoot</span>.<span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>React.createElement()를 사용하여 React Element를 생성하여 컴포넌트를 생성하는 방법보다 훨씬 편리하다는 것을 알 수 있다.</li>
+</ul>
+<h1 id="🏓-소감"><a href="#🏓-소감" class="headerlink" title="🏓 소감"></a>🏓 소감</h1><p>리액트 수업을 듣고 배운것을 차근차근 익혀가면서 정리해보았다. props에 대한 개념도 확실히 잡히고, JSX를 왜 쓰게 되었는지, 안쓰면 무엇인 문제점이고 불편한지를 깨달을 수 있는 시간이여서 좋았다.</p>
+<p>공식문서를 읽어볼 때도 영어로 된 것을 자동번역하여 읽지 않고 원문을 보면서 읽으니 시간이 조금 더디지만 그렇기 때문에 기억에 더 오래 남을 것이라고 생각하여 영어로 읽는 연습을 하고있다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2022/10/31/React/React(%EB%A6%AC%EC%95%A1%ED%8A%B8)%EB%8A%94%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80?/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2022/10/31/Algorithm/woowa/%EC%9A%B0%ED%85%8C%EC%BD%94%20%ED%94%84%EB%A6%AC%EC%BD%94%EC%8A%A4-%F0%9F%A6%96%20%ED%8F%AC%EB%B9%84%EC%99%80%20%ED%81%AC%EB%A1%B1/"
                             aria-label=": 우테코 프리코스-🦖 포비와 크롱"
                         >
@@ -1056,84 +1231,6 @@
                         <p>
                             <a
                                 href="/2022/10/18/git/Software%20Development%20Life%20Cycle%20(SDLC)%EC%99%80%20%ED%98%91%EC%97%85%20%EB%AA%A8%EB%8D%B8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/"
-                            aria-label=": 라우터 파일 구분 시도"
-                        >
-                            라우터 파일 구분 시도
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-10-18T22:38:09+09:00">
-	
-		    2022/10/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Project/">Project</a>, <a class="category-link" href="/categories/Project/holymoly/">holymoly</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-라우터-파일-구분을-해주자"><a href="#1-라우터-파일-구분을-해주자" class="headerlink" title="1. 라우터 파일 구분을 해주자."></a>1. 라우터 파일 구분을 해주자.</h1><h2 id="왜-라우터를-모듈로-빼서-관리를-해줘야-하는가"><a href="#왜-라우터를-모듈로-빼서-관리를-해줘야-하는가" class="headerlink" title="왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?"></a>왜 라우터를 모듈로 빼서 관리를 해줘야 하는가?</h2><p>App 컴포넌트가 다른 컴포넌트 정보를 모아서 렌더에게 이렇게 그려달라는 정보를 담고 있는데, App 에서 path에 맞게 컴포넌트를 지정해주는 router 메서드가 같이 있어도 논리가 맞지 않는가?</p>
-<p>라우터가 하는 일은 path를 인수로 받으면 history API를 설정해주고, path에 맞는 컴포넌트를 반환해주는 역할을 한다.</p>
-<p><strong>이 역할을 하는 라우터를 App 컴포넌트의 프로퍼티 메서드로 종속 시키는 것이 맞는가?</strong></p>
-<p>내 생각에는 데이터가 바뀔 때 화면 렌더링에 영향을 주는 데이터를 상태로 관리 해야하므로, path가 바뀔 때, 컴포넌트가 바뀌니 path든 component든 상태로 가져야 한다.</p>
-<p><strong>즉, App도 컴포넌트이므로 그려지는데 필요한 정보를 담고 있기만 하면 된다.</strong></p>
-<ul>
-<li>라우터에서 렌더링을 호출하면 App의 domStr이 새로 그려지게되는데 이때, Page 또는 Path를 확인하여 컴포넌트를 그려줘야한다.</li>
-<li>그런데 라우터함수가 렌더만 해주는데 상태를 변경해주지 않고 어떻게 그려주지?<br>⇒ 라우터 함수가 Page를 반환하고 그 페이지를 App의 domStr에서 받아서 그려주기로 해보자.<ul>
-<li>위의 것이 될까? App에서 처음 호출될 때는 return 값으로 Page를 넘겨줄 수 있겠지</li>
-<li>하지만 이벤트 발생하거나 서버에 요청으로 라우터 변경되었을 때, router가 호출되는데, 그 때는 반환만 해주고 렌더링을 해주고 있지 않아서 변경되지 않을 것이다.</li>
-<li>그렇다고 router에 렌더링을 넣어준다고 하면 App의 domStr을 호출하여 새로 그려줄텐데… 무엇을 기준으로 그려주는 것인가? router에서 받은 path를 기준으로 그 path에 맞는 컴포넌트로 그려주는데 이것을 App에서 어떻게 알 수 있나?</li>
-</ul>
-</li>
-</ul>
-<p><strong>결론</strong></p>
-<p>이를 해결하기 위해서는 기존의 App 컴포넌트에서 setState로 render를 시켜주는 구조를 바꾸고 App에서 render를 해주고 router에서도 render를 해주는 구조로 바꿔줘야한다.</p>
-<h1 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h1><p>오늘은 라우터를 파일로 분리하려는 시도와 리팩터링을 하면서 공부를 했다.</p>
-<p>내일은 GCP로 배포하는 법을 공부해서 배포를 해보려고 한다.</p>
-<p>내일 배포와 발표준비를 마치면 이제 자바스크립트 수업도 모두 끝이난다. 2달 반 정도의 시간이 참 빨리도 지나간 것 같다.</p>
-<p>역시 자바스크립트가 동료들과 페어로 하는 수업이 많아서 더 재밌게 느껴진 것 같다.</p>
-<p>앞으로 다가올 리액트 수업 때도 열심히 듣기 위해 만반의 준비를 해야겠다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2022/10/18/Project/holymoly/%EB%9D%BC%EC%9A%B0%ED%84%B0%20%ED%8C%8C%EC%9D%BC%20%EA%B5%AC%EB%B6%84%20%EC%8B%9C%EB%8F%84/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
