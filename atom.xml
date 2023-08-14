@@ -6,7 +6,7 @@
   <link href="https://loco9939.github.io/atom.xml" rel="self"/>
   
   <link href="https://loco9939.github.io/"/>
-  <updated>2023-08-14T13:04:59.519Z</updated>
+  <updated>2023-08-14T15:14:06.969Z</updated>
   <id>https://loco9939.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>useRef 예시</title>
+    <link href="https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"/>
+    <id>https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/</id>
+    <published>2023-08-14T15:00:39.000Z</published>
+    <updated>2023-08-14T15:14:06.969Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>useRef</code> hook은 DOM에 접근하기 위해 사용한다.</p><p><code>useRef</code>는 <code>current</code> 프로퍼티를 포함한 객체를 반환한다.</p><p><code>current</code> 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다.</p><p>즉, <code>useRef</code> 값은 렌더링 중에도 같은 값을 유지할 수 있다.</p><ul><li>리렌더링 없이 참조값을 갱신하는 것</li></ul><h1 id="문법"><a href="#문법" class="headerlink" title="문법"></a>문법</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newRefComponent = <span class="title function_">useRef</span>(initialValue);</span><br></pre></td></tr></table></figure><ul><li>주로 변형가능한 데이터를 리렌더링 없이 저장하기 위해 사용된다.</li></ul><h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [anyInput, setAnyInput] = <span class="title function_">useState</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> showRender = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> randomInput = <span class="title function_">useRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">toggleChange</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setAnyInput</span>(e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">    showRender.<span class="property">current</span>++;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">focusRandomInput</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    randomInput.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&quot;TextBox&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">ref</span>=<span class="string">&#123;randomInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;anyInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;toggleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Amount Of Renders: &#123;showRender.current&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;focusRandomInput&#125;</span>&gt;</span>Click To Focus On Input <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure><ul><li><code>showRender</code> 데이터는 <code>toggleChange</code> 이벤트가 발생할 때마다 값이 증가하고 해당 값이 화면에 렌더링된다. 이 때, 리렌더링 없이 <code>showRender</code> 값을 변형할 수 있다.</li><li><code>current</code> 프로퍼티로 DOM에 접근하여 focus를 적용할 수 있다.</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;code&gt;useRef&lt;/code&gt; hook은 DOM에 접근하기 위해 사용한다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;useRef&lt;/code&gt;는 &lt;code&gt;current&lt;/code&gt; 프로퍼티를 포함한 객체를 반환한다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;current&lt;/c</summary>
+      
+    
+    
+    
+    <category term="Daily" scheme="https://loco9939.github.io/categories/Daily/"/>
+    
+    
+    <category term="useRef" scheme="https://loco9939.github.io/tags/useRef/"/>
+    
+  </entry>
   
   <entry>
     <title>useReducer 예시</title>
@@ -473,35 +499,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;Queue-클래스로-구현하기&quot;&gt;&lt;a href=&quot;#Queue-클래스로-구현하기&quot; class=&quot;headerlink&quot; title=&quot;Queue 클래스로 구현하기&quot;&gt;&lt;/a&gt;Queue 클래스로 구현하기&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;/../../.</summary>
-      
-    
-    
-    
-    <category term="Python" scheme="https://loco9939.github.io/categories/Python/"/>
-    
-    <category term="DataStructure" scheme="https://loco9939.github.io/categories/Python/DataStructure/"/>
-    
-    <category term="Queue" scheme="https://loco9939.github.io/categories/Python/DataStructure/Queue/"/>
-    
-    
-    <category term="큐" scheme="https://loco9939.github.io/tags/%ED%81%90/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>큐 - 개념 및 설명</title>
-    <link href="https://loco9939.github.io/2023/07/23/Python/DataStructure/Queue/%ED%81%90-%EA%B0%9C%EB%85%90-%EB%B0%8F-%EC%84%A4%EB%AA%85/"/>
-    <id>https://loco9939.github.io/2023/07/23/Python/DataStructure/Queue/%ED%81%90-%EA%B0%9C%EB%85%90-%EB%B0%8F-%EC%84%A4%EB%AA%85/</id>
-    <published>2023-07-23T03:08:00.000Z</published>
-    <updated>2023-07-23T03:13:00.967Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Queue-큐-란"><a href="#Queue-큐-란" class="headerlink" title="Queue(큐)란?"></a>Queue(큐)란?</h1><p>큐는 대기행렬(줄)이다.</p><p>우리가 무언가를 사거나 장소에 들어갈 때 줄을 선 순서를 생각하면 된다.</p><p>많은 양의 자료를 프린터로 출력한다 했을 때, 프린터 상태창을 보면 출력할 자료가 순서대로 들어가있고 <strong>들어간 순서대로 출력되는 것을 알 수 있다.</strong></p><p><img src="/../../../../images/queue.png" alt="queue"></p><p>스택이 한쪽입구가 막힌 상자에 자료를 차곡차곡 쌓는 것이라면, 큐는 입구와 출구가 따로 있는 통로로서 한쪽에서 밀어 넣으면 반대쪽에서 나오는 것이다.</p><ul><li>큐에서는 <code>head</code> 대신 <code>front</code>, <code>tail</code> 대신 <code>rear(or back)</code> 이라 한다.</li><li><code>enqueue</code>: 가장 마지막에 자료를 넣는 것으로 위 그림에서 연결리스트의 <code>append()</code>와 같다.</li><li><code>dequeue</code>: 가장 먼저 들어간 자료를 꺼내는 것으로 연결리스트의 <code>popLeft()</code>와 같다.</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Queue-큐-란&quot;&gt;&lt;a href=&quot;#Queue-큐-란&quot; class=&quot;headerlink&quot; title=&quot;Queue(큐)란?&quot;&gt;&lt;/a&gt;Queue(큐)란?&lt;/h1&gt;&lt;p&gt;큐는 대기행렬(줄)이다.&lt;/p&gt;
-&lt;p&gt;우리가 무언가를 사거나 장소에 들어</summary>
       
     
     

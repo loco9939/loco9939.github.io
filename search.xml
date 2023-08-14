@@ -12014,4 +12014,33 @@
         <tag>useReducer</tag>
       </tags>
   </entry>
+  <entry>
+    <title>useRef 예시</title>
+    <url>/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/</url>
+    <content><![CDATA[<p><code>useRef</code> hook은 DOM에 접근하기 위해 사용한다.</p>
+<p><code>useRef</code>는 <code>current</code> 프로퍼티를 포함한 객체를 반환한다.</p>
+<p><code>current</code> 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다.</p>
+<p>즉, <code>useRef</code> 값은 렌더링 중에도 같은 값을 유지할 수 있다.</p>
+<ul>
+<li>리렌더링 없이 참조값을 갱신하는 것</li>
+</ul>
+<h1 id="문법"><a href="#문법" class="headerlink" title="문법"></a>문법</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> newRefComponent = <span class="title function_">useRef</span>(initialValue);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>주로 변형가능한 데이터를 리렌더링 없이 저장하기 위해 사용된다.</li>
+</ul>
+<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [anyInput, setAnyInput] = <span class="title function_">useState</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> showRender = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> randomInput = <span class="title function_">useRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">toggleChange</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setAnyInput</span>(e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">    showRender.<span class="property">current</span>++;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">focusRandomInput</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    randomInput.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&quot;TextBox&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">ref</span>=<span class="string">&#123;randomInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;anyInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;toggleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Amount Of Renders: &#123;showRender.current&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;focusRandomInput&#125;</span>&gt;</span>Click To Focus On Input <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>showRender</code> 데이터는 <code>toggleChange</code> 이벤트가 발생할 때마다 값이 증가하고 해당 값이 화면에 렌더링된다. 이 때, 리렌더링 없이 <code>showRender</code> 값을 변형할 수 있다.</li>
+<li><code>current</code> 프로퍼티로 DOM에 접근하여 focus를 적용할 수 있다.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Daily</category>
+      </categories>
+      <tags>
+        <tag>useRef</tag>
+      </tags>
+  </entry>
 </search>
