@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2023/08/15/react/useref-예시/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/08/16/daily/flex-박스-반응형-팁/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>useRef 예시 - Loco&#39;s Dev Blog</title>
+    <title>flex 박스 반응형 팁 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -19,18 +19,18 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"useRef hook은 DOM에 접근하기 위해 사용한다.\nuseRef는 current 프로퍼티를 포함한 객체를 반환한다.\ncurrent 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다.\n즉, useRef 값은 렌더링 중에도 같은 값을 유지할 수 있다.\n\n리렌더링 없이 참조값을 갱신하는 것\n\n문법1const newRefComponent = useRef(initialValue);\n\n\n주로 변형가능한 데이터를 리렌더링 없이 저장하기 위해 사용된다.\n\n예시1234567891011121314151617181920212223242526272829function App() &#123;  const [anyInput, setAnyInput] = useState(&quot; &quot;);  const showRender = useRef(0);  const randomInput = useRef(null);  const toggleChange = (e) =&gt; &#123;    setAnyInput(e.target.value);    showRender.current++;  &#125;;  const focusRandomInput = () =&gt; &#123;    randomInput.current.focus();  &#125;;  return (    &lt;div className=&quot;App&quot;&gt;      &lt;input        className=&quot;TextBox&quot;        ref=&#123;randomInput&#125;        type=&quot;text&quot;        value=&#123;anyInput&#125;        onChange=&#123;toggleChange&#125;      /&gt;      &lt;h3&gt;Amount Of Renders: &#123;showRender.current&#125;&lt;/h3&gt;      &lt;button onClick=&#123;focusRandomInput&#125;&gt;Click To Focus On Input &lt;/button&gt;    &lt;/div&gt;  );&#125;export default App;\n\n\nshowRender 데이터는 toggleChange 이벤트가 발생할 때마다 값이 증가하고 해당 값이 화면에 렌더링된다. 이 때, 리렌더링 없이 showRender 값을 변형할 수 있다.\ncurrent 프로퍼티로 DOM에 접근하여 focus를 적용할 수 있다.\n\n","dateCreated":"2023-08-15T00:00:39+09:00","dateModified":"2023-08-15T00:14:06+09:00","datePublished":"2023-08-15T00:00:39+09:00","description":"","headline":"useRef 예시","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/","keywords":"useRef"}</script>
-    <meta name="description" content="useRef hook은 DOM에 접근하기 위해 사용한다. useRef는 current 프로퍼티를 포함한 객체를 반환한다. current 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다. 즉, useRef 값은 렌더링 중에도 같은 값을 유지할 수 있다.  리렌더링 없이 참조값">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"flex-grow와 flex-basis 사용하여 반응형 만들기1234567891011&lt;form&gt;  &lt;label class=&quot;name&quot; for=&quot;name-field&quot;&gt;    Name:    &lt;input id=&quot;name-field&quot; /&gt;  &lt;/label&gt;  &lt;label class=&quot;email&quot; for=&quot;email-field&quot;&gt;    Email:    &lt;input id=&quot;email-field&quot; type=&quot;email&quot; /&gt;  &lt;/label&gt;  &lt;button&gt;Submit&lt;/button&gt;&lt;/form&gt;\n\n1234567891011121314151617181920212223242526272829303132333435363738form &#123;  padding: 8px;  border: 1px solid hsl(0deg 0% 50%);  /* display 속성 */  display: flex;  align-items: flex-end;  flex-wrap: wrap;  gap: 8px;&#125;label &#123;  font-weight: 500;&#125;input &#123;  display: block;  width: 100%;  height: 2.5rem;  margin-top: 4px;&#125;button &#123;  height: 2.5rem;  /* display 속성 */  flex-grow: 1;  flex-basis: 70px;&#125;.name &#123;  /* display 속성 */  flex-grow: 1;  flex-basis: 120px;&#125;.email &#123;  /* display 속성 */  flex-grow: 3;  flex-basis: 170px;&#125;\n\n\nflex-grow는 flex 아이템이 컨테이너 안ㄴ에서 다른 아이템들에 비해 얼마나 많은 여유공간을 차지할 것인지 결정하는 값이다.\n위에서는 flex-grow가 총 5이니, 1&#x2F;5,1&#x2F;5,3&#x2F;5씩 차지하게 된다.\nflex-basis는 flex 아이템의 초기 크기를 결정한다.\nflex-grow가 계산되기 이전에 아이템이 어느정도 크기를 가져야하는지를 정의한다.\n\n","dateCreated":"2023-08-16T22:22:40+09:00","dateModified":"2023-08-16T23:07:41+09:00","datePublished":"2023-08-16T22:22:40+09:00","description":"","headline":"flex 박스 반응형 팁","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/","keywords":"flex"}</script>
+    <meta name="description" content="flex-grow와 flex-basis 사용하여 반응형 만들기1234567891011&lt;form&gt;  &lt;label class&#x3D;&quot;name&quot; for&#x3D;&quot;name-field&quot;&gt;    Name:    &lt;input id&#x3D;&quot;name-field&quot; &#x2F;&gt;  &lt;&#x2F;label&gt;  &lt;">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="useRef 예시">
-<meta property="og:url" content="https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/index.html">
+<meta property="og:title" content="flex 박스 반응형 팁">
+<meta property="og:url" content="https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="useRef hook은 DOM에 접근하기 위해 사용한다. useRef는 current 프로퍼티를 포함한 객체를 반환한다. current 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다. 즉, useRef 값은 렌더링 중에도 같은 값을 유지할 수 있다.  리렌더링 없이 참조값">
+<meta property="og:description" content="flex-grow와 flex-basis 사용하여 반응형 만들기1234567891011&lt;form&gt;  &lt;label class&#x3D;&quot;name&quot; for&#x3D;&quot;name-field&quot;&gt;    Name:    &lt;input id&#x3D;&quot;name-field&quot; &#x2F;&gt;  &lt;&#x2F;label&gt;  &lt;">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-08-14T15:00:39.000Z">
-<meta property="article:modified_time" content="2023-08-14T15:14:06.969Z">
+<meta property="article:published_time" content="2023-08-16T13:22:40.000Z">
+<meta property="article:modified_time" content="2023-08-16T14:07:41.517Z">
 <meta property="article:author" content="loco9939">
-<meta property="article:tag" content="useRef">
+<meta property="article:tag" content="flex">
 <meta name="twitter:card" content="summary">
     
     
@@ -233,14 +233,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            useRef 예시
+            flex 박스 반응형 팁
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-08-15T00:00:39+09:00">
+    <time datetime="2023-08-16T22:22:40+09:00">
 	
-		    2023/08/15
+		    2023/08/16
     	
     </time>
     
@@ -258,23 +258,15 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p><code>useRef</code> hook은 DOM에 접근하기 위해 사용한다.</p>
-<p><code>useRef</code>는 <code>current</code> 프로퍼티를 포함한 객체를 반환한다.</p>
-<p><code>current</code> 프로퍼티를 포함한 객체는 컴포넌트 전체 생명 주기에서 사용될 수 있고 리렌더링을 발생시키지 않으면서 데이터를 유지할 수 있도록 한다.</p>
-<p>즉, <code>useRef</code> 값은 렌더링 중에도 같은 값을 유지할 수 있다.</p>
-<ul>
-<li>리렌더링 없이 참조값을 갱신하는 것</li>
-</ul>
-<h1 id="문법"><a href="#문법" class="headerlink" title="문법"></a>문법</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newRefComponent = <span class="title function_">useRef</span>(initialValue);</span><br></pre></td></tr></table></figure>
+            <h1 id="flex-grow와-flex-basis-사용하여-반응형-만들기"><a href="#flex-grow와-flex-basis-사용하여-반응형-만들기" class="headerlink" title="flex-grow와 flex-basis 사용하여 반응형 만들기"></a>flex-grow와 flex-basis 사용하여 반응형 만들기</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;name&quot;</span> <span class="attr">for</span>=<span class="string">&quot;name-field&quot;</span>&gt;</span></span><br><span class="line">    Name:</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;name-field&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;email&quot;</span> <span class="attr">for</span>=<span class="string">&quot;email-field&quot;</span>&gt;</span></span><br><span class="line">    Email:</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;email-field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">form</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">8px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="built_in">hsl</span>(<span class="number">0deg</span> <span class="number">0%</span> <span class="number">50%</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* display 속성 */</span></span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">align-items</span>: flex-end;</span><br><span class="line">  <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">  <span class="attribute">gap</span>: <span class="number">8px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">label</span> &#123;</span><br><span class="line">  <span class="attribute">font-weight</span>: <span class="number">500</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">input</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">2.5rem</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">4px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">2.5rem</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* display 속성 */</span></span><br><span class="line">  <span class="attribute">flex-grow</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">flex-basis</span>: <span class="number">70px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.name</span> &#123;</span><br><span class="line">  <span class="comment">/* display 속성 */</span></span><br><span class="line">  <span class="attribute">flex-grow</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">flex-basis</span>: <span class="number">120px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.email</span> &#123;</span><br><span class="line">  <span class="comment">/* display 속성 */</span></span><br><span class="line">  <span class="attribute">flex-grow</span>: <span class="number">3</span>;</span><br><span class="line">  <span class="attribute">flex-basis</span>: <span class="number">170px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>주로 변형가능한 데이터를 리렌더링 없이 저장하기 위해 사용된다.</li>
-</ul>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [anyInput, setAnyInput] = <span class="title function_">useState</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> showRender = <span class="title function_">useRef</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> randomInput = <span class="title function_">useRef</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">toggleChange</span> = (<span class="params">e</span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setAnyInput</span>(e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">    showRender.<span class="property">current</span>++;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">focusRandomInput</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    randomInput.<span class="property">current</span>.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">&quot;TextBox&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">ref</span>=<span class="string">&#123;randomInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;anyInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;toggleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Amount Of Renders: &#123;showRender.current&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;focusRandomInput&#125;</span>&gt;</span>Click To Focus On Input <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>showRender</code> 데이터는 <code>toggleChange</code> 이벤트가 발생할 때마다 값이 증가하고 해당 값이 화면에 렌더링된다. 이 때, 리렌더링 없이 <code>showRender</code> 값을 변형할 수 있다.</li>
-<li><code>current</code> 프로퍼티로 DOM에 접근하여 focus를 적용할 수 있다.</li>
+<li><code>flex-grow</code>는 flex 아이템이 컨테이너 안ㄴ에서 다른 아이템들에 비해 얼마나 많은 여유공간을 차지할 것인지 결정하는 값이다.</li>
+<li>위에서는 <code>flex-grow</code>가 총 5이니, 1&#x2F;5,1&#x2F;5,3&#x2F;5씩 차지하게 된다.</li>
+<li><code>flex-basis</code>는 flex 아이템의 초기 크기를 결정한다.</li>
+<li><code>flex-grow</code>가 계산되기 이전에 아이템이 어느정도 크기를 가져야하는지를 정의한다.</li>
 </ul>
 
             
@@ -287,7 +279,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">태그</span><br/>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/useRef/" rel="tag">useRef</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/flex/" rel="tag">flex</a>
 
             </div>
         
@@ -297,14 +289,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
-                    data-tooltip="flex 박스 반응형 팁"
-                    aria-label="이전: flex 박스 반응형 팁"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -314,9 +303,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/14/React/useReducer-%EC%98%88%EC%8B%9C/"
-                    data-tooltip="useReducer 예시"
-                    aria-label="다음: useReducer 예시"
+                    href="/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    data-tooltip="useRef 예시"
+                    aria-label="다음: useRef 예시"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -341,7 +330,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -354,7 +343,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -367,7 +356,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -412,14 +401,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
-                    data-tooltip="flex 박스 반응형 팁"
-                    aria-label="이전: flex 박스 반응형 팁"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -429,9 +415,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/14/React/useReducer-%EC%98%88%EC%8B%9C/"
-                    data-tooltip="useReducer 예시"
-                    aria-label="다음: useReducer 예시"
+                    href="/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    data-tooltip="useRef 예시"
+                    aria-label="다음: useRef 예시"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
@@ -456,7 +442,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -469,7 +455,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -482,7 +468,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -516,7 +502,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -529,7 +515,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -542,7 +528,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/16/Daily/flex-%EB%B0%95%EC%8A%A4-%EB%B0%98%EC%9D%91%ED%98%95-%ED%8C%81/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
