@@ -233,6 +233,72 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/"
+                            aria-label=": useState로 컴포넌트 리셋하기"
+                        >
+                            useState로 컴포넌트 리셋하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-02-07T23:23:20+09:00">
+	
+		    2023/02/07
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/React/">React</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="useState란"><a href="#useState란" class="headerlink" title="useState란?"></a>useState란?</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, setState] = <span class="title function_">useState</span>(initialState);</span><br></pre></td></tr></table></figure>
+
+<p>리액트에서 상태 변수를 컴포넌트에 추가할 때 사용하는 리액트 훅이다.</p>
+<p>특징으로는 상태를 변경하기 위해서는 set 함수를 사용하여 변경해야만 하고, set 함수에 새로운 값을 인자로 전달하면 새로운 상태로 렌더링을 일으킨다.</p>
+<h2 id="useState로-컴포넌트-Reset-시키기"><a href="#useState로-컴포넌트-Reset-시키기" class="headerlink" title="useState로 컴포넌트 Reset 시키기"></a>useState로 컴포넌트 Reset 시키기</h2><p>주로 어떤 상태를 reset 시키기 위해 아래와 같은 코드를 작성할 것이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [list, setList] = <span class="title function_">useState</span>([]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">resetList</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setList</span>([]);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">addList</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setList</span>([...list, <span class="number">10</span>]);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;resetList&#125;</span>&gt;</span>Reset Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;addList&#125;</span>&gt;</span>Add 10<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;list.map((num) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;num&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 직접 상태를 초기화 하는 방법도 있지만 <strong>key props에게 변경된 상태를 전달함으로써 해당 컴포넌트는 물론 해당 컴포넌트의 하위 컴포넌트까지 reset할 수 있다.</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [version, setVersion] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleReset</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">setVersion</span>(version + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleReset&#125;</span>&gt;</span>Reset<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Form</span> <span class="attr">key</span>=<span class="string">&#123;version&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Form</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [name, setName] = <span class="title function_">useState</span>(<span class="string">&quot;Taylor&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#123;name&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;(e)</span> =&gt;</span> setName(e.target.value)&#125; /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Hello, &#123;name&#125;.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/02/07/React/useState%EB%A1%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A6%AC%EC%85%8B%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/02/06/React/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/useEffect%EB%A1%9C-%EC%9D%B4%EC%A0%84-%EC%83%81%ED%83%9C-%EA%B8%B0%EB%B0%98%ED%95%98%EC%97%AC-%EC%83%81%ED%83%9C-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%ED%95%98%EA%B8%B0/"
                             aria-label=": useEffect로 이전 상태 기반하여 상태 업데이트 하기"
                         >
@@ -910,61 +976,6 @@
                                 댓글 공유
                             </a>
                         </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
-                            aria-label=": ✈️ 리액트 Hooks"
-                        >
-                            ✈️ 리액트 Hooks
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2022-11-21T19:26:59+09:00">
-	
-		    2022/11/21
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>, <a class="category-link" href="/categories/React/Hooks/">Hooks</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <h1 id="📌-Hooks"><a href="#📌-Hooks" class="headerlink" title="📌 Hooks"></a>📌 Hooks</h1><p>리액트 Hook은 클래스로 컴포넌트를 만들 때 발생하는 문제점을 해결하기 위해 등장하였다.</p>
-<ul>
-<li>리액트 Hook을 사용하면 <strong>함수 컴포넌트 중심으로 개발</strong>이 가능하다.</li>
-<li>함수 컴포넌트에서도 상태, 로직을 추출하여 다른 컴포넌트에서 <red>재사용</red> 할 수 있다.</li>
-</ul>
-                    
-                        <a
-                            href="/2022/11/21/React/Hooks/%E2%9C%88%EF%B8%8F-%EB%A6%AC%EC%95%A1%ED%8A%B8-Hooks/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": ✈️ 리액트 Hooks"
-                        >
-                            계속 읽기
-                        </a>
-                        
                     
                 </div>
             
