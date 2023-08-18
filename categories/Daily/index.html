@@ -233,6 +233,81 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/19/Daily/%EB%94%94%EB%B0%94%EC%9A%B4%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A1%9C%ED%8B%80-%EC%B0%A8%EC%9D%B4/"
+                            aria-label=": 디바운스와 스로틀 차이"
+                        >
+                            디바운스와 스로틀 차이
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-19T00:16:09+09:00">
+	
+		    2023/08/19
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Debounce"><a href="#Debounce" class="headerlink" title="Debounce"></a>Debounce</h1><p>이벤트가 연달아 발생할 때, 제일 처음 또는 마지막 이벤트일 때만 함수를 호출하는 방법</p>
+<p>만약 키보드 이벤트가 발생할 때마다 API를 요청한다고 가정해보자.</p>
+<p>“감”이라는 글자를 입력하는데 “ㄱ”, “가”, “감” 3번의 이벤트가 발생하게됩니다. 이러면 불필요한 이벤트까지 API 요청에 포함시키면 낭비이므로 이를 방지하기 위해 디바운스를 사용합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#input&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (timer) &#123;</span><br><span class="line">    <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">  &#125;</span><br><span class="line">  timer = <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;여기에 ajax 요청&quot;</span>, e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">  &#125;, <span class="number">200</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>주로 키보드 입력 이벤트에 사용</li>
+</ul>
+<h1 id="Throttle"><a href="#Throttle" class="headerlink" title="Throttle"></a>Throttle</h1><p>마지막 이벤트가 발생한 후 일정 시간이 지나기 전에 다시 호출되지 않도록 막는 방법</p>
+<p>만약 스크롤이벤트가 발생했을 때, 처음에 스크롤 이벤트가 발생할 때, 함수를 호출하고 몇초동안은 이벤트가 발생해도 함수를 호출시키지 않는 방법이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#input&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!timer) &#123;</span><br><span class="line">    timer = <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      timer = <span class="literal">null</span>;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;여기에 ajax 요청&quot;</span>, e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;, <span class="number">200</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>주로 스크롤 이벤트에 사용</li>
+</ul>
+<p>위와 같이 직접 구현하는 방법보다는 예외 사항을 처리하지 못할 경우도 있기때문에, <code>_.debounce</code>, <code>_.throttle</code>을 사용한다.</p>
+<p>요즘은 토스에서도 해당 라이브러리를 지원하니 관심이 있으면 사용해보자.</p>
+<p><a target="_blank" rel="noopener" href="https://slash.page/ko/libraries/react/react/src/hooks/useDebounce.i18n">토스 디바운스 라이브러리 바로가기</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/19/Daily/%EB%94%94%EB%B0%94%EC%9A%B4%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A1%9C%ED%8B%80-%EC%B0%A8%EC%9D%B4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/18/Daily/var-setTimeout-Quiz/"
                             aria-label=": var setTimeout Quiz"
                         >
@@ -867,70 +942,6 @@
                         <p>
                             <a
                                 href="/2023/08/05/Daily/%ED%85%8D%EC%8A%A4%ED%8A%B8-%EB%A7%90%EC%A4%84%EC%9E%84%ED%91%9C-%EC%B2%98%EB%A6%AC/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/04/Daily/%EC%9B%B9-%ED%8F%B0%ED%8A%B8-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/"
-                            aria-label=": 웹 폰트 적용하기"
-                        >
-                            웹 폰트 적용하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-04T23:37:54+09:00">
-	
-		    2023/08/04
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="1-import-방식으-CSS-최상단에-복붙"><a href="#1-import-방식으-CSS-최상단에-복붙" class="headerlink" title="1. @import 방식으 CSS 최상단에 복붙"></a>1. @import 방식으 CSS 최상단에 복붙</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span> url(<span class="string">&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.4/dist/web/static/pretendard.css&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-font-family-설정"><a href="#2-font-family-설정" class="headerlink" title="2. font-family 설정"></a>2. font-family 설정</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">font-family</span>: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,</span><br><span class="line">    <span class="string">&quot;Helvetica Neue&quot;</span>, <span class="string">&quot;Segoe UI&quot;</span>, <span class="string">&quot;Apple SD Gothic Neo&quot;</span>, <span class="string">&quot;Noto Sans KR&quot;</span>, <span class="string">&quot;Malgun Gothic&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Apple Color Emoji&quot;</span>, <span class="string">&quot;Segoe UI Emoji&quot;</span>, <span class="string">&quot;Segoe UI Symbol&quot;</span>, sans-serif;</span><br><span class="line">  <span class="attribute">font-weight</span>: <span class="number">400</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>font-family는 하나로 정해두고 굵기는 원하는 부분에서 font-weight로 조절한다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/04/Daily/%EC%9B%B9-%ED%8F%B0%ED%8A%B8-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
