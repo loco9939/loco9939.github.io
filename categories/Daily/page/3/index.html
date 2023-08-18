@@ -233,6 +233,88 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/04/05/Daily/%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4-%ED%8C%8C%EC%9D%BC-%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%97%90%EC%84%9C-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0/"
+                            aria-label=": 마크다운 파일 리액트에서 불러오기"
+                        >
+                            마크다운 파일 리액트에서 불러오기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-04-05T23:55:37+09:00">
+	
+		    2023/04/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Markdown-파일-React에서-불러오기"><a href="#Markdown-파일-React에서-불러오기" class="headerlink" title="Markdown 파일 React에서 불러오기"></a>Markdown 파일 React에서 불러오기</h1><p>이번 프로젝트에서 .md 파일로 저장된 데이터를 React 화면에 렌더링해야하는 작업이 필요했다.</p>
+<p>그래서 찾아본 결과 마크다운 파일을 리액트에서 불러오기 편하도록 <code>react-markdown</code> 라이브러리를 찾았다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install react-markdown</span><br></pre></td></tr></table></figure>
+
+<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;./App.css&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useEffect, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ReactMarkdown</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-markdown/lib/react-markdown&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Markdown</span> <span class="keyword">from</span> <span class="string">&quot;./assets/markdown.md&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [markdown, setMarkdown] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="title class_">Markdown</span>)</span><br><span class="line">      .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> res.<span class="title function_">text</span>())</span><br><span class="line">      .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> <span class="title function_">setMarkdown</span>(data));</span><br><span class="line">  &#125;, [markdown]);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ReactMarkdown</span> <span class="attr">children</span>=<span class="string">&#123;markdown&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>마크다운 파일을 import 해온 뒤 useEffect를 사용하여 컴포넌트가 마운트 될 때, 지정된 경로로 마크다운 파일을 로드한다.</li>
+</ul>
+<h2 id="결과"><a href="#결과" class="headerlink" title="결과"></a>결과</h2><p><img src="/../../images/Daily/markdown/markdown.png" alt="마크다운 업로드 사진"></p>
+<ul>
+<li>마크다운 형식에 맞춰서 HTML형식으로 변환까지 잘 되었다.</li>
+</ul>
+<h3 id="TroubleShooting"><a href="#TroubleShooting" class="headerlink" title="TroubleShooting"></a>TroubleShooting</h3><h4 id="1-import-type-오류"><a href="#1-import-type-오류" class="headerlink" title="1. import type 오류"></a>1. import type 오류</h4><p>나는 vite를 사용하여 프로젝트를 시작하였다.</p>
+<p>이 때, 마크다운 파일을 리액트에서 import 해오면 vite에서는 md 파일을 경로에서 가져온다는 것을 기본적으로 포함하고 있지 않기 때문에 경로에 빨간 밑줄(error)이 생긴다.</p>
+<p>이를 해결하기 위해서는 TypeScript에게 md 파일을 경로에서 가져온다는 타입을 선언해줘야한다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// d.ts</span></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&quot;*.md&quot;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="attr">content</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">export</span> <span class="keyword">default</span> content;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-vite-md파일-형식-오류"><a href="#2-vite-md파일-형식-오류" class="headerlink" title="2. vite md파일 형식 오류"></a>2. vite md파일 형식 오류</h4><p><img src="/../../images/Daily/markdown/markdown_error.png" alt="markdown 오류"></p>
+<p>vite 에서는 md 파일을 다룰 적절한 플러그인을 설치하거나 만약 이것이 asset이라면, <code>vite.config.ts</code>안에서 <code>**/*.md</code>를 assetsInclude에 할당하라고 알려주고 있다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vite.config.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&quot;vite&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> react <span class="keyword">from</span> <span class="string">&quot;@vitejs/plugin-react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">react</span>()],</span><br><span class="line">  <span class="attr">assetsInclude</span>: [<span class="string">&quot;**/*.md&quot;</span>],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>나는 <code>**/*.md</code>를 assetsInclude에 할당하라는 것이 어떤 파일에서 해야하는지 몰라서 <code>tsconfig.json</code>에 넣어서 해결하는데 시간이 걸렸다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/04/05/Daily/%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4-%ED%8C%8C%EC%9D%BC-%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%97%90%EC%84%9C-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/04/04/Daily/useEffect-%EC%B4%88%EA%B8%B0-%EB%A0%8C%EB%8D%94%EB%A7%81-%EB%B0%A9%EC%A7%80%ED%95%98%EA%B8%B0/"
                             aria-label=": useEffect 초기 렌더링 방지하기"
                         >
