@@ -233,6 +233,92 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/21/Daily/ES6-import-%ED%81%B4%EB%A6%B0-%EC%BD%94%EB%93%9C/"
+                            aria-label=": ES6 import 클린 코드"
+                        >
+                            ES6 import 클린 코드
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-21T23:27:18+09:00">
+	
+		    2023/08/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; colors &#125; <span class="keyword">from</span> <span class="string">&quot;../../../themes&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Button</span> <span class="keyword">from</span> <span class="string">&quot;../../../components/Button&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">MyImage</span> <span class="keyword">from</span> <span class="string">&quot;../../../assets/images/my-image.png&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; globalStyles &#125; <span class="keyword">from</span> <span class="string">&quot;../../../styles/globalStyles&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 import 코드를 깔끔하게 하기 위한 3가지 방법에 대해 알아보자.</p>
+<h1 id="1-Barrel-패턴"><a href="#1-Barrel-패턴" class="headerlink" title="1. Barrel 패턴"></a>1. Barrel 패턴</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// folder structure</span></span><br><span class="line">components;</span><br><span class="line">--<span class="title class_">Accordions</span>.<span class="property">js</span>;</span><br><span class="line">--<span class="title class_">Button</span>.<span class="property">js</span>;</span><br><span class="line">--index.<span class="property">js</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">Accordion</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./Accordion&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">Button</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./Button&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// imports</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Accordion</span>, <span class="title class_">Button</span> &#125; <span class="keyword">from</span> <span class="string">&quot;components&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>index.js 파일에 담아서 export를 한곳에서 내보낸다.</li>
+</ul>
+<h1 id="2-Aliases-사용"><a href="#2-Aliases-사용" class="headerlink" title="2. Aliases 사용"></a>2. Aliases 사용</h1><ul>
+<li>가독성을 높이는 짧은 경로</li>
+<li>파일을 옮기더라도, import는 바뀌지 않는다.</li>
+<li>snippets을 사용하면 더 쉽다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="string">&quot;module-resolver&quot;</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&quot;@internals/assets&quot;</span>: <span class="string">&quot;./src/assets&quot;</span>,</span><br><span class="line">      <span class="string">&quot;@internals/components&quot;</span>: <span class="string">&quot;./src/components&quot;</span>,</span><br><span class="line">      <span class="string">&quot;@internals/hooks&quot;</span>: <span class="string">&quot;./src/hooks&quot;</span>,</span><br><span class="line">      ...</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>babel을 사용할 때는 위와 같이 alias를 지정할 수 있다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vite.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; fileURLToPath, <span class="variable constant_">URL</span> &#125; <span class="keyword">from</span> <span class="string">&quot;node:url&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&quot;vite&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&quot;@vitejs/plugin-vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">vue</span>()],</span><br><span class="line">  <span class="attr">resolve</span>: &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&quot;@&quot;</span>: <span class="title function_">fileURLToPath</span>(<span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&quot;./src&quot;</span>, <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>)),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>vite를 사용하면 위와 같이 사용할 수 있다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tsconfig.json</span></span><br><span class="line"><span class="string">&quot;paths&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;@internals/assets/*&quot;</span>: [<span class="string">&quot;./src/assets/*&quot;</span>],</span><br><span class="line">    <span class="string">&quot;@internals/components&quot;</span>: [<span class="string">&quot;./src/components/index.ts&quot;</span>],</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>typescript를 사용하면 위와 같이 사용할 수 있다.</li>
+</ul>
+<h1 id="3-import-순서-지정"><a href="#3-import-순서-지정" class="headerlink" title="3. import 순서 지정"></a>3. import 순서 지정</h1><h3 id="prettier-plugin-sort-import"><a href="#prettier-plugin-sort-import" class="headerlink" title="prettier-plugin-sort-import"></a><a target="_blank" rel="noopener" href="https://github.com/trivago/prettier-plugin-sort-imports">prettier-plugin-sort-import</a></h3><p>prettier는 왠만한 프로젝트에서 자주 사용되기 때문에 자동적으로 지원해주는 라이브러리를 사용하자.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/21/Daily/ES6-import-%ED%81%B4%EB%A6%B0-%EC%BD%94%EB%93%9C/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/20/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%EC%99%80-%EB%8F%84%EC%BB%A4/"
                             aria-label=": 컨테이너와 도커"
                         >
@@ -874,77 +960,6 @@
                         <p>
                             <a
                                 href="/2023/08/07/Daily/flex-vs-inline-flex/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/06/Daily/hr-%ED%83%9C%EA%B7%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EC%A7%80-%EC%95%8A%EA%B3%A0-%EA%B0%80%EB%A1%9C%EC%84%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%95%98%EA%B8%B0/"
-                            aria-label=": hr 태그 사용하지 않고 가로선 스타일링 하기"
-                        >
-                            hr 태그 사용하지 않고 가로선 스타일링 하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-06T23:16:50+09:00">
-	
-		    2023/08/06
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="정의"><a href="#정의" class="headerlink" title="정의"></a>정의</h1><p>hr 태그는 콘텐츠 내용에서 주제가 바뀔 때, 사용하는 수평 가로선이다.</p>
-<p>HTML 문서에서 주로 내용을 구분하거나 주제의 변화를 정의한다.</p>
-<h2 id="HTML5에서-변경된-사항"><a href="#HTML5에서-변경된-사항" class="headerlink" title="HTML5에서 변경된 사항"></a>HTML5에서 변경된 사항</h2><ul>
-<li>HTML5 이전에서는 단순히 가로선을 나타냈지만, HTML5에서는 주제의 흐름 변경을 나타내도록 변경되었다.</li>
-<li>시각적인 의미보다는 의미적 용어(semantic term)로 사용된다.</li>
-</ul>
-<blockquote>
-<p>또한, HTML5에서는 hr 요소의 layout을 더 이상 지원하지 않으며 CSS를 대신 사용하도록 변경되었다.</p>
-</blockquote>
-<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.news</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">80%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#aaa</span> <span class="built_in">linear-gradient</span>(to right, <span class="number">#aaa</span>, <span class="number">#fff</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>news라는 클래스의 가상 선택자로 css 스타일링 해줄 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/06/Daily/hr-%ED%83%9C%EA%B7%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EC%A7%80-%EC%95%8A%EA%B3%A0-%EA%B0%80%EB%A1%9C%EC%84%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

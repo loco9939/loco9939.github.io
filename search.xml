@@ -12195,4 +12195,45 @@
         <tag>도커</tag>
       </tags>
   </entry>
+  <entry>
+    <title>ES6 import 클린 코드</title>
+    <url>/2023/08/21/Daily/ES6-import-%ED%81%B4%EB%A6%B0-%EC%BD%94%EB%93%9C/</url>
+    <content><![CDATA[<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; colors &#125; <span class="keyword">from</span> <span class="string">&quot;../../../themes&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Button</span> <span class="keyword">from</span> <span class="string">&quot;../../../components/Button&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">MyImage</span> <span class="keyword">from</span> <span class="string">&quot;../../../assets/images/my-image.png&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; globalStyles &#125; <span class="keyword">from</span> <span class="string">&quot;../../../styles/globalStyles&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 import 코드를 깔끔하게 하기 위한 3가지 방법에 대해 알아보자.</p>
+<h1 id="1-Barrel-패턴"><a href="#1-Barrel-패턴" class="headerlink" title="1. Barrel 패턴"></a>1. Barrel 패턴</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// folder structure</span></span><br><span class="line">components;</span><br><span class="line">--<span class="title class_">Accordions</span>.<span class="property">js</span>;</span><br><span class="line">--<span class="title class_">Button</span>.<span class="property">js</span>;</span><br><span class="line">--index.<span class="property">js</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">Accordion</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./Accordion&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> <span class="title class_">Button</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./Button&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// imports</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Accordion</span>, <span class="title class_">Button</span> &#125; <span class="keyword">from</span> <span class="string">&quot;components&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>index.js 파일에 담아서 export를 한곳에서 내보낸다.</li>
+</ul>
+<h1 id="2-Aliases-사용"><a href="#2-Aliases-사용" class="headerlink" title="2. Aliases 사용"></a>2. Aliases 사용</h1><ul>
+<li>가독성을 높이는 짧은 경로</li>
+<li>파일을 옮기더라도, import는 바뀌지 않는다.</li>
+<li>snippets을 사용하면 더 쉽다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// babel.config.js</span></span><br><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="string">&quot;module-resolver&quot;</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&quot;@internals/assets&quot;</span>: <span class="string">&quot;./src/assets&quot;</span>,</span><br><span class="line">      <span class="string">&quot;@internals/components&quot;</span>: <span class="string">&quot;./src/components&quot;</span>,</span><br><span class="line">      <span class="string">&quot;@internals/hooks&quot;</span>: <span class="string">&quot;./src/hooks&quot;</span>,</span><br><span class="line">      ...</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>babel을 사용할 때는 위와 같이 alias를 지정할 수 있다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// vite.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; fileURLToPath, <span class="variable constant_">URL</span> &#125; <span class="keyword">from</span> <span class="string">&quot;node:url&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&quot;vite&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&quot;@vitejs/plugin-vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">vue</span>()],</span><br><span class="line">  <span class="attr">resolve</span>: &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&quot;@&quot;</span>: <span class="title function_">fileURLToPath</span>(<span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&quot;./src&quot;</span>, <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>)),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>vite를 사용하면 위와 같이 사용할 수 있다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// tsconfig.json</span></span><br><span class="line"><span class="string">&quot;paths&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;@internals/assets/*&quot;</span>: [<span class="string">&quot;./src/assets/*&quot;</span>],</span><br><span class="line">    <span class="string">&quot;@internals/components&quot;</span>: [<span class="string">&quot;./src/components/index.ts&quot;</span>],</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>typescript를 사용하면 위와 같이 사용할 수 있다.</li>
+</ul>
+<h1 id="3-import-순서-지정"><a href="#3-import-순서-지정" class="headerlink" title="3. import 순서 지정"></a>3. import 순서 지정</h1><h3 id="prettier-plugin-sort-import"><a href="#prettier-plugin-sort-import" class="headerlink" title="prettier-plugin-sort-import"></a><a href="https://github.com/trivago/prettier-plugin-sort-imports">prettier-plugin-sort-import</a></h3><p>prettier는 왠만한 프로젝트에서 자주 사용되기 때문에 자동적으로 지원해주는 라이브러리를 사용하자.</p>
+]]></content>
+      <categories>
+        <category>Daily</category>
+      </categories>
+      <tags>
+        <tag>es6</tag>
+        <tag>clean code</tag>
+      </tags>
+  </entry>
 </search>
