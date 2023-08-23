@@ -232,6 +232,117 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/"
+                            aria-label=": 원시타입과 객체타입"
+                        >
+                            원시타입과 객체타입
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-03-03T10:50:04+09:00">
+	
+		    2023/03/03
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>원시타입과 객체타입에 대해서 제대로 알고 넘어가기 위해 오늘은 원시타입과 객체타입, 그리고 더 나아가 얕은복사, 깊은복사에 대해서도 알아보자.</p>
+<h1 id="원시타입과-객체타입"><a href="#원시타입과-객체타입" class="headerlink" title="원시타입과 객체타입"></a>원시타입과 객체타입</h1><hr>
+<h2 id="원시타입"><a href="#원시타입" class="headerlink" title="원시타입"></a>원시타입</h2><h3 id="1-원시타입의-값"><a href="#1-원시타입의-값" class="headerlink" title="1. 원시타입의 값"></a>1. 원시타입의 값</h3><p>원시타입의 값은 변경 불가능한 값이다. 읽기전용이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"></span><br><span class="line">str[<span class="number">0</span>] = <span class="string">&quot;H&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str); <span class="comment">// hello</span></span><br></pre></td></tr></table></figure>
+
+<p>변수 str의 첫번째 문자열을 인덱스로 접근하여 직접 바꾸려했지만 변경불가능하여 바꿀 수 없다.</p>
+<h3 id="2-원시타입의-메모리-공간"><a href="#2-원시타입의-메모리-공간" class="headerlink" title="2. 원시타입의 메모리 공간"></a>2. 원시타입의 메모리 공간</h3><p>원시타입은 변수 할당 시 메모리 공간에 실제 값을 저장한다.</p>
+<p>변수와 메모리에 대해 자세히 언급하면 사실 변수라는 식별자가 <span style="color:red">값을 저장하는 게 아닌</span> 값이 저장된 메모리 공간에 대한 <strong>메모리 주소</strong>를 저장하고 있다.</p>
+<blockquote>
+<p>즉, 메모리 공간에는 값이 저장되어 있고 변수라는 식별자는 메모리 공간의 메모리 주소를 저장한다.</p>
+</blockquote>
+<h3 id="3-원시타입-값의-전달"><a href="#3-원시타입-값의-전달" class="headerlink" title="3. 원시타입 값의 전달"></a>3. 원시타입 값의 전달</h3><p>원시값을 갖는 변수를 다른 변수에 할당하면 <s>원시값이 복사되어 전달된다.</s></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> greeting = str;</span><br><span class="line"></span><br><span class="line">greeting = <span class="string">&quot;hi&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str); <span class="comment">// hello</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greeting); <span class="comment">// hi</span></span><br></pre></td></tr></table></figure>
+
+<p>사실 값이 복사되어 전달되는 것이 아니고 동일한 값을 <strong>새로운 메모리 저장공간</strong>에 저장한 뒤 해당 메모리 공간의 메모리 주소를 copy라는 변수에 할당하는 것이다.</p>
+<hr>
+<h2 id="객체타입"><a href="#객체타입" class="headerlink" title="객체타입"></a>객체타입</h2><h3 id="1-객체타입의-값"><a href="#1-객체타입의-값" class="headerlink" title="1. 객체타입의 값"></a>1. 객체타입의 값</h3><p>객체타입의 값은 변경가능한 값이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">28</span>,</span><br><span class="line">  <span class="title function_">smoke</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;no-smoking&quot;</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;jangoon&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj); <span class="comment">// &#123;name: &#x27;jangoon&#x27;, age: 28, smoke: ƒ&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-객체타입의-메모리-공간"><a href="#2-객체타입의-메모리-공간" class="headerlink" title="2. 객체타입의 메모리 공간"></a>2. 객체타입의 메모리 공간</h3><p>객체타입은 변수 할당 시 메모리 공간에 참조값(주소값)이 저장된다.</p>
+<p>원시타입에서는 메모리 공간에 값이 저장되고 변수 식별자에 해당 메모리 공간을 가리키는 주소가 저장되어 있다.</p>
+<p>하지만, 객체타입에서는 <span style="color:red">메모리 공간에 다른 메모리 공간을 가리키는 메모리 주소</span>가 담겨있다. 다시말해서, 객체타입의 메모리는 원시타입의 메모리보다 과정이 한번 더 일어나게 되는 것이다.</p>
+<h3 id="3-객체타입-값의-전달"><a href="#3-객체타입-값의-전달" class="headerlink" title="3. 객체타입 값의 전달"></a>3. 객체타입 값의 전달</h3><p>객체를 가리키는 변수를 다른 변수에 할당하면 원본의 참조값(주소값)이 복사되어 전달된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Lee&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> copy = person;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person === copy); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>변수 person과 copy는 {name:’Lee’} 객체 프로퍼티들의 주소가 담겨있는 메모리 공간의 메모리 주소를 저장한다. 그러므로 같은 참조값(주소값)을 비교하고 있기 때문에 일치 비교 연산자가 true가 나왔다.</p>
+<hr>
+<h2 id="객체타입의-얕은복사"><a href="#객체타입의-얕은복사" class="headerlink" title="객체타입의 얕은복사"></a>객체타입의 얕은복사</h2><p>객체를 spread 문법을 사용하여 얕은복사를 해보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;yiju&quot;</span>,</span><br><span class="line">  <span class="attr">fruit</span>: &#123;</span><br><span class="line">    <span class="number">1</span>: <span class="string">&quot;peach&quot;</span>,</span><br><span class="line">    <span class="number">2</span>: <span class="string">&quot;strawberry&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> someone = &#123; ...person &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 두 객체가 같은지 비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person === someone); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 객체의 프로퍼티 비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">name</span> === someone.<span class="property">name</span>); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">fruit</span> === someone.<span class="property">fruit</span>); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 원시타입의 값을 변경했을 경우</span></span><br><span class="line">person.<span class="property">name</span> = <span class="string">&quot;minseok&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person); <span class="comment">// &#123;name: &#x27;minseok&#x27;, fruit: &#123;…&#125;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(someone); <span class="comment">// &#123;name: &#x27;yiju&#x27;, fruit: &#123;…&#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 객체타입의 값을 변경했을 경우</span></span><br><span class="line">person.<span class="property">fruit</span>[<span class="string">&quot;1&quot;</span>] = <span class="string">&quot;watermelon&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person); <span class="comment">// fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(someone); <span class="comment">// fruit: &#123;1: &#x27;watermelon&#x27;, 2: &#x27;strawberry&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>변수 person의 원시타입의 값을 수정하였을 때, 서로의 원시타입의 값은 공유하지 않는다. 하지만 객체타입의 값을 바꾼 경우 서로의 객체타입의 값을 공유하는 모습을 볼 수 있다.</p>
+<blockquote>
+<p>왜 그럴까? 앞서 언급한 내용으로 깊게 파헤쳐보자.</p>
+</blockquote>
+<ol>
+<li>person, someone은 일치하지 않으니 서로 다른 주소값을 갖는다. 각각의 주소는 <code>javascript &#123;name:&#39;yiju&#39;,fruit:&#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;&#125; </code> 객체 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다.</li>
+</ol>
+<p>예를 들면 name 식별자가 가리키는 주소, fruit 식별자가 가리키는 주소 이런식으로 프로퍼티의 주소들을 담고 있다.</p>
+<p>여기서 name 식별자는 원시타입의 값을 가리키는 메모리 주소를 저장한다. <code>javascript person.name = &#39;minseok&#39;</code> 을 실행하면 person.name과 someone.name이 서로 다른 주소값을 갖게된다.</p>
+<ol start="2">
+<li>fruit의 식별자 주소는 <code>javascript &#123;1:&#39;peach&#39;,2:&#39;strawberry&#39;&#125;</code> 프로퍼티들의 주소를 담고있는 메모리 공간을 가리킨다. person.fruit와 someone.fruit가 서로 같다(메모리 주소가 같다). 즉, fruit 프로퍼티들의 주소가 담긴 메모리 공간을 가리키는 메모리 주소가 같다.</li>
+</ol>
+<p>그리하여 <code>javascript fruit[&#39;1&#39;] = &#39;watermelon&#39; </code> 로 fruit 프로퍼티인 1을 수정하면 식별자인 1이 가리키는 메모리 주소가 바뀌게 되고 person과 someone 식별자가 식별자 1을 포함하는 프로퍼티들의 주소를 담은 메모리 공간을 가리키는 메모리 주소는 변하지 않으므로 서로 공유하게 된다.</p>
+<hr>
+<h2 id="객체타입의-깊은복사"><a href="#객체타입의-깊은복사" class="headerlink" title="객체타입의 깊은복사"></a>객체타입의 깊은복사</h2><p>객체타입의 깊은복사는 JSON.parse, JSON.stringify 메서드를 사용하여 구현할 수도 있고 lodash 라는 라이브러리를 사용한다.</p>
+<blockquote>
+<p>하지만 JSON.stringify 방식으로는 함수(메서드)를 복사할 수 없기 때문에 재귀를 사용하거나 실무에선 라이브러리를 사용한다.</p>
+</blockquote>
+<h3 id="lodash-방법"><a href="#lodash-방법" class="headerlink" title="lodash 방법"></a>lodash 방법</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> o = &#123; <span class="attr">x</span>: &#123; <span class="attr">y</span>: <span class="number">1</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">&quot;lodash&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> c2 = _.<span class="title function_">cloneDeep</span>(o);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 객체비교</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c2 === o); <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c2.<span class="property">x</span> === o.<span class="property">x</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON-방법"><a href="#JSON-방법" class="headerlink" title="JSON 방법"></a>JSON 방법</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  <span class="attr">b</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">c</span>: &#123;</span><br><span class="line">    <span class="attr">d</span>: <span class="number">2</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> b = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(a));</span><br><span class="line">b.<span class="property">c</span>.<span class="property">d</span> = <span class="number">4</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// &#123; b: 1, c: &#123; d: 2 &#125; &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// &#123; b: 1, c: &#123; d: 4 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="소감"><a href="#소감" class="headerlink" title="소감"></a>소감</h2><p>자바스크립트 DeepDive 책을 읽으면서 팀원들과 각자 공부한 내용을 말로 풀어서 설명하다보니 내가 무엇이 부족한지 알 수 있었고 내가 모르거나 제대로 알지 못하던 부분을 확실히 알고 이렇게 TIL까지 작성하면서 정리하니 기억에 오래 남을 것 같다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/03/03/JavaScript/%EC%9B%90%EC%8B%9C%ED%83%80%EC%9E%85%EA%B3%BC-%EA%B0%9D%EC%B2%B4%ED%83%80%EC%9E%85/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/03/03/JavaScript/%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85/"
                             aria-label=": 데이터 타입"
                         >
@@ -1024,96 +1135,6 @@
                         <p>
                             <a
                                 href="/2023/02/27/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-11%EC%9D%BC%EC%B0%A8-combinators-%EC%85%80%EB%A0%89%ED%84%B0-%EC%A1%B0%ED%95%A9/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/02/27/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-10%EC%9D%BC%EC%B0%A8-Align/"
-                            aria-label=": &lt;오늘부터 CSS 마스터 10일차&gt; Align"
-                        >
-                            &lt;오늘부터 CSS 마스터 10일차&gt; Align
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-02-27T23:29:27+09:00">
-	
-		    2023/02/27
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="align"><a href="#align" class="headerlink" title="align"></a>align</h1><p>div 와 같은 block 요소를 수평으로 가운데 배치하려면 <code>margin: auto;</code>를 사용하였다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>하지만 내부의 텍스트를 가운데 정렬하기 위해서는 <code>text-align: center;</code>를 사용한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="이미지-가운데-정렬"><a href="#이미지-가운데-정렬" class="headerlink" title="이미지 가운데 정렬"></a>이미지 가운데 정렬</h2><p>image를 가운데 정렬하기 위해서는 block 요소로 바꾸고 width를 설정해준 뒤 <code>margin:auto;</code> 속성을 사용한다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">margin-left</span>: auto;</span><br><span class="line">  <span class="attribute">margin-right</span>: auto;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="좌우-정렬-position-속성"><a href="#좌우-정렬-position-속성" class="headerlink" title="좌우 정렬 - position 속성"></a>좌우 정렬 - position 속성</h2><p>좌우 정렬을 위해서 <code>position:absolute;</code> 속성을 사용할 수 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">0px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid <span class="number">#73ad21</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>position:absolute 속성은 기본 flow를 제거하므로 다른 요소에 오버랩 될 수 있다.</p>
-</blockquote>
-<h2 id="clearfix-팁"><a href="#clearfix-팁" class="headerlink" title="clearfix 팁"></a>clearfix 팁</h2><p>만약, 요소가 요소를 감싸는 컨테이닝 블록보다 길고 이것이 float 속성을 가졌다면, 해당 요소는 컨테이너의 외부로 넘칠 것이다. 이를 해결하기 위해서 clearfix 속성을 사용한다.</p>
-<p><strong>해당 컨테이닝 블록에다가 다음 속성을 설정한다.</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../../images/CSS/align/clearfix.png" alt="clearfix"></p>
-<h2 id="수직-가운데-정렬-padding"><a href="#수직-가운데-정렬-padding" class="headerlink" title="수직 가운데 정렬 - padding"></a>수직 가운데 정렬 - padding</h2><p>padding을 상하로 주어서 수직 가운데 정렬을 해줄 수 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">70px</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>이를 <code>text-align:center;</code> 와 같이 쓰면 수평 수직 가운데 정렬이 가능하다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">70px</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="수직-가운데-정렬-line-height"><a href="#수직-가운데-정렬-line-height" class="headerlink" title="수직 가운데 정렬 - line-height"></a>수직 가운데 정렬 - line-height</h2><p>line-height 속성을 사용하여 수직 가운데 정렬을 할 수 있다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* If the text has multiple lines, add the following: */</span></span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.5</span>;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="수직-가운데-정렬-position-amp-transform"><a href="#수직-가운데-정렬-position-amp-transform" class="headerlink" title="수직 가운데 정렬 - position &amp; transform"></a>수직 가운데 정렬 - position &amp; transform</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="수직-가운데-정렬-flexbox"><a href="#수직-가운데-정렬-flexbox" class="headerlink" title="수직 가운데 정렬 - flexbox"></a>수직 가운데 정렬 - flexbox</h2><p>flexbox는 IE10나 이전버전에서는 지원되지 않는다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">3px</span> solid green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/02/27/CSS/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0-CSS-%EB%A7%88%EC%8A%A4%ED%84%B0-10%EC%9D%BC%EC%B0%A8-Align/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
