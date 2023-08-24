@@ -233,6 +233,90 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/"
+                            aria-label=": 원하는 요소를 제외한 영역 클릭 시 함수 실행하기"
+                        >
+                            원하는 요소를 제외한 영역 클릭 시 함수 실행하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-02T22:42:39+09:00">
+	
+		    2023/08/02
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>흔히 웹을 사용하면서 select 태그를 클릭해서 options 들이 나타났을 때, select 태그 내부의 option을 클릭하면 해당 option이 선택되고, option 외부를 클릭했을 때, 나타났던 option들이 사라지도록 구현된 웹을 많이 경험했을 것이다.</p>
+<p>나도 그래프를 CustomLegend의 요소를 클릭했을 때, 클릭한 Legend의 Line 그래프를 highlight 시켜주고, CustomLegend 내부의 요소 이외의 영역을 클릭했을 때, 클릭한 요소를 해제하도록 구현해보았다.</p>
+<h3 id="1-선택된-그래프의-x축-값을-상태로-관리한다"><a href="#1-선택된-그래프의-x축-값을-상태로-관리한다" class="headerlink" title="1. 선택된 그래프의 x축 값을 상태로 관리한다."></a>1. 선택된 그래프의 x축 값을 상태로 관리한다.</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [clickedGraph, setClickedGraph] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-CustomLegend에-이벤트-위임을-해준다"><a href="#2-CustomLegend에-이벤트-위임을-해준다" class="headerlink" title="2. CustomLegend에 이벤트 위임을 해준다."></a>2. CustomLegend에 이벤트 위임을 해준다.</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;CUSTOM_LEGEND&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((elem) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;elem.name&#125;</span>&gt;</span>&#123;elem.value&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CustomLegend의 ul 태그에 id를 부여한다.</li>
+<li>li 요소를 클릭 이벤트를 이벤트 위임을 통해 이벤트 발생을 캐치할 수 있다.</li>
+</ul>
+<h3 id="3-이벤트-핸들러-생성"><a href="#3-이벤트-핸들러-생성" class="headerlink" title="3. 이벤트 핸들러 생성"></a>3. 이벤트 핸들러 생성</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">handleClickGraph</span> = (<span class="params">e: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> value = e.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line">  <span class="title function_">setClickedGraph</span>(value);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleClickOutside</span> = (<span class="params">e: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> parentElem = e.<span class="property">target</span> <span class="keyword">as</span> <span class="title class_">HTMLElement</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!targetElem.<span class="title function_">closest</span>(<span class="string">&quot;#CUSTOM_LEGEND&quot;</span>)) &#123;</span><br><span class="line">    <span class="title function_">setClickedGraph</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>클릭이벤트가 발생한 요소의 가장 가까운 요소 중 id가 <code>CUSTOM_LEGEND</code>인 요소가 없으면 clickedGraph의 값을 빈 값으로 초기화 시킨다.</li>
+</ul>
+<h3 id="4-브라우저에-이벤트-등록"><a href="#4-브라우저에-이벤트-등록" class="headerlink" title="4. 브라우저에 이벤트 등록"></a>4. 브라우저에 이벤트 등록</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, handleClickOutside);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;click&quot;</span>, handleClickOutside);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>내가 지정한 영역은 ul 태그 안이고 내가 지정하지 않은 외부의 영역을 모두 다루기 위해서는 브라우저에 이벤트를 등록해줘야한다.</li>
+<li>useEffect는 함수형 컴포넌트에서 리액트 컴포넌트의 라이프사이클에 원하는 함수를 실행할 수 있도록 도와주는 훅이다.<ul>
+<li>return으로 함수를 반환하면 해당 함수는 컴포넌트가 소멸할 때, 실행된다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>렌더링 되기 이전에 브라우저에 이벤트를 등록해주고 해당 컴포넌트가 소멸할 때, 이벤트를 제거해줘야 컴포넌트가 렌더링 될 때마다 이벤트가 중복으로 등록되지 않아 성능상 문제를 해결할 수 있다.</p>
+</blockquote>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/02/Daily/%EC%9B%90%ED%95%98%EB%8A%94-%EC%9A%94%EC%86%8C%EB%A5%BC-%EC%A0%9C%EC%99%B8%ED%95%9C-%EC%98%81%EC%97%AD-%ED%81%B4%EB%A6%AD-%EC%8B%9C-%ED%95%A8%EC%88%98-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/01/Daily/JavaScript-%EB%82%A0%EC%A7%9C-%EC%89%BD%EA%B2%8C-%EB%8B%A4%EB%A3%A8%EA%B8%B0/"
                             aria-label=": JavaScript 날짜 쉽게 다루기"
                         >
@@ -901,77 +985,6 @@
                         <p>
                             <a
                                 href="/2023/07/23/Python/DataStructure/Queue/%ED%81%90-%EA%B0%9C%EB%85%90-%EB%B0%8F-%EC%84%A4%EB%AA%85/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/07/22/CSS/CSS-%EB%82%B4%EB%B6%80-%EA%B2%BD%EA%B3%84-border-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/CSS-%EB%82%B4%EB%B6%80-%EA%B2%BD%EA%B3%84-border-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/"
-                            aria-label=": CSS 내부 경계(border) 적용하기"
-                        >
-                            CSS 내부 경계(border) 적용하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-07-22T09:18:37+09:00">
-	
-		    2023/07/22
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/CSS/">CSS</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="내부-경계-border-효과-주기"><a href="#내부-경계-border-효과-주기" class="headerlink" title="내부 경계(border) 효과 주기"></a>내부 경계(border) 효과 주기</h1><h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p><img src="/../../../images/inner_border.png" alt="문제사진"></p>
-<p>CSS로 작업을 하다가 경계가 검정색 바탕 부분과 border에 약간의 단차가 생기는 문제가 있었다.</p>
-<p>마크업 구조는 다음과 같다.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>나의 자산 목표 금액 계산기<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>목표 금액 계산기란?<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>h2 태그에 배경색이 검정색이다.</li>
-<li>h2 태그와 형제태그인 div 태그에 보더를 주었더니 단차가 생겼다.</li>
-</ul>
-<h2 id="해결방법"><a href="#해결방법" class="headerlink" title="해결방법"></a>해결방법</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1px</span> gray inset;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>box-shadow 효과를 inset으로 주어서 보더 처럼 보이도록 구현했다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/07/22/CSS/CSS-%EB%82%B4%EB%B6%80-%EA%B2%BD%EA%B3%84-border-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/CSS-%EB%82%B4%EB%B6%80-%EA%B2%BD%EA%B3%84-border-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

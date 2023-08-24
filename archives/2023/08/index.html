@@ -233,6 +233,83 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/24/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C/"
+                            aria-label=": 요세푸스 문제"
+                        >
+                            요세푸스 문제
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-24T22:17:21+09:00">
+	
+		    2023/08/24
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Python/">Python</a>, <a class="category-link" href="/categories/Python/DataStructure/">DataStructure</a>, <a class="category-link" href="/categories/Python/DataStructure/Queue/">Queue</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>1번부터 N 번까지 N명의 사람이 원을 이루면서 앉아있고, 양의 정수 K(≤ N)가 주어진다. 이제 순서대로 K 번째 사람을 제거한다. 한 사람이 제거되면 남은 사람들로 이루어진 원을 따라 이 과정을 계속해 나간다. 이 과정은 N명의 사람이 모두 제거될 때까지 계속된다. 원에서 사람들이 제거되는 순서를 (N, K)-요세푸스 순열이라고 한다. 예를 들어 (7, 3)-요세푸스 순열은 &lt;3, 6, 2, 7, 5, 1, 4&gt;이다.</p>
+<p>N과 K가 주어지면 (N, K)-요세푸스 순열을 구하는 프로그램을 작성하시오.</p>
+<h3 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h3><ul>
+<li>입력: 7, 3</li>
+<li>출력: [3, 6, 2, 7, 5, 1, 4]</li>
+</ul>
+<h2 id="1-list로-풀기"><a href="#1-list로-풀기" class="headerlink" title="1. list로 풀기"></a>1. list로 풀기</h2><p>예시대로 3번째 마다 사람을 제거하려면, 처음에는 시작점이니 2번만 인덱스를 이동하고 제거한 후 이 후에는 3번 인덱스를 이동해서 제거한다.</p>
+<p><strong>첫 시작을 0이 아닌 -1로 시작하는 점에 유의하자.</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">josephus</span>(<span class="params">n,k</span>):</span><br><span class="line">    res = []</span><br><span class="line">    line = [<span class="number">1</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)] <span class="comment"># 값이 1이면 제거 대상, 0이면 제거 완료</span></span><br><span class="line">    i = -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n-<span class="number">1</span>):</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> count &lt; k:</span><br><span class="line">            i = (i + <span class="number">1</span>) % n <span class="comment"># i는 0~6까지 순회해야하므로 나머지로 계산한다.</span></span><br><span class="line">            <span class="keyword">if</span> line[i]: <span class="comment"># line의 원소가 0이 아니면...</span></span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line">        line[i] = <span class="number">0</span></span><br><span class="line">        res.append(i+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    res.append(line.index(<span class="number">1</span>)+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>line 배열을 1로 초기화 해준다. 1은 아직 제거안된 요소이고 0은 제거된 요소로 처리</li>
+<li>마지막 1개가 남을 때 까지 반복하므로 n-1회 반복한다.</li>
+<li>count 변수는 제거되지 않은 원소를 지나온 순서를 카운팅하기 위해 사용한다.</li>
+<li>0 ~ 6까지 index가 순회해야하므로, n으로 나눈 나머지 값을 이용한다.</li>
+<li>i를 순회하면서 line의 요소가 0이 아니면, 즉 아직 제거되지 않았으면 순서를 카운팅 해준다.</li>
+<li>순서를 카운팅 해서 k번째 순서에 도달하면, 반복을 멈추고 해당 index 요소를 0으로 바꾼다. (요소 제거)</li>
+<li>해당 index는 0부터 시작했으므로, 결과 배열에 넣어줄 땐 +1을 해준다. 왜냐하면 문제에선 1부터 시작한다 했으니 때문이다.</li>
+<li>이렇게 n-1번 반복하게되면 line의 요소는 1개 남는다. 이 때는 index 메서드를 사용하여 1인 요소의 index를 구한 뒤 결과배열에 추가한다. 이 때도 + 1 을 해줘야한다.</li>
+</ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/24/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/23/Daily/JavaScript-D-Day-%ED%95%A8%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                             aria-label=": JavaScript D-Day 함수 만들기"
                         >
@@ -882,81 +959,6 @@
                         <p>
                             <a
                                 href="/2023/08/15/React/useRef-%EC%98%88%EC%8B%9C/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/14/React/useReducer-%EC%98%88%EC%8B%9C/"
-                            aria-label=": useReducer 예시"
-                        >
-                            useReducer 예시
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-14T21:48:05+09:00">
-	
-		    2023/08/14
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/React/">React</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p><code>useReducer</code> hook은 상태관리 도구이다.</p>
-<p><code>useState의</code> 대안으로 많이 사용된다.</p>
-<p>2개 이상의 상태를 관리하기 위해서 각각을 <code>useState로</code> 관리하는 것 보단 <code>useReducer를</code> 사용하여 <code>action</code>별로 상태 관리하는 것이 훨씬 단순하다.</p>
-<h1 id="문법"><a href="#문법" class="headerlink" title="문법"></a>문법</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = <span class="title function_">useReducer</span>(reducer, initialState);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>useReducer는</code> 3개의 인자를 받을 수 있다.</li>
-<li><code>reducer</code> 함수, <code>initialState</code>(초기상태), <code>initFunction</code>(초기화함수, optional)</li>
-</ul>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useReducer &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">reducer</span> = (<span class="params">state, action</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;INCREMENT&quot;</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">count</span>: state.<span class="property">count</span> + <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;DECREMENT&quot;</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">count</span>: state.<span class="property">count</span> - <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;USER_INPUT&quot;</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">userInput</span>: action.<span class="property">payload</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;TOGGLE_COLOR&quot;</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">color</span>: !state.<span class="property">color</span> &#125;;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = <span class="title function_">useReducer</span>(reducer, &#123;</span><br><span class="line">    <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">userInput</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">color</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">main</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&quot;App, App-header&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">color:</span> <span class="attr">state.color</span> ? &quot;#<span class="attr">000</span>&quot; <span class="attr">:</span> &quot;#<span class="attr">FF07FF</span>&quot; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">margin:</span> &quot;<span class="attr">2rem</span>&quot; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;state.userInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;(e)</span> =&gt;</span></span></span><br><span class="line"><span class="language-xml">          dispatch(&#123; type: &quot;USER_INPUT&quot;, payload: e.target.value &#125;)</span></span><br><span class="line"><span class="language-xml">        &#125;</span></span><br><span class="line"><span class="language-xml">      /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">margin:</span> &quot;<span class="attr">2rem</span>&quot; &#125;&#125;&gt;</span>&#123;state.count&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">section</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">margin:</span> &quot;<span class="attr">2rem</span>&quot; &#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> dispatch(&#123; type: &quot;DECREMENT&quot; &#125;)&#125;&gt;-<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> dispatch(&#123; type: &quot;INCREMENT&quot; &#125;)&#125;&gt;+<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> dispatch(&#123; type: &quot;TOGGLE_COLOR&quot; &#125;)&#125;&gt;</span></span><br><span class="line"><span class="language-xml">          Color</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">margin:</span> &quot;<span class="attr">2rem</span>&quot; &#125;&#125;&gt;</span>&#123;state.userInput&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">main</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>reducer</code> 함수에는 초기값 <code>state</code>와 <code>action</code>에 따른 case별로 반환하는 상태값을 정의한다.</li>
-<li><code>useReducer</code> hook을 사용하여 <code>state(상태)</code>, <code>dispatch(상태변경함수)</code>를 선언한다.</li>
-<li><code>dispatch(상태변경함수)</code>의 인자로 객체를 전달해주는데, <code>type</code>, <code>payload</code> 프로퍼티를 갖는 객체를 전달해준다.</li>
-<li><code>action</code> 객체의 type에 따라 <code>reducer</code>에 정의해둔 <code>action</code> case에 따라 반환하는 값이 달라진다.</li>
-<li>위와 같이 사용하면, <code>useState</code>와 <code>useState</code> 변경함수를 여러 개 정의하지 않고도 직관적으로 상태관리 코드를 작성할 수 있다는 장점이 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/14/React/useReducer-%EC%98%88%EC%8B%9C/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
