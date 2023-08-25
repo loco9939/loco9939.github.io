@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-    <link rel="canonical" href="https://loco9939.github.io/2023/08/25/python/datastructure/queue/요세푸스-문제-큐를-이용하여-풀기/"/>
+    <link rel="canonical" href="https://loco9939.github.io/2023/08/26/python/datastructure/queue/queue로-이진수-만들기/"/>
 
 <head>
     <meta name="google-site-verification" content="7ur7A9bi79NuylPOO6FjMynEeinWe-v-kmDPZD-bcqY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Loco&#39;s Dev Blog">
-    <title>요세푸스 문제 - Loco&#39;s Dev Blog</title>
+    <title>Queue로 이진수 만들기 - Loco&#39;s Dev Blog</title>
     <meta name="author" content="loco9939">
     
         <meta name="keywords" content="loco9939,javascript,">
@@ -19,21 +19,19 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"2. queue로 풀기\n1234567891011def josephus(n,k):    res = []    q = Queue() # 직접 구현한 Queue 클래스    for i in range(n):        q.enqueue(i+1)    while q.front.next: # 끝에서 2번째 원소까지 반복        for _ in range(k-1):            q.enqueue(q.dequeue())        res.append(q.dequeue())    res.append(q.dequeue()) # 마지막 원소 출력    return res\n\n","dateCreated":"2023-08-25T00:01:21+09:00","dateModified":"2023-08-24T23:07:28+09:00","datePublished":"2023-08-25T00:01:21+09:00","description":"","headline":"요세푸스 문제","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/","keywords":"큐"}</script>
-    <meta name="description" content="2. queue로 풀기 1234567891011def josephus(n,k):    res &#x3D; []    q &#x3D; Queue() # 직접 구현한 Queue 클래스    for i in range(n):        q.enqueue(i+1)    while q.front.next: # 끝에서 2번째 원소까지 반복        for _ in range(k-">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"articleBody":"문제양의 정수 n이 주어질 때 1부터 n까지의 십진수를 이진수로 출력하라.\nGeneratre Binary Numbers\n1. 내장함수 풀기123def generate_binary(n):    for i in range(1, n+1):        print(bin(i)[2:]) # 이진수는 0b가 붙으므로 슬라이싱으로 제거한다.\n\n2. 큐를 사용하여 풀기문제를 분석해보면, 2의 이진수는 10이고 3의 이진수는 11이다.\n이는 1에다가 0과 1을 붙인 것이다.\n4의 이진수는 100이고 5의 이진수는 101이다. 이는 2의 이진수 10에다가 0과 1을 추가한 것이다.\n앞서 사용한 숫자에 0과 1을 붙인 이진수가 나중에 사용된다.\n\n큐를 하나 생성하고 1을 삽입한다.\n\nn만큼 반복한다.\n\n큐에서 꺼낸 값을 i에 저장\ni에 0과 1을 붙인 이진수를 큐에 삽입\ni를 출력\n\n\n\n123456789def generate_binary_queue(n):    q = Queue() # 직접 구현한 Queue 클래스    q.enqueue(&#x27;1&#x27;)    for _ in range(n):        i = q.dequeue()        q.enqueue(i+&#x27;0&#x27;)        q.enqueue(i+&#x27;1&#x27;)        print(i)\n","dateCreated":"2023-08-26T06:56:07+09:00","dateModified":"2023-08-26T07:09:11+09:00","datePublished":"2023-08-26T06:56:07+09:00","description":"","headline":"Queue로 이진수 만들기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"},"publisher":{"@type":"Organization","name":"loco9939","sameAs":["https://github.com/loco9939","mailto"]},"url":"https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/","keywords":"큐"}</script>
+    <meta name="description" content="문제양의 정수 n이 주어질 때 1부터 n까지의 십진수를 이진수로 출력하라. Generatre Binary Numbers 1. 내장함수 풀기123def generate_binary(n):    for i in range(1, n+1):        print(bin(i)[2:]) # 이진수는 0b가 붙으므로 슬라이싱으로 제거한다.  2. 큐를 사용하여 풀기문">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="요세푸스 문제">
-<meta property="og:url" content="https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/index.html">
+<meta property="og:title" content="Queue로 이진수 만들기">
+<meta property="og:url" content="https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/index.html">
 <meta property="og:site_name" content="Loco&#39;s Dev Blog">
-<meta property="og:description" content="2. queue로 풀기 1234567891011def josephus(n,k):    res &#x3D; []    q &#x3D; Queue() # 직접 구현한 Queue 클래스    for i in range(n):        q.enqueue(i+1)    while q.front.next: # 끝에서 2번째 원소까지 반복        for _ in range(k-">
+<meta property="og:description" content="문제양의 정수 n이 주어질 때 1부터 n까지의 십진수를 이진수로 출력하라. Generatre Binary Numbers 1. 내장함수 풀기123def generate_binary(n):    for i in range(1, n+1):        print(bin(i)[2:]) # 이진수는 0b가 붙으므로 슬라이싱으로 제거한다.  2. 큐를 사용하여 풀기문">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://loco9939.github.io/images/josephus.png">
-<meta property="article:published_time" content="2023-08-24T15:01:21.000Z">
-<meta property="article:modified_time" content="2023-08-24T14:07:28.537Z">
+<meta property="article:published_time" content="2023-08-25T21:56:07.000Z">
+<meta property="article:modified_time" content="2023-08-25T22:09:11.162Z">
 <meta property="article:author" content="loco9939">
 <meta property="article:tag" content="큐">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://loco9939.github.io/images/josephus.png">
     
     
         
@@ -235,14 +233,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            요세푸스 문제
+            Queue로 이진수 만들기
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2023-08-25T00:01:21+09:00">
+    <time datetime="2023-08-26T06:56:07+09:00">
 	
-		    2023/08/25
+		    2023/08/26
     	
     </time>
     
@@ -260,9 +258,26 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="2-queue로-풀기"><a href="#2-queue로-풀기" class="headerlink" title="2. queue로 풀기"></a>2. queue로 풀기</h2><p><img src="/../../../../images/josephus.png" alt="josephus"></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">josephus</span>(<span class="params">n,k</span>):</span><br><span class="line">    res = []</span><br><span class="line">    q = Queue() <span class="comment"># 직접 구현한 Queue 클래스</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        q.enqueue(i+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">while</span> q.front.<span class="built_in">next</span>: <span class="comment"># 끝에서 2번째 원소까지 반복</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k-<span class="number">1</span>):</span><br><span class="line">            q.enqueue(q.dequeue())</span><br><span class="line">        res.append(q.dequeue())</span><br><span class="line">    res.append(q.dequeue()) <span class="comment"># 마지막 원소 출력</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+            <h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>양의 정수 n이 주어질 때 1부터 n까지의 십진수를 이진수로 출력하라.</p>
+<p><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/interesting-method-generate-binary-numbers-1-n/">Generatre Binary Numbers</a></p>
+<h2 id="1-내장함수-풀기"><a href="#1-내장함수-풀기" class="headerlink" title="1. 내장함수 풀기"></a>1. 내장함수 풀기</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_binary</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">bin</span>(i)[<span class="number">2</span>:]) <span class="comment"># 이진수는 0b가 붙으므로 슬라이싱으로 제거한다.</span></span><br></pre></td></tr></table></figure>
 
+<h2 id="2-큐를-사용하여-풀기"><a href="#2-큐를-사용하여-풀기" class="headerlink" title="2. 큐를 사용하여 풀기"></a>2. 큐를 사용하여 풀기</h2><p>문제를 분석해보면, 2의 이진수는 <code>10</code>이고 3의 이진수는 <code>11</code>이다.</p>
+<p>이는 1에다가 <code>0</code>과 <code>1</code>을 붙인 것이다.</p>
+<p>4의 이진수는 <code>100</code>이고 5의 이진수는 <code>101</code>이다. 이는 2의 이진수 <code>10</code>에다가 <code>0</code>과 <code>1</code>을 추가한 것이다.</p>
+<p>앞서 사용한 숫자에 <code>0</code>과 <code>1</code>을 붙인 이진수가 나중에 사용된다.</p>
+<ol>
+<li><p>큐를 하나 생성하고 <code>1</code>을 삽입한다.</p>
+</li>
+<li><p>n만큼 반복한다.</p>
+<ol>
+<li>큐에서 꺼낸 값을 i에 저장</li>
+<li>i에 <code>0</code>과 <code>1</code>을 붙인 이진수를 큐에 삽입</li>
+<li>i를 출력</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_binary_queue</span>(<span class="params">n</span>):</span><br><span class="line">    q = Queue() <span class="comment"># 직접 구현한 Queue 클래스</span></span><br><span class="line">    q.enqueue(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        i = q.dequeue()</span><br><span class="line">        q.enqueue(i+<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        q.enqueue(i+<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
 
             
 
@@ -284,14 +299,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
-                    data-tooltip="Queue로 이진수 만들기"
-                    aria-label="이전: Queue로 이진수 만들기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -301,7 +313,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/24/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C/"
+                    href="/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
                     data-tooltip="요세푸스 문제"
                     aria-label="다음: 요세푸스 문제"
                 >
@@ -328,7 +340,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -341,7 +353,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -354,7 +366,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -399,14 +411,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
-                    data-tooltip="Queue로 이진수 만들기"
-                    aria-label="이전: Queue로 이진수 만들기"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">이전</span>
                     </a>
@@ -416,7 +425,7 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2023/08/24/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C/"
+                    href="/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
                     data-tooltip="요세푸스 문제"
                     aria-label="다음: 요세푸스 문제"
                 >
@@ -443,7 +452,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -456,7 +465,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -469,7 +478,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                    target="new" href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -503,7 +512,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -516,7 +525,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                        href="https://twitter.com/intent/tweet?text=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -529,7 +538,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/25/Python/DataStructure/Queue/%EC%9A%94%EC%84%B8%ED%91%B8%EC%8A%A4-%EB%AC%B8%EC%A0%9C-%ED%81%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%92%80%EA%B8%B0/"
+                        href="https://plus.google.com/share?url=https://loco9939.github.io/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

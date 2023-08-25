@@ -12317,4 +12317,37 @@
         <tag>큐</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Queue로 이진수 만들기</title>
+    <url>/2023/08/26/Python/DataStructure/Queue/Queue%EB%A1%9C-%EC%9D%B4%EC%A7%84%EC%88%98-%EB%A7%8C%EB%93%A4%EA%B8%B0/</url>
+    <content><![CDATA[<h1 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h1><p>양의 정수 n이 주어질 때 1부터 n까지의 십진수를 이진수로 출력하라.</p>
+<p><a href="https://www.geeksforgeeks.org/interesting-method-generate-binary-numbers-1-n/">Generatre Binary Numbers</a></p>
+<h2 id="1-내장함수-풀기"><a href="#1-내장함수-풀기" class="headerlink" title="1. 내장함수 풀기"></a>1. 내장함수 풀기</h2><figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_binary</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">bin</span>(i)[<span class="number">2</span>:]) <span class="comment"># 이진수는 0b가 붙으므로 슬라이싱으로 제거한다.</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-큐를-사용하여-풀기"><a href="#2-큐를-사용하여-풀기" class="headerlink" title="2. 큐를 사용하여 풀기"></a>2. 큐를 사용하여 풀기</h2><p>문제를 분석해보면, 2의 이진수는 <code>10</code>이고 3의 이진수는 <code>11</code>이다.</p>
+<p>이는 1에다가 <code>0</code>과 <code>1</code>을 붙인 것이다.</p>
+<p>4의 이진수는 <code>100</code>이고 5의 이진수는 <code>101</code>이다. 이는 2의 이진수 <code>10</code>에다가 <code>0</code>과 <code>1</code>을 추가한 것이다.</p>
+<p>앞서 사용한 숫자에 <code>0</code>과 <code>1</code>을 붙인 이진수가 나중에 사용된다.</p>
+<ol>
+<li><p>큐를 하나 생성하고 <code>1</code>을 삽입한다.</p>
+</li>
+<li><p>n만큼 반복한다.</p>
+<ol>
+<li>큐에서 꺼낸 값을 i에 저장</li>
+<li>i에 <code>0</code>과 <code>1</code>을 붙인 이진수를 큐에 삽입</li>
+<li>i를 출력</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_binary_queue</span>(<span class="params">n</span>):</span><br><span class="line">    q = Queue() <span class="comment"># 직접 구현한 Queue 클래스</span></span><br><span class="line">    q.enqueue(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        i = q.dequeue()</span><br><span class="line">        q.enqueue(i+<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        q.enqueue(i+<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+        <category>DataStructure</category>
+        <category>Queue</category>
+      </categories>
+      <tags>
+        <tag>큐</tag>
+      </tags>
+  </entry>
 </search>
