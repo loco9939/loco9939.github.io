@@ -233,6 +233,85 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/28/Daily/%EC%BB%A4%EC%8A%A4%ED%85%80-%ED%9B%85-%EC%82%AC%EC%9A%A9-%EC%98%88%EC%8B%9C/"
+                            aria-label=": 커스텀 훅 사용 예시"
+                        >
+                            커스텀 훅 사용 예시
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-28T22:04:50+09:00">
+	
+		    2023/08/28
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>오늘은 회사에서 실전투자 API 개편사항을 반영하기 위해 기존 API를 수정하는 작업을 하였다.</p>
+<p>그러던 중, 각 컴포넌트에서 동일한 백엔드 API 로직을 발견하고 이를 커스텀 훅으로 빼내어 관리하면 유지보수성 측면과 가독성 측면에서 개선될 것이라고 판단하여 적용해보았다.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 기존 코드</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">checkUserStatus</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> tradeInstanceAPIWithToken.<span class="title function_">post</span>(<span class="string">&quot;/url&quot;</span>, &#123;</span><br><span class="line">    requestBody</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (response.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 응답 성공시 코드</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (response.<span class="property">status</span> === <span class="number">403</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 403일 때, 실행할 코드</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [accountLoading, setAccountLoading] = useState&lt;<span class="built_in">boolean</span>&gt;(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getUserAccount</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">setAccountLoading</span>(<span class="literal">true</span>);</span><br><span class="line">  <span class="keyword">await</span> tradeInstanceAPI.<span class="title function_">post</span>(<span class="string">&quot;/url2&quot;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (res.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">        ... <span class="comment">// 응답 성공 시 코드</span></span><br><span class="line">        <span class="title function_">setAccountLoading</span>(<span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">useLayoutEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (subMenu === <span class="string">&quot;accounts&quot;</span>) &#123;</span><br><span class="line">      <span class="comment">// subMenu가 accounts 일 때,</span></span><br><span class="line">      <span class="title function_">getUserAccount</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// subMenu가 myport, trading일 때</span></span><br><span class="line">      <span class="title function_">checkUserStatus</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, [subMenu]);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>checkUserStatus, getUserAccount 함수를 useLayoutEffect 훅에서 호출한다.</li>
+<li>해당 백엔드 요청 API 코드는 다룬 곳에서도 쓰이기에 함수로 빼내면 유지보수성을 높일 수 있다.</li>
+<li>가독성 측면에서도 굳이 요청 로직을 다 볼 필요가 없다.</li>
+</ul>
+<h3 id="개선된-코드"><a href="#개선된-코드" class="headerlink" title="개선된 코드"></a>개선된 코드</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useCheckUserStatus.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; tradeInstanceAPIWithToken &#125; <span class="keyword">from</span> <span class="string">&quot;your-api-instance&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">useCheckUserStatus</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// 백엔드 API 응답과 관련된 state들</span></span><br><span class="line">  <span class="keyword">const</span> [errorType, setErrorType] = useState&lt;<span class="built_in">number</span> | <span class="built_in">string</span> | <span class="literal">null</span>&gt;(<span class="literal">null</span>);</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">checkUserStatus</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> tradeInstanceAPIWithToken.<span class="title function_">post</span>(<span class="string">&quot;/url&quot;</span>, &#123;</span><br><span class="line">    requestBody</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (response.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 응답 성공시 코드</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (response.<span class="property">status</span> === <span class="number">403</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 403일 때, 실행할 코드</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    errorType,</span><br><span class="line">    ...,</span><br><span class="line">    checkUserStatus,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> useCheckUserStatus;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useGetUserAccount.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; tradeInstanceAPI &#125; <span class="keyword">from</span> <span class="string">&quot;your-api-instance&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">useGetUserAccount</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [userAccounts, setUserAccounts] = useState&lt;<span class="built_in">any</span>[]&gt;([]);</span><br><span class="line">  <span class="keyword">const</span> [accountLoading, setAccountLoading] = useState&lt;<span class="built_in">boolean</span>&gt;(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getUserAccount</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setAccountLoading</span>(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">await</span> tradeInstanceAPI.<span class="title function_">post</span>(<span class="string">&quot;/trade/get_accounts&quot;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (res.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; accounts &#125; = res.<span class="property">data</span>;</span><br><span class="line">        <span class="title function_">setUserAccounts</span>(accounts);</span><br><span class="line">        <span class="title function_">setAccountLoading</span>(<span class="literal">false</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    userAccounts,</span><br><span class="line">    accountLoading,</span><br><span class="line">    getUserAccount,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> useGetUserAccount;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>백엔드 로직의 로딩 상태까지 캡슐화 할 수 있다.</li>
+</ul>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Main.tsx</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useLayoutEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> useCheckUserStatus <span class="keyword">from</span> <span class="string">&#x27;./useCheckUserStatus&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> useGetUserAccount <span class="keyword">from</span> <span class="string">&#x27;./useGetUserAccount&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Main</span> = (<span class="params">&#123; user, license, isExpiredUser, subMenu &#125;: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; errorType, ..., checkUserStatus &#125; = <span class="title function_">useCheckUserStat</span>();</span><br><span class="line">    <span class="keyword">const</span> &#123; userAccounts, accountLoading, getUserAccount &#125; = <span class="title function_">useGetUserAccount</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_">useLayoutEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (subMenu === <span class="string">&quot;accounts&quot;</span>) &#123;</span><br><span class="line">            <span class="title function_">getUserAccount</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_">checkUserStatus</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [subMenu]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="comment">// 여기에 컴포넌트의 JSX를 반환</span></span><br><span class="line">    );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Main</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>훨씬 코드가 간결해지고 가독성도 높아져서 추후에 유지보수할 때 시간을 많이 절약할 수 있을 것 같다.</li>
+<li>앞으로 서비스의 코드를 이런식으로 분리해보는 연습을 해봐야겠다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/28/Daily/%EC%BB%A4%EC%8A%A4%ED%85%80-%ED%9B%85-%EC%82%AC%EC%9A%A9-%EC%98%88%EC%8B%9C/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/27/Python/DataStructure/Queue/Queue-%EC%88%AB%EC%9E%90%EC%9D%98-%ED%91%9C%ED%98%84-%EB%AC%B8%EC%A0%9C/"
                             aria-label=": Queue-숫자의 표현 문제"
                         >
@@ -855,79 +934,6 @@
                         <p>
                             <a
                                 href="/2023/08/19/Daily/%EB%94%94%EB%B0%94%EC%9A%B4%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A1%9C%ED%8B%80-%EC%B0%A8%EC%9D%B4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/18/Daily/var-setTimeout-Quiz/"
-                            aria-label=": var setTimeout Quiz"
-                        >
-                            var setTimeout Quiz
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-18T21:15:13+09:00">
-	
-		    2023/08/18
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(i), <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>다음 코드의 결과는??</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 정답</span></span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="이유"><a href="#이유" class="headerlink" title="이유"></a>이유</h2><p>var 키워드로 선언한 변수는 함수 레벨 스코프를 갖는다. for문 코드 블록에서는 전역 변수로 선언되었기 때문에, 변수 i 값이 갱신된다.</p>
-<p>setTimeout 함수는 비동기 처리 방식으로 실행된다.</p>
-<p>setTimeout 함수는 Web API로 이동하여 타이머가 만료되면 Task Queue로 이동한다.</p>
-<p>Task Queue에서 Call Stack이 비워질 때 까지 대기한다.</p>
-<p>대기하는 동안, 다음 for 문이 돌고 있으므로, setTimeout 함수가 Task Queue에서 실행 컨텍스트가 비워질 때 까지 계속 대기한다.</p>
-<p>이러한 이유로 i가 5가 될 때, Call Stack이 비워지므로 그때서야 이벤트 루프에 의해서 console 창에 출력되는 i 값이 5이므로 5가 5번 찍히게 된다.</p>
-<h2 id="해결방법"><a href="#해결방법" class="headerlink" title="해결방법"></a>해결방법</h2><h3 id="1-블록-레벨-스코프"><a href="#1-블록-레벨-스코프" class="headerlink" title="1. 블록 레벨 스코프"></a>1. 블록 레벨 스코프</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(i), <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-즉시실행함수"><a href="#2-즉시실행함수" class="headerlink" title="2. 즉시실행함수"></a>2. 즉시실행함수</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  (<span class="keyword">function</span> (<span class="params">param</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(param), <span class="number">1000</span>);</span><br><span class="line">  &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>setTimeout 함수를 즉시실행함수로 감싸서 함수 레벨 스코프를 갖도록 해준 뒤 즉시실행함수의 인수로 i를 전달해주고 즉시실행함수 내부의 함수에 파라미터로 해당 인수를 어디서 참조할지 설정해주면 된다. 위 예제에서는 콘솔 로그의 인수로 파라미터를 전달해줘야 할 것이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/18/Daily/var-setTimeout-Quiz/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

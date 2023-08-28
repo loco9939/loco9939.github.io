@@ -232,6 +232,79 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/18/Daily/var-setTimeout-Quiz/"
+                            aria-label=": var setTimeout Quiz"
+                        >
+                            var setTimeout Quiz
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-18T21:15:13+09:00">
+	
+		    2023/08/18
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(i), <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>다음 코드의 결과는??</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 정답</span></span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br><span class="line"><span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="이유"><a href="#이유" class="headerlink" title="이유"></a>이유</h2><p>var 키워드로 선언한 변수는 함수 레벨 스코프를 갖는다. for문 코드 블록에서는 전역 변수로 선언되었기 때문에, 변수 i 값이 갱신된다.</p>
+<p>setTimeout 함수는 비동기 처리 방식으로 실행된다.</p>
+<p>setTimeout 함수는 Web API로 이동하여 타이머가 만료되면 Task Queue로 이동한다.</p>
+<p>Task Queue에서 Call Stack이 비워질 때 까지 대기한다.</p>
+<p>대기하는 동안, 다음 for 문이 돌고 있으므로, setTimeout 함수가 Task Queue에서 실행 컨텍스트가 비워질 때 까지 계속 대기한다.</p>
+<p>이러한 이유로 i가 5가 될 때, Call Stack이 비워지므로 그때서야 이벤트 루프에 의해서 console 창에 출력되는 i 값이 5이므로 5가 5번 찍히게 된다.</p>
+<h2 id="해결방법"><a href="#해결방법" class="headerlink" title="해결방법"></a>해결방법</h2><h3 id="1-블록-레벨-스코프"><a href="#1-블록-레벨-스코프" class="headerlink" title="1. 블록 레벨 스코프"></a>1. 블록 레벨 스코프</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(i), <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-즉시실행함수"><a href="#2-즉시실행함수" class="headerlink" title="2. 즉시실행함수"></a>2. 즉시실행함수</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  (<span class="keyword">function</span> (<span class="params">param</span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(param), <span class="number">1000</span>);</span><br><span class="line">  &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>setTimeout 함수를 즉시실행함수로 감싸서 함수 레벨 스코프를 갖도록 해준 뒤 즉시실행함수의 인수로 i를 전달해주고 즉시실행함수 내부의 함수에 파라미터로 해당 인수를 어디서 참조할지 설정해주면 된다. 위 예제에서는 콘솔 로그의 인수로 파라미터를 전달해줘야 할 것이다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/18/Daily/var-setTimeout-Quiz/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/17/React/React-Query%EB%9E%80/"
                             aria-label=": React Query란?"
                         >
@@ -916,77 +989,6 @@
                         <p>
                             <a
                                 href="/2023/08/07/Daily/flex-vs-inline-flex/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/06/Daily/hr-%ED%83%9C%EA%B7%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EC%A7%80-%EC%95%8A%EA%B3%A0-%EA%B0%80%EB%A1%9C%EC%84%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%95%98%EA%B8%B0/"
-                            aria-label=": hr 태그 사용하지 않고 가로선 스타일링 하기"
-                        >
-                            hr 태그 사용하지 않고 가로선 스타일링 하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-06T23:16:50+09:00">
-	
-		    2023/08/06
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="정의"><a href="#정의" class="headerlink" title="정의"></a>정의</h1><p>hr 태그는 콘텐츠 내용에서 주제가 바뀔 때, 사용하는 수평 가로선이다.</p>
-<p>HTML 문서에서 주로 내용을 구분하거나 주제의 변화를 정의한다.</p>
-<h2 id="HTML5에서-변경된-사항"><a href="#HTML5에서-변경된-사항" class="headerlink" title="HTML5에서 변경된 사항"></a>HTML5에서 변경된 사항</h2><ul>
-<li>HTML5 이전에서는 단순히 가로선을 나타냈지만, HTML5에서는 주제의 흐름 변경을 나타내도록 변경되었다.</li>
-<li>시각적인 의미보다는 의미적 용어(semantic term)로 사용된다.</li>
-</ul>
-<blockquote>
-<p>또한, HTML5에서는 hr 요소의 layout을 더 이상 지원하지 않으며 CSS를 대신 사용하도록 변경되었다.</p>
-</blockquote>
-<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.news</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">80%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#aaa</span> <span class="built_in">linear-gradient</span>(to right, <span class="number">#aaa</span>, <span class="number">#fff</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>news라는 클래스의 가상 선택자로 css 스타일링 해줄 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/06/Daily/hr-%ED%83%9C%EA%B7%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EC%A7%80-%EC%95%8A%EA%B3%A0-%EA%B0%80%EB%A1%9C%EC%84%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81-%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
