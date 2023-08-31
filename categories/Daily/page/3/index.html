@@ -233,6 +233,87 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/07/29/Daily/Recharts-Legend-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95/"
+                            aria-label=": Recharts - Legend 커스터마이징"
+                        >
+                            Recharts - Legend 커스터마이징
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-07-29T12:47:43+09:00">
+	
+		    2023/07/29
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>저번 포스팅 때, Legend에 hover했을 때, 해당 데이터만 highlight 되도록 구현을 했다.</p>
+<p>이번에는 Legend를 커스터마이징하여 색상도 바꿔보도록 하려고한다.</p>
+<h3 id="1-CustomLegend-컴포넌트"><a href="#1-CustomLegend-컴포넌트" class="headerlink" title="1. CustomLegend 컴포넌트"></a>1. CustomLegend 컴포넌트</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params">props: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; payload, onMouseEnter, onMouseLeave &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((entry: any, index: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;</span>`<span class="attr">item-</span>$&#123;<span class="attr">index</span>&#125;`&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseEnter</span>=<span class="string">&#123;onMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseLeave</span>=<span class="string">&#123;onMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">listStyle:</span> &quot;<span class="attr">none</span>&quot;, <span class="attr">color:</span> <span class="attr">colors.GRAPH</span>[`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`] &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;entry.value&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>예시를 위해 타입은 any로 설정하였다.</li>
+<li>Legend의 각 li에 mouse 이벤트를 할당하였다.</li>
+<li>마우스 이벤트는 호버된 데이터를 제외한 데이터들의 opacity를 줄여서 해당 데이터만 highlight 되도록 한다.</li>
+</ul>
+<h3 id="2-CustomLegend의-props"><a href="#2-CustomLegend의-props" class="headerlink" title="2. CustomLegend의 props"></a>2. CustomLegend의 props</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">handleMouseEnter</span> = (<span class="params">o: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> dataKey = o.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span></span><br><span class="line">    key === dataKey ? [key, <span class="number">1</span>] : [key, <span class="number">0.2</span>]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">    prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">  &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>그런데, 해당 데이터에 호버를 해도 모든 데이터의 opacity가 줄어드는 문제가 발생했다.</p>
+<p>그 이유는 Legend에서의 props와 customLegend의 props가 달라서 mouse 이벤트가 잘못 동작했기 때문이다.</p>
+<ul>
+<li>이전 mouse 이벤트에서는 props안에 dataKey 속성으로 호버된 데이터 값을 가져올 수 있었다.</li>
+<li>하지만 customLegend에서는 props에 너무나도 많은 속성이 있었고 이 중 나는 target속성의 innerHTML 속성으로 호버된 데이터의 dataKey를 확인하는 로직을 구성하였다.</li>
+</ul>
+<h3 id="3-전체-코드"><a href="#3-전체-코드" class="headerlink" title="3. 전체 코드"></a>3. 전체 코드</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">LineChart</span>,</span><br><span class="line">  <span class="title class_">Line</span>,</span><br><span class="line">  <span class="title class_">Tooltip</span>,</span><br><span class="line">  <span class="title class_">Legend</span>,</span><br><span class="line">  <span class="title class_">ResponsiveContainer</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;recharts&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> colors <span class="keyword">from</span> <span class="string">&quot;styles/colors&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">CustomLegend</span> = (<span class="params">props: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; payload, onMouseEnter, onMouseLeave &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;payload.map((entry: any, index: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;</span>`<span class="attr">item-</span>$&#123;<span class="attr">index</span>&#125;`&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseEnter</span>=<span class="string">&#123;onMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onMouseLeave</span>=<span class="string">&#123;onMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">listStyle:</span> &quot;<span class="attr">none</span>&quot;, <span class="attr">color:</span> <span class="attr">colors.GRAPH</span>[`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`] &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;entry.value&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">NewPortChart</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [opacity, setOpacity] = useState&lt;<span class="built_in">any</span>&gt;(&#123;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleMouseEnter</span> = (<span class="params">o: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> dataKey = o.<span class="property">target</span>.<span class="property">innerHTML</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span></span><br><span class="line">      key === dataKey ? [key, <span class="number">1</span>] : [key, <span class="number">0.2</span>]</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">      prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleMouseLeave</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> entries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(opacity).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> [key, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">mappedObj</span>: <span class="built_in">any</span> = entries.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> [key, value] = curr;</span><br><span class="line">      prev = &#123; ...prev, [key]: value &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedObj);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> mappedOpacity = <span class="title class_">Object</span>.<span class="title function_">keys</span>(data[<span class="number">0</span>]).<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">      prev = &#123; ...prev, [curr]: <span class="number">1</span> &#125;;</span><br><span class="line">      <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;, &#123;&#125;);</span><br><span class="line">    <span class="title function_">setOpacity</span>(mappedOpacity);</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ResponsiveContainer</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> <span class="attr">height</span>=<span class="string">&quot;100%&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">LineChart</span> <span class="attr">width</span>=<span class="string">&#123;857&#125;</span> <span class="attr">height</span>=<span class="string">&#123;440&#125;</span> <span class="attr">data</span>=<span class="string">&#123;data&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Tooltip</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Legend</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">align</span>=<span class="string">&quot;right&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">verticalAlign</span>=<span class="string">&quot;middle&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">layout</span>=<span class="string">&quot;vertical&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">content</span>=<span class="string">&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &lt;<span class="attr">CustomLegend</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onMouseEnter</span>=<span class="string">&#123;handleMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onMouseLeave</span>=<span class="string">&#123;handleMouseLeave&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#125;</span></span><br><span class="line"><span class="language-xml">        /&gt;</span></span><br><span class="line"><span class="language-xml">        &#123;Object.keys(data[0]).map((key, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Line</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">key</span>=<span class="string">&#123;key&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">type</span>=<span class="string">&quot;linear&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">dataKey</span>=<span class="string">&#123;key&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">strokeOpacity</span>=<span class="string">&#123;opacity[key]&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">strokeLinecap</span>=<span class="string">&quot;round&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">stroke</span>=<span class="string">&#123;colors.GRAPH[</span>`$&#123;<span class="attr">index</span> + <span class="attr">1</span>&#125;`]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">activeDot</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">dot</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          /&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">LineChart</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ResponsiveContainer</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">NewPortChart</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="기본-CustomLegend"><a href="#기본-CustomLegend" class="headerlink" title="기본 CustomLegend"></a>기본 CustomLegend</h4><p><img src="/../../images/customLegend1.png" alt="기본 customlegend"></p>
+<h4 id="Hover된-데이터만-highlight"><a href="#Hover된-데이터만-highlight" class="headerlink" title="Hover된 데이터만 highlight"></a>Hover된 데이터만 highlight</h4><p><img src="/../../images/customLegend2.png" alt="hover1"><br><img src="/../../images/customLegend3.png" alt="hover2"><br><img src="/../../images/customLegend4.png" alt="hover3"></p>
+<h3 id="추가로…"><a href="#추가로…" class="headerlink" title="추가로…"></a>추가로…</h3><p>색상만 바꿀 것이였다면 왜 CustomLegend까지 쓰면서 복잡하게 시도를 했을까 궁금증이 들 수도 있다.</p>
+<p>디자이너 요구사항이 Legend와 해당 Line 데이터 끝 부분을 선으로 연결해달라는 요청이 있었기 때문에 CustomLegend를 사용해보았다.</p>
+<p>아직 해당 부분은 좀 더 고민이 필요하기 때문에 추후에 포스팅하도록 하겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/07/29/Daily/Recharts-Legend-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/07/27/Daily/Recharts-%EC%BB%A4%EC%8A%A4%ED%84%B0%EB%A7%88%EC%9D%B4%EC%A7%95-%EB%8F%84%EC%A0%84%EA%B8%B0-1/"
                             aria-label=": Recharts 커스터마이징 도전기 1"
                         >
@@ -935,83 +1016,6 @@
                         <p>
                             <a
                                 href="/2023/04/01/Daily/onClick-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%A0%84%ED%8C%8C/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/"
-                            aria-label=": sticky 잘 사용하기"
-                        >
-                            sticky 잘 사용하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-27T23:36:52+09:00">
-	
-		    2023/03/27
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="sticky-잘-알고-사용하기"><a href="#sticky-잘-알고-사용하기" class="headerlink" title="sticky 잘 알고 사용하기"></a>sticky 잘 알고 사용하기</h1><p><code>position:sticky</code>는 <code>position:static</code> 처럼 일반적인 흐름을 따르지만, 일정 스크롤을 내렸을 때 해당 임계점에 도달하였을 때, <code>position:fixed</code> 처럼 구현하기 위한 속성이다.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.sticky</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: -webkit-sticky; <span class="comment">/* 사파리 브라우저 지원 */</span></span><br><span class="line">  <span class="attribute">position</span>: sticky;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">background</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>sticky 속성을 설정하면 top, bottom, right, left 속성 중 하나는 반드시 설정해줘야한다.</li>
-</ul>
-<blockquote>
-<p>또한 sticky가 기준으로 하는 임계점은 <code>overflow:auto</code>, <code>overflow:scroll</code> 속성을 가진 가장 가까운 조상 컨테이너 박스이다.</p>
-</blockquote>
-<h2 id="예시"><a href="#예시" class="headerlink" title="예시"></a>예시</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;scroll&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;parent&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;static&quot;</span>&gt;</span>.static<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;sticky&quot;</span>&gt;</span>.sticky<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;fixed&quot;</span>&gt;</span>.fixed<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;parent&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;static&quot;</span>&gt;</span>.static<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;sticky&quot;</span>&gt;</span>.sticky<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.scroll</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">4px</span>;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">4px</span> solid <span class="number">#000</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">4px</span> <span class="number">0</span> <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">4px</span> solid <span class="number">#666</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.static</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: static;</span><br><span class="line">  <span class="attribute">background</span>: gray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>위 코드에서 sticky가 fixed로 고정되는 임계기준점은 scroll 클래스를 가진 div 박스이다.</li>
-<li>scroll 클래스가 있는 박스는 스크롤이 할 수 있을 만큼 길이가 길어서 스크롤 하여 해당 임계점에 도달하는 순간 fixed로 변하게 된다.</li>
-</ul>
-<blockquote>
-<p>처음에 헷갈린 점은 <code>overflow:auto</code> 속성을 parent 클래스를 가진 박스로 옮겼는데 아무런 일도 일어나지 않아서 당황했다. 그 이유는 parent 클래스를 가진 박스 내부가 스크롤이 되었을 때 해당 박스를 기준으로 고정되는 것인데, parent 클래스를 가진 박스는 스크롤이 될만한 높이를 가지고 있지 않아서 아무런 일도 발생하지 않았던 것이다.</p>
-</blockquote>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/27/Daily/sticky-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

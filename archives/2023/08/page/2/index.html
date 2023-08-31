@@ -233,6 +233,81 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2023/08/19/Daily/%EB%94%94%EB%B0%94%EC%9A%B4%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A1%9C%ED%8B%80-%EC%B0%A8%EC%9D%B4/"
+                            aria-label=": 디바운스와 스로틀 차이"
+                        >
+                            디바운스와 스로틀 차이
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2023-08-19T00:16:09+09:00">
+	
+		    2023/08/19
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/Daily/">Daily</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="Debounce"><a href="#Debounce" class="headerlink" title="Debounce"></a>Debounce</h1><p>이벤트가 연달아 발생할 때, 제일 처음 또는 마지막 이벤트일 때만 함수를 호출하는 방법</p>
+<p>만약 키보드 이벤트가 발생할 때마다 API를 요청한다고 가정해보자.</p>
+<p>“감”이라는 글자를 입력하는데 “ㄱ”, “가”, “감” 3번의 이벤트가 발생하게됩니다. 이러면 불필요한 이벤트까지 API 요청에 포함시키면 낭비이므로 이를 방지하기 위해 디바운스를 사용합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#input&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (timer) &#123;</span><br><span class="line">    <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">  &#125;</span><br><span class="line">  timer = <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;여기에 ajax 요청&quot;</span>, e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">  &#125;, <span class="number">200</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>주로 키보드 입력 이벤트에 사용</li>
+</ul>
+<h1 id="Throttle"><a href="#Throttle" class="headerlink" title="Throttle"></a>Throttle</h1><p>마지막 이벤트가 발생한 후 일정 시간이 지나기 전에 다시 호출되지 않도록 막는 방법</p>
+<p>만약 스크롤이벤트가 발생했을 때, 처음에 스크롤 이벤트가 발생할 때, 함수를 호출하고 몇초동안은 이벤트가 발생해도 함수를 호출시키지 않는 방법이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#input&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!timer) &#123;</span><br><span class="line">    timer = <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      timer = <span class="literal">null</span>;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;여기에 ajax 요청&quot;</span>, e.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">    &#125;, <span class="number">200</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>주로 스크롤 이벤트에 사용</li>
+</ul>
+<p>위와 같이 직접 구현하는 방법보다는 예외 사항을 처리하지 못할 경우도 있기때문에, <code>_.debounce</code>, <code>_.throttle</code>을 사용한다.</p>
+<p>요즘은 토스에서도 해당 라이브러리를 지원하니 관심이 있으면 사용해보자.</p>
+<p><a target="_blank" rel="noopener" href="https://slash.page/ko/libraries/react/react/src/hooks/useDebounce.i18n">토스 디바운스 라이브러리 바로가기</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2023/08/19/Daily/%EB%94%94%EB%B0%94%EC%9A%B4%EC%8A%A4%EC%99%80-%EC%8A%A4%EB%A1%9C%ED%8B%80-%EC%B0%A8%EC%9D%B4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                댓글 공유
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2023/08/18/Daily/var-setTimeout-Quiz/"
                             aria-label=": var setTimeout Quiz"
                         >
@@ -928,68 +1003,6 @@
                         <p>
                             <a
                                 href="/2023/08/08/Daily/%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%8B%9D-%EB%B8%94%EB%A1%9D-%EA%B5%AC%EB%B6%84%ED%95%98%EA%B8%B0/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                댓글 공유
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/08/07/Daily/flex-vs-inline-flex/"
-                            aria-label=": flex vs inline-flex"
-                        >
-                            flex vs inline-flex
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-08-07T20:15:13+09:00">
-	
-		    2023/08/07
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/Daily/">Daily</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="flex-vs-inline-flex"><a href="#flex-vs-inline-flex" class="headerlink" title="flex vs inline-flex"></a>flex vs inline-flex</h1><ul>
-<li>flex로 지정된 flex container는 block 요소 성향</li>
-<li>inline-flex로 지정된 inline-flex container는 inline 요소 성향</li>
-</ul>
-<p><img src="/../../images/inline_flex.png" alt="inline-flex"></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/08/07/Daily/flex-vs-inline-flex/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
